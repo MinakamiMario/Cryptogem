@@ -623,3 +623,199 @@ Per-tier breakdown (Config B):
 2. Validate DualConfirm on 1H data (same gates, expect more trades)
 3. Explore Family B: Multi-TF Confirmation (4H signal + 1H execution)
 4. Address HIGH red-team risks: slippage model + stop-loss fill realism
+
+---
+
+## ADR-HF-019: Standalone Screening Harness (Not Engine Extension)
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Sprint 3 HALT established DualConfirm has no edge at 1H. Sprint 4 needed to screen 15 alternative hypotheses across 5 categories. The existing engine (`agent_team_v3.py`) has hardcoded DualConfirm entry logic with no plugin system.
+
+**Options considered**:
+1. Extend engine with plugin-based signal dispatch (modify `check_entry_at_bar()`)
+2. Build standalone harness replicating engine equity/fee model but with signal_fn parameter
+
+**Decision**: Option 2 — standalone harness in `strategies/hf/screening/harness.py`.
+
+**Rationale**:
+1. Engine is READ-ONLY production code — modifying it risks breaking validated 4H behavior
+2. Screening framework needs ~2,400 lines of new code (15 hypotheses, 90 configs, 2-layer gates) — this is research infrastructure, not production code
+3. Fee model parity is critical and verifiable: every harness line has `# Parity: engine line NNN` comments
+4. test_harness.py includes DualConfirm parity test (trade count, P&L, DD within ±5%)
+5. Standalone harness is disposable — if no hypothesis has edge, the framework is archived with results
+
+**Consequence**: Harness is research-only. Any hypothesis that passes Layer 2 promotion would need a live execution layer (engine extension or new engine) for production deployment.
+
+---
+
+## ADR-HF-020: T1+T2 Screening Universe with Per-Tier Friction
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Need to decide which coins to screen. Universe tiering (ADR-HF-008) showed edge depends on Tier 2 mid-caps.
+
+**Decision**: Screen on T1 (98 coins, fee=31bps/side) + T2 (216 coins, fee=56bps/side) = 314 coins. Tier 3 excluded per UNIVERSE_POLICY.md.
+
+**Fee model**:
+| Tier | Base (Kraken) | Slippage | Total per side |
+|------|---------------|----------|----------------|
+| T1 (Liquid) | 26 bps | 5 bps | 31 bps |
+| T2 (Mid) | 26 bps | 30 bps | 56 bps |
+
+**Rationale**:
+1. Per-tier friction prevents false-positive from unrealistic flat fees
+2. Layer 2 stress test uses 2× fees (T1: 36bps, T2: 86bps) for additional margin
+3. Results combine T1+T2 for composite metrics but per-tier breakdown is preserved
+
+---
+
+## ADR-HF-021: Fixed Exit Taxonomy (TP/SL/TIME)
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Engine supports 3 exit types (tp_sl, trail, hybrid_notrl). For screening 15 hypotheses fairly, need a standardized exit mechanism.
+
+**Decision**: All hypotheses use the same 3-mechanism exit: SL check first (low <= stop_price), then TP (high >= target_price), then TIME (bars_in >= time_limit). Each signal_fn provides stop_price, target_price, and time_limit per trade.
+
+**Rationale**:
+1. **Fair comparison**: Different exit mechanisms would confound signal quality with exit quality
+2. **Signal provides prices**: The signal_fn returns absolute stop/target prices (not percentages), giving each hypothesis control over risk/reward
+3. **Priority order matters**: SL before TP (engine parity, line 368 before 370) — conservative assumption when both trigger in same bar
+4. **TIME as safety valve**: Prevents zombie positions — every hypothesis must declare max hold time
+
+**Consequence**: Hypotheses like H05 (DC breakout) that naturally suit trailing stops are constrained to fixed TP/SL. If a hypothesis survives screening with fixed exits, adding trailing stops would likely improve it further.
+
+---
+
+## ADR-HF-022: Two-Layer Progressive Filtering
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Testing 15 hypotheses × 6 variants = 90 configs needs systematic filtering to avoid overfitting.
+
+**Decision**: Two-layer approach:
+- **Layer 1 (Screening)**: Loose gates, high throughput. KILL gates = trades ≥ 60 AND expectancy > $0. Soft gates for PF, walk-forward, concentration. Run on all 90 configs.
+- **Layer 2 (Promotion)**: Strict gates on top 1-2 survivors. Stress fees, PF ≥ 1.2, WF ≥ 3/5, rolling windows ≥ 60%, DD ≤ 30%, latency stress, capacity check.
+
+**Gate spec**: `strategies/hf/GATES_SCREENING.md`
+
+**Rationale**:
+1. Layer 1 KILL gates are intentionally loose — S2 (expectancy > $0) is the minimum bar
+2. Layer 2 applies strict operational gates only to survivors, preventing premature rejection
+3. Scoring formula `expectancy × sqrt(trades) × (PF - 1)` with throughput bonus balances edge strength with sample size
+4. Walk-forward at both layers (2/5 at L1, 3/5 at L2) ensures temporal stability
+
+**Trade gate design** (per user requirement):
+- S1: trades ≥ 60 = KILL (hard floor for statistical significance)
+- S1b: trades ≥ 120 = soft bonus (+20% score) — throughput goal, not gate
+
+---
+
+## ADR-HF-023: Deployability — Harness is Research-Only
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Per user requirement, clarify that the screening harness is a research tool, not a live execution system.
+
+**Decision**: The screening framework (`strategies/hf/screening/`) is explicitly research-only:
+1. **No live execution**: Harness simulates fills at bar close/stop/target prices — no order book interaction
+2. **No real-time data**: Works on cached historical candles only
+3. **No position management**: Simplified single-position model (max_pos=1)
+4. **No risk management**: No circuit breakers, no real-time exposure monitoring
+
+**Path to production** (if a hypothesis passes Layer 2):
+1. Build signal adapter that implements the winning signal_fn in the live engine
+2. Add the signal to `check_entry_at_bar()` or build new entry dispatch
+3. Run paper trading validation with real-time data for ≥ 30 days
+4. Validate with live execution metrics (fill quality, latency, slippage)
+
+**Consequence**: Layer 2 promotion is necessary but NOT sufficient for live deployment.
+
+---
+
+## ADR-HF-024: Sprint 4 Screening Results — NO SURVIVORS (HALT)
+
+**Date**: 2026-02-15
+**Status**: DECIDED — **HALT** (no Layer 2 promotion)
+**Context**: Sprint 4 screened 15 hypotheses × 6 variants = 90 configs through Layer 1 gates on 1H data (T1: 98 coins, T2: 216 coins). Runtime: 304s.
+
+**Result**: **0 survivors out of 90 configs.** Every configuration failed the S2 KILL gate (expectancy > $0).
+
+**Evidence** (screen_001.json / screen_001.md):
+
+| Gate | Pass | Fail | Rate |
+|------|------|------|------|
+| S1 (trades ≥ 60) | 89 | 1 | 99% |
+| S2 (expectancy > $0) | 0 | 90 | **0%** |
+| S3 (PF ≥ 1.1) | 0 | 90 | 0% |
+| S4 (WF ≥ 2/5) | 17 | 73 | 19% |
+| S5 (concentration) | 71 | 19 | 79% |
+
+Best variants per hypothesis:
+
+| ID | Category | Best PF | Best Exp/Trade | Trades |
+|----|----------|---------|----------------|--------|
+| H03 STOCH_CROSS | mean_reversion | 0.95 | -$2.00 | 154 |
+| H11 SQUEEZE_BREAK | volume | 0.95 | -$2.77 | 89 |
+| H14 RSI_MACD_AGREE | multi_indicator | 0.90 | -$3.32 | 123 |
+| H02 BB_REVERT | mean_reversion | 0.81 | -$4.99 | 88 |
+| H05 DC_BREAKOUT_UP | momentum | 0.82 | -$7.67 | 221 |
+
+**Key findings**:
+1. **Universal negative expectancy**: ALL 15 hypotheses across ALL 5 categories (mean reversion, momentum, volume, price action, multi-indicator) have negative expectancy at 1H
+2. **Sufficient trade counts**: 89/90 configs pass S1 (≥ 60 trades) — the signals DO fire, they just lose money
+3. **Best PF = 0.95** (H03, H11): Even the closest-to-breakeven configs are still losing $2-3/trade after fees
+4. **Fee drag is dominant**: PF range 0.06-0.95 — no config even reaches breakeven (PF = 1.0)
+5. **Walk-forward has some positives**: 17/90 pass WF (≥ 2/5 folds positive), indicating temporal pockets of profitability that don't survive aggregate analysis
+6. **Concentration is fine**: 71/90 pass S5, confirming signals are well-diversified — the problem is not concentration but universal negative alpha
+
+**Root cause analysis**:
+- **1H crypto is friction-dominated**: At T2 fees (56bps/side = 112bps round trip), a trade needs >1.12% gross return to be positive. 1H candle ranges are typically 1-3%, leaving almost no room for edge after fees.
+- **Signal diversity doesn't help**: 5 distinct signal families (15 hypotheses) all fail. This suggests the problem is structural (1H timeframe + fee structure) not signal-specific.
+- **Comparison with DualConfirm HALT** (ADR-HF-018): DualConfirm at 1H had PF 0.43/0.36. The best new hypotheses (PF 0.95) are significantly better but still underwater.
+- **Volume-based signals perform worst**: H09 (PF 0.55 best) and H08 (PF 0.35 best) — 1H volume patterns are noisier than expected.
+- **Multi-indicator signals perform best**: H14 (PF 0.90) suggests that combining filters helps, but not enough to overcome fee drag.
+
+**Decision**: **HALT**. No Layer 2 promotion. No further 1H signal exploration.
+
+**Recommendations for future work**:
+1. **Accept 4H-only deployment**: DualConfirm at 4H with T1+T2 remains the only validated edge
+2. **Different market structure**: Consider market-making or order flow signals that benefit FROM spreads rather than suffering from them
+3. **Different asset universe**: Crypto majors (BTC, ETH) may have better 1H signal-to-noise but insufficient Kraken liquidity for the strategy style
+4. **Different timeframe approach**: Multi-TF confirmation (4H signal → 1H entry timing) rather than pure 1H signals
+5. **Fee reduction**: If Kraken maker fees decrease or the bot qualifies for fee tiers, re-screen at lower friction
+
+**Consequence**:
+- Sprint 4 screening framework is archived with results in `reports/hf/screening/`
+- Screening infrastructure (`strategies/hf/screening/`) is reusable for future signal research
+- 30 new unit tests added (test_harness.py: 16 pass + 3 parity skipped, test_hypotheses.py: 14 pass)
+- Next sprint should focus on live deployment preparation for 4H DualConfirm (T1+T2)
+
+---
+
+## Sprint 4 Summary — Indicator-Agnostic Hypothesis Screening
+
+**Deliverables**:
+| Artifact | Lines | Purpose |
+|----------|-------|---------|
+| strategies/hf/screening/harness.py | ~390 | Signal-agnostic backtest engine with engine fee parity |
+| strategies/hf/screening/indicators.py | ~440 | Extended indicator library (11 new + 4 reused) |
+| strategies/hf/screening/hypotheses.py | ~800 | 15 hypotheses × 6 variants = 90 configs |
+| strategies/hf/screening/screener.py | ~280 | Layer 1 screening pipeline |
+| strategies/hf/screening/promoter.py | ~260 | Layer 2 promotion pipeline |
+| strategies/hf/screening/report.py | ~280 | JSON + Markdown report writer |
+| strategies/hf/screening/run_screen.py | ~190 | Layer 1 CLI orchestrator |
+| strategies/hf/screening/run_promote.py | ~170 | Layer 2 CLI orchestrator |
+| strategies/hf/screening/test_harness.py | ~430 | 19 tests (16 pass + 3 parity skipped) |
+| strategies/hf/screening/test_hypotheses.py | ~270 | 14 tests (all pass) |
+| strategies/hf/GATES_SCREENING.md | ~120 | Layer 1 + Layer 2 gate specification |
+| reports/hf/screening/screen_001.json | — | Full raw results |
+| reports/hf/screening/screen_001.md | — | Human-readable summary |
+| ADRs HF-019 through HF-024 | — | 6 architecture decisions |
+| **Total new code** | **~3,630** | |
+| **Total new tests** | **33** | 30 pass, 3 skipped (parity, no 4H data) |
+
+**Result**: **HALT** — 0/90 configs survive Layer 1. No hypothesis has positive expectancy at 1H.
+
+**Test status**: make check 66/66 green. Screening tests: 30/30 pass + 3 skip.

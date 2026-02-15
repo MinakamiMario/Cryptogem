@@ -1,4 +1,4 @@
-.PHONY: check schema tests capsule robustness robustness-tests last60d last60d-all last60d-tests compare-universe compare-universe-all compare-universe-tests build-unfiltered-cache build-research-cache compare-caches compare-caches-smoke compare-caches-tests grid_best-check grid_best-robustness hf-check ci-guard
+.PHONY: check schema tests capsule robustness robustness-tests last60d last60d-all last60d-tests compare-universe compare-universe-all compare-universe-tests build-unfiltered-cache build-research-cache compare-caches compare-caches-smoke compare-caches-tests grid_best-check grid_best-robustness hf-check hf-robustness ci-guard
 
 # Full validation (schema + tests) — run before any PR
 check: schema tests context
@@ -148,3 +148,10 @@ hf-check:
 	@echo "=== HF Check ==="
 	@echo "No HF tests yet — placeholder"
 	@echo "✅ HF check passed (no tests)"
+
+# HF robustness (placeholder — expand when HF harness exists)
+hf-robustness:
+	@echo "=== HF Robustness ==="
+	@echo "No HF robustness harness yet — placeholder"
+	@echo "Reports will go to: reports/hf/"
+	@echo "✅ HF robustness passed (no harness)"

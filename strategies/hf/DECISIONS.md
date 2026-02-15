@@ -519,6 +519,94 @@ Method B — Best policies (GRID_BEST):
 
 ---
 
+## ADR-HF-018: HALT — DualConfirm Has No Edge at 1H Frequency
+
+**Date**: 2026-02-15
+**Status**: DECIDED — **HALT** (no 15m build)
+**Context**: Sprint 3 STOP-CHECK. The 1H data pipeline delivered 1903 coins (96.8% coverage, 0 OHLCV violations). Both A/B configs were tested through the full 6-gate validation suite per GATES_MTF.md.
+
+**STOP-CHECK rule**: "Als trades ↑ maar expectancy/trade ≤ 0 (net, Tier 1+2) → HALT + ADR (geen 15m build)."
+
+**Evidence** (validate_1h_001):
+
+| Metric | Config A (tmb=15) | Config B (tmb=60) |
+|--------|-------------------|-------------------|
+| Trades | 32 | 22 |
+| P&L | $-1,037.80 | $-1,246.88 |
+| PF | 0.43 | 0.36 |
+| Win Rate | 31.2% | 22.7% |
+| Max DD | 57.3% | 73.3% |
+| Expectancy/trade | **-$32.43** | **-$56.68** |
+| WF folds positive | 1/5 | 1/5 |
+| Gates passed | 2/6 (G1, G6) | 2/6 (G1, G6) |
+| Gates failed | G2, G3, G4, G5 | G2, G3, G4, G5 |
+
+Per-tier breakdown (Config A):
+
+| Tier | Trades | P&L | PF | Fee (bps) |
+|------|--------|-----|----|-----------|
+| T1 (Liquid) | 13 | $-261.95 | 0.63 | 31.0 |
+| T2 (Mid) | 19 | $-775.85 | 0.31 | 56.0 |
+
+Per-tier breakdown (Config B):
+
+| Tier | Trades | P&L | PF | Fee (bps) |
+|------|--------|-----|----|-----------|
+| T1 (Liquid) | 11 | $-174.73 | 0.78 | 31.0 |
+| T2 (Mid) | 11 | $-1,072.15 | 0.05 | 56.0 |
+
+**Decision**: **HALT**. Do NOT build 15m data pipeline. DualConfirm has zero edge at 1H.
+
+**Rationale**:
+1. **Both configs deeply negative**: PF 0.43 and 0.36 — not even close to breakeven (PF 1.0)
+2. **Expectancy/trade ≤ 0**: -$32.43 (A) and -$56.68 (B). STOP-CHECK rule triggers.
+3. **Trades did NOT increase meaningfully**: 32 at 1H vs 32 at 4H — the DualConfirm signal fires at roughly the same bar-count rate regardless of timeframe. The hypothesis "more frequent candles → more signals → cumulative profit" is falsified.
+4. **T2 collapses at 1H**: PF 0.31 (A) and 0.05 (B). At 4H, T2 alone was GO. 1H noise destroys the signal.
+5. **Walk-forward catastrophic**: Only 1/5 folds profitable in both configs. No temporal stability.
+6. **Config B (scaled) is WORSE**: Longer hold time at 1H just extends exposure to noise, increasing DD from 57.3% → 73.3%.
+7. **A/B methodology worked as designed**: Prevented false-negative attribution ("maybe the params are wrong"). Both interpretations fail — the signal itself is broken at this frequency.
+
+**Root cause analysis**:
+- DualConfirm is a **4H-frequency-specific signal**. The Donchian + Bollinger touch pattern requires multi-day price structure that simply doesn't exist at 1H resolution.
+- At 1H, the Donchian low and Bollinger lower band are compressed (30-day window = 720 1H bars vs 180 4H bars). The bands move more smoothly, triggering more false touches.
+- Volume spike confirmation (vol_spike_mult × 20-bar avg) at 1H captures intra-day noise rather than multi-day conviction.
+- COOLDOWN_BARS=4 at 1H = 4 hours. This is actually favorable (faster re-entry) but irrelevant when every entry loses money.
+
+**Consequence**:
+1. **No 15m pipeline build** — if 1H has zero edge, 15m would be worse (more noise, higher fee drag)
+2. **DualConfirm is validated as 4H-only** — the strategy stays at 4H with T1+T2 universe
+3. **Sub-4H throughput requires NEW signal families** (multi-TF confirmation, momentum, order flow — see hf_hypotheses.md)
+4. **Sprint 3 deliverables (infrastructure) remain valuable** — the pipeline, validation framework, and A/B methodology are reusable for future signal research
+
+---
+
+## Sprint 3 Execution Results — 1H HALT
+
+**Phase 1 (Data Pipeline)**: ✅ COMPLETE
+| Artifact | Result |
+|----------|--------|
+| candle_cache_1h.json | 1903 coins, 129MB |
+| data_manifest_1h.json | Snapshotted to reports/hf/ |
+| data_audit_1h_001 | Coverage 96.8% (≥95% ✅), OHLCV violations 0 (=0 ✅) |
+| hf-check | 35/35 green |
+| make check | 66/66 green |
+
+**Phase 2 (Validation)**: ❌ NO_EDGE
+| Run | Verdict |
+|-----|---------|
+| Config A (as-is, tmb=15) | FAIL — G2, G3, G4, G5 |
+| Config B (scaled, tmb=60) | FAIL — G2, G3, G4, G5 |
+| A/B conclusion | NO_EDGE — both fail |
+
+**Phase 3 (STOP-CHECK)**: 🛑 HALT
+| Check | Result |
+|-------|--------|
+| Trades ↑ vs 4H? | NO — 32 trades at 1H ≈ 32 at 4H |
+| Expectancy/trade > 0? | NO — -$32.43 (A), -$56.68 (B) |
+| Verdict | **HALT** — geen 15m build |
+
+---
+
 ## Sprint 1 Summary
 
 **Deliverables**:

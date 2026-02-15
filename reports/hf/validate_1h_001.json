@@ -1,0 +1,426 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15 16:33",
+    "timeframe": "1h",
+    "data_file": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/data/candle_cache_1h.json",
+    "n_coins": 1903,
+    "n_bars": 721,
+    "tier_source": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/reports/hf/universe_tiering_001.json",
+    "tier_counts": {
+      "1": 98,
+      "2": 216
+    },
+    "tf_params": {
+      "rolling_window_bars": 720,
+      "wf_embargo": 2,
+      "start_bar": 50,
+      "min_trades": 20,
+      "time_max_bars_scaled": 60
+    },
+    "fee_model": {
+      "tier1_fee": 0.0031,
+      "tier2_fee": 0.0056,
+      "tier1_fee_2x": 0.0036,
+      "tier2_fee_2x": 0.0086
+    },
+    "gate_thresholds": {
+      "min_trades": 20,
+      "wf_folds": 5,
+      "wf_min_positive": 3,
+      "max_dd_pct": 50.0,
+      "outlier_dep_max": 0.8,
+      "conc_max": 0.8
+    },
+    "total_time_s": 148.98,
+    "label": "1H multi-timeframe validation"
+  },
+  "config_a": {
+    "config_name": "Config_A (as-is)",
+    "cfg": {
+      "exit_type": "tp_sl",
+      "max_pos": 1,
+      "rsi_max": 45,
+      "sl_pct": 10,
+      "time_max_bars": 15,
+      "tp_pct": 12,
+      "vol_confirm": true,
+      "vol_spike_mult": 2.5
+    },
+    "composite": {
+      "pnl": -1037.8,
+      "pf": 0.43,
+      "dd": 57.3,
+      "trades": 32,
+      "wr": 31.2,
+      "final_equity": 962.2
+    },
+    "per_tier": {
+      "1": {
+        "trades": 13,
+        "pnl": -261.95,
+        "pf": 0.63,
+        "wr": 38.5,
+        "dd": 28.8,
+        "final_equity": 1738.05,
+        "fee": 0.0031,
+        "fee_bps": 31.0,
+        "n_coins": 98
+      },
+      "2": {
+        "trades": 19,
+        "pnl": -775.85,
+        "pf": 0.31,
+        "wr": 26.3,
+        "dd": 43.5,
+        "final_equity": 1224.15,
+        "fee": 0.0056,
+        "fee_bps": 56.0,
+        "n_coins": 216
+      }
+    },
+    "gates": {
+      "G1": {
+        "gate": "G1",
+        "name": "min_trades",
+        "trade_count": 32,
+        "threshold": 20,
+        "result": "PASS"
+      },
+      "G2": {
+        "gate": "G2",
+        "name": "walk_forward",
+        "n_folds": 5,
+        "embargo": 2,
+        "folds": [
+          {
+            "fold": 1,
+            "test_start": 50,
+            "test_end": 184,
+            "trades": 7,
+            "pnl": -109.52,
+            "pf": 0.4,
+            "wr": 28.6,
+            "dd": 8.8,
+            "positive": false
+          },
+          {
+            "fold": 2,
+            "test_start": 186,
+            "test_end": 318,
+            "trades": 7,
+            "pnl": -345.59,
+            "pf": 0.0,
+            "wr": 0.0,
+            "dd": 17.3,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "test_start": 320,
+            "test_end": 452,
+            "trades": 5,
+            "pnl": 61.17,
+            "pf": 1.22,
+            "wr": 40.0,
+            "dd": 12.0,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "test_start": 454,
+            "test_end": 586,
+            "trades": 7,
+            "pnl": -626.2,
+            "pf": 0.28,
+            "wr": 28.6,
+            "dd": 35.1,
+            "positive": false
+          },
+          {
+            "fold": 5,
+            "test_start": 588,
+            "test_end": 721,
+            "trades": 6,
+            "pnl": -86.4,
+            "pf": 0.67,
+            "wr": 50.0,
+            "dd": 11.1,
+            "positive": false
+          }
+        ],
+        "positive_folds": 1,
+        "result": "FAIL"
+      },
+      "G3": {
+        "gate": "G3",
+        "name": "max_dd",
+        "dd_pct": 57.3,
+        "threshold": 50.0,
+        "result": "FAIL"
+      },
+      "G4": {
+        "gate": "G4",
+        "name": "outlier_dependency",
+        "top_trade_pnl": 0.0,
+        "total_pnl": -1037.8,
+        "top_trade_share": 0.0,
+        "threshold": 0.8,
+        "result": "FAIL",
+        "note": "Total P&L not positive"
+      },
+      "G5": {
+        "gate": "G5",
+        "name": "friction_stress",
+        "composite_pnl": -1195.2,
+        "composite_pf": 0.38,
+        "composite_dd": 63.5,
+        "composite_trades": 32,
+        "per_tier": {
+          "1": {
+            "trades": 13,
+            "pnl": -284.62,
+            "pf": 0.6,
+            "wr": 38.5,
+            "dd": 29.6,
+            "final_equity": 1715.38,
+            "fee": 0.0036,
+            "fee_bps": 36.0,
+            "n_coins": 98
+          },
+          "2": {
+            "trades": 19,
+            "pnl": -910.58,
+            "pf": 0.24,
+            "wr": 21.1,
+            "dd": 48.8,
+            "final_equity": 1089.42,
+            "fee": 0.0086,
+            "fee_bps": 86.0,
+            "n_coins": 216
+          }
+        },
+        "result": "FAIL"
+      },
+      "G6": {
+        "gate": "G6",
+        "name": "coin_concentration",
+        "top_coin": "XMN/USD",
+        "top_coin_profit": 192.4,
+        "total_positive_pnl": 643.65,
+        "top_coin_share": 0.2989,
+        "top_coin_pct": 29.9,
+        "threshold": 0.8,
+        "n_coins_traded": 29,
+        "result": "PASS",
+        "informational": true
+      }
+    },
+    "verdict": "FAIL",
+    "verdict_reason": "Failed gates: G2, G3, G4, G5",
+    "failed_gates": [
+      "G2",
+      "G3",
+      "G4",
+      "G5"
+    ],
+    "elapsed_s": 74.24
+  },
+  "config_b": {
+    "config_name": "Config_B (scaled)",
+    "cfg": {
+      "exit_type": "tp_sl",
+      "max_pos": 1,
+      "rsi_max": 45,
+      "sl_pct": 10,
+      "time_max_bars": 60,
+      "tp_pct": 12,
+      "vol_confirm": true,
+      "vol_spike_mult": 2.5
+    },
+    "composite": {
+      "pnl": -1246.88,
+      "pf": 0.36,
+      "dd": 73.3,
+      "trades": 22,
+      "wr": 22.7,
+      "final_equity": 753.12
+    },
+    "per_tier": {
+      "1": {
+        "trades": 11,
+        "pnl": -174.73,
+        "pf": 0.78,
+        "wr": 36.4,
+        "dd": 30.4,
+        "final_equity": 1825.27,
+        "fee": 0.0031,
+        "fee_bps": 31.0,
+        "n_coins": 98
+      },
+      "2": {
+        "trades": 11,
+        "pnl": -1072.15,
+        "pf": 0.05,
+        "wr": 9.1,
+        "dd": 58.7,
+        "final_equity": 927.85,
+        "fee": 0.0056,
+        "fee_bps": 56.0,
+        "n_coins": 216
+      }
+    },
+    "gates": {
+      "G1": {
+        "gate": "G1",
+        "name": "min_trades",
+        "trade_count": 22,
+        "threshold": 20,
+        "result": "PASS"
+      },
+      "G2": {
+        "gate": "G2",
+        "name": "walk_forward",
+        "n_folds": 5,
+        "embargo": 2,
+        "folds": [
+          {
+            "fold": 1,
+            "test_start": 50,
+            "test_end": 184,
+            "trades": 5,
+            "pnl": -511.8,
+            "pf": 0.0,
+            "wr": 0.0,
+            "dd": 25.6,
+            "positive": false
+          },
+          {
+            "fold": 2,
+            "test_start": 186,
+            "test_end": 318,
+            "trades": 4,
+            "pnl": -424.48,
+            "pf": 0.0,
+            "wr": 0.0,
+            "dd": 21.2,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "test_start": 320,
+            "test_end": 452,
+            "trades": 5,
+            "pnl": -116.39,
+            "pf": 0.73,
+            "wr": 40.0,
+            "dd": 18.8,
+            "positive": false
+          },
+          {
+            "fold": 4,
+            "test_start": 454,
+            "test_end": 586,
+            "trades": 6,
+            "pnl": -757.71,
+            "pf": 0.21,
+            "wr": 16.7,
+            "dd": 40.2,
+            "positive": false
+          },
+          {
+            "fold": 5,
+            "test_start": 588,
+            "test_end": 721,
+            "trades": 5,
+            "pnl": 78.67,
+            "pf": 1.3,
+            "wr": 40.0,
+            "dd": 11.1,
+            "positive": true
+          }
+        ],
+        "positive_folds": 1,
+        "result": "FAIL"
+      },
+      "G3": {
+        "gate": "G3",
+        "name": "max_dd",
+        "dd_pct": 73.3,
+        "threshold": 50.0,
+        "result": "FAIL"
+      },
+      "G4": {
+        "gate": "G4",
+        "name": "outlier_dependency",
+        "top_trade_pnl": 0.0,
+        "total_pnl": -1246.88,
+        "top_trade_share": 0.0,
+        "threshold": 0.8,
+        "result": "FAIL",
+        "note": "Total P&L not positive"
+      },
+      "G5": {
+        "gate": "G5",
+        "name": "friction_stress",
+        "composite_pnl": -1328.94,
+        "composite_pf": 0.34,
+        "composite_dd": 76.5,
+        "composite_trades": 22,
+        "per_tier": {
+          "1": {
+            "trades": 11,
+            "pnl": -194.89,
+            "pf": 0.76,
+            "wr": 36.4,
+            "dd": 31.0,
+            "final_equity": 1805.11,
+            "fee": 0.0036,
+            "fee_bps": 36.0,
+            "n_coins": 98
+          },
+          "2": {
+            "trades": 11,
+            "pnl": -1134.05,
+            "pf": 0.04,
+            "wr": 9.1,
+            "dd": 61.0,
+            "final_equity": 865.95,
+            "fee": 0.0086,
+            "fee_bps": 86.0,
+            "n_coins": 216
+          }
+        },
+        "result": "FAIL"
+      },
+      "G6": {
+        "gate": "G6",
+        "name": "coin_concentration",
+        "top_coin": "BSX/USD",
+        "top_coin_profit": 194.16,
+        "total_positive_pnl": 692.29,
+        "top_coin_share": 0.2805,
+        "top_coin_pct": 28.0,
+        "threshold": 0.8,
+        "n_coins_traded": 22,
+        "result": "PASS",
+        "informational": true
+      }
+    },
+    "verdict": "FAIL",
+    "verdict_reason": "Failed gates: G2, G3, G4, G5",
+    "failed_gates": [
+      "G2",
+      "G3",
+      "G4",
+      "G5"
+    ],
+    "elapsed_s": 74.74
+  },
+  "mtf_verdict": {
+    "overall_verdict": "NO_EDGE",
+    "summary": "1H has no edge for DualConfirm",
+    "detail": "Both Config A and Config B fail on 1H data. The DualConfirm strategy does not transfer to 1H frequency.",
+    "config_a_pass": false,
+    "config_b_pass": false
+  }
+}

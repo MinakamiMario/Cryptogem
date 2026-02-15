@@ -1,0 +1,371 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15 12:19",
+    "universe": "tradeable",
+    "data_file": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/data/candle_cache_tradeable.json",
+    "n_coins": 425,
+    "total_configs": 1280,
+    "gate_passed": 796,
+    "friction_passed": 780,
+    "total_time_s": 602.76
+  },
+  "champion": {
+    "cfg": {
+      "exit_type": "tp_sl",
+      "max_pos": 1,
+      "vol_confirm": true,
+      "rsi_max": 45,
+      "sl_pct": 8,
+      "time_max_bars": 15,
+      "tp_pct": 12,
+      "vol_spike_mult": 3.0
+    },
+    "trades": 31,
+    "wr": 67.7,
+    "pnl": 4113.5,
+    "pf": 2.73,
+    "dd": 24.7,
+    "exit_reasons": {
+      "PROFIT TARGET": 15,
+      "FIXED STOP": 7,
+      "TIME MAX": 9
+    },
+    "friction": {
+      "pnl_2x20bps": 2608.27,
+      "pnl_1candle": 1827.13,
+      "pass_2x20bps": true,
+      "pass_1candle": true
+    },
+    "score": 9.528
+  },
+  "top": [
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 45,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 31,
+      "wr": 67.7,
+      "pnl": 4113.5,
+      "pf": 2.73,
+      "dd": 24.7,
+      "exit_reasons": {
+        "PROFIT TARGET": 15,
+        "FIXED STOP": 7,
+        "TIME MAX": 9
+      },
+      "friction": {
+        "pnl_2x20bps": 2608.27,
+        "pnl_1candle": 1827.13,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 9.528
+    },
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 50,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 31,
+      "wr": 67.7,
+      "pnl": 4113.5,
+      "pf": 2.73,
+      "dd": 24.7,
+      "exit_reasons": {
+        "PROFIT TARGET": 15,
+        "FIXED STOP": 7,
+        "TIME MAX": 9
+      },
+      "friction": {
+        "pnl_2x20bps": 2608.27,
+        "pnl_1candle": 1827.13,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 9.528
+    },
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 55,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 31,
+      "wr": 67.7,
+      "pnl": 4113.5,
+      "pf": 2.73,
+      "dd": 24.7,
+      "exit_reasons": {
+        "PROFIT TARGET": 15,
+        "FIXED STOP": 7,
+        "TIME MAX": 9
+      },
+      "friction": {
+        "pnl_2x20bps": 2608.27,
+        "pnl_1candle": 1827.13,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 9.528
+    },
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 60,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 31,
+      "wr": 67.7,
+      "pnl": 4113.5,
+      "pf": 2.73,
+      "dd": 24.7,
+      "exit_reasons": {
+        "PROFIT TARGET": 15,
+        "FIXED STOP": 7,
+        "TIME MAX": 9
+      },
+      "friction": {
+        "pnl_2x20bps": 2608.27,
+        "pnl_1candle": 1827.13,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 9.528
+    },
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 45,
+        "sl_pct": 8,
+        "time_max_bars": 10,
+        "tp_pct": 12,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 33,
+      "wr": 66.7,
+      "pnl": 3940.7,
+      "pf": 2.8,
+      "dd": 22.7,
+      "exit_reasons": {
+        "PROFIT TARGET": 14,
+        "FIXED STOP": 6,
+        "TIME MAX": 13
+      },
+      "friction": {
+        "pnl_2x20bps": 2395.49,
+        "pnl_1candle": 1606.07,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 9.183
+    },
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 50,
+        "sl_pct": 8,
+        "time_max_bars": 10,
+        "tp_pct": 12,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 33,
+      "wr": 66.7,
+      "pnl": 3940.7,
+      "pf": 2.8,
+      "dd": 22.7,
+      "exit_reasons": {
+        "PROFIT TARGET": 14,
+        "FIXED STOP": 6,
+        "TIME MAX": 13
+      },
+      "friction": {
+        "pnl_2x20bps": 2395.49,
+        "pnl_1candle": 1606.07,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 9.183
+    },
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 55,
+        "sl_pct": 8,
+        "time_max_bars": 10,
+        "tp_pct": 12,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 33,
+      "wr": 66.7,
+      "pnl": 3940.7,
+      "pf": 2.8,
+      "dd": 22.7,
+      "exit_reasons": {
+        "PROFIT TARGET": 14,
+        "FIXED STOP": 6,
+        "TIME MAX": 13
+      },
+      "friction": {
+        "pnl_2x20bps": 2395.49,
+        "pnl_1candle": 1606.07,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 9.183
+    },
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 60,
+        "sl_pct": 8,
+        "time_max_bars": 10,
+        "tp_pct": 12,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 33,
+      "wr": 66.7,
+      "pnl": 3940.7,
+      "pf": 2.8,
+      "dd": 22.7,
+      "exit_reasons": {
+        "PROFIT TARGET": 14,
+        "FIXED STOP": 6,
+        "TIME MAX": 13
+      },
+      "friction": {
+        "pnl_2x20bps": 2395.49,
+        "pnl_1candle": 1606.07,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 9.183
+    },
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 45,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 15,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 30,
+      "wr": 66.7,
+      "pnl": 3821.77,
+      "pf": 2.73,
+      "dd": 24.7,
+      "exit_reasons": {
+        "TIME MAX": 14,
+        "FIXED STOP": 7,
+        "PROFIT TARGET": 9
+      },
+      "friction": {
+        "pnl_2x20bps": 2428.1,
+        "pnl_1candle": 1699.35,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 8.98
+    },
+    {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "vol_confirm": true,
+        "rsi_max": 50,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 15,
+        "vol_spike_mult": 3.0
+      },
+      "trades": 30,
+      "wr": 66.7,
+      "pnl": 3821.77,
+      "pf": 2.73,
+      "dd": 24.7,
+      "exit_reasons": {
+        "TIME MAX": 14,
+        "FIXED STOP": 7,
+        "PROFIT TARGET": 9
+      },
+      "friction": {
+        "pnl_2x20bps": 2428.1,
+        "pnl_1candle": 1699.35,
+        "pass_2x20bps": true,
+        "pass_1candle": true
+      },
+      "score": 8.98
+    }
+  ],
+  "grid": {
+    "vol_spike_mult": [
+      3.0,
+      3.5,
+      4.0,
+      4.5,
+      5.0
+    ],
+    "rsi_max": [
+      45,
+      50,
+      55,
+      60
+    ],
+    "tp_pct": [
+      10,
+      12,
+      15,
+      18
+    ],
+    "sl_pct": [
+      6,
+      8,
+      10,
+      12
+    ],
+    "time_max_bars": [
+      8,
+      10,
+      12,
+      15
+    ]
+  },
+  "gates": {
+    "min_trades": 20,
+    "min_pf": 1.6,
+    "max_dd": 30.0
+  }
+}

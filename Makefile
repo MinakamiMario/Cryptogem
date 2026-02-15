@@ -1,4 +1,4 @@
-.PHONY: check schema tests capsule robustness robustness-tests last60d last60d-all last60d-tests compare-universe compare-universe-all compare-universe-tests build-unfiltered-cache build-research-cache compare-caches compare-caches-smoke compare-caches-tests
+.PHONY: check schema tests capsule robustness robustness-tests last60d last60d-all last60d-tests compare-universe compare-universe-all compare-universe-tests build-unfiltered-cache build-research-cache compare-caches compare-caches-smoke compare-caches-tests grid_best-check grid_best-robustness hf-check ci-guard
 
 # Full validation (schema + tests) — run before any PR
 check: schema tests context
@@ -121,3 +121,30 @@ endif
 compare-caches-tests:
 	@echo "=== Compare Caches Tests ==="
 	python3 trading_bot/test_compare_caches.py
+
+# ─── GRID_BEST frozen baseline ───────────────────────────────
+
+# GRID_BEST full validation (schema + tests + robustness)
+grid_best-check: check
+	@echo ""
+	@echo "=== GRID_BEST Full Suite ==="
+	$(MAKE) robustness
+	@echo ""
+	@echo "✅ GRID_BEST check passed"
+
+# GRID_BEST robustness only
+grid_best-robustness:
+	@echo "=== GRID_BEST Robustness ==="
+	$(MAKE) robustness
+
+# CI guard: detect GRID_BEST-critical file changes
+ci-guard:
+	@bash scripts/ci_guard.sh
+
+# ─── HF strategy (development) ──────────────────────────────
+
+# HF strategy check (placeholder — expand when HF tests exist)
+hf-check:
+	@echo "=== HF Check ==="
+	@echo "No HF tests yet — placeholder"
+	@echo "✅ HF check passed (no tests)"

@@ -1,0 +1,7 @@
+{
+  "name": "HF",
+  "status": "development",
+  "description": "High Frequency strategy — research phase",
+  "base_timeframe": "TBD",
+  "notes": "Imports shared engine from trading_bot/ via sys.path"
+}

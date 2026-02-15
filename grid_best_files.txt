@@ -1,0 +1,12 @@
+# Files critical to GRID_BEST strategy
+# Changes to any of these files require: make check && make robustness
+trading_bot/agent_team_v3.py
+trading_bot/strategy.py
+trading_bot/robustness_harness.py
+trading_bot/bot.py
+trading_bot/paper_backfill_v4.py
+trading_bot/overnight_optimizer.py
+trading_bot/champion.json
+trading_bot/DualConfirm_GRID_BEST.pine
+trading_bot/test_param_sensitivity.py
+trading_bot/test_robustness_harness.py

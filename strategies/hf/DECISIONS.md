@@ -110,6 +110,118 @@
 
 ---
 
+## ADR-HF-005: Gate Canon — 5 Hard + 1 Informational
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Sprint 1 reports said "6/6 gates passed" but the gate list was ambiguous — latency proxy was not an independent test (it reused friction stress results). Gate definitions (fold construction, "positive" criteria) were not formally documented.
+
+**Decision**: Create `GATES.md` as canonical single source of truth.
+
+**Gate canon**:
+
+| # | Gate | Type | Threshold |
+|---|------|------|-----------|
+| G1 | Trade Sufficiency | HARD | trades ≥ 20 (blocks all verdicts if fail → `INSUFFICIENT_SAMPLE`) |
+| G2 | Purged Walk-Forward | HARD (soft @ 3/5) | ≥ 4/5 folds with P&L > $0 or PF > 1 |
+| G3 | Rolling Windows | HARD | ≥ 70% windows P&L > $0 |
+| G4 | Friction Stress | HARD | P&L > $0 at BOTH 72bps and 102bps regimes |
+| G5 | Concentration | HARD | top1 < 40% AND top3 < 70% of positive P&L |
+| G6 | Latency Proxy | INFO | reads G4 1-candle result; does NOT independently cause NO-GO |
+
+**Definitions locked in GATES.md**: WF = 5 folds, chronological, embargo=2, fold_size=134 bars, indicators causal per fold. Rolling = 180-bar non-overlapping windows, leftover included if ≥ 90 bars. "Positive" = `pnl > 0`.
+
+**Consequence**: Code (`hf_validate.py`) unchanged — already implements this. Reports now say "5 hard + 1 informational" instead of "6/6".
+
+---
+
+## ADR-HF-006: Volume Ablation — Edge MODERATE Dependence on Anomaly Symbols
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Data audit flagged 147/425 symbols (volume spikes, zero-vol runs, low bar count). Entry signal uses `vol_spike_mult`, so edge could lean on "volume noise" coins.
+
+**Evidence** (volume_ablation_001):
+
+| Subset | Champion H2 | GRID_BEST |
+|--------|-------------|-----------|
+| ALL (425) | $+4,114 / 31 trades / PF 2.73 | $+4,718 / 32 trades / PF 2.61 |
+| CLEAN (278) | $+2,374 / 24 trades / PF 2.26 | $+3,058 / 22 trades / PF 3.44 |
+| FLAGGED (147) | $+2 / 25 trades / PF 1.00 | $+406 / 26 trades / PF 1.22 |
+| Clean ratio | 57.7% | 64.8% |
+| Verdict | MODERATE | MODERATE |
+
+**Decision**: Edge survives on clean symbols but is modestly diluted (~35-42% P&L comes from flagged symbols). This is NOT critical — flagged symbols are tradeable on Kraken, and the vol_spike_mult filter is working as designed. However, GRID_BEST is more robust on clean symbols (PF improves from 2.61 → 3.44).
+
+**Action**: Monitor clean-subset performance on future timeframes. Do NOT exclude flagged symbols yet — they are real tradeable assets with real volume events.
+
+---
+
+## ADR-HF-007: Latency Fragility — ROBUST After Proper Stress Test
+
+**Date**: 2026-02-15
+**Status**: DECIDED — supersedes initial concern from Sprint 1
+**Context**: Sprint 1 showed -55.6% P&L at 1-candle-later entry (fixed fee model). This looked like a red flag. Sprint 1.5 ran proper Monte Carlo stress test with random 0/1/2-candle delays.
+
+**Evidence** (latency_stress_001):
+
+| Config | 0-candle | 1-candle | 2-candle | MC Mean | MC P5 | Survival | Verdict |
+|--------|----------|----------|----------|---------|-------|----------|---------|
+| Champion H2 | $+4,114 | $+1,827 | $+801 | $+2,888 | $+801 | 100% | ROBUST |
+| GRID_BEST | $+4,718 | $+2,144 | $+1,004 | $+3,203 | $+1,004 | 100% | ROBUST |
+
+**Decision**: Latency fragility is NOT a blocking concern. Both configs remain profitable even at worst-case 2-candle delay. 100% survival across 50 Monte Carlo trials. The -55.6% figure was misleading — it's P&L degradation, not P&L destruction.
+
+**Key insight**: At 4H timeframe, a 1-candle delay = 4 hours. Real execution latency is seconds, not hours. Latency risk is primarily relevant at sub-4H timeframes.
+
+---
+
+## ADR-HF-008: Universe Tiering — Edge Depends on Mid-Cap, NOT Liquid Coins
+
+**Date**: 2026-02-15
+**Status**: DECIDED — critical finding for live trading
+**Context**: Worst coin (COQ/USD) suggested microcap dependency. Universe tiering tested 3 tiers by liquidity.
+
+**Evidence** (universe_tiering_001):
+
+| Tier | Count | Median Vol | Champion H2 P&L | GRID_BEST P&L |
+|------|-------|-----------|-----------------|----------------|
+| Tier 1 (Liquid, top 25%) | 100 | 1.29M | $+38 (0.9%) | $+284 (6.0%) |
+| Tier 2 (Mid, P25-P75) | 216 | 44.8K | $+1,695 (41.2%) | $+1,795 (38.0%) |
+| Tier 3 (Illiquid, bottom) | 109 | 2.0K | $+697 (17.0%) | $+837 (17.7%) |
+| Full universe | 425 | — | $+4,114 | $+4,718 |
+
+**Decision**: The DualConfirm edge is concentrated in **Tier 2 (mid-cap)** coins. Tier 1 liquid coins contribute almost nothing. This is a structural characteristic of the vol_spike_mult entry filter — liquid coins have less dramatic volume events.
+
+**Implication for live trading**:
+1. Strategy cannot run on liquid-only universe — edge collapses
+2. Mid-cap + illiquid coins ARE the edge, but carry execution risk (wider spreads, thinner books)
+3. The flat slippage model (20bps uniform) is OPTIMISTIC for Tier 2/3 coins
+4. This reinforces ADR-HF-002: true alpha requires different signal families or lower timeframes
+
+**Action**: When building 1H/15m pipeline, include a per-coin slippage model calibrated to volume tier. Do NOT assume flat 20bps for Tier 3 coins.
+
+---
+
+## Sprint 1.5 Summary
+
+**Deliverables**:
+| Fix | Artifact | Finding |
+|-----|----------|---------|
+| Gate canon | GATES.md | 5 hard + 1 informational, definitions locked |
+| Volume ablation | hf_volume_ablation.py + report | MODERATE — 58-65% edge survives clean |
+| Latency stress | hf_latency_stress.py + report | ROBUST — 100% survival, 50 MC trials |
+| Universe tiering | hf_universe_tiering.py + report | CRITICAL — edge depends on Tier 2, Tier 1 ≈ 0% |
+
+**Updated Sprint 2 Recommendations** (revised from Sprint 1):
+1. Build 1H/15m data pipeline with per-coin volume tier metadata
+2. Calibrate slippage model per tier (flat 20bps is optimistic for Tier 2/3)
+3. Test whether DualConfirm edge exists at all on Tier 1 coins at lower timeframes
+4. Explore new signal families designed for liquid coins (momentum, order flow)
+5. Address HIGH red-team risks: stop-loss fill realism + tier-aware slippage
+
+---
+
 ## Sprint 1 Summary
 
 **Deliverables**:

@@ -1,0 +1,124 @@
+# HF Universe Tiering Report -- 4H Variant Research
+
+> **Question**: Does the strategy edge depend on illiquid/low-quality coins?
+
+**Date**: 2026-02-15 13:32
+**Universe**: tradeable
+**Data**: `candle_cache_tradeable.json`
+**Total coins**: 425
+**Max bars**: 721
+**Runtime**: 99.0s
+
+## 1. Universe Breakdown
+
+### Tier Definitions
+
+| Tier | Label | Volume Threshold | Zero-Vol% | Coverage% |
+|------|-------|-----------------|-----------|-----------|
+| 1 | Liquid | >= P75 (256,531.70) | < 5.0% | >= 99% |
+| 2 | Mid | >= P25 (8,288.21) | < 20.0% | >= 95% |
+| 3 | Illiquid | Below Tier 2 | any | any |
+
+**Volume percentiles**: P25=8,288.21, P50=43,843.56, P75=256,531.70
+
+### Tier Characteristics
+
+| Tier | Count | Median Vol | Avg Zero-Vol% | Avg Coverage% | Avg Max Wick | Vol Range |
+|------|-------|-----------|---------------|---------------|-------------|-----------|
+| 1 (Liquid) | 100 | 1,286,941.71 | 0.7% | 100.0% | 0.7298 | 256,531.70 - 42,040,584,757.41 |
+| 2 (Mid) | 216 | 44,751.19 | 3.3% | 99.9% | 0.4256 | 8,288.21 - 68,915,728.34 |
+| 3 (Illiquid) | 109 | 2,025.40 | 5.6% | 100.0% | 0.3978 | 0.93 - 233,786.43 |
+
+## 2. Performance Per Tier
+
+### Champion_H2
+
+**Config**: `{"exit_type": "tp_sl", "max_pos": 1, "rsi_max": 45, "sl_pct": 8, "time_max_bars": 15, "tp_pct": 12, "vol_confirm": true, "vol_spike_mult": 3.0}`
+
+| Subset | Coins | Trades | P&L | PF | WR% | DD% |
+|--------|-------|--------|-----|----|-----|-----|
+| **Full Universe** | 425 | 31 | $+4,113.50 | 2.73 | 67.7% | 24.7% |
+| Tier 1 (Liquid) | 100 | 17 | $+38.39 | 1.03 | 47.1% | 35.4% |
+| Tier 2 (Mid) | 216 | 23 | $+1,695.48 | 1.99 | 65.2% | 19.5% |
+| Tier 3 (Illiquid) | 109 | 16 | $+697.45 | 1.76 | 68.8% | 20.5% |
+
+### GRID_BEST
+
+**Config**: `{"exit_type": "tp_sl", "max_pos": 1, "rsi_max": 45, "sl_pct": 10, "time_max_bars": 15, "tp_pct": 12, "vol_confirm": true, "vol_spike_mult": 2.5}`
+
+| Subset | Coins | Trades | P&L | PF | WR% | DD% |
+|--------|-------|--------|-----|----|-----|-----|
+| **Full Universe** | 425 | 32 | $+4,718.27 | 2.61 | 68.8% | 16.4% |
+| Tier 1 (Liquid) | 100 | 18 | $+283.60 | 1.19 | 55.6% | 36.4% |
+| Tier 2 (Mid) | 216 | 22 | $+1,795.43 | 2.24 | 68.2% | 20.8% |
+| Tier 3 (Illiquid) | 109 | 17 | $+837.04 | 1.76 | 70.6% | 23.9% |
+
+## 3. P&L Contribution Analysis
+
+### Champion_H2
+
+| Tier | P&L | P&L Share | Trades | Trades Share |
+|------|-----|-----------|--------|-------------|
+| 1 (Liquid) | $+38.39 | +0.9% | 17 | 30.4% |
+| 2 (Mid) | $+1,695.48 | +41.2% | 23 | 41.1% |
+| 3 (Illiquid) | $+697.45 | +17.0% | 16 | 28.6% |
+
+**Best alpha tier**: Tier 2 (P&L=$+1,695.48, 41.2% of baseline)
+**Tier 1 retention**: 0.9% of baseline P&L
+
+### GRID_BEST
+
+| Tier | P&L | P&L Share | Trades | Trades Share |
+|------|-----|-----------|--------|-------------|
+| 1 (Liquid) | $+283.60 | +6.0% | 18 | 31.6% |
+| 2 (Mid) | $+1,795.43 | +38.1% | 22 | 38.6% |
+| 3 (Illiquid) | $+837.04 | +17.7% | 17 | 29.8% |
+
+**Best alpha tier**: Tier 2 (P&L=$+1,795.43, 38.1% of baseline)
+**Tier 1 retention**: 6.0% of baseline P&L
+
+## 4. Conclusion
+
+### Edge Survival Verdicts
+
+| Config | Verdict | Tier 1 Retention | Best Alpha Tier | Interpretation |
+|--------|---------|-----------------|-----------------|----------------|
+| Champion_H2 | **EDGE_DEPENDS_ON_ILLIQUID** | 0.9% | Tier 2 | Edge depends on illiquid coins. Tier 1 P&L=$+38.39 (0.9% of baseline). Live t... |
+| GRID_BEST | **EDGE_DEPENDS_ON_ILLIQUID** | 6.0% | Tier 2 | Edge depends on illiquid coins. Tier 1 P&L=$+283.60 (6.0% of baseline). Live ... |
+
+**Champion_H2**: Edge depends on illiquid coins. Tier 1 P&L=$+38.39 (0.9% of baseline). Live trading with liquid-only universe NOT recommended.
+
+**GRID_BEST**: Edge depends on illiquid coins. Tier 1 P&L=$+283.60 (6.0% of baseline). Live trading with liquid-only universe NOT recommended.
+
+### Overall Assessment
+
+**Edge depends on illiquid coins.** Both configs lose most of their 
+profitability when restricted to liquid coins only. Live trading on a 
+liquid-only universe is NOT recommended without further research.
+
+## 5. Recommended Universe Policy
+
+| Policy | Recommendation |
+|--------|---------------|
+| Live trading | NOT recommended on Tier 1 only |
+| Paper trading | Full universe; investigate illiquid coin edge |
+| Monitoring | Closely monitor Tier 3 coins for execution risk |
+| Risk | Illiquid edge may not be executable at scale |
+
+## Tier Thresholds Reference
+
+| Parameter | Tier 1 (Liquid) | Tier 2 (Mid) | Tier 3 (Illiquid) |
+|-----------|----------------|-------------|-------------------|
+| Volume | >= P75 | >= P25 | < P25 |
+| Zero-vol% | < 5.0% | < 20.0% | any |
+| Bar coverage | >= 99% | >= 95% | any |
+
+### Verdict Logic
+
+- `EDGE_SURVIVES_TIER1`: Tier 1 P&L > 0, PF > 1.0, and retains >= 50% of baseline
+- `EDGE_PARTIAL_TIER1`: Tier 1 P&L > 0 and retains >= 20% of baseline
+- `EDGE_DEPENDS_ON_ILLIQUID`: Tier 1 retention < 20% or P&L <= 0
+- `BASELINE_NEGATIVE`: Full universe has no positive edge
+
+---
+*Generated by hf_universe_tiering.py -- 4H variant research*

@@ -1,6 +1,6 @@
 # Part 2 Scoreboard — Gate Status per Candidate
 
-> Last updated: Cycle 2 complete (2026-02-16)
+> Last updated: Cycle 3 complete (2026-02-16)
 
 ## Hard Gates
 
@@ -38,7 +38,24 @@
 > OOS validation: STRUCTURAL_FEATURE — exclusion helps out-of-sample (C2-A3)
 > Minimum exclusion: 12 coins (not 21) for 7/7 gates — 9 coins of headroom (C2-A5)
 
-### v5 on 304 coins (excl_worst12) — 7/7 gates (ALTERNATIVE LEADER)
+### ⭐ sl=7 on 295 coins (excl_all_negative) — 7/7 gates PASS (ALTERNATIVE)
+| Gate | Value | Verdict |
+|------|-------|---------|
+| G1 | 12.82/wk | PASS |
+| G2 | 1.50d | PASS |
+| G3 | +$745/wk | PASS |
+| G4 | +$557/wk (2x stress) | PASS |
+| G5 | 9.8% | PASS |
+| G6 | 5/5 | PASS |
+| G7 | 12/12 (C2-A1) | PASS |
+| G8 | 33.1% | PASS |
+| **Score** | **7/7 ALL GATES PASS** | **🟢🟢 ALT GO** |
+
+> Source: C3-A3 sl7_295_001. sl=7 variant: better WF (5/5 vs 4/5) and fold_conc (33.1% vs 34.2%).
+> PF=2.715, 55 trades, DD=9.8%. V5 wins on raw P&L/PF but sl=7 wins on robustness metrics.
+> Both pass all 7 testable gates. sl=7 is more conservative (wider stop loss).
+
+### v5 on 304 coins (excl_worst12) — 8/8 gates PASS (CONSERVATIVE ALT)
 | Gate | Value | Verdict |
 |------|-------|---------|
 | G1 | 13.50/wk | PASS |
@@ -47,12 +64,13 @@
 | G4 | +$392/wk (2x stress) | PASS |
 | G5 | 11.8% | PASS |
 | G6 | 4/5 | PASS |
-| G7 | TBD | — |
+| G7 | **12/12** (C3-A1) | **PASS** |
 | G8 | 34.0% | PASS |
-| **Score** | **7/7 (G7 pending)** | **🟢 CANDIDATE** |
+| **Score** | **8/8 ALL GATES PASS** | **🟢🟢 GO** |
 
-> Source: C2-A5 excl_sweep_001. More conservative exclusion: only 12 worst coins.
-> PF=2.518, 58 trades, DD=11.8%, fold_conc=34.0%
+> Source: C2-A5 excl_sweep_001 + C3-A1 robustness_304_001. More conservative: only 12 worst coins excluded.
+> PF=2.518, 58 trades, DD=11.8%, fold_conc=34.0%. G7=12/12 (all survive stress, all WF>=3/5).
+> Top variant on 304: time_limit-2 (score=510.6, exp/wk=$638).
 
 ### tp10_sl4_tl8 on 295 coins — 6/7 gates (G8 FAIL)
 | Gate | Value | Verdict |
@@ -131,7 +149,15 @@
 
 ## Key Insights
 
-### Cycle 2 (NEW)
+### Cycle 3 (NEW)
+1. **G7 PASS 12/12 on 304 coins**: excl_worst12 also gets perfect G7 — TWO universes now pass all 8 gates
+2. **sl=7 on 295 coins: 7/7 gates + WF=5/5**: Better walk-forward (5/5 vs 4/5) and fold_conc (33.1% vs 34.2%) than v5 baseline
+3. **Rolling lookback: MARGINAL**: Only retains 22% of oracle P&L. Best rolling variant = $729 (vs oracle $3272). Not viable as sole production mechanism.
+4. **Persistent excludes (12 coins)**: Static list from rolling analysis gets 6/7 gates (G8 FAIL at 39.8%)
+5. **ADR HF-032 written**: GO decision for paper trading with v5 on 295 coins documented
+6. **Three viable production configs**: v5/295 (leader), sl7/295 (robustness alt), v5/304 (conservative alt)
+
+### Cycle 2
 1. **G7 PASS 12/12 on 295 coins**: ALL neighbors profitable, ALL survive stress — best G7 ever
 2. **excl_all_negative is STRUCTURAL**: OOS validation confirms it helps out-of-sample (C2-A3)
 3. **Minimum exclusion = 12 coins** (not 21): 9 coins of headroom for error (C2-A5)

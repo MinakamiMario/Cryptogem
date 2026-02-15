@@ -1,0 +1,1092 @@
+{
+  "run_header": {
+    "task": "part2_rolling_exclusion",
+    "agent": "C3-A2",
+    "date": "2026-02-16",
+    "commit": "9f691c0",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 5,
+      "time_limit": 10
+    },
+    "cost_regime": "MEXC Market",
+    "fees_bps": {
+      "tier1": 12.5,
+      "tier2": 23.5
+    },
+    "stress_fees_bps": {
+      "tier1": 25.0,
+      "tier2": 47.0
+    },
+    "universe": "T1(100)+T2(216)",
+    "timeframe": "1h",
+    "total_bars": 722,
+    "total_weeks": 4.3,
+    "runtime_s": 31.0,
+    "lookback_windows_tested": [
+      168,
+      336,
+      504
+    ],
+    "segment_size": 168,
+    "exclusion_modes": [
+      "all_negative",
+      "worst_12"
+    ]
+  },
+  "reference_baselines": {
+    "no_exclusion": {
+      "metrics": {
+        "trades": 72,
+        "pnl": 369.91,
+        "pf": 1.138,
+        "wr": 47.2,
+        "trades_per_week": 16.75,
+        "exp_per_week": 86.0735,
+        "max_dd_pct": 53.1,
+        "max_gap_days": 1.42,
+        "expectancy": 5.1377
+      },
+      "n_coins": 316
+    },
+    "oracle_excl_all_neg": {
+      "n_excluded": 21,
+      "excluded_coins": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "CFG/USD",
+        "DBR/USD",
+        "ESX/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "PNUT/USD",
+        "POLIS/USD",
+        "RARI/USD",
+        "SUKU/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD",
+        "WMTX/USD"
+      ],
+      "metrics": {
+        "trades": 56,
+        "pnl": 3272.13,
+        "pf": 2.834,
+        "wr": 64.3,
+        "trades_per_week": 13.03,
+        "exp_per_week": 761.3822,
+        "max_dd_pct": 8.6,
+        "max_gap_days": 1.5,
+        "expectancy": 58.4309
+      },
+      "gate_evaluation": {
+        "gates": {
+          "G1": {
+            "name": "Trades/week",
+            "value": 13.03,
+            "threshold": ">= 10",
+            "pass": true
+          },
+          "G2": {
+            "name": "Max gap (days)",
+            "value": 1.5,
+            "threshold": "<= 2.5",
+            "pass": true
+          },
+          "G3": {
+            "name": "Exp/week (market)",
+            "value": 761.38,
+            "threshold": "> $0",
+            "pass": true
+          },
+          "G4": {
+            "name": "Exp/week (P95 stress)",
+            "value": 570.62,
+            "threshold": "> $0",
+            "pass": true
+          },
+          "G5": {
+            "name": "Max DD%",
+            "value": 8.6,
+            "threshold": "<= 20%",
+            "pass": true
+          },
+          "G6": {
+            "name": "WF folds positive",
+            "value": "4/5",
+            "threshold": ">= 4/5",
+            "pass": true
+          },
+          "G8": {
+            "name": "Top-1 fold conc.",
+            "value": "34.2%",
+            "threshold": "< 35%",
+            "pass": true
+          }
+        },
+        "pass_count": 7,
+        "total_count": 7,
+        "score": "7/7",
+        "all_pass": true
+      }
+    }
+  },
+  "rolling_results": [
+    {
+      "label": "rolling_lb168_seg168_all_negative",
+      "lookback_bars": 168,
+      "lookback_weeks": 1.0,
+      "segment_size": 168,
+      "exclusion_mode": "all_negative",
+      "n_segments": 3,
+      "total_forward_bars": 504,
+      "metrics": {
+        "trades": 54,
+        "pnl": -63.59,
+        "pf": 0.968,
+        "wr": 46.3,
+        "trades_per_week": 18.0,
+        "exp_per_week": -21.1969,
+        "max_dd_pct": 58.1,
+        "max_gap_days": 1.29,
+        "expectancy": -1.1776
+      },
+      "segment_details": [
+        {
+          "segment": 0,
+          "seg_bars": [
+            218,
+            386
+          ],
+          "lb_bars": [
+            50,
+            218
+          ],
+          "lb_trades": 14,
+          "excluded_coins": [
+            "ANIME/USD",
+            "ELX/USD",
+            "HOUSE/USD",
+            "KET/USD",
+            "PNUT/USD"
+          ],
+          "n_excluded": 5,
+          "n_coins_active": 311,
+          "seg_trades": 20,
+          "seg_pnl": -474.99
+        },
+        {
+          "segment": 1,
+          "seg_bars": [
+            386,
+            554
+          ],
+          "lb_bars": [
+            218,
+            386
+          ],
+          "lb_trades": 21,
+          "excluded_coins": [
+            "AI3/USD",
+            "ANIME/USD",
+            "DBR/USD",
+            "LMWR/USD",
+            "NYM/USD",
+            "RARI/USD",
+            "REKT/USD",
+            "SIGMA/USD",
+            "TANSSI/USD",
+            "TITCOIN/USD",
+            "TOSHI/USD",
+            "VELODROME/USD",
+            "XYO/USD"
+          ],
+          "n_excluded": 13,
+          "n_coins_active": 303,
+          "seg_trades": 17,
+          "seg_pnl": -139.98
+        },
+        {
+          "segment": 2,
+          "seg_bars": [
+            554,
+            722
+          ],
+          "lb_bars": [
+            386,
+            554
+          ],
+          "lb_trades": 17,
+          "excluded_coins": [
+            "ALKIMI/USD",
+            "CFG/USD",
+            "GST/USD",
+            "KET/USD",
+            "KOBAN/USD",
+            "MXC/USD",
+            "ODOS/USD",
+            "PERP/USD",
+            "POLIS/USD",
+            "SUKU/USD"
+          ],
+          "n_excluded": 10,
+          "n_coins_active": 306,
+          "seg_trades": 17,
+          "seg_pnl": 551.38
+        }
+      ],
+      "stability": {
+        "avg_overlap_pct": 2.9,
+        "min_overlap_pct": 0.0,
+        "max_overlap_pct": 5.9,
+        "consecutive_overlaps": [
+          5.9,
+          0.0
+        ]
+      },
+      "coin_exclusion_frequency": {
+        "KET/USD": 66.7,
+        "ANIME/USD": 66.7,
+        "ELX/USD": 33.3,
+        "HOUSE/USD": 33.3,
+        "PNUT/USD": 33.3,
+        "NYM/USD": 33.3,
+        "DBR/USD": 33.3,
+        "LMWR/USD": 33.3,
+        "TITCOIN/USD": 33.3,
+        "VELODROME/USD": 33.3,
+        "TOSHI/USD": 33.3,
+        "SIGMA/USD": 33.3,
+        "TANSSI/USD": 33.3,
+        "AI3/USD": 33.3,
+        "RARI/USD": 33.3,
+        "REKT/USD": 33.3,
+        "XYO/USD": 33.3,
+        "SUKU/USD": 33.3,
+        "GST/USD": 33.3,
+        "CFG/USD": 33.3,
+        "MXC/USD": 33.3,
+        "ODOS/USD": 33.3,
+        "POLIS/USD": 33.3,
+        "PERP/USD": 33.3,
+        "ALKIMI/USD": 33.3,
+        "KOBAN/USD": 33.3
+      },
+      "persistent_excludes": [
+        "ANIME/USD",
+        "KET/USD"
+      ],
+      "n_persistent": 2
+    },
+    {
+      "label": "rolling_lb168_seg168_worst_12",
+      "lookback_bars": 168,
+      "lookback_weeks": 1.0,
+      "segment_size": 168,
+      "exclusion_mode": "worst_12",
+      "n_segments": 3,
+      "total_forward_bars": 504,
+      "metrics": {
+        "trades": 54,
+        "pnl": -63.59,
+        "pf": 0.968,
+        "wr": 46.3,
+        "trades_per_week": 18.0,
+        "exp_per_week": -21.1969,
+        "max_dd_pct": 58.1,
+        "max_gap_days": 1.29,
+        "expectancy": -1.1776
+      },
+      "segment_details": [
+        {
+          "segment": 0,
+          "seg_bars": [
+            218,
+            386
+          ],
+          "lb_bars": [
+            50,
+            218
+          ],
+          "lb_trades": 14,
+          "excluded_coins": [
+            "ANIME/USD",
+            "ELX/USD",
+            "HOUSE/USD",
+            "KET/USD",
+            "PNUT/USD"
+          ],
+          "n_excluded": 5,
+          "n_coins_active": 311,
+          "seg_trades": 20,
+          "seg_pnl": -474.99
+        },
+        {
+          "segment": 1,
+          "seg_bars": [
+            386,
+            554
+          ],
+          "lb_bars": [
+            218,
+            386
+          ],
+          "lb_trades": 21,
+          "excluded_coins": [
+            "AI3/USD",
+            "ANIME/USD",
+            "DBR/USD",
+            "LMWR/USD",
+            "NYM/USD",
+            "RARI/USD",
+            "REKT/USD",
+            "SIGMA/USD",
+            "TANSSI/USD",
+            "TITCOIN/USD",
+            "TOSHI/USD",
+            "VELODROME/USD"
+          ],
+          "n_excluded": 12,
+          "n_coins_active": 304,
+          "seg_trades": 17,
+          "seg_pnl": -139.98
+        },
+        {
+          "segment": 2,
+          "seg_bars": [
+            554,
+            722
+          ],
+          "lb_bars": [
+            386,
+            554
+          ],
+          "lb_trades": 17,
+          "excluded_coins": [
+            "ALKIMI/USD",
+            "CFG/USD",
+            "GST/USD",
+            "KET/USD",
+            "KOBAN/USD",
+            "MXC/USD",
+            "ODOS/USD",
+            "PERP/USD",
+            "POLIS/USD",
+            "SUKU/USD"
+          ],
+          "n_excluded": 10,
+          "n_coins_active": 306,
+          "seg_trades": 17,
+          "seg_pnl": 551.38
+        }
+      ],
+      "stability": {
+        "avg_overlap_pct": 3.1,
+        "min_overlap_pct": 0.0,
+        "max_overlap_pct": 6.2,
+        "consecutive_overlaps": [
+          6.2,
+          0.0
+        ]
+      },
+      "coin_exclusion_frequency": {
+        "KET/USD": 66.7,
+        "ANIME/USD": 66.7,
+        "ELX/USD": 33.3,
+        "HOUSE/USD": 33.3,
+        "PNUT/USD": 33.3,
+        "NYM/USD": 33.3,
+        "DBR/USD": 33.3,
+        "LMWR/USD": 33.3,
+        "TITCOIN/USD": 33.3,
+        "VELODROME/USD": 33.3,
+        "TOSHI/USD": 33.3,
+        "SIGMA/USD": 33.3,
+        "TANSSI/USD": 33.3,
+        "AI3/USD": 33.3,
+        "RARI/USD": 33.3,
+        "REKT/USD": 33.3,
+        "SUKU/USD": 33.3,
+        "GST/USD": 33.3,
+        "CFG/USD": 33.3,
+        "MXC/USD": 33.3,
+        "ODOS/USD": 33.3,
+        "POLIS/USD": 33.3,
+        "PERP/USD": 33.3,
+        "ALKIMI/USD": 33.3,
+        "KOBAN/USD": 33.3
+      },
+      "persistent_excludes": [
+        "ANIME/USD",
+        "KET/USD"
+      ],
+      "n_persistent": 2
+    },
+    {
+      "label": "rolling_lb336_seg168_all_negative",
+      "lookback_bars": 336,
+      "lookback_weeks": 2.0,
+      "segment_size": 168,
+      "exclusion_mode": "all_negative",
+      "n_segments": 2,
+      "total_forward_bars": 336,
+      "metrics": {
+        "trades": 31,
+        "pnl": 509.28,
+        "pf": 1.445,
+        "wr": 54.8,
+        "trades_per_week": 15.5,
+        "exp_per_week": 254.6412,
+        "max_dd_pct": 29.7,
+        "max_gap_days": 0.92,
+        "expectancy": 16.4285
+      },
+      "segment_details": [
+        {
+          "segment": 0,
+          "seg_bars": [
+            386,
+            554
+          ],
+          "lb_bars": [
+            50,
+            386
+          ],
+          "lb_trades": 35,
+          "excluded_coins": [
+            "AI3/USD",
+            "ANIME/USD",
+            "DBR/USD",
+            "ELX/USD",
+            "HOUSE/USD",
+            "KET/USD",
+            "LMWR/USD",
+            "PNUT/USD",
+            "RARI/USD",
+            "TANSSI/USD",
+            "TITCOIN/USD",
+            "TOSHI/USD"
+          ],
+          "n_excluded": 12,
+          "n_coins_active": 304,
+          "seg_trades": 15,
+          "seg_pnl": -159.1
+        },
+        {
+          "segment": 1,
+          "seg_bars": [
+            554,
+            722
+          ],
+          "lb_bars": [
+            218,
+            554
+          ],
+          "lb_trades": 38,
+          "excluded_coins": [
+            "AI3/USD",
+            "ALKIMI/USD",
+            "ANIME/USD",
+            "CFG/USD",
+            "DBR/USD",
+            "GST/USD",
+            "KET/USD",
+            "KOBAN/USD",
+            "LMWR/USD",
+            "MXC/USD",
+            "NYM/USD",
+            "ODOS/USD",
+            "PERP/USD",
+            "POLIS/USD",
+            "RARI/USD",
+            "REKT/USD",
+            "SIGMA/USD",
+            "SUKU/USD",
+            "TANSSI/USD",
+            "TITCOIN/USD",
+            "TOSHI/USD",
+            "VELODROME/USD",
+            "XYO/USD"
+          ],
+          "n_excluded": 23,
+          "n_coins_active": 293,
+          "seg_trades": 16,
+          "seg_pnl": 668.38
+        }
+      ],
+      "stability": {
+        "avg_overlap_pct": 34.6,
+        "min_overlap_pct": 34.6,
+        "max_overlap_pct": 34.6,
+        "consecutive_overlaps": [
+          34.6
+        ]
+      },
+      "coin_exclusion_frequency": {
+        "DBR/USD": 100.0,
+        "LMWR/USD": 100.0,
+        "TITCOIN/USD": 100.0,
+        "TOSHI/USD": 100.0,
+        "KET/USD": 100.0,
+        "TANSSI/USD": 100.0,
+        "AI3/USD": 100.0,
+        "RARI/USD": 100.0,
+        "ANIME/USD": 100.0,
+        "ELX/USD": 50.0,
+        "HOUSE/USD": 50.0,
+        "PNUT/USD": 50.0,
+        "MXC/USD": 50.0,
+        "ODOS/USD": 50.0,
+        "ALKIMI/USD": 50.0,
+        "XYO/USD": 50.0,
+        "NYM/USD": 50.0,
+        "GST/USD": 50.0,
+        "CFG/USD": 50.0,
+        "PERP/USD": 50.0,
+        "VELODROME/USD": 50.0,
+        "SIGMA/USD": 50.0,
+        "KOBAN/USD": 50.0,
+        "REKT/USD": 50.0,
+        "SUKU/USD": 50.0,
+        "POLIS/USD": 50.0
+      },
+      "persistent_excludes": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "CFG/USD",
+        "DBR/USD",
+        "ELX/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "KOBAN/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "NYM/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "PNUT/USD",
+        "POLIS/USD",
+        "RARI/USD",
+        "REKT/USD",
+        "SIGMA/USD",
+        "SUKU/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD",
+        "VELODROME/USD",
+        "XYO/USD"
+      ],
+      "n_persistent": 26
+    },
+    {
+      "label": "rolling_lb336_seg168_worst_12",
+      "lookback_bars": 336,
+      "lookback_weeks": 2.0,
+      "segment_size": 168,
+      "exclusion_mode": "worst_12",
+      "n_segments": 2,
+      "total_forward_bars": 336,
+      "metrics": {
+        "trades": 33,
+        "pnl": 456.1,
+        "pf": 1.441,
+        "wr": 51.5,
+        "trades_per_week": 16.5,
+        "exp_per_week": 228.0497,
+        "max_dd_pct": 29.7,
+        "max_gap_days": 0.92,
+        "expectancy": 13.8212
+      },
+      "segment_details": [
+        {
+          "segment": 0,
+          "seg_bars": [
+            386,
+            554
+          ],
+          "lb_bars": [
+            50,
+            386
+          ],
+          "lb_trades": 35,
+          "excluded_coins": [
+            "AI3/USD",
+            "ANIME/USD",
+            "DBR/USD",
+            "ELX/USD",
+            "HOUSE/USD",
+            "KET/USD",
+            "LMWR/USD",
+            "PNUT/USD",
+            "RARI/USD",
+            "TANSSI/USD",
+            "TITCOIN/USD",
+            "TOSHI/USD"
+          ],
+          "n_excluded": 12,
+          "n_coins_active": 304,
+          "seg_trades": 15,
+          "seg_pnl": -159.1
+        },
+        {
+          "segment": 1,
+          "seg_bars": [
+            554,
+            722
+          ],
+          "lb_bars": [
+            218,
+            554
+          ],
+          "lb_trades": 38,
+          "excluded_coins": [
+            "ANIME/USD",
+            "DBR/USD",
+            "GST/USD",
+            "KOBAN/USD",
+            "LMWR/USD",
+            "MXC/USD",
+            "ODOS/USD",
+            "REKT/USD",
+            "SIGMA/USD",
+            "SUKU/USD",
+            "TANSSI/USD",
+            "TITCOIN/USD"
+          ],
+          "n_excluded": 12,
+          "n_coins_active": 304,
+          "seg_trades": 18,
+          "seg_pnl": 615.2
+        }
+      ],
+      "stability": {
+        "avg_overlap_pct": 26.3,
+        "min_overlap_pct": 26.3,
+        "max_overlap_pct": 26.3,
+        "consecutive_overlaps": [
+          26.3
+        ]
+      },
+      "coin_exclusion_frequency": {
+        "DBR/USD": 100.0,
+        "LMWR/USD": 100.0,
+        "TITCOIN/USD": 100.0,
+        "TANSSI/USD": 100.0,
+        "ANIME/USD": 100.0,
+        "TOSHI/USD": 50.0,
+        "ELX/USD": 50.0,
+        "KET/USD": 50.0,
+        "HOUSE/USD": 50.0,
+        "AI3/USD": 50.0,
+        "PNUT/USD": 50.0,
+        "RARI/USD": 50.0,
+        "SUKU/USD": 50.0,
+        "GST/USD": 50.0,
+        "MXC/USD": 50.0,
+        "SIGMA/USD": 50.0,
+        "ODOS/USD": 50.0,
+        "KOBAN/USD": 50.0,
+        "REKT/USD": 50.0
+      },
+      "persistent_excludes": [
+        "AI3/USD",
+        "ANIME/USD",
+        "DBR/USD",
+        "ELX/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "KOBAN/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "ODOS/USD",
+        "PNUT/USD",
+        "RARI/USD",
+        "REKT/USD",
+        "SIGMA/USD",
+        "SUKU/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD"
+      ],
+      "n_persistent": 19
+    },
+    {
+      "label": "rolling_lb504_seg168_all_negative",
+      "lookback_bars": 504,
+      "lookback_weeks": 3.0,
+      "segment_size": 168,
+      "exclusion_mode": "all_negative",
+      "n_segments": 1,
+      "total_forward_bars": 168,
+      "metrics": {
+        "trades": 16,
+        "pnl": 625.93,
+        "pf": 3.092,
+        "wr": 68.8,
+        "trades_per_week": 16.0,
+        "exp_per_week": 625.9307,
+        "max_dd_pct": 4.6,
+        "max_gap_days": 0.92,
+        "expectancy": 39.1207
+      },
+      "segment_details": [
+        {
+          "segment": 0,
+          "seg_bars": [
+            554,
+            722
+          ],
+          "lb_bars": [
+            50,
+            554
+          ],
+          "lb_trades": 52,
+          "excluded_coins": [
+            "AI3/USD",
+            "ALKIMI/USD",
+            "ANIME/USD",
+            "CFG/USD",
+            "DBR/USD",
+            "GST/USD",
+            "HOUSE/USD",
+            "KET/USD",
+            "KOBAN/USD",
+            "LMWR/USD",
+            "MXC/USD",
+            "ODOS/USD",
+            "PERP/USD",
+            "PNUT/USD",
+            "POLIS/USD",
+            "RARI/USD",
+            "SUKU/USD",
+            "TANSSI/USD",
+            "TITCOIN/USD",
+            "TOSHI/USD"
+          ],
+          "n_excluded": 20,
+          "n_coins_active": 296,
+          "seg_trades": 16,
+          "seg_pnl": 625.93
+        }
+      ],
+      "stability": {
+        "avg_overlap_pct": 0,
+        "min_overlap_pct": 0,
+        "max_overlap_pct": 0,
+        "consecutive_overlaps": []
+      },
+      "coin_exclusion_frequency": {
+        "TOSHI/USD": 100.0,
+        "MXC/USD": 100.0,
+        "HOUSE/USD": 100.0,
+        "ODOS/USD": 100.0,
+        "ALKIMI/USD": 100.0,
+        "PNUT/USD": 100.0,
+        "GST/USD": 100.0,
+        "TITCOIN/USD": 100.0,
+        "CFG/USD": 100.0,
+        "PERP/USD": 100.0,
+        "RARI/USD": 100.0,
+        "DBR/USD": 100.0,
+        "KET/USD": 100.0,
+        "TANSSI/USD": 100.0,
+        "KOBAN/USD": 100.0,
+        "SUKU/USD": 100.0,
+        "LMWR/USD": 100.0,
+        "POLIS/USD": 100.0,
+        "AI3/USD": 100.0,
+        "ANIME/USD": 100.0
+      },
+      "persistent_excludes": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "CFG/USD",
+        "DBR/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "KOBAN/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "PNUT/USD",
+        "POLIS/USD",
+        "RARI/USD",
+        "SUKU/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD"
+      ],
+      "n_persistent": 20
+    },
+    {
+      "label": "rolling_lb504_seg168_worst_12",
+      "lookback_bars": 504,
+      "lookback_weeks": 3.0,
+      "segment_size": 168,
+      "exclusion_mode": "worst_12",
+      "n_segments": 1,
+      "total_forward_bars": 168,
+      "metrics": {
+        "trades": 17,
+        "pnl": 728.96,
+        "pf": 4.693,
+        "wr": 64.7,
+        "trades_per_week": 17.0,
+        "exp_per_week": 728.9563,
+        "max_dd_pct": 4.6,
+        "max_gap_days": 0.75,
+        "expectancy": 42.8798
+      },
+      "segment_details": [
+        {
+          "segment": 0,
+          "seg_bars": [
+            554,
+            722
+          ],
+          "lb_bars": [
+            50,
+            554
+          ],
+          "lb_trades": 52,
+          "excluded_coins": [
+            "ANIME/USD",
+            "DBR/USD",
+            "GST/USD",
+            "HOUSE/USD",
+            "KET/USD",
+            "KOBAN/USD",
+            "LMWR/USD",
+            "MXC/USD",
+            "ODOS/USD",
+            "PERP/USD",
+            "TANSSI/USD",
+            "TITCOIN/USD"
+          ],
+          "n_excluded": 12,
+          "n_coins_active": 304,
+          "seg_trades": 17,
+          "seg_pnl": 728.96
+        }
+      ],
+      "stability": {
+        "avg_overlap_pct": 0,
+        "min_overlap_pct": 0,
+        "max_overlap_pct": 0,
+        "consecutive_overlaps": []
+      },
+      "coin_exclusion_frequency": {
+        "DBR/USD": 100.0,
+        "LMWR/USD": 100.0,
+        "GST/USD": 100.0,
+        "TITCOIN/USD": 100.0,
+        "MXC/USD": 100.0,
+        "KET/USD": 100.0,
+        "HOUSE/USD": 100.0,
+        "TANSSI/USD": 100.0,
+        "ODOS/USD": 100.0,
+        "PERP/USD": 100.0,
+        "KOBAN/USD": 100.0,
+        "ANIME/USD": 100.0
+      },
+      "persistent_excludes": [
+        "ANIME/USD",
+        "DBR/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "KOBAN/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD"
+      ],
+      "n_persistent": 12
+    }
+  ],
+  "best_rolling": {
+    "label": "rolling_lb504_seg168_worst_12",
+    "metrics": {
+      "trades": 17,
+      "pnl": 728.96,
+      "pf": 4.693,
+      "wr": 64.7,
+      "trades_per_week": 17.0,
+      "exp_per_week": 728.9563,
+      "max_dd_pct": 4.6,
+      "max_gap_days": 0.75,
+      "expectancy": 42.8798
+    },
+    "persistent_excludes": [
+      "ANIME/USD",
+      "DBR/USD",
+      "GST/USD",
+      "HOUSE/USD",
+      "KET/USD",
+      "KOBAN/USD",
+      "LMWR/USD",
+      "MXC/USD",
+      "ODOS/USD",
+      "PERP/USD",
+      "TANSSI/USD",
+      "TITCOIN/USD"
+    ],
+    "n_persistent": 12,
+    "stability": {
+      "avg_overlap_pct": 0,
+      "min_overlap_pct": 0,
+      "max_overlap_pct": 0,
+      "consecutive_overlaps": []
+    },
+    "coin_exclusion_frequency": {
+      "DBR/USD": 100.0,
+      "LMWR/USD": 100.0,
+      "GST/USD": 100.0,
+      "TITCOIN/USD": 100.0,
+      "MXC/USD": 100.0,
+      "KET/USD": 100.0,
+      "HOUSE/USD": 100.0,
+      "TANSSI/USD": 100.0,
+      "ODOS/USD": 100.0,
+      "PERP/USD": 100.0,
+      "KOBAN/USD": 100.0,
+      "ANIME/USD": 100.0
+    }
+  },
+  "gate_evaluation_persistent": {
+    "label": "rolling_persistent_excl (12 coins)",
+    "metrics": {
+      "trades": 57,
+      "pnl": 2416.37,
+      "pf": 2.697,
+      "wr": 59.6,
+      "trades_per_week": 13.26,
+      "exp_per_week": 562.2587,
+      "max_dd_pct": 13.9,
+      "max_gap_days": 2.04,
+      "expectancy": 42.3925
+    },
+    "stress_metrics": {
+      "pnl": 1701.19,
+      "pf": 2.068,
+      "exp_per_week": 395.8456
+    },
+    "wf_folds_positive": 4,
+    "wf_fold_details": [
+      {
+        "fold": 0,
+        "trades": 10,
+        "pnl": 731.9,
+        "positive": true
+      },
+      {
+        "fold": 1,
+        "trades": 14,
+        "pnl": 26.97,
+        "positive": true
+      },
+      {
+        "fold": 2,
+        "trades": 9,
+        "pnl": -34.11,
+        "positive": false
+      },
+      {
+        "fold": 3,
+        "trades": 10,
+        "pnl": 853.79,
+        "positive": true
+      },
+      {
+        "fold": 4,
+        "trades": 14,
+        "pnl": 531.08,
+        "positive": true
+      }
+    ],
+    "fold_concentration": {
+      "top1_fold_conc_pct": 39.8,
+      "fold_pnls": {
+        "0": 731.9,
+        "1": 26.97,
+        "2": -34.11,
+        "3": 853.79,
+        "4": 531.08
+      }
+    },
+    "gate_evaluation": {
+      "gates": {
+        "G1": {
+          "name": "Trades/week",
+          "value": 13.26,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max gap (days)",
+          "value": 2.04,
+          "threshold": "<= 2.5",
+          "pass": true
+        },
+        "G3": {
+          "name": "Exp/week (market)",
+          "value": 562.26,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Exp/week (P95 stress)",
+          "value": 395.85,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max DD%",
+          "value": 13.9,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "WF folds positive",
+          "value": "4/5",
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "name": "Top-1 fold conc.",
+          "value": "39.8%",
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "pass_count": 6,
+      "total_count": 7,
+      "score": "6/7",
+      "all_pass": false
+    },
+    "runtime_s": 0.3
+  },
+  "verdict": {
+    "result": "ROLLING_MARGINAL",
+    "detail": "Rolling lookback retains only 22% of oracle P&L. Most exclusion benefit requires forward-looking knowledge.",
+    "oracle_pnl": 3272.13,
+    "best_rolling_pnl": 728.96,
+    "retention_pct": 22.3
+  }
+}

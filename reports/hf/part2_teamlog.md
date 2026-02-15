@@ -167,3 +167,70 @@ The leader config (v5 + excl_all_negative on 295 coins) now has:
 **Remaining P0 items**: None critical — all 8 gates PASS.
 
 ---
+
+## Cycle 3
+
+### Assignments
+| Agent | Task | Status |
+|-------|------|--------|
+| C3-A1 (Robustness 304) | G7 robustness on 304-coin universe (excl_worst12) | ✅ DONE |
+| C3-A2 (Rolling Exclusion) | Rolling lookback window for production coin exclusion | ✅ DONE |
+| C3-A3 (sl=7 Test) | sl=7 variant full gate test on 295 coins | ✅ DONE |
+| C3-A4 (ADR Writer) | ADR HF-032: Universe Reduction GO decision | ✅ DONE |
+
+### Agent Log Entries
+
+#### C3-A1 — G7 Robustness on 304 Coins ⭐ PERFECT SCORE
+- **Report**: `part2_robustness_304_001.json` + `.md`
+- **Attempt**: 12-variant neighborhood sweep on 304-coin universe (excl_worst12)
+- **Metrics**: G7 = **12/12 profitable** (all variants). ALL 12 survive stress 2x. ALL 12 have WF >= 3/5.
+- **Learnings**: 304-coin universe (more conservative, only 12 excluded) also gets perfect G7. Top variant: time_limit-2 (score=510.6, exp/wk=$638, PF=2.596, WF=4/5). dev_thresh-0.2 close second (score=506.6). Confirms the robustness holds even with fewer exclusions.
+- **Next move**: → 304-coin universe now also passes ALL 8 gates (including G7=12/12).
+
+#### C3-A2 — Rolling Lookback Exclusion ⚠️ MARGINAL
+- **Report**: `part2_rolling_exclusion_001.json` + `.md`
+- **Attempt**: Simulate rolling lookback window (168/336/504 bars) for coin exclusion in production
+- **Metrics**:
+  - lb168 (1wk): P&L=$-64, PF=0.968, overlap=3% — worse than no exclusion
+  - lb336 (2wk): P&L=$509, PF=1.445, overlap=35% — marginal improvement
+  - lb504 (3wk): P&L=$729, PF=4.693 (worst_12 mode) — best rolling, but only 22% of oracle P&L
+  - Persistent excludes (12 coins, 100% freq): Static list gets 6/7 gates (G8 FAIL at 39.8%)
+- **Learnings**: Rolling lookback retains only 22% of oracle P&L ($729 vs $3272). Short windows (1wk) have near-zero overlap between segments — unstable lists. The exclusion list is not predictable from recent data alone. Static persistent excludes provide better signal.
+- **Next move**: → Rolling exclusion not viable as sole mechanism. Consider hybrid: static persistent excludes + periodic review.
+
+#### C3-A3 — sl=7 on 295 Coins ⭐ 7/7 + WF=5/5
+- **Report**: `part2_sl7_295_001.json` + `.md`
+- **Attempt**: Full gate test of sl=7 variant (G7 top scorer) vs v5 baseline on 295 coins
+- **Metrics**:
+  - sl=7: 55 trades, PF=2.715, WR=63.6%, Exp/wk=$745, DD=9.8%, WF=**5/5**, fold_conc=**33.1%**, gates=**7/7**
+  - v5 (sl=5): 56 trades, PF=2.834, WR=64.3%, Exp/wk=$762, DD=8.6%, WF=4/5, fold_conc=34.2%, gates=7/7
+- **Learnings**: Both pass all 7 testable gates. sl=7 wins on robustness: WF=5/5 (all folds profitable) and fold_conc=33.1% (more headroom on G8). v5 wins on raw metrics: higher P&L, PF, lower DD. sl=7 is a valid alternative for production if robustness is prioritized over raw performance.
+- **Next move**: → sl=7 is a credible alternative. v5 remains leader on raw performance.
+
+#### C3-A4 — ADR HF-032
+- **Report**: ADR HF-032 appended to `strategies/hf/DECISIONS.md`
+- **Attempt**: Document the Universe Reduction GO decision with full evidence
+- **Content**: 75-line ADR with gate table, evidence from all 12 agents across 3 cycles, risks (forward-looking bias, market regime change), alternatives (304-coin conservative, 316-coin aggressive), and consequences.
+- **Status**: APPROVED. Supersedes ADR-HF-031. Decision: GO for paper trading with v5 on 295 coins.
+
+### Cycle 3 Synthesis
+
+**THREE VIABLE PRODUCTION CONFIGS IDENTIFIED** ⭐
+
+| Config | Universe | Gates | PF | WF | Fold Conc | DD | Notes |
+|--------|----------|-------|----|----|-----------|----|-------|
+| v5 (sl=5) | 295 coins | 8/8 | 2.834 | 4/5 | 34.2% | 8.6% | **LEADER** — best raw metrics |
+| sl=7 | 295 coins | 7/7 | 2.715 | 5/5 | 33.1% | 9.8% | **ALT** — best robustness (WF=5/5) |
+| v5 (sl=5) | 304 coins | 8/8 | 2.518 | 4/5 | 34.0% | 11.8% | **CONSERVATIVE** — fewer exclusions |
+
+**Rolling lookback tested but MARGINAL**: Only retains 22% of oracle P&L. Static persistent excludes are more viable.
+
+**ADR HF-032 written**: GO decision documented with full evidence trail.
+
+**Remaining questions for Cycle 4**:
+- Multi-position capacity (max_pos=2) — more trades, different risk profile?
+- Deeper OOS with longer rolling window or expanding window?
+- Time-of-day analysis — are certain hours better?
+- Per-tier edge decomposition on 295 coins
+
+---

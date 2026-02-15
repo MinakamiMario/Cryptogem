@@ -1,6 +1,6 @@
 # Part 2 Backlog — Priority Queue
 
-> Last updated: Cycle 2 complete (2026-02-16)
+> Last updated: Cycle 3 complete (2026-02-16)
 
 ## P0 — Critical (blocks GO decision)
 | # | Card | Owner | Status |
@@ -8,22 +8,23 @@
 | — | *All P0 items resolved* | — | ✅ |
 
 **ALL 8 GATES PASS** on v5 + excl_all_negative (295 coins).
+**ADR HF-032 written** — GO decision documented.
 
 ## P1 — Important (improves confidence)
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| P1-1 | G7 robustness on excl_worst12 (304 coins) | — | ⏳ Cycle 3 |
-| P1-2 | Rolling lookback window for coin exclusion (production mechanism) | — | ⏳ Cycle 3 |
-| P1-3 | Multi-pos capacity (max_pos=2) on winning config | — | ⏳ Cycle 3 |
-| P1-4 | Deeper OOS: 60/40 train/test split with rolling window | — | ⏳ Cycle 3 |
+| P1-3 | Multi-pos capacity (max_pos=2) on winning config | — | ⏳ Cycle 4 |
+| P1-4 | Deeper OOS: expanding window or 60/40 split | — | ⏳ Cycle 4 |
+| P1-5 | Time-of-day analysis on winning config | — | ⏳ Cycle 4 |
+| P1-6 | Per-tier edge decomposition on 295 coins | — | ⏳ Cycle 4 |
 
 ## P2 — Nice-to-have
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| P2-1 | Time-of-day analysis on winning config | — | ⏳ |
-| P2-2 | ADR HF-032 draft (Cycle 2 results → GO decision) | — | ⏳ |
-| P2-3 | Per-tier edge decomposition on 295 coins | — | ⏳ |
-| P2-4 | Explore sl=7 variant on 295 coins (top G7 scorer) | — | ⏳ |
+| P2-1 | Hybrid exclusion: static persistent + periodic rolling review | — | ⏳ |
+| P2-2 | sl=7 + excl_worst12 (304 coins) cross-test | — | ⏳ |
+| P2-3 | Correlation analysis: coin P&L vs BTC regime | — | ⏳ |
+| P2-4 | Max drawdown duration analysis on v5/295 | — | ⏳ |
 
 ## Completed (Cycle 1)
 | # | Card | Owner | Result |
@@ -44,3 +45,11 @@
 | ~~P0-4~~ | Combo test (tp10+excl) | C2-A4 | ❌ v5 beats tp10 on 295 coins |
 | ~~P0-5~~ | Exclusion threshold sweep | C2-A5 | ⭐ **Min exclusion = 12 coins** (9 headroom) |
 | ~~P1-2~~ | Stress 2x + attribution | C2-A6 | ⭐ **Breakeven 5.00x** (was 1.71x on 316) |
+
+## Completed (Cycle 3)
+| # | Card | Owner | Result |
+|---|------|-------|--------|
+| ~~P1-1~~ | G7 robustness on 304 coins | C3-A1 | ⭐ **12/12 PASS — perfect G7 on excl_worst12** |
+| ~~P1-2~~ | Rolling lookback exclusion | C3-A2 | ⚠️ MARGINAL (22% of oracle P&L retained) |
+| ~~P2-4~~ | sl=7 variant on 295 coins | C3-A3 | ⭐ **7/7 gates + WF=5/5 + fold_conc=33.1%** |
+| ~~P2-2~~ | ADR HF-032 draft | C3-A4 | ✅ **GO decision documented** |

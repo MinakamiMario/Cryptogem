@@ -1,0 +1,1366 @@
+{
+  "run_header": {
+    "task": "part2_sl7_295",
+    "agent": "C3-A3",
+    "date": "2026-02-16",
+    "commit": "9f691c0",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "candidate_params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 7,
+      "time_limit": 10
+    },
+    "baseline_params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 5,
+      "time_limit": 10
+    },
+    "cost_regime": "MEXC Market",
+    "fees_bps": {
+      "tier1": 12.5,
+      "tier2": 23.5
+    },
+    "stress_fees_bps": {
+      "tier1": 25.0,
+      "tier2": 47.0
+    },
+    "universe": "295 (T1=96, T2=199)",
+    "universe_source": "excl_all_negative (316 - 21 net-negative)",
+    "excluded_coins": [
+      "AI3/USD",
+      "ALKIMI/USD",
+      "ANIME/USD",
+      "CFG/USD",
+      "DBR/USD",
+      "ESX/USD",
+      "GST/USD",
+      "HOUSE/USD",
+      "KET/USD",
+      "LMWR/USD",
+      "MXC/USD",
+      "ODOS/USD",
+      "PERP/USD",
+      "PNUT/USD",
+      "POLIS/USD",
+      "RARI/USD",
+      "SUKU/USD",
+      "TANSSI/USD",
+      "TITCOIN/USD",
+      "TOSHI/USD",
+      "WMTX/USD"
+    ],
+    "timeframe": "1h",
+    "total_bars": 721,
+    "total_weeks": 4.3,
+    "runtime_s": 28.0
+  },
+  "sl7_candidate": {
+    "params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 7,
+      "time_limit": 10
+    },
+    "baseline": {
+      "metrics": {
+        "trades": 55,
+        "pnl": 3195.61,
+        "pf": 2.715,
+        "wr": 63.6,
+        "trades_per_week": 12.82,
+        "exp_per_week": 744.6071,
+        "max_dd_pct": 9.8,
+        "max_gap_days": 1.5,
+        "expectancy": 58.1019
+      },
+      "concentration": {
+        "top1_pct": 12.6,
+        "top3_pct": 31.0,
+        "top1_coin": "XL1/USD"
+      },
+      "n_coins_with_trades": 41
+    },
+    "stress_2x": {
+      "trades": 55,
+      "pnl": 2391.91,
+      "pf": 2.232,
+      "exp_per_week": 557.3392
+    },
+    "walk_forward": {
+      "n_folds": 5,
+      "folds_positive": 5,
+      "fold_details": [
+        {
+          "fold": 0,
+          "trades": 10,
+          "pnl": 862.71,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 12,
+          "pnl": 74.23,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": 34.56,
+          "positive": true
+        },
+        {
+          "fold": 3,
+          "trades": 9,
+          "pnl": 792.44,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 15,
+          "pnl": 838.89,
+          "positive": true
+        }
+      ],
+      "fold_concentration": {
+        "top1_fold_conc_pct": 33.1,
+        "fold_pnls": {
+          "0": 862.71,
+          "1": 74.23,
+          "2": 34.56,
+          "3": 792.44,
+          "4": 838.89
+        }
+      }
+    },
+    "gate_evaluation": {
+      "gates": {
+        "G1": {
+          "name": "Trades/week",
+          "value": 12.82,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max gap (days)",
+          "value": 1.5,
+          "threshold": "<= 2.5",
+          "pass": true
+        },
+        "G3": {
+          "name": "Exp/week (market)",
+          "value": 744.61,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Exp/week (P95 stress)",
+          "value": 557.34,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max DD%",
+          "value": 9.8,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "WF folds positive",
+          "value": "5/5",
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "name": "Top-1 fold conc.",
+          "value": "33.1%",
+          "threshold": "< 35%",
+          "pass": true
+        }
+      },
+      "pass_count": 7,
+      "total_count": 7,
+      "score": "7/7",
+      "all_pass": true
+    },
+    "coin_attribution": {
+      "coins_with_trades": 41,
+      "coins_net_negative": 12,
+      "coins_net_positive": 29,
+      "coins_breakeven": 0,
+      "worst_10": [
+        {
+          "coin": "PUPS/USD",
+          "tier": "tier2",
+          "pnl": -300.38,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "GLMR/USD",
+          "tier": "tier2",
+          "pnl": -294.09,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "DRV/USD",
+          "tier": "tier2",
+          "pnl": -142.42,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SUSHI/USD",
+          "tier": "tier2",
+          "pnl": -98.02,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SGB/USD",
+          "tier": "tier1",
+          "pnl": -76.34,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SAROS/USD",
+          "tier": "tier2",
+          "pnl": -46.39,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "ARPA/USD",
+          "tier": "tier2",
+          "pnl": -43.43,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "MF/USD",
+          "tier": "tier2",
+          "pnl": -40.11,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SAMO/USD",
+          "tier": "tier2",
+          "pnl": -37.53,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "CAMP/USD",
+          "tier": "tier2",
+          "pnl": -36.12,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        }
+      ],
+      "best_10": [
+        {
+          "coin": "GOMINING/USD",
+          "tier": "tier2",
+          "pnl": 165.42,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "SIGMA/USD",
+          "tier": "tier2",
+          "pnl": 197.3,
+          "trades": 4,
+          "wins": 2,
+          "losses": 2
+        },
+        {
+          "coin": "NOBODY/USD",
+          "tier": "tier2",
+          "pnl": 208.3,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "AUDIO/USD",
+          "tier": "tier2",
+          "pnl": 209.68,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "BILLY/USD",
+          "tier": "tier2",
+          "pnl": 235.03,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "CVC/USD",
+          "tier": "tier2",
+          "pnl": 271.67,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "SPICE/USD",
+          "tier": "tier2",
+          "pnl": 281.55,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "INIT/USD",
+          "tier": "tier2",
+          "pnl": 311.64,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "AURA/USD",
+          "tier": "tier2",
+          "pnl": 486.86,
+          "trades": 4,
+          "wins": 3,
+          "losses": 1
+        },
+        {
+          "coin": "XL1/USD",
+          "tier": "tier1",
+          "pnl": 543.81,
+          "trades": 3,
+          "wins": 3,
+          "losses": 0
+        }
+      ],
+      "full_attribution": [
+        {
+          "coin": "PUPS/USD",
+          "tier": "tier2",
+          "pnl": -300.38,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "GLMR/USD",
+          "tier": "tier2",
+          "pnl": -294.09,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "DRV/USD",
+          "tier": "tier2",
+          "pnl": -142.42,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SUSHI/USD",
+          "tier": "tier2",
+          "pnl": -98.02,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SGB/USD",
+          "tier": "tier1",
+          "pnl": -76.34,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SAROS/USD",
+          "tier": "tier2",
+          "pnl": -46.39,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "ARPA/USD",
+          "tier": "tier2",
+          "pnl": -43.43,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "MF/USD",
+          "tier": "tier2",
+          "pnl": -40.11,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SAMO/USD",
+          "tier": "tier2",
+          "pnl": -37.53,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "CAMP/USD",
+          "tier": "tier2",
+          "pnl": -36.12,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "DEEP/USD",
+          "tier": "tier2",
+          "pnl": -9.98,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "ELX/USD",
+          "tier": "tier1",
+          "pnl": -6.1,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "BTT/USD",
+          "tier": "tier1",
+          "pnl": 7.9,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "BANANAS31/USD",
+          "tier": "tier1",
+          "pnl": 8.14,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "MEME/USD",
+          "tier": "tier1",
+          "pnl": 8.32,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "BLZ/USD",
+          "tier": "tier2",
+          "pnl": 10.35,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "XYO/USD",
+          "tier": "tier2",
+          "pnl": 21.8,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "DOGS/USD",
+          "tier": "tier1",
+          "pnl": 38.93,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "SBR/USD",
+          "tier": "tier1",
+          "pnl": 44.26,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "PHA/USD",
+          "tier": "tier2",
+          "pnl": 46.99,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "OGN/USD",
+          "tier": "tier2",
+          "pnl": 48.4,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "KOBAN/USD",
+          "tier": "tier1",
+          "pnl": 66.38,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "ALPHA/USD",
+          "tier": "tier2",
+          "pnl": 83.36,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "ALT/USD",
+          "tier": "tier2",
+          "pnl": 85.83,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "BODEN/USD",
+          "tier": "tier2",
+          "pnl": 98.36,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "REKT/USD",
+          "tier": "tier1",
+          "pnl": 113.63,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "XAN/USD",
+          "tier": "tier1",
+          "pnl": 125.43,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "NYM/USD",
+          "tier": "tier2",
+          "pnl": 137.49,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "JUNO/USD",
+          "tier": "tier2",
+          "pnl": 150.22,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "GHIBLI/USD",
+          "tier": "tier1",
+          "pnl": 154.7,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "TOKEN/USD",
+          "tier": "tier2",
+          "pnl": 164.76,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "GOMINING/USD",
+          "tier": "tier2",
+          "pnl": 165.42,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "SIGMA/USD",
+          "tier": "tier2",
+          "pnl": 197.3,
+          "trades": 4,
+          "wins": 2,
+          "losses": 2
+        },
+        {
+          "coin": "NOBODY/USD",
+          "tier": "tier2",
+          "pnl": 208.3,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "AUDIO/USD",
+          "tier": "tier2",
+          "pnl": 209.68,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "BILLY/USD",
+          "tier": "tier2",
+          "pnl": 235.03,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "CVC/USD",
+          "tier": "tier2",
+          "pnl": 271.67,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "SPICE/USD",
+          "tier": "tier2",
+          "pnl": 281.55,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "INIT/USD",
+          "tier": "tier2",
+          "pnl": 311.64,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "AURA/USD",
+          "tier": "tier2",
+          "pnl": 486.86,
+          "trades": 4,
+          "wins": 3,
+          "losses": 1
+        },
+        {
+          "coin": "XL1/USD",
+          "tier": "tier1",
+          "pnl": 543.81,
+          "trades": 3,
+          "wins": 3,
+          "losses": 0
+        }
+      ]
+    },
+    "runtime_s": 0.4
+  },
+  "v5_baseline": {
+    "params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 5,
+      "time_limit": 10
+    },
+    "baseline": {
+      "metrics": {
+        "trades": 56,
+        "pnl": 3272.13,
+        "pf": 2.834,
+        "wr": 64.3,
+        "trades_per_week": 13.05,
+        "exp_per_week": 762.4382,
+        "max_dd_pct": 8.6,
+        "max_gap_days": 1.5,
+        "expectancy": 58.4309
+      },
+      "concentration": {
+        "top1_pct": 12.5,
+        "top3_pct": 30.6,
+        "top1_coin": "XL1/USD"
+      },
+      "n_coins_with_trades": 41
+    },
+    "stress_2x": {
+      "trades": 56,
+      "pnl": 2452.31,
+      "pf": 2.306,
+      "exp_per_week": 571.413
+    },
+    "walk_forward": {
+      "n_folds": 5,
+      "folds_positive": 4,
+      "fold_details": [
+        {
+          "fold": 0,
+          "trades": 10,
+          "pnl": 909.08,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 13,
+          "pnl": 57.53,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -17.57,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 9,
+          "pnl": 792.44,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 15,
+          "pnl": 913.43,
+          "positive": true
+        }
+      ],
+      "fold_concentration": {
+        "top1_fold_conc_pct": 34.2,
+        "fold_pnls": {
+          "0": 909.08,
+          "1": 57.53,
+          "2": -17.57,
+          "3": 792.44,
+          "4": 913.43
+        }
+      }
+    },
+    "gate_evaluation": {
+      "gates": {
+        "G1": {
+          "name": "Trades/week",
+          "value": 13.05,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max gap (days)",
+          "value": 1.5,
+          "threshold": "<= 2.5",
+          "pass": true
+        },
+        "G3": {
+          "name": "Exp/week (market)",
+          "value": 762.44,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Exp/week (P95 stress)",
+          "value": 571.41,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max DD%",
+          "value": 8.6,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "WF folds positive",
+          "value": "4/5",
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "name": "Top-1 fold conc.",
+          "value": "34.2%",
+          "threshold": "< 35%",
+          "pass": true
+        }
+      },
+      "pass_count": 7,
+      "total_count": 7,
+      "score": "7/7",
+      "all_pass": true
+    },
+    "coin_attribution": {
+      "coins_with_trades": 41,
+      "coins_net_negative": 11,
+      "coins_net_positive": 30,
+      "coins_breakeven": 0,
+      "worst_10": [
+        {
+          "coin": "GLMR/USD",
+          "tier": "tier2",
+          "pnl": -243.29,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "PUPS/USD",
+          "tier": "tier2",
+          "pnl": -215.17,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "MF/USD",
+          "tier": "tier2",
+          "pnl": -176.71,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "DRV/USD",
+          "tier": "tier2",
+          "pnl": -139.32,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SUSHI/USD",
+          "tier": "tier2",
+          "pnl": -95.89,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SGB/USD",
+          "tier": "tier1",
+          "pnl": -77.99,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SAROS/USD",
+          "tier": "tier2",
+          "pnl": -45.37,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "ARPA/USD",
+          "tier": "tier2",
+          "pnl": -44.37,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SAMO/USD",
+          "tier": "tier2",
+          "pnl": -38.34,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "CAMP/USD",
+          "tier": "tier2",
+          "pnl": -36.12,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        }
+      ],
+      "best_10": [
+        {
+          "coin": "TOKEN/USD",
+          "tier": "tier2",
+          "pnl": 164.76,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "NOBODY/USD",
+          "tier": "tier2",
+          "pnl": 208.3,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "AUDIO/USD",
+          "tier": "tier2",
+          "pnl": 214.2,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "BILLY/USD",
+          "tier": "tier2",
+          "pnl": 229.9,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "SIGMA/USD",
+          "tier": "tier2",
+          "pnl": 259.21,
+          "trades": 4,
+          "wins": 2,
+          "losses": 2
+        },
+        {
+          "coin": "CVC/USD",
+          "tier": "tier2",
+          "pnl": 265.74,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "SPICE/USD",
+          "tier": "tier2",
+          "pnl": 275.41,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "INIT/USD",
+          "tier": "tier2",
+          "pnl": 311.41,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "AURA/USD",
+          "tier": "tier2",
+          "pnl": 486.12,
+          "trades": 4,
+          "wins": 3,
+          "losses": 1
+        },
+        {
+          "coin": "XL1/USD",
+          "tier": "tier1",
+          "pnl": 549.02,
+          "trades": 3,
+          "wins": 3,
+          "losses": 0
+        }
+      ],
+      "full_attribution": [
+        {
+          "coin": "GLMR/USD",
+          "tier": "tier2",
+          "pnl": -243.29,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "PUPS/USD",
+          "tier": "tier2",
+          "pnl": -215.17,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "MF/USD",
+          "tier": "tier2",
+          "pnl": -176.71,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "DRV/USD",
+          "tier": "tier2",
+          "pnl": -139.32,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SUSHI/USD",
+          "tier": "tier2",
+          "pnl": -95.89,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SGB/USD",
+          "tier": "tier1",
+          "pnl": -77.99,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SAROS/USD",
+          "tier": "tier2",
+          "pnl": -45.37,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "ARPA/USD",
+          "tier": "tier2",
+          "pnl": -44.37,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "SAMO/USD",
+          "tier": "tier2",
+          "pnl": -38.34,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "CAMP/USD",
+          "tier": "tier2",
+          "pnl": -36.12,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "DEEP/USD",
+          "tier": "tier2",
+          "pnl": -10.19,
+          "trades": 1,
+          "wins": 0,
+          "losses": 1
+        },
+        {
+          "coin": "BANANAS31/USD",
+          "tier": "tier1",
+          "pnl": 8.04,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "MEME/USD",
+          "tier": "tier1",
+          "pnl": 8.4,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "BTT/USD",
+          "tier": "tier1",
+          "pnl": 9.49,
+          "trades": 2,
+          "wins": 2,
+          "losses": 0
+        },
+        {
+          "coin": "BLZ/USD",
+          "tier": "tier2",
+          "pnl": 10.35,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "XYO/USD",
+          "tier": "tier2",
+          "pnl": 21.8,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "ELX/USD",
+          "tier": "tier1",
+          "pnl": 38.38,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "DOGS/USD",
+          "tier": "tier1",
+          "pnl": 39.3,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "REKT/USD",
+          "tier": "tier1",
+          "pnl": 43.54,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "SBR/USD",
+          "tier": "tier1",
+          "pnl": 43.75,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "PHA/USD",
+          "tier": "tier2",
+          "pnl": 46.96,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "OGN/USD",
+          "tier": "tier2",
+          "pnl": 47.35,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "ALPHA/USD",
+          "tier": "tier2",
+          "pnl": 83.36,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "ALT/USD",
+          "tier": "tier2",
+          "pnl": 85.76,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "BODEN/USD",
+          "tier": "tier2",
+          "pnl": 96.21,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "KOBAN/USD",
+          "tier": "tier1",
+          "pnl": 111.46,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "XAN/USD",
+          "tier": "tier1",
+          "pnl": 126.63,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "NYM/USD",
+          "tier": "tier2",
+          "pnl": 137.49,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "JUNO/USD",
+          "tier": "tier2",
+          "pnl": 150.22,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "GHIBLI/USD",
+          "tier": "tier1",
+          "pnl": 158.04,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "GOMINING/USD",
+          "tier": "tier2",
+          "pnl": 164.3,
+          "trades": 2,
+          "wins": 1,
+          "losses": 1
+        },
+        {
+          "coin": "TOKEN/USD",
+          "tier": "tier2",
+          "pnl": 164.76,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "NOBODY/USD",
+          "tier": "tier2",
+          "pnl": 208.3,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "AUDIO/USD",
+          "tier": "tier2",
+          "pnl": 214.2,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "BILLY/USD",
+          "tier": "tier2",
+          "pnl": 229.9,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "SIGMA/USD",
+          "tier": "tier2",
+          "pnl": 259.21,
+          "trades": 4,
+          "wins": 2,
+          "losses": 2
+        },
+        {
+          "coin": "CVC/USD",
+          "tier": "tier2",
+          "pnl": 265.74,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "SPICE/USD",
+          "tier": "tier2",
+          "pnl": 275.41,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "INIT/USD",
+          "tier": "tier2",
+          "pnl": 311.41,
+          "trades": 1,
+          "wins": 1,
+          "losses": 0
+        },
+        {
+          "coin": "AURA/USD",
+          "tier": "tier2",
+          "pnl": 486.12,
+          "trades": 4,
+          "wins": 3,
+          "losses": 1
+        },
+        {
+          "coin": "XL1/USD",
+          "tier": "tier1",
+          "pnl": 549.02,
+          "trades": 3,
+          "wins": 3,
+          "losses": 0
+        }
+      ]
+    },
+    "runtime_s": 0.3
+  },
+  "head_to_head": {
+    "winner": "v5 (sl=5)",
+    "sl7_wins_count": 2,
+    "v5_wins_count": 5,
+    "comparison": {
+      "trades": {
+        "sl7": 55,
+        "v5": 56
+      },
+      "pnl": {
+        "sl7": 3195.61,
+        "v5": 3272.13
+      },
+      "pf": {
+        "sl7": 2.715,
+        "v5": 2.834
+      },
+      "wr": {
+        "sl7": 63.6,
+        "v5": 64.3
+      },
+      "exp_per_week": {
+        "sl7": 744.61,
+        "v5": 762.44
+      },
+      "max_dd_pct": {
+        "sl7": 9.8,
+        "v5": 8.6
+      },
+      "stress_exp_per_week": {
+        "sl7": 557.34,
+        "v5": 571.41
+      },
+      "wf_folds": {
+        "sl7": 5,
+        "v5": 4
+      },
+      "fold_conc": {
+        "sl7": 33.1,
+        "v5": 34.2
+      },
+      "gates": {
+        "sl7": "7/7",
+        "v5": "7/7"
+      }
+    }
+  }
+}

@@ -1,0 +1,1165 @@
+{
+  "meta": {
+    "date": "2026-02-15",
+    "data_source": "data/cache_parts_hf/1h/",
+    "manifest": "data/manifest_hf_1h.json",
+    "tiering_source": "reports/hf/universe_tiering_001.json"
+  },
+  "manifest_stats": {
+    "total_coins": 2134,
+    "done": 261,
+    "pending": 1873,
+    "failed": 0,
+    "kraken": {
+      "done": 261,
+      "total": 614
+    },
+    "mexc": {
+      "done": 0,
+      "total": 1520
+    }
+  },
+  "part_files": {
+    "kraken": 261,
+    "mexc": 0
+  },
+  "tier_coverage": {
+    "T1": {
+      "available": 43,
+      "total": 100,
+      "pct": 43.0,
+      "available_coins": [
+        "AB/USD",
+        "ACH/USD",
+        "ADA/USD",
+        "AKE/USD",
+        "ALGO/USD",
+        "APU/USD",
+        "ATH/USD",
+        "BANANAS31/USD",
+        "BEAM/USD",
+        "BLESS/USD",
+        "BONK/USD",
+        "BSX/USD",
+        "BTT/USD",
+        "CCD/USD",
+        "CHEEMS/USD",
+        "CHILLHOUSE/USD",
+        "COQ/USD",
+        "CPOOL/USD",
+        "CRV/USD",
+        "DENT/USD",
+        "DMC/USD",
+        "DOG/USD",
+        "DOGS/USD",
+        "ELX/USD",
+        "ENA/USD",
+        "FARTCOIN/USD",
+        "FET/USD",
+        "FLOKI/USD",
+        "FLR/USD",
+        "FWOG/USD",
+        "GALA/USD",
+        "GARI/USD",
+        "GHIBLI/USD",
+        "GIGA/USD",
+        "GRIFFAIN/USD",
+        "GRT/USD",
+        "GST/USD",
+        "GUN/USD",
+        "H/USD",
+        "HBAR/USD",
+        "HIPPO/USD",
+        "HONEY/USD",
+        "JASMY/USD"
+      ],
+      "missing_coins": [
+        {
+          "coin": "KAS/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "KEY/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "KOBAN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LINEA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LOBO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LOCKIN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LUNA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MEME/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MEW/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MIM/USD",
+          "status": "NOT_IN_MANIFEST",
+          "exchange": "unknown"
+        },
+        {
+          "coin": "MOG/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MXC/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "NEIRO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "NOT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "NPC/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PENGU/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PEPE/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PLUME/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "POL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PTB/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PUMP/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "REKT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "RIZE/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "RSR/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SBR/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SC/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SEI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SGB/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SHIB/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SNEK/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SPELL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SPX/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "STBL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "STRK/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SUI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SWELL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TITCOIN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TOSHI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TRX/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TURBO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "U/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "USELESS/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "WIF/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "WLFI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XAN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XCN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XDC/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XDG/USD",
+          "status": "NOT_IN_MANIFEST",
+          "exchange": "unknown"
+        },
+        {
+          "coin": "XL1/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XLM/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XNY/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XPL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XRP/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ZBCN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ZEREBRO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ZK/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ZORA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        }
+      ]
+    },
+    "T2": {
+      "available": 92,
+      "total": 216,
+      "pct": 42.6,
+      "available_coins": [
+        "0G/USD",
+        "1INCH/USD",
+        "2Z/USD",
+        "A/USD",
+        "ACT/USD",
+        "AERO/USD",
+        "AEVO/USD",
+        "AI3/USD",
+        "AIXBT/USD",
+        "AKT/USD",
+        "ALKIMI/USD",
+        "ALPHA/USD",
+        "ALT/USD",
+        "ALTHEA/USD",
+        "ANIME/USD",
+        "ANKR/USD",
+        "APE/USD",
+        "APR/USD",
+        "APT/USD",
+        "ARB/USD",
+        "ARC/USD",
+        "ARKM/USD",
+        "ARPA/USD",
+        "ASTER/USD",
+        "ASTR/USD",
+        "ATLAS/USD",
+        "ATOM/USD",
+        "AUDIO/USD",
+        "AURA/USD",
+        "AVAX/USD",
+        "AVNT/USD",
+        "BABY/USD",
+        "BAT/USD",
+        "BDXN/USD",
+        "BERT/USD",
+        "BICO/USD",
+        "BIGTIME/USD",
+        "BILLY/USD",
+        "BIO/USD",
+        "BLUAI/USD",
+        "BLUR/USD",
+        "BLZ/USD",
+        "BMT/USD",
+        "BOBA/USD",
+        "BODEN/USD",
+        "BTR/USD",
+        "CAMP/USD",
+        "CELO/USD",
+        "CELR/USD",
+        "CFG/USD",
+        "CHEX/USD",
+        "CHZ/USD",
+        "CLOUD/USD",
+        "CLV/USD",
+        "COTI/USD",
+        "CRO/USD",
+        "CTSI/USD",
+        "CVC/USD",
+        "CXT/USD",
+        "DBR/USD",
+        "DEEP/USD",
+        "DEGEN/USD",
+        "DOT/USD",
+        "DRIFT/USD",
+        "DRV/USD",
+        "DYDX/USD",
+        "DYM/USD",
+        "EDGE/USD",
+        "EIGEN/USD",
+        "ENJ/USD",
+        "ES/USD",
+        "ESX/USD",
+        "FHE/USD",
+        "FIDA/USD",
+        "FIL/USD",
+        "FIS/USD",
+        "FLOW/USD",
+        "FLUX/USD",
+        "GLMR/USD",
+        "GMT/USD",
+        "GOAT/USD",
+        "GOMINING/USD",
+        "HFT/USD",
+        "HOUSE/USD",
+        "HPOS10I/USD",
+        "ICNT/USD",
+        "ICP/USD",
+        "ICX/USD",
+        "IDEX/USD",
+        "IMX/USD",
+        "INIT/USD",
+        "IP/USD"
+      ],
+      "missing_coins": [
+        {
+          "coin": "JTO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "JUNO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "JUP/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "KAVA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "KERNEL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "KET/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "KMNO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "KTA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LCX/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LDO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LINK/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LMWR/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LOFI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "LRC/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MANA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MELANIA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MERL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MF/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MINA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MIRA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MNGO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MNT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MOODENG/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "MORPHO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "NANO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "NEAR/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "NIL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "NOBODY/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "NOS/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "NYM/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "OCEAN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ODOS/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "OGN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "OM/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "OMG/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ONDO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "OP/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "OSMO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "OXT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PARTI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PEAQ/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PERP/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PHA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PLAY/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PNUT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "POLIS/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "POND/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PONKE/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "POPCAT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PRCL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PRIME/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PROMPT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PUPS/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "PYTH/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "Q/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "RARE/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "RARI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "RAY/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "REN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "RENDER/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "RETARDIO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "REZ/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "RUNE/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "S/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SAGA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SAHARA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SAMO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SAND/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SAPIEN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SAROS/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SCRT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SHX/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SIGMA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SKY/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SLAY/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SNX/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SOL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SPICE/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SPK/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SRM/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "STORJ/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "STX/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SUKU/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SUPER/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SUSHI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SXT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SYN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "SYRUP/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "T/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TANSSI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TIA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TLM/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TNSR/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TOKEN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TON/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TRAC/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "TRU/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "UFD/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "UNI/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "USUAL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "VANRY/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "VELODROME/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "VFY/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "VINE/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "VIRTUAL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "VSN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "W/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "WAL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "WCT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "WELL/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "WEN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "WLD/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "WMTX/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "WOO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XMN/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XTZ/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "XYO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "YALA/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "YB/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ZBT/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ZEUS/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ZIG/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ZRO/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        },
+        {
+          "coin": "ZRX/USD",
+          "status": "pending",
+          "exchange": "kraken"
+        }
+      ]
+    }
+  },
+  "bar_stats": {
+    "all_done": {
+      "count": 261,
+      "min": 81,
+      "max": 722,
+      "median": 721,
+      "mean": 703.7
+    },
+    "T1_available": {
+      "count": 43,
+      "min": 721,
+      "max": 722,
+      "median": 721,
+      "mean": 721.0
+    },
+    "T2_available": {
+      "count": 92,
+      "min": 721,
+      "max": 721,
+      "median": 721.0,
+      "mean": 721
+    },
+    "low_bar_coins": [
+      {
+        "coin": "ALEO/USD",
+        "bars": 415
+      },
+      {
+        "coin": "AZTEC/USD",
+        "bars": 86
+      },
+      {
+        "coin": "BGB/USD",
+        "bars": 391
+      },
+      {
+        "coin": "CASH/USD",
+        "bars": 464
+      },
+      {
+        "coin": "CFX/USD",
+        "bars": 223
+      },
+      {
+        "coin": "ESP/USD",
+        "bars": 81
+      },
+      {
+        "coin": "FIDD/USD",
+        "bars": 271
+      },
+      {
+        "coin": "HSK/USD",
+        "bars": 490
+      },
+      {
+        "coin": "HYPE/USD",
+        "bars": 440
+      },
+      {
+        "coin": "INX/USD",
+        "bars": 388
+      }
+    ],
+    "bar_distribution": {
+      "lt_100": 2,
+      "100_500": 8,
+      "500_700": 5,
+      "700_plus": 246
+    }
+  },
+  "verdict": {
+    "status": "PARTIAL",
+    "t1_threshold": ">50%",
+    "t2_threshold": ">30%",
+    "t1_met": false,
+    "t2_met": true,
+    "reason": "T1=43.0% (<50%), T2=42.6% (>30%). Kraken download only 42.5% complete (A-J range). MEXC 0% complete. Resume download to reach sufficient coverage."
+  }
+}

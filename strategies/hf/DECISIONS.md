@@ -1068,3 +1068,71 @@ Key MEXC advantage: 0% maker fee (promotional since Q4 2022) + 10bps taker (vs K
 - First positive-expectancy hypothesis found after 25 signal families tested
 
 **Test status**: make check 66/66 green. All previous tests unchanged.
+
+---
+
+### ADR-HF-030: GO/NO-GO — H20 Throughput + Robustness Validation
+
+**Date**: 2026-02-15
+**Status**: **CONDITIONAL GO** (confirms HF-029)
+**Commit**: 2246e21
+**Reports**: `reports/hf/h20_throughput_002.json`, `reports/hf/h20_robustness_002.json`
+
+**Context**: ADR-HF-029 gave CONDITIONAL GO for H20 VWAP_DEVIATION on MEXC. Before paper trading, we need to verify: (1) sufficient trade throughput for a viable strategy, (2) parameter robustness — the v5 baseline isn't a fragile overfitted peak.
+
+**Gate Thresholds**:
+
+| Gate | Metric | Threshold | Result | Verdict |
+|------|--------|-----------|--------|---------|
+| G1 | Trades/week | >= 10 | 10.01/wk | PASS |
+| G2 | Exp/week (baseline) | > $0 | +$250/wk | PASS |
+| G3 | Exp/week (2x stress) | > $0 | +$178/wk | PASS |
+| G4 | Max drawdown | <= 20% | 11.4% | PASS |
+| G5 | Walk-forward (baseline) | >= 4/5 | 5/5 | PASS |
+| G6 | Neighbor stability | >= 8/12 profitable | 11/12 | PASS |
+| G7 | Max gap (days) | <= 7 | 1.75 | PASS |
+| G8 | Empty weeks | 0 | 0 | PASS |
+
+**All 8 gates PASS.**
+
+**Throughput Evidence** (from `h20_throughput_002`):
+- 43 trades over 4.3 weeks = 10.01/week (just above G1 threshold)
+- T1: 9, T2: 34 (79% from T2 tier — higher-cost coins drive volume)
+- Max gap: 42 bars (1.75 days), median gap: 16 bars — no prolonged dry spells
+- Utilization: 41.6% (bot is idle 58% of time — room for additional strategies)
+- Weekly distribution: 8, 11, 9, 11 — consistent, no empty weeks
+- Peak activity: 13:00 + 19:00 UTC, Fridays busiest (11 trades)
+- Capacity: mp=1→43 trades, mp=2→44 (+1), mp=3→55 (+12). Max_pos=1 is optimal — minimal missed signals.
+
+**Robustness Evidence** (from `h20_robustness_002`):
+- 12 neighborhood variants (±1 step per parameter from v5 baseline)
+- v5 baseline ranks #2 with score 215.0, confirming it is NOT a fragile peak
+- **tp_pct=10% (variant 5) is strictly better**: score 280.6, PF=1.96, $326/wk, 5/5 WF, stress PF=1.68
+- 11/12 variants profitable at baseline fees, 11/12 profitable at 2x stress (only dev=2.5 fails)
+- Parameter sensitivity (ordered by impact):
+  1. **dev_thresh**: most sensitive. Raising from 2.0→2.5 kills edge (PF=1.12→0.95 under stress). Lowering to 1.8 adds trades but loses 1 WF fold. Sweet spot confirmed at 2.0.
+  2. **tp_pct**: tp=10% is better than tp=8% (score +65.5). tp=12% overshoots (WF 3/5). Optimal range: 8-10%.
+  3. **sl_pct**: sl=3% has highest PF (2.03) but loses 1 WF fold. sl=5% is balanced. Range 3-5% works.
+  4. **time_limit**: tl=8 adds 4 trades but halves expectancy. tl=12-15 loses WF folds. tl=10 optimal.
+- Walk-forward detail: Fold 4 (bars ~432-576) dominates P&L across all variants — this is the ZEUS-equivalent period. But even excluding Fold 4, baseline has 4 positive folds.
+
+**Decision**: **CONDITIONAL GO** — proceed to paper trading.
+
+**Rationale**:
+1. Throughput is borderline but sufficient (10/wk). With partial universe coverage (43% T1, 43% T2), full universe may yield 15-20+/wk.
+2. Robustness is strong — baseline is not overfitted. The v5 neighborhood is a plateau, not a spike.
+3. tp_pct=10% should be evaluated as the new baseline candidate (v6) in paper trading alongside v5.
+4. All metrics survive 2x fee stress — the edge is real, not a fee-precision artifact.
+
+**Risk factors**:
+1. **Partial data coverage**: Only 135/316 tier coins (43%). Results may shift with full universe — both ways. More coins = more trades but also more noise.
+2. **Short sample**: 4.3 weeks (722 bars). Walk-forward 5/5 is encouraging but still limited.
+3. **Fold 4 concentration**: One fold contributes disproportionately. Without it, edge shrinks but remains positive.
+4. **MEXC promotional rates**: If 0% maker reverts, market costs rise ~10bps. Strategy survives at 2x stress so this is manageable.
+
+**Consequence**:
+1. **Paper trading scope**: Run H20 VWAP_DEVIATION on MEXC for 2-4 weeks (target: 40-80 round trips)
+2. **Two configs**: v5 (tp=8%) as baseline, tp=10% as challenger
+3. **Validation criteria**: Live PF > 1.2, live Exp/trade within 50% of backtest, fill rate > 90%
+4. **Data action**: Resume 1H download (Kraken K-Z, then MEXC) to expand universe coverage before next backtest iteration
+5. **Abort trigger**: If paper trading PF < 1.0 after 20 trades, HALT and reassess

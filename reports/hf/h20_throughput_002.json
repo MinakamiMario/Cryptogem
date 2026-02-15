@@ -1,9 +1,124 @@
 {
   "run_header": {
     "task": "h20_throughput_analysis",
-    "status": "PENDING",
-    "reason": "Runner created, awaiting 1H candle cache",
+    "status": "DONE",
+    "date": "2026-02-15",
+    "commit": "2246e21",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "baseline": "v5 (dev_thresh=2.0, tp_pct=8, sl_pct=5, time_limit=10)",
+    "cost_regime": "MEXC Market",
+    "fees_bps": {
+      "tier1": 12.5,
+      "tier2": 23.5
+    },
+    "universe": "T1(43)+T2(92)",
+    "timeframe": "1h",
+    "total_bars": 722,
+    "total_weeks": 4.3,
     "runner": "strategies/hf/screening/run_h20_throughput.py",
-    "command": "python -m strategies.hf.screening.run_h20_throughput"
+    "command": "python -m strategies.hf.screening.run_h20_throughput",
+    "runtime_s": 12.5
+  },
+  "throughput": {
+    "trades_total": 43,
+    "trades_per_week": 10.01,
+    "trades_t1": 9,
+    "trades_t2": 34,
+    "max_gap_bars": 42,
+    "max_gap_days": 1.75,
+    "median_gap_bars": 16,
+    "mean_gap_bars": 14.9,
+    "rolling_4w_mean": 39.0,
+    "rolling_4w_std": 0.0,
+    "rolling_4w_cv": 0.0,
+    "utilization_pct": 41.55,
+    "total_weeks": 4.3
+  },
+  "clustering": {
+    "busiest_week_trades": 11,
+    "empty_weeks": 0,
+    "total_weeks_in_data": 4,
+    "weeks_with_trades": 4,
+    "pct_weeks_active": 100.0
+  },
+  "weekly_trade_counts": [
+    8,
+    11,
+    9,
+    11
+  ],
+  "capacity": {
+    "max_pos_1": {
+      "trades": 43,
+      "pnl": 1074.59,
+      "pf": 1.847,
+      "wr": 55.8,
+      "exp_per_week": 250.04,
+      "utilization_pct": 41.55,
+      "trades_per_week": 10.01
+    },
+    "max_pos_2": {
+      "trades": 44,
+      "pnl": 511.91,
+      "pf": 1.883,
+      "wr": 56.8,
+      "exp_per_week": 119.11,
+      "utilization_pct": 41.55,
+      "trades_per_week": 10.24
+    },
+    "max_pos_3": {
+      "trades": 55,
+      "pnl": 310.91,
+      "pf": 1.743,
+      "wr": 52.7,
+      "exp_per_week": 72.34,
+      "utilization_pct": 44.18,
+      "trades_per_week": 12.8
+    },
+    "missed_at_mp1_vs_mp2": 1,
+    "missed_at_mp2_vs_mp3": 11
+  },
+  "time_of_week": {
+    "available": true,
+    "mapped_trades": 43,
+    "hour_distribution": {
+      "0": 1,
+      "1": 1,
+      "2": 1,
+      "3": 2,
+      "6": 1,
+      "7": 2,
+      "8": 1,
+      "9": 2,
+      "10": 1,
+      "11": 4,
+      "12": 1,
+      "13": 6,
+      "14": 1,
+      "15": 4,
+      "16": 2,
+      "17": 2,
+      "19": 6,
+      "20": 1,
+      "22": 2,
+      "23": 2
+    },
+    "day_of_week_distribution": {
+      "Friday": 11,
+      "Thursday": 6,
+      "Sunday": 6,
+      "Monday": 5,
+      "Tuesday": 5,
+      "Wednesday": 5,
+      "Saturday": 5
+    },
+    "peak_hour": [
+      13,
+      6
+    ],
+    "peak_day": [
+      "Friday",
+      11
+    ]
   }
 }

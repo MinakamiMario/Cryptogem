@@ -1,11 +1,954 @@
 {
   "run_header": {
     "task": "h20_robustness_neighborhood",
-    "status": "PENDING",
-    "reason": "Runner updated, awaiting 1H candle cache",
-    "runner": "strategies/hf/screening/run_h20_robustness.py",
-    "command": "python -m strategies.hf.screening.run_h20_robustness",
-    "variants": 12,
-    "cost_regime": "MEXC Market (from costs_mexc_v2 or hardcoded fallback)"
-  }
+    "date": "2026-02-15",
+    "commit": "2246e21",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "baseline": "v5 (dev_thresh=2.0, tp_pct=8, sl_pct=5, time_limit=10)",
+    "variants_tested": 12,
+    "cost_regime": "MEXC Market",
+    "fees": {
+      "baseline": {
+        "tier1_bps": 5,
+        "tier2_bps": 20
+      },
+      "stress_2x": {
+        "tier1_bps": 10,
+        "tier2_bps": 40
+      }
+    },
+    "universe": "T1(43)+T2(92)",
+    "timeframe": "1h",
+    "total_bars": 722,
+    "total_weeks": 4.3,
+    "runtime_s": 13.8
+  },
+  "scoring_formula": "exp_per_week * (wf_folds_positive / 5) * min(1.0, trades / 50)",
+  "variant_results": [
+    {
+      "variant_idx": 0,
+      "label": "v5 baseline",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 43,
+        "pnl": 1074.59,
+        "pf": 1.847,
+        "wr": 55.81,
+        "dd": 11.41,
+        "expectancy": 24.9904,
+        "trades_per_week": 10.01,
+        "exp_per_week": 250.0421,
+        "fee_drag_pct": 16.83
+      },
+      "wf_folds_positive": 5,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": 107.57,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 8,
+          "pnl": 80.71,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 8,
+          "pnl": 8.71,
+          "positive": true
+        },
+        {
+          "fold": 3,
+          "trades": 10,
+          "pnl": 568.8,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 189.42,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.577,
+        "exp_per_week": 177.9033,
+        "trades": 43,
+        "wr": 55.81,
+        "dd": 12.3
+      },
+      "composite_score": 215.0362
+    },
+    {
+      "variant_idx": 1,
+      "label": "dev_thresh -0.2",
+      "params": {
+        "dev_thresh": 1.8,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 50,
+        "pnl": 1096.05,
+        "pf": 1.691,
+        "wr": 56.0,
+        "dd": 14.61,
+        "expectancy": 21.921,
+        "trades_per_week": 11.63,
+        "exp_per_week": 255.0371,
+        "fee_drag_pct": 16.83
+      },
+      "wf_folds_positive": 4,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 9,
+          "pnl": 331.72,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 11,
+          "pnl": 227.94,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -69.13,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 10,
+          "pnl": 568.8,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 11,
+          "pnl": 90.84,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.477,
+        "exp_per_week": 181.4031,
+        "trades": 50,
+        "wr": 56.0,
+        "dd": 17.44
+      },
+      "composite_score": 204.0297
+    },
+    {
+      "variant_idx": 2,
+      "label": "dev_thresh +0.2",
+      "params": {
+        "dev_thresh": 2.2,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 38,
+        "pnl": 525.8,
+        "pf": 1.431,
+        "wr": 52.63,
+        "dd": 11.04,
+        "expectancy": 13.8369,
+        "trades_per_week": 8.84,
+        "exp_per_week": 122.347,
+        "fee_drag_pct": 18.48
+      },
+      "wf_folds_positive": 5,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": 21.03,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 6,
+          "pnl": 91.56,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 8,
+          "pnl": 8.71,
+          "positive": true
+        },
+        {
+          "fold": 3,
+          "trades": 8,
+          "pnl": 356.83,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 8,
+          "pnl": 36.88,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.233,
+        "exp_per_week": 69.1109,
+        "trades": 38,
+        "wr": 52.63,
+        "dd": 13.38
+      },
+      "composite_score": 92.9837
+    },
+    {
+      "variant_idx": 3,
+      "label": "dev_thresh +0.5",
+      "params": {
+        "dev_thresh": 2.5,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 30,
+        "pnl": 107.72,
+        "pf": 1.119,
+        "wr": 46.67,
+        "dd": 16.89,
+        "expectancy": 3.5907,
+        "trades_per_week": 6.98,
+        "exp_per_week": 25.065,
+        "fee_drag_pct": 22.56
+      },
+      "wf_folds_positive": 3,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": 21.03,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 4,
+          "pnl": -55.97,
+          "positive": false
+        },
+        {
+          "fold": 2,
+          "trades": 7,
+          "pnl": -43.9,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 6,
+          "pnl": 44.65,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 5,
+          "pnl": 153.48,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 0.951,
+        "exp_per_week": -10.9995,
+        "trades": 30,
+        "wr": 46.67,
+        "dd": 20.37
+      },
+      "composite_score": 9.0234
+    },
+    {
+      "variant_idx": 4,
+      "label": "tp_pct -2",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 6,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 43,
+        "pnl": 745.35,
+        "pf": 1.705,
+        "wr": 58.14,
+        "dd": 11.61,
+        "expectancy": 17.3338,
+        "trades_per_week": 10.01,
+        "exp_per_week": 173.4337,
+        "fee_drag_pct": 20.16
+      },
+      "wf_folds_positive": 4,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": 31.37,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 8,
+          "pnl": 90.28,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 8,
+          "pnl": -64.87,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 10,
+          "pnl": 394.22,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 233.7,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.411,
+        "exp_per_week": 107.3975,
+        "trades": 43,
+        "wr": 55.81,
+        "dd": 13.99
+      },
+      "composite_score": 119.3224
+    },
+    {
+      "variant_idx": 5,
+      "label": "tp_pct +2",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 10,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 43,
+        "pnl": 1402.07,
+        "pf": 1.956,
+        "wr": 53.49,
+        "dd": 11.24,
+        "expectancy": 32.6063,
+        "trades_per_week": 10.01,
+        "exp_per_week": 326.2434,
+        "fee_drag_pct": 14.98
+      },
+      "wf_folds_positive": 5,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": 183.76,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 8,
+          "pnl": 120.65,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 8,
+          "pnl": 83.67,
+          "positive": true
+        },
+        {
+          "fold": 3,
+          "trades": 10,
+          "pnl": 459.31,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 271.21,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.679,
+        "exp_per_week": 240.7053,
+        "trades": 43,
+        "wr": 53.49,
+        "dd": 12.1
+      },
+      "composite_score": 280.5693
+    },
+    {
+      "variant_idx": 6,
+      "label": "tp_pct +4",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 12,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 43,
+        "pnl": 887.4,
+        "pf": 1.593,
+        "wr": 48.84,
+        "dd": 17.42,
+        "expectancy": 20.6372,
+        "trades_per_week": 10.01,
+        "exp_per_week": 206.4866,
+        "fee_drag_pct": 15.35
+      },
+      "wf_folds_positive": 3,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": -65.92,
+          "positive": false
+        },
+        {
+          "fold": 1,
+          "trades": 8,
+          "pnl": 160.6,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 8,
+          "pnl": -167.35,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 10,
+          "pnl": 605.71,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 354.51,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.372,
+        "exp_per_week": 134.2925,
+        "trades": 43,
+        "wr": 48.84,
+        "dd": 19.14
+      },
+      "composite_score": 106.5471
+    },
+    {
+      "variant_idx": 7,
+      "label": "sl_pct -2",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 8,
+        "sl_pct": 3,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 44,
+        "pnl": 1069.5,
+        "pf": 2.025,
+        "wr": 52.27,
+        "dd": 14.29,
+        "expectancy": 24.3069,
+        "trades_per_week": 10.24,
+        "exp_per_week": 248.8591,
+        "fee_drag_pct": 18.51
+      },
+      "wf_folds_positive": 4,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": 150.61,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 8,
+          "pnl": 88.95,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -138.18,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 10,
+          "pnl": 612.64,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 282.55,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.68,
+        "exp_per_week": 177.3018,
+        "trades": 44,
+        "wr": 52.27,
+        "dd": 15.81
+      },
+      "composite_score": 175.1968
+    },
+    {
+      "variant_idx": 8,
+      "label": "sl_pct +2",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 8,
+        "sl_pct": 7,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 43,
+        "pnl": 828.09,
+        "pf": 1.563,
+        "wr": 55.81,
+        "dd": 13.55,
+        "expectancy": 19.258,
+        "trades_per_week": 10.01,
+        "exp_per_week": 192.6864,
+        "fee_drag_pct": 16.88
+      },
+      "wf_folds_positive": 4,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": 64.53,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 8,
+          "pnl": 80.71,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 8,
+          "pnl": -33.52,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 10,
+          "pnl": 524.95,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 117.69,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.353,
+        "exp_per_week": 124.3628,
+        "trades": 43,
+        "wr": 55.81,
+        "dd": 14.77
+      },
+      "composite_score": 132.5682
+    },
+    {
+      "variant_idx": 9,
+      "label": "time_limit -2",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 8
+      },
+      "baseline_metrics": {
+        "trades": 47,
+        "pnl": 601.43,
+        "pf": 1.46,
+        "wr": 51.06,
+        "dd": 10.25,
+        "expectancy": 12.7964,
+        "trades_per_week": 10.94,
+        "exp_per_week": 139.9451,
+        "fee_drag_pct": 20.71
+      },
+      "wf_folds_positive": 5,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 9,
+          "pnl": 71.18,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 9,
+          "pnl": 45.42,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": 97.52,
+          "positive": true
+        },
+        {
+          "fold": 3,
+          "trades": 11,
+          "pnl": 309.61,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 55.89,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.231,
+        "exp_per_week": 73.8369,
+        "trades": 47,
+        "wr": 42.55,
+        "dd": 13.29
+      },
+      "composite_score": 131.5484
+    },
+    {
+      "variant_idx": 10,
+      "label": "time_limit +2",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 12
+      },
+      "baseline_metrics": {
+        "trades": 41,
+        "pnl": 1066.87,
+        "pf": 1.82,
+        "wr": 51.22,
+        "dd": 11.61,
+        "expectancy": 26.0212,
+        "trades_per_week": 9.54,
+        "exp_per_week": 248.2461,
+        "fee_drag_pct": 15.65
+      },
+      "wf_folds_positive": 4,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": 66.18,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 8,
+          "pnl": 5.84,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 7,
+          "pnl": -24.03,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 9,
+          "pnl": 547.05,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 324.81,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.564,
+        "exp_per_week": 177.4686,
+        "trades": 41,
+        "wr": 51.22,
+        "dd": 16.18
+      },
+      "composite_score": 162.8494
+    },
+    {
+      "variant_idx": 11,
+      "label": "time_limit +5",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 15
+      },
+      "baseline_metrics": {
+        "trades": 41,
+        "pnl": 1092.61,
+        "pf": 1.852,
+        "wr": 58.54,
+        "dd": 15.17,
+        "expectancy": 26.649,
+        "trades_per_week": 9.54,
+        "exp_per_week": 254.236,
+        "fee_drag_pct": 15.12
+      },
+      "wf_folds_positive": 3,
+      "wf_folds_total": 5,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": -2.77,
+          "positive": false
+        },
+        {
+          "fold": 1,
+          "trades": 8,
+          "pnl": -8.12,
+          "positive": false
+        },
+        {
+          "fold": 2,
+          "trades": 7,
+          "pnl": 16.77,
+          "positive": true
+        },
+        {
+          "fold": 3,
+          "trades": 9,
+          "pnl": 638.7,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 334.29,
+          "positive": true
+        }
+      ],
+      "stress_2x": {
+        "pf": 1.6,
+        "exp_per_week": 185.0901,
+        "trades": 41,
+        "wr": 51.22,
+        "dd": 18.7
+      },
+      "composite_score": 125.0841
+    }
+  ],
+  "ranking": [
+    {
+      "rank": 1,
+      "variant_idx": 5,
+      "label": "tp_pct +2",
+      "composite_score": 280.5693
+    },
+    {
+      "rank": 2,
+      "variant_idx": 0,
+      "label": "v5 baseline",
+      "composite_score": 215.0362
+    },
+    {
+      "rank": 3,
+      "variant_idx": 1,
+      "label": "dev_thresh -0.2",
+      "composite_score": 204.0297
+    },
+    {
+      "rank": 4,
+      "variant_idx": 7,
+      "label": "sl_pct -2",
+      "composite_score": 175.1968
+    },
+    {
+      "rank": 5,
+      "variant_idx": 10,
+      "label": "time_limit +2",
+      "composite_score": 162.8494
+    },
+    {
+      "rank": 6,
+      "variant_idx": 8,
+      "label": "sl_pct +2",
+      "composite_score": 132.5682
+    },
+    {
+      "rank": 7,
+      "variant_idx": 9,
+      "label": "time_limit -2",
+      "composite_score": 131.5484
+    },
+    {
+      "rank": 8,
+      "variant_idx": 11,
+      "label": "time_limit +5",
+      "composite_score": 125.0841
+    },
+    {
+      "rank": 9,
+      "variant_idx": 4,
+      "label": "tp_pct -2",
+      "composite_score": 119.3224
+    },
+    {
+      "rank": 10,
+      "variant_idx": 6,
+      "label": "tp_pct +4",
+      "composite_score": 106.5471
+    },
+    {
+      "rank": 11,
+      "variant_idx": 2,
+      "label": "dev_thresh +0.2",
+      "composite_score": 92.9837
+    },
+    {
+      "rank": 12,
+      "variant_idx": 3,
+      "label": "dev_thresh +0.5",
+      "composite_score": 9.0234
+    }
+  ],
+  "top3": [
+    {
+      "rank": 1,
+      "variant_idx": 5,
+      "label": "tp_pct +2",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 10,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "composite_score": 280.5693,
+      "baseline_metrics": {
+        "trades": 43,
+        "pnl": 1402.07,
+        "pf": 1.956,
+        "wr": 53.49,
+        "dd": 11.24,
+        "expectancy": 32.6063,
+        "trades_per_week": 10.01,
+        "exp_per_week": 326.2434,
+        "fee_drag_pct": 14.98
+      },
+      "wf_folds_positive": 5,
+      "stress_2x": {
+        "pf": 1.679,
+        "exp_per_week": 240.7053,
+        "trades": 43,
+        "wr": 53.49,
+        "dd": 12.1
+      }
+    },
+    {
+      "rank": 2,
+      "variant_idx": 0,
+      "label": "v5 baseline",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "composite_score": 215.0362,
+      "baseline_metrics": {
+        "trades": 43,
+        "pnl": 1074.59,
+        "pf": 1.847,
+        "wr": 55.81,
+        "dd": 11.41,
+        "expectancy": 24.9904,
+        "trades_per_week": 10.01,
+        "exp_per_week": 250.0421,
+        "fee_drag_pct": 16.83
+      },
+      "wf_folds_positive": 5,
+      "stress_2x": {
+        "pf": 1.577,
+        "exp_per_week": 177.9033,
+        "trades": 43,
+        "wr": 55.81,
+        "dd": 12.3
+      }
+    },
+    {
+      "rank": 3,
+      "variant_idx": 1,
+      "label": "dev_thresh -0.2",
+      "params": {
+        "dev_thresh": 1.8,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "composite_score": 204.0297,
+      "baseline_metrics": {
+        "trades": 50,
+        "pnl": 1096.05,
+        "pf": 1.691,
+        "wr": 56.0,
+        "dd": 14.61,
+        "expectancy": 21.921,
+        "trades_per_week": 11.63,
+        "exp_per_week": 255.0371,
+        "fee_drag_pct": 16.83
+      },
+      "wf_folds_positive": 4,
+      "stress_2x": {
+        "pf": 1.477,
+        "exp_per_week": 181.4031,
+        "trades": 50,
+        "wr": 56.0,
+        "dd": 17.44
+      }
+    }
+  ]
 }

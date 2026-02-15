@@ -1,0 +1,2007 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15 14:12",
+    "universe": "tradeable",
+    "data_file": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/data/candle_cache_tradeable.json",
+    "n_coins": 425,
+    "n_bars": 721,
+    "total_time_s": 0.66,
+    "label": "4H variant research"
+  },
+  "results": {
+    "Champion_H2": {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_confirm": true,
+        "vol_spike_mult": 3.0
+      },
+      "baseline": {
+        "trades": 31,
+        "pnl": 4113.5,
+        "pf": 2.73,
+        "wr": 67.7,
+        "dd": 24.7
+      },
+      "analysis": {
+        "total_trades": 31,
+        "tier_summary": {
+          "1": {
+            "trades": 7,
+            "pnl": 1152.62,
+            "wr": 57.1,
+            "coins": 7,
+            "pct_of_total": 22.6
+          },
+          "2": {
+            "trades": 14,
+            "pnl": 2880.95,
+            "wr": 78.6,
+            "coins": 13,
+            "pct_of_total": 45.2
+          },
+          "3": {
+            "trades": 10,
+            "pnl": 79.94,
+            "wr": 60.0,
+            "coins": 10,
+            "pct_of_total": 32.3
+          }
+        },
+        "coin_summary": [
+          {
+            "coin": "MF/USD",
+            "tier": "2",
+            "trades": 2,
+            "pnl": 746.0,
+            "wr": 100.0,
+            "avg_pnl": 373.0,
+            "avg_bars": 4.5
+          },
+          {
+            "coin": "BTT/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": 228.98,
+            "wr": 100.0,
+            "avg_pnl": 228.98,
+            "avg_bars": 3.0
+          },
+          {
+            "coin": "YGG/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": -189.45,
+            "wr": 0.0,
+            "avg_pnl": -189.45,
+            "avg_bars": 2.0
+          },
+          {
+            "coin": "SOON/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 233.5,
+            "wr": 100.0,
+            "avg_pnl": 233.5,
+            "avg_bars": 12.0
+          },
+          {
+            "coin": "WCT/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 260.23,
+            "wr": 100.0,
+            "avg_pnl": 260.23,
+            "avg_bars": 6.0
+          },
+          {
+            "coin": "AKE/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": -215.31,
+            "wr": 0.0,
+            "avg_pnl": -215.31,
+            "avg_bars": 6.0
+          },
+          {
+            "coin": "GHST/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": -197.01,
+            "wr": 0.0,
+            "avg_pnl": -197.01,
+            "avg_bars": 8.0
+          },
+          {
+            "coin": "SGB/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": -66.88,
+            "wr": 0.0,
+            "avg_pnl": -66.88,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "RPL/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 29.3,
+            "wr": 100.0,
+            "avg_pnl": 29.3,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "OGN/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 57.3,
+            "wr": 100.0,
+            "avg_pnl": 57.3,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "M/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 245.08,
+            "wr": 100.0,
+            "avg_pnl": 245.08,
+            "avg_bars": 9.0
+          },
+          {
+            "coin": "BIGTIME/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 238.65,
+            "wr": 100.0,
+            "avg_pnl": 238.65,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "DYDX/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 300.46,
+            "wr": 100.0,
+            "avg_pnl": 300.46,
+            "avg_bars": 9.0
+          },
+          {
+            "coin": "BLUR/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": -248.59,
+            "wr": 0.0,
+            "avg_pnl": -248.59,
+            "avg_bars": 11.0
+          },
+          {
+            "coin": "KNC/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 97.51,
+            "wr": 100.0,
+            "avg_pnl": 97.51,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "LCX/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 317.56,
+            "wr": 100.0,
+            "avg_pnl": 317.56,
+            "avg_bars": 5.0
+          },
+          {
+            "coin": "PUFFER/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": -106.02,
+            "wr": 0.0,
+            "avg_pnl": -106.02,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "DYM/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 380.91,
+            "wr": 100.0,
+            "avg_pnl": 380.91,
+            "avg_bars": 8.0
+          },
+          {
+            "coin": "GHIBLI/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": 424.52,
+            "wr": 100.0,
+            "avg_pnl": 424.52,
+            "avg_bars": 1.0
+          },
+          {
+            "coin": "APR/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": -351.23,
+            "wr": 0.0,
+            "avg_pnl": -351.23,
+            "avg_bars": 1.0
+          },
+          {
+            "coin": "AI3/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": -250.65,
+            "wr": 0.0,
+            "avg_pnl": -250.65,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "UMA/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 159.02,
+            "wr": 100.0,
+            "avg_pnl": 159.02,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "BERA/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": -347.95,
+            "wr": 0.0,
+            "avg_pnl": -347.95,
+            "avg_bars": 13.0
+          },
+          {
+            "coin": "ES/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 428.87,
+            "wr": 100.0,
+            "avg_pnl": 428.87,
+            "avg_bars": 3.0
+          },
+          {
+            "coin": "KGEN/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 155.95,
+            "wr": 100.0,
+            "avg_pnl": 155.95,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "ZEUS/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 495.82,
+            "wr": 100.0,
+            "avg_pnl": 495.82,
+            "avg_bars": 1.0
+          },
+          {
+            "coin": "COQ/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": -410.22,
+            "wr": 0.0,
+            "avg_pnl": -410.22,
+            "avg_bars": 3.0
+          },
+          {
+            "coin": "MOODENG/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 505.62,
+            "wr": 100.0,
+            "avg_pnl": 505.62,
+            "avg_bars": 4.0
+          },
+          {
+            "coin": "CHEEMS/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": 563.51,
+            "wr": 100.0,
+            "avg_pnl": 563.51,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "U/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": 628.02,
+            "wr": 100.0,
+            "avg_pnl": 628.02,
+            "avg_bars": 8.0
+          }
+        ],
+        "day_summary": {
+          "total_days": 112,
+          "days_with_trades": 30,
+          "days_zero_trades": 82,
+          "pct_zero_days": 73.2,
+          "daily_detail": [
+            {
+              "date": "2025-10-26",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-10-27",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-10-28",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-10-29",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-10-30",
+              "trades": 1,
+              "pnl": 228.98
+            },
+            {
+              "date": "2025-10-31",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-01",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-02",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-03",
+              "trades": 2,
+              "pnl": 44.06
+            },
+            {
+              "date": "2025-11-04",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-05",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-06",
+              "trades": 1,
+              "pnl": 260.23
+            },
+            {
+              "date": "2025-11-07",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-08",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-09",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-10",
+              "trades": 1,
+              "pnl": -215.31
+            },
+            {
+              "date": "2025-11-11",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-12",
+              "trades": 1,
+              "pnl": -197.01
+            },
+            {
+              "date": "2025-11-13",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-14",
+              "trades": 1,
+              "pnl": -66.88
+            },
+            {
+              "date": "2025-11-15",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-16",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-17",
+              "trades": 1,
+              "pnl": 29.3
+            },
+            {
+              "date": "2025-11-18",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-19",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-20",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-21",
+              "trades": 1,
+              "pnl": 57.3
+            },
+            {
+              "date": "2025-11-22",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-23",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-24",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-25",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-26",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-27",
+              "trades": 1,
+              "pnl": 245.08
+            },
+            {
+              "date": "2025-11-28",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-29",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-30",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-01",
+              "trades": 1,
+              "pnl": 238.65
+            },
+            {
+              "date": "2025-12-02",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-03",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-04",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-05",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-06",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-07",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-08",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-09",
+              "trades": 1,
+              "pnl": 300.46
+            },
+            {
+              "date": "2025-12-10",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-11",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-12",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-13",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-14",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-15",
+              "trades": 1,
+              "pnl": -248.59
+            },
+            {
+              "date": "2025-12-16",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-17",
+              "trades": 1,
+              "pnl": 97.51
+            },
+            {
+              "date": "2025-12-18",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-19",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-20",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-21",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-22",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-23",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-24",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-25",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-26",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-27",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-28",
+              "trades": 1,
+              "pnl": 317.56
+            },
+            {
+              "date": "2025-12-29",
+              "trades": 1,
+              "pnl": -106.02
+            },
+            {
+              "date": "2025-12-30",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-31",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-01",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-02",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-03",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-04",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-05",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-06",
+              "trades": 1,
+              "pnl": 341.78
+            },
+            {
+              "date": "2026-01-07",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-08",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-09",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-10",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-11",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-12",
+              "trades": 1,
+              "pnl": 380.91
+            },
+            {
+              "date": "2026-01-13",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-14",
+              "trades": 1,
+              "pnl": 424.52
+            },
+            {
+              "date": "2026-01-15",
+              "trades": 1,
+              "pnl": -351.23
+            },
+            {
+              "date": "2026-01-16",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-17",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-18",
+              "trades": 1,
+              "pnl": -250.65
+            },
+            {
+              "date": "2026-01-19",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-20",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-21",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-22",
+              "trades": 1,
+              "pnl": 404.22
+            },
+            {
+              "date": "2026-01-23",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-24",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-25",
+              "trades": 1,
+              "pnl": 159.02
+            },
+            {
+              "date": "2026-01-26",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-27",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-28",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-29",
+              "trades": 1,
+              "pnl": -347.95
+            },
+            {
+              "date": "2026-01-30",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-31",
+              "trades": 1,
+              "pnl": 428.87
+            },
+            {
+              "date": "2026-02-01",
+              "trades": 1,
+              "pnl": 155.95
+            },
+            {
+              "date": "2026-02-02",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-03",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-04",
+              "trades": 1,
+              "pnl": 495.82
+            },
+            {
+              "date": "2026-02-05",
+              "trades": 1,
+              "pnl": -410.22
+            },
+            {
+              "date": "2026-02-06",
+              "trades": 1,
+              "pnl": 505.62
+            },
+            {
+              "date": "2026-02-07",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-08",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-09",
+              "trades": 1,
+              "pnl": 563.51
+            },
+            {
+              "date": "2026-02-10",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-11",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-12",
+              "trades": 1,
+              "pnl": 628.02
+            },
+            {
+              "date": "2026-02-13",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-14",
+              "trades": 0,
+              "pnl": 0
+            }
+          ]
+        },
+        "week_summary": {
+          "total_weeks": 18,
+          "weeks_with_trades": 16,
+          "weeks_zero_trades": 2,
+          "pct_zero_weeks": 11.1,
+          "mean_trades_per_week": 1.72,
+          "median_trades_per_week": 2,
+          "max_trades_per_week": 4,
+          "weekly_detail": [
+            {
+              "week": "2025-W42",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "week": "2025-W43",
+              "trades": 1,
+              "pnl": 228.98
+            },
+            {
+              "week": "2025-W44",
+              "trades": 3,
+              "pnl": 304.29
+            },
+            {
+              "week": "2025-W45",
+              "trades": 3,
+              "pnl": -479.2
+            },
+            {
+              "week": "2025-W46",
+              "trades": 2,
+              "pnl": 86.6
+            },
+            {
+              "week": "2025-W47",
+              "trades": 1,
+              "pnl": 245.08
+            },
+            {
+              "week": "2025-W48",
+              "trades": 1,
+              "pnl": 238.65
+            },
+            {
+              "week": "2025-W49",
+              "trades": 1,
+              "pnl": 300.46
+            },
+            {
+              "week": "2025-W50",
+              "trades": 2,
+              "pnl": -151.08
+            },
+            {
+              "week": "2025-W51",
+              "trades": 1,
+              "pnl": 317.56
+            },
+            {
+              "week": "2025-W52",
+              "trades": 1,
+              "pnl": -106.02
+            },
+            {
+              "week": "2026-W00",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "week": "2026-W01",
+              "trades": 1,
+              "pnl": 341.78
+            },
+            {
+              "week": "2026-W02",
+              "trades": 4,
+              "pnl": 203.55
+            },
+            {
+              "week": "2026-W03",
+              "trades": 2,
+              "pnl": 563.24
+            },
+            {
+              "week": "2026-W04",
+              "trades": 3,
+              "pnl": 236.86
+            },
+            {
+              "week": "2026-W05",
+              "trades": 3,
+              "pnl": 591.22
+            },
+            {
+              "week": "2026-W06",
+              "trades": 2,
+              "pnl": 1191.53
+            }
+          ]
+        },
+        "duration_stats": {
+          "mean_bars": 8.8,
+          "median_bars": 8,
+          "min_bars": 1,
+          "max_bars": 15
+        },
+        "exit_reasons": {
+          "PROFIT TARGET": 15,
+          "FIXED STOP": 7,
+          "TIME MAX": 9
+        }
+      }
+    },
+    "GRID_BEST": {
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 10,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_confirm": true,
+        "vol_spike_mult": 2.5
+      },
+      "baseline": {
+        "trades": 32,
+        "pnl": 4718.27,
+        "pf": 2.61,
+        "wr": 68.8,
+        "dd": 16.4
+      },
+      "analysis": {
+        "total_trades": 32,
+        "tier_summary": {
+          "1": {
+            "trades": 7,
+            "pnl": 1461.66,
+            "wr": 71.4,
+            "coins": 6,
+            "pct_of_total": 21.9
+          },
+          "2": {
+            "trades": 15,
+            "pnl": 3052.87,
+            "wr": 73.3,
+            "coins": 14,
+            "pct_of_total": 46.9
+          },
+          "3": {
+            "trades": 10,
+            "pnl": 203.74,
+            "wr": 60.0,
+            "coins": 10,
+            "pct_of_total": 31.2
+          }
+        },
+        "coin_summary": [
+          {
+            "coin": "CHEEMS/USD",
+            "tier": "1",
+            "trades": 2,
+            "pnl": 873.18,
+            "wr": 100.0,
+            "avg_pnl": 436.59,
+            "avg_bars": 11.0
+          },
+          {
+            "coin": "MF/USD",
+            "tier": "2",
+            "trades": 2,
+            "pnl": 915.79,
+            "wr": 100.0,
+            "avg_pnl": 457.9,
+            "avg_bars": 4.5
+          },
+          {
+            "coin": "BTT/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": 228.98,
+            "wr": 100.0,
+            "avg_pnl": 228.98,
+            "avg_bars": 3.0
+          },
+          {
+            "coin": "YGG/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": -233.91,
+            "wr": 0.0,
+            "avg_pnl": -233.91,
+            "avg_bars": 2.0
+          },
+          {
+            "coin": "SOON/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 228.41,
+            "wr": 100.0,
+            "avg_pnl": 228.41,
+            "avg_bars": 12.0
+          },
+          {
+            "coin": "WCT/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 254.56,
+            "wr": 100.0,
+            "avg_pnl": 254.56,
+            "avg_bars": 6.0
+          },
+          {
+            "coin": "AKE/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": -260.05,
+            "wr": 0.0,
+            "avg_pnl": -260.05,
+            "avg_bars": 6.0
+          },
+          {
+            "coin": "GHST/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": -191.5,
+            "wr": 0.0,
+            "avg_pnl": -191.5,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "RPL/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 32.53,
+            "wr": 100.0,
+            "avg_pnl": 32.53,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "OGN/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 63.61,
+            "wr": 100.0,
+            "avg_pnl": 63.61,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "M/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 272.09,
+            "wr": 100.0,
+            "avg_pnl": 272.09,
+            "avg_bars": 9.0
+          },
+          {
+            "coin": "BIGTIME/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 264.95,
+            "wr": 100.0,
+            "avg_pnl": 264.95,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "DYDX/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 333.57,
+            "wr": 100.0,
+            "avg_pnl": 333.57,
+            "avg_bars": 9.0
+          },
+          {
+            "coin": "ME/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 371.76,
+            "wr": 100.0,
+            "avg_pnl": 371.76,
+            "avg_bars": 4.0
+          },
+          {
+            "coin": "USUAL/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": -194.18,
+            "wr": 0.0,
+            "avg_pnl": -194.18,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "TANSSI/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 239.99,
+            "wr": 100.0,
+            "avg_pnl": 239.99,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "LCX/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 419.57,
+            "wr": 100.0,
+            "avg_pnl": 419.57,
+            "avg_bars": 5.0
+          },
+          {
+            "coin": "PUFFER/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": -140.08,
+            "wr": 0.0,
+            "avg_pnl": -140.08,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "HPOS10I/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": -42.43,
+            "wr": 0.0,
+            "avg_pnl": -42.43,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "GHIBLI/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": 498.41,
+            "wr": 100.0,
+            "avg_pnl": 498.41,
+            "avg_bars": 1.0
+          },
+          {
+            "coin": "APR/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": -509.15,
+            "wr": 0.0,
+            "avg_pnl": -509.15,
+            "avg_bars": 1.0
+          },
+          {
+            "coin": "AI3/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": -287.86,
+            "wr": 0.0,
+            "avg_pnl": -287.86,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "UMA/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 182.63,
+            "wr": 100.0,
+            "avg_pnl": 182.63,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "BERA/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": -493.39,
+            "wr": 0.0,
+            "avg_pnl": -493.39,
+            "avg_bars": 14.0
+          },
+          {
+            "coin": "ES/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 481.79,
+            "wr": 100.0,
+            "avg_pnl": 481.79,
+            "avg_bars": 3.0
+          },
+          {
+            "coin": "KGEN/USD",
+            "tier": "3",
+            "trades": 1,
+            "pnl": 175.19,
+            "wr": 100.0,
+            "avg_pnl": 175.19,
+            "avg_bars": 15.0
+          },
+          {
+            "coin": "ZEUS/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 557.01,
+            "wr": 100.0,
+            "avg_pnl": 557.01,
+            "avg_bars": 1.0
+          },
+          {
+            "coin": "COQ/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": -569.01,
+            "wr": 0.0,
+            "avg_pnl": -569.01,
+            "avg_bars": 3.0
+          },
+          {
+            "coin": "MOODENG/USD",
+            "tier": "2",
+            "trades": 1,
+            "pnl": 555.64,
+            "wr": 100.0,
+            "avg_pnl": 555.64,
+            "avg_bars": 4.0
+          },
+          {
+            "coin": "U/USD",
+            "tier": "1",
+            "trades": 1,
+            "pnl": 690.15,
+            "wr": 100.0,
+            "avg_pnl": 690.15,
+            "avg_bars": 8.0
+          }
+        ],
+        "day_summary": {
+          "total_days": 112,
+          "days_with_trades": 31,
+          "days_zero_trades": 81,
+          "pct_zero_days": 72.3,
+          "daily_detail": [
+            {
+              "date": "2025-10-26",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-10-27",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-10-28",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-10-29",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-10-30",
+              "trades": 1,
+              "pnl": 228.98
+            },
+            {
+              "date": "2025-10-31",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-01",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-02",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-03",
+              "trades": 2,
+              "pnl": -5.5
+            },
+            {
+              "date": "2025-11-04",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-05",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-06",
+              "trades": 1,
+              "pnl": 254.56
+            },
+            {
+              "date": "2025-11-07",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-08",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-09",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-10",
+              "trades": 1,
+              "pnl": -260.05
+            },
+            {
+              "date": "2025-11-11",
+              "trades": 1,
+              "pnl": 253.93
+            },
+            {
+              "date": "2025-11-12",
+              "trades": 1,
+              "pnl": -191.5
+            },
+            {
+              "date": "2025-11-13",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-14",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-15",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-16",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-17",
+              "trades": 1,
+              "pnl": 32.53
+            },
+            {
+              "date": "2025-11-18",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-19",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-20",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-21",
+              "trades": 1,
+              "pnl": 63.61
+            },
+            {
+              "date": "2025-11-22",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-23",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-24",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-25",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-26",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-27",
+              "trades": 1,
+              "pnl": 272.09
+            },
+            {
+              "date": "2025-11-28",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-29",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-11-30",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-01",
+              "trades": 1,
+              "pnl": 264.95
+            },
+            {
+              "date": "2025-12-02",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-03",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-04",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-05",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-06",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-07",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-08",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-09",
+              "trades": 1,
+              "pnl": 333.57
+            },
+            {
+              "date": "2025-12-10",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-11",
+              "trades": 1,
+              "pnl": 371.76
+            },
+            {
+              "date": "2025-12-12",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-13",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-14",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-15",
+              "trades": 1,
+              "pnl": -194.18
+            },
+            {
+              "date": "2025-12-16",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-17",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-18",
+              "trades": 1,
+              "pnl": 239.99
+            },
+            {
+              "date": "2025-12-19",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-20",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-21",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-22",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-23",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-24",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-25",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-26",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-27",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-28",
+              "trades": 1,
+              "pnl": 419.57
+            },
+            {
+              "date": "2025-12-29",
+              "trades": 1,
+              "pnl": -140.08
+            },
+            {
+              "date": "2025-12-30",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2025-12-31",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-01",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-02",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-03",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-04",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-05",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-06",
+              "trades": 1,
+              "pnl": 451.57
+            },
+            {
+              "date": "2026-01-07",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-08",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-09",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-10",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-11",
+              "trades": 1,
+              "pnl": -42.43
+            },
+            {
+              "date": "2026-01-12",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-13",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-14",
+              "trades": 1,
+              "pnl": 498.41
+            },
+            {
+              "date": "2026-01-15",
+              "trades": 1,
+              "pnl": -509.15
+            },
+            {
+              "date": "2026-01-16",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-17",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-18",
+              "trades": 1,
+              "pnl": -287.86
+            },
+            {
+              "date": "2026-01-19",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-20",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-21",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-22",
+              "trades": 1,
+              "pnl": 464.22
+            },
+            {
+              "date": "2026-01-23",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-24",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-25",
+              "trades": 1,
+              "pnl": 182.63
+            },
+            {
+              "date": "2026-01-26",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-27",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-28",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-29",
+              "trades": 1,
+              "pnl": -493.39
+            },
+            {
+              "date": "2026-01-30",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-01-31",
+              "trades": 1,
+              "pnl": 481.79
+            },
+            {
+              "date": "2026-02-01",
+              "trades": 1,
+              "pnl": 175.19
+            },
+            {
+              "date": "2026-02-02",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-03",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-04",
+              "trades": 1,
+              "pnl": 557.01
+            },
+            {
+              "date": "2026-02-05",
+              "trades": 1,
+              "pnl": -569.01
+            },
+            {
+              "date": "2026-02-06",
+              "trades": 1,
+              "pnl": 555.64
+            },
+            {
+              "date": "2026-02-07",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-08",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-09",
+              "trades": 1,
+              "pnl": 619.25
+            },
+            {
+              "date": "2026-02-10",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-11",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-12",
+              "trades": 1,
+              "pnl": 690.15
+            },
+            {
+              "date": "2026-02-13",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "date": "2026-02-14",
+              "trades": 0,
+              "pnl": 0
+            }
+          ]
+        },
+        "week_summary": {
+          "total_weeks": 18,
+          "weeks_with_trades": 16,
+          "weeks_zero_trades": 2,
+          "pct_zero_weeks": 11.1,
+          "mean_trades_per_week": 1.78,
+          "median_trades_per_week": 2,
+          "max_trades_per_week": 3,
+          "weekly_detail": [
+            {
+              "week": "2025-W42",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "week": "2025-W43",
+              "trades": 1,
+              "pnl": 228.98
+            },
+            {
+              "week": "2025-W44",
+              "trades": 3,
+              "pnl": 249.06
+            },
+            {
+              "week": "2025-W45",
+              "trades": 3,
+              "pnl": -197.61
+            },
+            {
+              "week": "2025-W46",
+              "trades": 2,
+              "pnl": 96.14
+            },
+            {
+              "week": "2025-W47",
+              "trades": 1,
+              "pnl": 272.09
+            },
+            {
+              "week": "2025-W48",
+              "trades": 1,
+              "pnl": 264.95
+            },
+            {
+              "week": "2025-W49",
+              "trades": 2,
+              "pnl": 705.34
+            },
+            {
+              "week": "2025-W50",
+              "trades": 2,
+              "pnl": 45.81
+            },
+            {
+              "week": "2025-W51",
+              "trades": 1,
+              "pnl": 419.57
+            },
+            {
+              "week": "2025-W52",
+              "trades": 1,
+              "pnl": -140.08
+            },
+            {
+              "week": "2026-W00",
+              "trades": 0,
+              "pnl": 0
+            },
+            {
+              "week": "2026-W01",
+              "trades": 2,
+              "pnl": 409.14
+            },
+            {
+              "week": "2026-W02",
+              "trades": 3,
+              "pnl": -298.6
+            },
+            {
+              "week": "2026-W03",
+              "trades": 2,
+              "pnl": 646.85
+            },
+            {
+              "week": "2026-W04",
+              "trades": 3,
+              "pnl": 163.6
+            },
+            {
+              "week": "2026-W05",
+              "trades": 3,
+              "pnl": 543.64
+            },
+            {
+              "week": "2026-W06",
+              "trades": 2,
+              "pnl": 1309.4
+            }
+          ]
+        },
+        "duration_stats": {
+          "mean_bars": 9.0,
+          "median_bars": 9,
+          "min_bars": 1,
+          "max_bars": 15
+        },
+        "exit_reasons": {
+          "PROFIT TARGET": 16,
+          "FIXED STOP": 5,
+          "TIME MAX": 11
+        }
+      }
+    }
+  }
+}

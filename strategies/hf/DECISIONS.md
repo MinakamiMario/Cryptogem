@@ -819,3 +819,165 @@ Best variants per hypothesis:
 **Result**: **HALT** — 0/90 configs survive Layer 1. No hypothesis has positive expectancy at 1H.
 
 **Test status**: make check 66/66 green. Screening tests: 30/30 pass + 3 skip.
+
+---
+
+## ADR-HF-025: Market Context Injection (Harness Untouched)
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Sprint 5 needed cross-coin data (BTC regime, market breadth, cross-sectional rankings) inside per-coin signal functions. The harness calls `signal_fn(candles, bar, ind, params)` per-coin. Modifying harness was ruled out (engine parity, Sprint 4 test stability).
+
+**Decision**: Precompute cross-coin context per-bar in `market_context.py`, inject into `params['__market__']` before backtesting. Signal functions read `params['__market__']` for cross-coin data. Per-coin identity is injected into `indicators['__coin__']` since `ind` is per-coin while `params` is shared.
+
+**Architecture**:
+```
+precompute_market_context(data, coins) → {
+    btc_atr_ratio: [float/bar],
+    breadth_up: [float/bar],
+    momentum_rank: {coin: [int/bar]},
+    mean_revert_rank: {coin: [int/bar]}
+}
+# Injection: enriched_params = {**params, '__market__': market_ctx}
+# Per-coin: indicators[coin]['__coin__'] = coin
+```
+
+**Causality guarantee**: All context at bar N uses data up to bar N-1 only. Proven by truncation tests in `test_market_context.py::TestNoLookahead` — compute with N bars, then with N+K bars, values at 0..N-1 must be identical.
+
+**Key bug found during screening**: BTC/USD must be explicitly included in the coin list passed to `precompute_market_context`, even if BTC is not in any trading tier. Without this, `btc_atr_ratio` defaults to 1.0 and H21 (BTC_REGIME_MR) generates 0 trades.
+
+**Consequence**: Harness remains unmodified. Sprint 4 tests unchanged (30 pass + 3 skip). Pattern is extensible to future cross-coin features.
+
+---
+
+## ADR-HF-026: Cross-Sectional via strength + max_pos (No Harness Change)
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Cross-sectional hypotheses (H24 MOMENTUM_RANK, H25 MEAN_REVERT_RANK) need to rank all coins per bar and trade only top-N. The harness already sorts buys by `strength` (line 176) and respects `max_pos` parameter.
+
+**Decision**: Cross-sectional signals return rank-based strength scores and run with `max_pos=5`. The harness naturally selects top-5 by sorting on strength. No harness modification needed.
+
+**Implementation**:
+- H24/H25 signal functions return `strength = (total_coins - rank + 1) / total_coins`
+- `screener_s5.py` overrides `max_pos=5` for `category == 'cross_sectional'`
+- Rankings precomputed in `market_context.py` (momentum: vol-adjusted 10-bar return; mean_revert: z-score oversold)
+
+**Key bug found**: Signal functions initially read `params.get('__coin__')` but `__coin__` was injected into `indicators[coin]`. Since `params` is shared across all coins in the harness bar loop while `ind` is per-coin, the fix was to change signals to read `indicators.get('__coin__')`.
+
+**Consequence**: Harness untouched. Cross-sectional signals generate 380-576 trades per config (high throughput). However, all configs have negative expectancy — the ranking signal alone doesn't overcome fee drag.
+
+---
+
+## ADR-HF-027: Sprint 5 Screening Results — NO SURVIVORS (HALT)
+
+**Date**: 2026-02-15
+**Status**: DECIDED — **HALT** (no Layer 2 promotion)
+**Context**: Sprint 5 screened 10 hypotheses × 6 variants = 60 configs across 3 new signal families: microstructure (H16-H20), market state (H21-H23), and cross-sectional (H24-H25). Updated KILL gates: exp/week > $0 AND trades/week ≥ 7 AND be_trade_ratio < 40%.
+
+**Result**: **0 survivors out of 60 configs.** Every configuration failed K1 (exp_per_week > $0).
+
+**Evidence** (screen_s5_001.json / screen_s5_001.md):
+
+| Gate | Pass | Fail | Rate |
+|------|------|------|------|
+| K1 (exp/week > $0) | 0 | 60 | **0%** |
+| K2 (trades/week ≥ 7) | 59 | 1 | 98% |
+| K3 (BE ratio < 40%) | 60 | 0 | 100% |
+| S3 (PF ≥ 1.1) | 0 | 60 | 0% |
+| S4 (WF ≥ 2/5) | 9 | 51 | 15% |
+| S5 (concentration) | 47 | 13 | 78% |
+
+Best variants per hypothesis family:
+
+| ID | Category | Best PF | Best Exp/Week | Trades |
+|----|----------|---------|---------------|--------|
+| H20 VWAP_DEVIATION | microstructure | **0.90** | **-$64/wk** | 70 |
+| H23 DECORRELATION | market_state | 0.67 | -$564/wk | 166 |
+| H24 MOMENTUM_RANK | cross_sectional | 0.60 | -$322/wk | 448 |
+| H25 MEAN_REVERT_RANK | cross_sectional | 0.52 | -$313/wk | 473 |
+| H22 BREADTH_MOMENTUM | market_state | 0.40 | -$468/wk | 100 |
+| H21 BTC_REGIME_MR | market_state | 0.60 | -$159/wk | 56 |
+
+**Closest-to-viable**: H20 VWAP_DEVIATION v5 (dev_thresh=2.0, tp_pct=8, sl_pct=5) achieved PF=0.90 with only -$64/week — the closest any Sprint 4 or Sprint 5 hypothesis has come to breakeven. This suggests VWAP-based mean reversion has a real signal, but 10% gross profit still lost to fees.
+
+**Key findings**:
+1. **Microstructure came closest**: H20 (VWAP deviation + bounce) nearly breaks even (PF 0.90). This is significantly better than Sprint 4's best (PF 0.95 at -$2/trade but much more negative exp/week).
+2. **Cross-sectional generates massive throughput**: H25 produced 576 trades (134 tr/week!) — selectivity from ranking doesn't overcome fee drag but the throughput is there.
+3. **Market state filtering reduces trades but doesn't improve PF**: H21 (BTC calm + RSI oversold) fires rarely (29-72 trades across all variants) and still loses.
+4. **BE ratio is universally low** (3-21%): Break-even trades are NOT the problem. Trades clearly win or lose; they just lose more often than they win at these fee levels.
+5. **Breadth-based timing doesn't help**: H22 had the worst PF (0.27-0.40). Market-wide recovery detection is too lagging at 1H.
+
+**Root cause analysis**:
+Sprint 5 tested 3 structurally different signal families that were specifically designed to overcome Sprint 4's fee-drag problem:
+- **Microstructure** targeted larger per-trade gross returns (displacement bars = big candles). Result: signals fire on big candles but subsequent moves don't follow through enough.
+- **Market state** tried to trade only in favorable conditions. Result: filtering reduces trade count but remaining trades have same negative expectancy.
+- **Cross-sectional** tried selectivity (trade only the best-ranked coins). Result: ranking doesn't identify coins with genuine 1H alpha.
+
+The conclusion is now definitive: **1H crypto at these fee levels (T1=31bps, T2=56bps per side) does not support positive expectancy for any tested signal family.** Five categories tested in Sprint 4 (15 hypotheses) and three categories in Sprint 5 (10 hypotheses) — 25 total hypothesis families, 150 total configs — all fail.
+
+**Decision**: **HALT**. No further 1H signal exploration. The problem is structural.
+
+**Recommendations**:
+1. **Accept 4H-only deployment** for DualConfirm
+2. **If 1H is revisited**: Focus exclusively on H20-style VWAP deviation (PF 0.90, closest to edge) but only after Kraken fee tier improvement brings RT cost below ~80bps
+3. **Alternative**: Maker-fee strategies or higher-timeframe signals (4H trigger → 1H timing)
+
+---
+
+## ADR-HF-028: Sprint 5 Scoreboard Design
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Sprint 4 scoring used expectancy × sqrt(trades) × (PF-1). Sprint 5 needed throughput-oriented metrics and execution realism.
+
+**Decision**: Sprint 5 scoreboard adds 5 new metrics and 3 updated KILL gates:
+
+| Metric | Formula | Purpose |
+|--------|---------|---------|
+| trades_per_week | n_trades / (total_bars / 168) | Throughput |
+| exp_per_week | expectancy × trades_per_week | Sustainable profit rate |
+| fee_drag_pct | total_fees / gross_profit × 100 | Fee erosion |
+| be_trade_ratio | trades where \|pnl\| < RT_fee / n_trades × 100 | Noise detection |
+| stress_2x_pnl | P&L at 2× tier fees | Stress robustness |
+
+**Updated KILL gates** (from Sprint 4's S1+S2):
+- K1: exp_per_week > $0 (replaces S2 expectancy > $0 per trade)
+- K2: trades_per_week ≥ 7 (replaces S1 trades ≥ 60)
+- K3: be_trade_ratio < 40% (new — reject noise-dominated signals)
+
+**Rationale**:
+1. exp_per_week is the primary metric — a signal that profits $1/trade but trades once/week is useless
+2. trades_per_week captures frequency at human scale (not bar count)
+3. be_trade_ratio detects signals where most trades are within the fee band (noise, not alpha)
+4. fee_drag_pct quantifies how much gross profit fees consume
+5. stress_2x_pnl provides execution headroom check
+
+**Consequence**: All 60 Sprint 5 configs passed K2 (98%) and K3 (100%) but none passed K1 (0%). The bottleneck is universally negative alpha, not trade frequency or noise.
+
+---
+
+## Sprint 5 Summary — Microstructure, Market State & Cross-Sectional Screening
+
+**Deliverables**:
+| Artifact | Lines | Purpose |
+|----------|-------|---------|
+| strategies/hf/screening/market_context.py | ~300 | BTC regime, breadth, cross-sectional rankings |
+| strategies/hf/screening/indicators_extended.py | ~120 | VWAP, count, body_pct, atr_ratio |
+| strategies/hf/screening/hypotheses_s5.py | ~890 | H16-H25 signal functions + grids |
+| strategies/hf/screening/screener_s5.py | ~490 | Sprint 5 screening wrapper |
+| strategies/hf/screening/run_screen_s5.py | ~395 | Sprint 5 CLI |
+| strategies/hf/screening/test_market_context.py | ~240 | 14 tests (causality proof) |
+| strategies/hf/screening/test_hypotheses_s5.py | ~980 | 31 tests |
+| strategies/hf/screening/report.py (modified) | +120 | S5 report functions |
+| reports/hf/screening/screen_s5_001.json | — | Full raw results |
+| reports/hf/screening/screen_s5_001.md | — | Human-readable summary |
+| ADRs HF-025 through HF-028 | — | 4 architecture decisions |
+| **Total new code** | **~3,535** | |
+| **Total new tests** | **45** | 45 pass (14 market_context + 31 hypotheses_s5) |
+
+**Result**: **HALT** — 0/60 configs survive. No hypothesis has positive weekly expectancy at 1H.
+
+**Cumulative result across Sprints 3-5**: 0/150 configs survive across 25 hypothesis families tested at 1H. The 1H crypto trading timeframe at current fee levels is structurally unprofitable for directional signals.
+
+**Test status**: make check 66/66 green. Sprint 5 tests: 45/45 pass.

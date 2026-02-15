@@ -203,6 +203,112 @@
 
 ---
 
+## ADR-HF-009: Per-Tier Friction — MARGINAL Under Realistic Costs
+
+**Date**: 2026-02-15
+**Status**: DECIDED — key finding for live viability
+**Context**: Sprint 1 used flat KRAKEN_FEE (26bps) or flat 20bps slippage. ADR-HF-008 showed edge lives in Tier 2 mid-caps. Sprint 2 built per-tier slippage model to answer: "How much P&L survives realistic execution costs?"
+
+**Fee model (per side)**:
+
+| Tier | Base | Slippage | Total | Rationale |
+|------|------|----------|-------|-----------|
+| Tier 1 (Liquid) | 26 bps | 5 bps | 31 bps | Tight spreads, deep books |
+| Tier 2 (Mid) | 26 bps | 30 bps | 56 bps | Wider spreads, thinner books |
+| Tier 3 (Illiquid) | 26 bps | 75 bps | 101 bps | Wide spreads, minimal depth |
+
+**Evidence** (friction_v2_001):
+
+| Model | Champion H2 | GRID_BEST |
+|-------|-------------|-----------|
+| Flat baseline (26bps) | $+4,114 / PF 2.73 | $+4,718 / PF 2.61 |
+| Flat 20bps (46bps) | $+3,408 / PF 2.45 | $+3,920 / PF 2.37 |
+| **Per-tier composite** | **$+1,346 / PF 1.34** | **$+1,770 / PF 1.43** |
+| Per-tier 2x stress | $+437 / PF 1.11 | $+816 / PF 1.19 |
+| Retained (composite/baseline) | 32.7% | 37.5% |
+
+**Per-tier breakdown (composite)**:
+
+| Tier | Champion H2 | GRID_BEST |
+|------|-------------|-----------|
+| Tier 1 | $+4 / PF 1.00 | $+243 / PF 1.16 |
+| Tier 2 | **$+1,222 / PF 1.71** | **$+1,329 / PF 1.91** |
+| Tier 3 | $+121 / PF 1.12 | $+198 / PF 1.17 |
+
+**Decision**: Strategy is **MARGINAL** under realistic friction. Both configs retain only 33-38% of flat-baseline P&L. However:
+1. Both remain profitable (P&L > $0)
+2. Tier 2 is the clear alpha driver under friction too (PF 1.71/1.91)
+3. 2x stress still positive for both configs
+4. GRID_BEST is more robust than Champion H2 (again)
+
+**Implication**: The "headline" P&L of $4,114/$4,718 was inflated by unrealistic friction. Realistic P&L is ~$1,350–$1,770 over 120 days on $2K capital (67-88% annualized return). Still positive, but margins are thin.
+
+---
+
+## ADR-HF-010: Per-Tier Gate Validation — Tier 1+2 (Live) PASSES All Gates
+
+**Date**: 2026-02-15
+**Status**: DECIDED — critical for live eligibility
+**Context**: Sprint 2.3 ran all 5 hard gates per tier with tier-appropriate friction.
+
+**Evidence** (validate_per_tier_001):
+
+| Config | Tier 1 | Tier 2 | Tier 3 | **Tier 1+2 (Live)** |
+|--------|--------|--------|--------|---------------------|
+| Champion H2 | INSUFFICIENT_SAMPLE (17 trades) | **GO** (5/5 gates) | INSUFFICIENT_SAMPLE (16 trades) | **GO** (5/5 gates) |
+| GRID_BEST | INSUFFICIENT_SAMPLE (18 trades) | **SOFT-GO** (WF 3/5) | INSUFFICIENT_SAMPLE (17 trades) | **GO** (5/5 gates) |
+
+**Key findings**:
+1. **Tier 1 alone**: INSUFFICIENT_SAMPLE for both configs (17-18 trades < 20). Even with enough trades, WF fails (2/5) and concentration is too high (top1 ~40%, top3 ~71%)
+2. **Tier 2 alone**: Champion H2 = GO (all gates). GRID_BEST = SOFT-GO (WF 3/5, but all other gates pass). Friction stress passes even at 2x tier fee.
+3. **Tier 3 alone**: INSUFFICIENT_SAMPLE. Friction stress fails hard at tier fee.
+4. **Tier 1+2 (Live universe, 316 coins)**: Both configs = **GO**. All 5 hard gates pass. This is the recommended live universe.
+
+**Decision**: Live trading universe = Tier 1 + Tier 2 (316 coins). Tier 3 excluded. Conservative fee = 56bps (Tier 2 fee applied to all).
+
+**Live eligibility per UNIVERSE_POLICY.md**:
+- [x] All 5 hard gates PASS (Tier 1+2) ✓
+- [x] Per-tier friction composite P&L > $0 ✓
+- [x] Tier 2 alone P&L > $0 under tier friction ✓
+- [x] Per-tier 2x stress P&L > $0 ✓
+- [x] No Tier 3 coins ✓
+
+---
+
+## ADR-HF-011: Universe Policy Established
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: `UNIVERSE_POLICY.md` defines inclusion filters, tier assignment, capacity limits, and live eligibility criteria.
+
+**Decision**: See `UNIVERSE_POLICY.md` for full spec. Key rules:
+1. Min median volume ≥ P25 (~$8,300) — excludes Tier 3
+2. Max zero-volume candles < 20%
+3. Min bar coverage ≥ 95%
+4. Per-tier fees: T1=31bps, T2=56bps per side
+5. Live universe = Tier 1 + Tier 2 = 316 coins
+
+---
+
+## Sprint 2 Summary
+
+**Deliverables**:
+| Task | Artifact | Finding |
+|------|----------|---------|
+| Friction v2 | hf_friction_v2.py + report | MARGINAL — 33-38% P&L retained under realistic friction |
+| Universe policy | UNIVERSE_POLICY.md | Tier 3 excluded, T1+T2 = 316 coins for live |
+| Per-tier validation | hf_validate_per_tier.py + report | T1+2 = GO for both configs at conservative 56bps fee |
+| ADRs | DECISIONS.md | ADR-009 through ADR-011 |
+
+**Updated Sprint 3 Recommendations**:
+1. **Data pipeline**: Build 1H/15m Kraken OHLCV fetcher with tier metadata
+2. **Signal exploration**: Test DualConfirm on 1H (expect more trades → better sample size)
+3. **New signals for Tier 1**: vol_spike_mult doesn't work on liquid coins — need different entry (momentum, orderbook, multi-TF)
+4. **Stop-loss realism**: Model gap risk / slippage on stop-loss fills (currently exact sl_pct)
+5. **Paper trading**: Consider running T1+2 universe with per-tier fees on paper before live
+
+---
+
 ## Sprint 1.5 Summary
 
 **Deliverables**:

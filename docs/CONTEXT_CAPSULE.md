@@ -117,3 +117,27 @@ Definition: `unique_backtest_signatures / total_evaluations` where signature = `
 | `save_champion()` | agent_team_v3.py L118 | Persist + normalize |
 | `load_champion()` | agent_team_v3.py L126 | Load + normalize |
 | `test_param_sensitivity.py` | trading_bot/ | 66 regression tests |
+
+## HF Screening Research
+
+### Scope
+- Directory: `strategies/hf/` -- separate project from `trading_bot/` (4H DualConfirm)
+- Timeframe: 1H candles, T1 (98 coins) + T2 (216 coins)
+
+### Result
+- **CONDITIONAL GO** for H20 VWAP_DEVIATION v5 @ MEXC (ADR-HF-029)
+- 25 hypothesis families, 150+ configs tested -- all negative at Kraken fees
+- H20 v5 flips positive at MEXC fees: PF=1.25, +$143/wk
+
+### ADR Source of Truth
+- `strategies/hf/DECISIONS.md` (ADR-HF-001 through ADR-HF-029)
+- Root-level `docs/DECISIONS.md` contains only trading_bot/ ADRs
+
+### Test Separation
+- 66 regression tests (`make check`) remain green -- HF does not affect them
+- HF tests are separate: `pytest strategies/hf/screening/`
+
+### Invariants
+- `harness.py` is READ-ONLY (engine fee parity with `agent_team_v3.py`)
+- `params['__market__']` for cross-coin context, `indicators['__coin__']` for per-coin identity
+- Signal protocol: `signal_fn(candles, bar, indicators, params) -> {stop_price, target_price, time_limit, strength}`

@@ -103,3 +103,46 @@
 
 ### Deprecated
 All in `trading_bot/deprecated/` — v1/v2 agents, v5-v9 experiments.
+
+## HF Research (1H Screening)
+
+### Scope
+- **Timeframe**: 1H candles (separate from 4H DualConfirm)
+- **Universe**: T1 (98 coins, 31bps/side) + T2 (216 coins, 56bps/side) = 316 coins
+- **Dataset**: candle_cache_1h.json (1903 coins, 721 bars)
+- **Engine**: standalone harness in `strategies/hf/screening/harness.py` (READ-ONLY, engine fee parity with `agent_team_v3.py`)
+
+### Signal Protocol
+```
+signal_fn(candles, bar, indicators, params) -> {stop_price, target_price, time_limit, strength}
+```
+- Cross-coin context injected via `params['__market__']`
+- Per-coin identity via `indicators['__coin__']`
+
+### Research Summary
+- 5 sprints, 25 hypothesis families, 150+ configs tested
+- **All negative at Kraken fees**
+- Sprint 4: 15 hypotheses (mean_reversion, momentum, volume, price_action, multi_indicator) -- 0/90 survivors
+- Sprint 5: 10 hypotheses (microstructure, market_state, cross_sectional) -- 0/60 survivors
+- Reality Check: H20 VWAP_DEVIATION v5 flips positive at MEXC fees (PF=1.25, +$143/wk)
+
+### Current Baseline
+- **Signal**: H20 VWAP_DEVIATION v5 (dev_thresh=2.0, tp_pct=8, sl_pct=5)
+- **Exchange**: MEXC (0% maker, 10bps taker) -- market execution
+- **Result**: PF=1.25, +$143/wk, survives P95 stress (PF=1.07)
+- **Status**: CONDITIONAL GO (ADR-HF-029) -- needs paper trading validation
+
+### Key Learnings
+- 1H crypto at Kraken fees (T2=56bps/side) is structurally unprofitable
+- Fee structure is the bottleneck, not signal quality
+- MEXC cost advantage (60-92% cheaper) is necessary for positive expectancy
+
+### Key Files
+| Location | Purpose |
+|----------|---------|
+| `strategies/hf/DECISIONS.md` | 29 ADRs (HF-001 through HF-029) |
+| `strategies/hf/screening/` | All screening code (harness, hypotheses, screener) |
+| `reports/hf/` | All experiment reports (JSON + MD pairs) |
+| `strategies/hf/GATES.md` | 4H gate canon |
+| `strategies/hf/GATES_SCREENING.md` | 1H screening gates |
+| `strategies/hf/UNIVERSE_POLICY.md` | Tier definitions and inclusion criteria |

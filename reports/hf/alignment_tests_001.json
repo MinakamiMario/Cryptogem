@@ -1,0 +1,185 @@
+{
+  "timestamp": "2026-02-15T15:18:08.568509",
+  "label": "HF alignment / no-leak tests",
+  "passed": 35,
+  "failed": 0,
+  "total": 35,
+  "include_mtf": false,
+  "tests": [
+    {
+      "name": "4H: 0G/USD indicators bar 50-149 identical (end_bar=150 vs 300)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "4H: 1INCH/USD indicators bar 50-149 identical (end_bar=150 vs 300)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "4H: 2Z/USD indicators bar 50-149 identical (end_bar=150 vs 300)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "4H: A/USD indicators bar 50-149 identical (end_bar=150 vs 300)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "4H: AB/USD indicators bar 50-149 identical (end_bar=150 vs 300)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "4H: 0G/USD signals identical bar 50-199 (end_bar=200 vs full) [150 bars]",
+      "status": "PASS",
+      "detail": "0/150 mismatches"
+    },
+    {
+      "name": "4H: 1INCH/USD signals identical bar 50-199 (end_bar=200 vs full) [150 bars]",
+      "status": "PASS",
+      "detail": "0/150 mismatches"
+    },
+    {
+      "name": "4H: 2Z/USD signals identical bar 50-199 (end_bar=200 vs full) [150 bars]",
+      "status": "PASS",
+      "detail": "0/150 mismatches"
+    },
+    {
+      "name": "4H: A/USD signals identical bar 50-199 (end_bar=200 vs full) [150 bars]",
+      "status": "PASS",
+      "detail": "0/150 mismatches"
+    },
+    {
+      "name": "4H: AB/USD signals identical bar 50-199 (end_bar=200 vs full) [150 bars]",
+      "status": "PASS",
+      "detail": "0/150 mismatches"
+    },
+    {
+      "name": "4H: WF fold [100,200] trades identical (end_bar=200 vs full)",
+      "status": "PASS",
+      "detail": "trades: 1 vs 1"
+    },
+    {
+      "name": "4H: WF fold [100,200] PnL identical (end_bar=200 vs full)",
+      "status": "PASS",
+      "detail": "pnl: -209.88 vs -209.88"
+    },
+    {
+      "name": "COOLDOWN_BARS == 4 (engine constant)",
+      "status": "PASS",
+      "detail": "got 4"
+    },
+    {
+      "name": "COOLDOWN_AFTER_STOP == 8 (engine constant)",
+      "status": "PASS",
+      "detail": "got 8"
+    },
+    {
+      "name": "4h: rolling_window=180 bars = 30 days (expect ~30)",
+      "status": "PASS",
+      "detail": "got 30.0 days"
+    },
+    {
+      "name": "4h: wf_embargo=2 bars = 8.0h",
+      "status": "PASS",
+      "detail": "got 8.0h"
+    },
+    {
+      "name": "1h: rolling_window=720 bars = 30 days (expect ~30)",
+      "status": "PASS",
+      "detail": "got 30.0 days"
+    },
+    {
+      "name": "1h: wf_embargo=2 bars = 2.0h",
+      "status": "PASS",
+      "detail": "got 2.0h"
+    },
+    {
+      "name": "15m: rolling_window=2880 bars = 30 days (expect ~30)",
+      "status": "PASS",
+      "detail": "got 30.0 days"
+    },
+    {
+      "name": "15m: wf_embargo=8 bars = 2.0h",
+      "status": "PASS",
+      "detail": "got 2.0h"
+    },
+    {
+      "name": "4h: fold_size=134 bars = 22 days (expect 20-30)",
+      "status": "PASS",
+      "detail": "got 22.3 days"
+    },
+    {
+      "name": "1h: fold_size=566 bars = 24 days (expect 20-30)",
+      "status": "PASS",
+      "detail": "got 23.6 days"
+    },
+    {
+      "name": "15m: fold_size=2264 bars = 24 days (expect 20-30)",
+      "status": "PASS",
+      "detail": "got 23.6 days"
+    },
+    {
+      "name": "1H bar 0 \u2192 no closed 4H bar",
+      "status": "PASS",
+      "detail": "got -1"
+    },
+    {
+      "name": "1H bar 2 \u2192 no closed 4H bar",
+      "status": "PASS",
+      "detail": "got -1"
+    },
+    {
+      "name": "1H bar 3 \u2192 4H bar 0 closed",
+      "status": "PASS",
+      "detail": "got 0"
+    },
+    {
+      "name": "1H bar 4 \u2192 4H bar 0 still last closed",
+      "status": "PASS",
+      "detail": "got 0"
+    },
+    {
+      "name": "1H bar 7 \u2192 4H bar 1 closed",
+      "status": "PASS",
+      "detail": "got 1"
+    },
+    {
+      "name": "1H bar 11 \u2192 4H bar 2 closed",
+      "status": "PASS",
+      "detail": "got 2"
+    },
+    {
+      "name": "1H bar 100 \u2192 4H bar 24 closed",
+      "status": "PASS",
+      "detail": "got 24"
+    },
+    {
+      "name": "15m bar 0 \u2192 no closed 4H bar",
+      "status": "PASS",
+      "detail": "got -1"
+    },
+    {
+      "name": "15m bar 15 \u2192 4H bar 0 closed",
+      "status": "PASS",
+      "detail": "got 0"
+    },
+    {
+      "name": "15m bar 31 \u2192 4H bar 1 closed",
+      "status": "PASS",
+      "detail": "got 1"
+    },
+    {
+      "name": "1H\u21924H mapping is monotonically non-decreasing (500 bars)",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "1H\u21924H mapping has no look-ahead (500 bars)",
+      "status": "PASS",
+      "detail": ""
+    }
+  ]
+}

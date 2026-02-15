@@ -339,6 +339,132 @@ Method B — Best policies (GRID_BEST):
 
 ---
 
+## Sprint 3 Summary — 1H/15m Data Pipeline + MTF Validation
+
+**Deliverables**:
+| Task | Artifact | Description |
+|------|----------|-------------|
+| Data pipeline | scripts/build_hf_cache.py | Paginated 1H/15m fetcher (Kraken + MEXC) |
+| Data audit MTF | hf_data_audit_mtf.py | Timeframe-aware OHLCV integrity checks |
+| Alignment tests | hf_alignment_tests.py (35 tests) | No-leak + MTF mapping verification |
+| MTF rules | hf_mtf_rules.md | Close-bar rules + wall-clock semantics |
+| Friction v3 | hf_friction_v3.py | Per-tier fees + capacity proxy metrics |
+| Latency stress MTF | hf_latency_stress_mtf.py | MC stress with TF-aware delay model |
+| MTF validation | hf_validate_mtf.py | A/B config (as-is vs scaled) + full gate suite |
+| Gates MTF | GATES_MTF.md | Timeframe-scaled gate parameters |
+| Correlation | hf_correlation.py | Rolling pairwise Pearson on signal-generating coins |
+| Exposure caps | hf_exposure_caps.py | Log-only at mp=1, hard-gate at mp>1 |
+| ADRs | ADR-HF-013 through ADR-HF-017 | 5 architecture decisions |
+
+**Key design decisions**:
+- Engine is timeframe-agnostic (bar-count based) — no modifications needed
+- A/B config methodology prevents false-negative verdicts at lower TFs
+- Data manifests gitignored; committed snapshots in reports/hf/
+- Alignment tests integrated into `make hf-check` (35 tests green)
+
+**Sprint 4 Recommendations** (after 1H/15m data available):
+1. Run `build_hf_cache.py --timeframe 1h` to fetch 1H data (~23 min)
+2. Run MTF validation with A/B configs: `hf_validate_mtf.py --timeframe 1h`
+3. If 1H passes → repeat for 15m
+4. If 1H passes with scaled params → grid-search TF-appropriate parameters
+5. If 1H fails → explore new signal families for lower timeframes
+
+---
+
+## ADR-HF-013: 1H/15m Data Pipeline — New Script, Import Shared Helpers
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Sprint 3 needs 1H and 15m candle data. Two approaches: (a) parameterize existing `build_research_cache.py` with `--interval`, or (b) new script importing shared helpers.
+
+**Decision**: New script `scripts/build_hf_cache.py`. Imports shared helpers (BASE_MAP, EXCLUDE_BASES) but has its own paginated fetch logic since Kraken returns max 720 candles/call.
+
+**Rationale**:
+1. Existing script has no pagination — 4H gets 720 bars in 1 call, but 1H needs ~4 calls, 15m needs ~16
+2. Parameterizing would add complexity to a working script without benefit
+3. New script has `--timeframe` arg, manifest per TF, and snapshot to `reports/hf/`
+4. Runtime manifests (`data/manifest_hf_*.json`) gitignored; committed snapshots in `reports/hf/data_manifest_*.json`
+
+---
+
+## ADR-HF-014: No-Leak Verification via External Tests (Engine Read-Only)
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: The backtest engine (`agent_team_v3.py`) is read-only. We cannot add leak-detection instrumentation inside it. Need external tests to verify causal correctness.
+
+**Decision**: `hf_alignment_tests.py` runs 7 test categories:
+1. Indicator causality (precompute_all end_bar independence)
+2. Signal determinism (check_entry_at_bar consistency)
+3. Walk-forward isolation (fold result independence)
+4. Cooldown semantics documentation (wall-clock table)
+5. Window scaling sanity (fold sizes in days)
+6. MTF data alignment (tests 1-3 on 1H/15m when available)
+7. MTF mapping (last_closed_4h_bar correctness + no-lookahead proof)
+
+**Evidence**: 35/35 tests pass on 4H data. MTF mapping test proves no look-ahead with mathematical invariant: `(N+1)*4 - 1 <= K` for all mapped pairs.
+
+**Consequence**: `make hf-check` now runs alignment tests as gate. Tests 6 re-run on 1H/15m once data pipeline delivers.
+
+---
+
+## ADR-HF-015: Per-Trade Fees Unchanged, Capacity Proxy Added
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Moving to lower timeframes means more trades. Need to understand whether increased trade count erodes edge through fee drag.
+
+**Decision**: Keep per-trade fee model from v2 (T1=31bps, T2=56bps per side). Add new metrics in v3:
+- `fee_drag_pct = total_estimated_fees / gross_profit` — how much fees eat into raw profits
+- `trades_below_breakeven` — trades where |pnl| < round_trip_fee
+- `capacity_proxy` — average trade size relative to daily volume
+
+**Rationale**: Fee-per-trade is correct because slippage scales with trade execution, not with time-between-trades. The new metrics help identify when higher trade frequency becomes counterproductive.
+
+---
+
+## ADR-HF-016: Timeframe Scaling — Window/Embargo Preserve 30-Day Semantics + A/B Methodology
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Engine is bar-count based. time_max_bars=15 at 1H means 15h hold (vs 60h at 4H). Testing with unchanged config may produce false negative if the parameter mismatch kills edge, not the timeframe.
+
+**Decision**: A/B config methodology for all lower-TF validations:
+- **Config A**: Run with GRID_BEST unchanged (time_max_bars=15)
+- **Config B**: Scale time_max_bars to preserve wall-clock semantics (1H: 60, 15m: 240)
+
+**Interpretation**:
+| A | B | Conclusion |
+|---|---|-----------|
+| PASS | PASS | Strong edge — works with any params |
+| PASS | FAIL | Edge exists but sensitive to hold time |
+| FAIL | PASS | Edge exists only with TF-scaled params; grid-search needed |
+| FAIL | FAIL | No edge at this timeframe |
+
+**Window scaling**: ROLLING_WINDOW_BARS scales to 30 days (1H: 720, 15m: 2880). WF_EMBARGO scales to ~2h wall-clock. start_bar kept at 50 for 1H (2.1 days warmup), 200 for 15m (12.5h warmup).
+
+**Note**: COOLDOWN_BARS=4 is an engine constant, cannot be scaled. This is a known limitation documented in `hf_mtf_rules.md`.
+
+---
+
+## ADR-HF-017: Correlation Guard as Standalone Module, Hard-Gate Only When mp>1
+
+**Date**: 2026-02-15
+**Status**: DECIDED
+**Context**: Sprint 2.5 (ADR-012) showed correlation guard effectively blocks 27 correlated entries at mp=3, producing best DD profile (10.2%). Need to make this reusable across timeframes.
+
+**Decision**: Extract correlation analysis into `hf_correlation.py` (standalone module). Exposure cap rules in `hf_exposure_caps.py`:
+- At max_pos=1: LOG-ONLY mode — compute and report correlations but don't block trades
+- At max_pos>1: HARD-GATE mode — block second entry if rolling correlation ρ > 0.70
+
+**Rationale**:
+1. At mp=1, there's only one position — correlation guard is meaningless (nothing to be correlated WITH)
+2. At mp>1, guard prevents capital concentration in correlated assets
+3. Standalone module enables reuse across 4H/1H/15m without code duplication
+4. Pre-filter to signal-generating coins (~50) keeps computation tractable (~1225 pairs)
+
+---
+
 ## Sprint 2.5 Summary
 
 **Deliverables**:

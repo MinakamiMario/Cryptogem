@@ -1,0 +1,20 @@
+{
+  "generated": "2026-02-15 00:34 CET",
+  "kraken": {
+    "done": 885,
+    "fail": 0,
+    "pending": 0,
+    "total": 885
+  },
+  "mexc": {
+    "done": 0,
+    "fail": 0,
+    "pending": 0,
+    "total": 0
+  },
+  "total_coins_in_cache": 885,
+  "cache_file": "/Users/oussama/Cryptogem/data/candle_cache_unfiltered.json",
+  "cache_size_mb": 70.84,
+  "status": "PARTIAL (885/886)",
+  "_note": "No manifest found \u2014 stats derived from cache metadata only"
+}

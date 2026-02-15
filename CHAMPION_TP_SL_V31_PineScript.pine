@@ -1,0 +1,237 @@
+//@version=6
+strategy("Champion TP/SL V3.1 — Score 71.8", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=95, commission_type=strategy.commission.percent, commission_value=0.26, initial_capital=2000)
+
+// === CHAMPION CONFIG (agent_team_v3.1 — ablation winner) ===
+// champion.json score: 71.8 | label: abl-rsi_max=45
+// Backtest (473/526 coins, 4H):
+//   29 trades | 75.9% WR | P&L +$4,931 | PF 4.93 | DD 23.0%
+// Monte Carlo: 100% winstkans | Median equity $7,075 | P5 $4,500
+// NoTop P&L: +$4,074 (winstgevend zonder outlier!)
+// Class A ratio: 71%
+//
+// Exit type: TP/SL (Take Profit / Stop Loss)
+//   - Geen trailing stop, geen RSI recovery
+//   - Simpel: TP +15%, SL -15%, Time Max 15 bars
+//   - Voordeel: geen trail stop verliezers (0% WR bij trail)
+//
+// Verschil t.o.v. V4/V5:
+//   - RSI max: 40 → 45 (meer entries)
+//   - VolSpike: 3.0x (strenger filter)
+//   - Exit: trail → tp_sl (15%/15%/15bars)
+
+// === DONCHIAN INPUTS ===
+donchian_period  = input.int(20, "Donchian Period", minval=5, maxval=50, group="Donchian")
+rsi_donchian_max = input.int(45, "RSI Max (Donchian entry)", minval=20, maxval=60, group="Donchian", tooltip="Champion: 45 (was 40 in V4). Ablation test toonde rsi_max als meest gevoelige param.")
+
+// === BOLLINGER INPUTS ===
+bb_period        = input.int(20, "BB Period", minval=5, maxval=50, group="Bollinger")
+bb_dev           = input.float(2.0, "BB Deviation", minval=1.0, maxval=4.0, step=0.1, group="Bollinger")
+rsi_buy_bb       = input.int(45, "RSI Buy (BB oversold)", minval=15, maxval=60, group="Bollinger", tooltip="Gelijk aan RSI Max Donchian")
+
+// === SHARED INPUTS ===
+rsi_period       = input.int(14, "RSI Period", minval=5, maxval=30, group="Shared")
+atr_period       = input.int(14, "ATR Period", minval=5, maxval=30, group="Shared")
+cooldown_bars    = input.int(4, "Cooldown Bars", minval=0, maxval=20, group="Shared")
+cooldown_stop    = input.int(8, "Cooldown After Stop", minval=0, maxval=20, group="Shared", tooltip="Langere cooldown na stop loss hit.")
+
+// === VOLUME FILTERS ===
+vol_spike_mult   = input.float(3.0, "Vol Spike Multiplier", minval=1.0, maxval=5.0, step=0.1, group="Volume", tooltip="Champion: 3.0x (strenger dan V4 2.0x). Filtert slechte entries.")
+vol_avg_period   = input.int(20, "Vol Average Period", minval=5, maxval=50, group="Volume")
+vol_min_pct      = input.float(0.5, "Min Volume (% of avg)", minval=0.0, maxval=1.0, step=0.1, group="Volume")
+vol_confirm_mult = input.float(1.0, "Vol Confirm Multiplier", minval=0.5, maxval=3.0, step=0.1, group="Volume", tooltip="Entry volume / vorige bar volume >= dit getal")
+
+// === TP/SL EXIT INPUTS ===
+tp_pct           = input.float(15.0, "Take Profit %", minval=1.0, maxval=50.0, step=1.0, group="TP/SL Exit", tooltip="Champion: 15%. Exit bij +15% winst.")
+sl_pct           = input.float(15.0, "Stop Loss %", minval=1.0, maxval=50.0, step=1.0, group="TP/SL Exit", tooltip="Champion: 15%. Exit bij -15% verlies.")
+tm_bars          = input.int(15, "Time Max Bars", minval=0, maxval=50, group="TP/SL Exit", tooltip="Champion: 15 bars (60h op 4H). Force close na dit aantal bars.")
+
+// === INDICATORS ===
+// Donchian Channel
+highest_high = ta.highest(high, donchian_period)
+lowest_low   = ta.lowest(low, donchian_period)
+mid_channel  = (highest_high + lowest_low) / 2
+prev_lowest  = ta.lowest(low[1], donchian_period)
+
+// Bollinger Bands
+[bb_mid, bb_upper, bb_lower] = ta.bb(close, bb_period, bb_dev)
+
+// RSI & ATR
+rsi_val = ta.rsi(close, rsi_period)
+atr_val = ta.atr(atr_period)
+
+// Volume
+vol_avg = ta.sma(volume, vol_avg_period)
+vol_ratio = vol_avg > 0 ? volume / vol_avg : 0.0
+
+// === TRACKING VARIABLES ===
+var float entry_price_track = 0.0
+var float tp_level = 0.0
+var float sl_level = 0.0
+var int last_exit_bar = -999
+var bool last_exit_was_stop = false
+var int entry_bar_index = 0
+
+// Exit flags (reset elke bar)
+var bool just_bought = false
+var bool just_sold_tp = false
+var bool just_sold_sl = false
+var bool just_sold_time = false
+
+just_bought := false
+just_sold_tp := false
+just_sold_sl := false
+just_sold_time := false
+
+// Smart cooldown: langere cooldown na stop loss
+cd_needed = last_exit_was_stop ? cooldown_stop : cooldown_bars
+in_cooldown = (bar_index - last_exit_bar) < cd_needed
+
+// === ENTRY: DUAL CONFIRM + VOLUME FILTERS ===
+donchian_signal = low <= prev_lowest and rsi_val < rsi_donchian_max and close > close[1]
+bb_signal = close <= bb_lower and rsi_val < rsi_buy_bb and close > close[1]
+
+// Volume filters
+vol_ok = vol_avg > 0 ? volume >= vol_avg * vol_min_pct : true
+vol_spike_ok = vol_avg > 0 ? vol_ratio >= vol_spike_mult : true
+vol_confirm_ok = volume[1] > 0 ? volume / volume[1] >= vol_confirm_mult : true
+
+// Dual confirm: BEIDE signalen + alle volume filters
+long_entry = donchian_signal and bb_signal and vol_ok and vol_spike_ok and vol_confirm_ok
+can_enter = long_entry and not in_cooldown and strategy.position_size == 0
+
+// === ENTRY ===
+if can_enter
+    strategy.entry("Long", strategy.long)
+    entry_price_track := close
+    tp_level := close * (1 + tp_pct / 100)
+    sl_level := close * (1 - sl_pct / 100)
+    entry_bar_index := bar_index
+    just_bought := true
+
+// === EXIT: TP / SL / TIME MAX ===
+if strategy.position_size > 0
+    bars_held = bar_index - entry_bar_index
+    profit_pct = (close - entry_price_track) / entry_price_track * 100
+
+    // Exit 1: Stop Loss (hoogste prioriteit)
+    if close <= sl_level
+        strategy.close("Long", comment="STOP LOSS")
+        last_exit_bar := bar_index
+        last_exit_was_stop := true
+        just_sold_sl := true
+        entry_price_track := 0.0
+        tp_level := 0.0
+        sl_level := 0.0
+
+    // Exit 2: Take Profit
+    else if close >= tp_level
+        strategy.close("Long", comment="TAKE PROFIT")
+        last_exit_bar := bar_index
+        last_exit_was_stop := false
+        just_sold_tp := true
+        entry_price_track := 0.0
+        tp_level := 0.0
+        sl_level := 0.0
+
+    // Exit 3: Time Max (force close stale trades)
+    else if tm_bars > 0 and bars_held >= tm_bars
+        strategy.close("Long", comment="TIME MAX")
+        last_exit_bar := bar_index
+        last_exit_was_stop := close < entry_price_track
+        just_sold_time := true
+        entry_price_track := 0.0
+        tp_level := 0.0
+        sl_level := 0.0
+
+// === PLOTS ===
+// Donchian Channel
+p_dc_upper = plot(highest_high, "DC Upper", color=color.new(color.red, 70), linewidth=1)
+p_dc_mid   = plot(mid_channel, "DC Mid", color=color.new(color.orange, 40), linewidth=2, style=plot.style_stepline)
+p_dc_lower = plot(lowest_low, "DC Lower (buy zone)", color=color.new(color.green, 40), linewidth=2, style=plot.style_stepline)
+fill(p_dc_upper, p_dc_lower, color=color.new(color.gray, 95), title="DC Band")
+
+// Bollinger Bands
+plot(bb_upper, "BB Upper", color=color.new(color.blue, 70), linewidth=1)
+plot(bb_mid, "BB Mid", color=color.new(color.blue, 50), linewidth=1, style=plot.style_circles)
+plot(bb_lower, "BB Lower", color=color.new(color.blue, 70), linewidth=1)
+
+// TP/SL levels (alleen zichtbaar bij open positie)
+plot(strategy.position_size > 0 ? tp_level : na, "Take Profit", color=color.new(color.lime, 0), style=plot.style_linebr, linewidth=2)
+plot(strategy.position_size > 0 ? sl_level : na, "Stop Loss", color=color.new(color.red, 0), style=plot.style_linebr, linewidth=2)
+plot(strategy.position_size > 0 ? entry_price_track : na, "Entry Price", color=color.new(color.white, 30), style=plot.style_linebr, linewidth=1)
+
+// === BUY / SELL MARKERS ===
+plotshape(just_bought, "BUY", shape.triangleup, location.belowbar, color.lime, size=size.normal, text="BUY", textcolor=color.lime)
+plotshape(just_sold_tp, "TAKE PROFIT", shape.triangledown, location.abovebar, color.lime, size=size.normal, text="TP", textcolor=color.lime)
+plotshape(just_sold_sl, "STOP LOSS", shape.xcross, location.abovebar, color.red, size=size.normal, text="SL", textcolor=color.red)
+plotshape(just_sold_time, "TIME MAX", shape.diamond, location.abovebar, color.yellow, size=size.normal, text="TM", textcolor=color.yellow)
+
+// === BACKGROUND ===
+buy_zone = close <= lowest_low * 1.01 and close <= bb_lower and rsi_val < rsi_buy_bb
+bgcolor(buy_zone ? color.new(color.green, 88) : na, title="Buy Zone")
+bgcolor(strategy.position_size > 0 ? color.new(color.blue, 95) : na, title="In Position")
+bgcolor(vol_spike_ok and buy_zone ? color.new(color.teal, 85) : na, title="Vol Spike + Buy Zone")
+
+// === INFO TABLE ===
+var table info = table.new(position.top_right, 2, 14, bgcolor=color.new(color.black, 80), border_width=1)
+if barstate.islast
+    table.cell(info, 0, 0, "Champion TP/SL V3.1", text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 0, "Score 71.8", text_color=color.lime, text_size=size.small)
+
+    table.cell(info, 0, 1, "RSI(14)", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 1, str.tostring(rsi_val, "#.0"), text_color=rsi_val < 45 ? color.lime : rsi_val > 70 ? color.red : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 2, "DC Lower", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 2, str.tostring(lowest_low, "#.####"), text_color=close <= lowest_low * 1.01 ? color.lime : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 3, "DC Mid", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 3, str.tostring(mid_channel, "#.####"), text_color=close >= mid_channel ? color.orange : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 4, "BB Lower", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 4, str.tostring(bb_lower, "#.####"), text_color=close <= bb_lower ? color.lime : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 5, "Vol Ratio", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 5, str.tostring(vol_ratio, "#.1") + "x", text_color=vol_ratio >= vol_spike_mult ? color.lime : vol_ratio >= 1.0 ? color.white : color.red, text_size=size.tiny)
+
+    table.cell(info, 0, 6, "TP Level", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 6, strategy.position_size > 0 ? str.tostring(tp_level, "#.####") + " (+" + str.tostring(tp_pct, "#.0") + "%)" : "---", text_color=color.lime, text_size=size.tiny)
+
+    table.cell(info, 0, 7, "SL Level", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 7, strategy.position_size > 0 ? str.tostring(sl_level, "#.####") + " (-" + str.tostring(sl_pct, "#.0") + "%)" : "---", text_color=color.red, text_size=size.tiny)
+
+    table.cell(info, 0, 8, "Bars Held", text_color=color.gray, text_size=size.tiny)
+    bars_display = strategy.position_size > 0 ? bar_index - entry_bar_index : 0
+    table.cell(info, 1, 8, strategy.position_size > 0 ? str.tostring(bars_display) + "/" + str.tostring(tm_bars) : "---", text_color=bars_display >= tm_bars - 2 ? color.yellow : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 9, "Unrealized", text_color=color.gray, text_size=size.tiny)
+    unr_pnl = strategy.position_size > 0 ? (close - entry_price_track) / entry_price_track * 100 : 0.0
+    table.cell(info, 1, 9, strategy.position_size > 0 ? str.tostring(unr_pnl, "+#.0") + "%" : "---", text_color=unr_pnl > 0 ? color.lime : unr_pnl < 0 ? color.red : color.gray, text_size=size.tiny)
+
+    table.cell(info, 0, 10, "Position", text_color=color.gray, text_size=size.tiny)
+    pos_text = strategy.position_size > 0 ? "LONG" : in_cooldown ? "COOLDOWN" : "FLAT"
+    pos_col = strategy.position_size > 0 ? color.lime : in_cooldown ? color.yellow : color.gray
+    table.cell(info, 1, 10, pos_text, text_color=pos_col, text_size=size.tiny)
+
+    table.cell(info, 0, 11, "Signal", text_color=color.gray, text_size=size.tiny)
+    sig_text = can_enter ? ">>> BUY <<<" : strategy.position_size > 0 ? "HOLD" : donchian_signal and bb_signal ? (vol_spike_ok ? "READY!" : "NO VOL") : donchian_signal ? "DC OK" : bb_signal ? "BB OK" : "WAIT"
+    sig_col = can_enter ? color.lime : strategy.position_size > 0 ? color.yellow : donchian_signal and bb_signal and vol_spike_ok ? color.aqua : donchian_signal or bb_signal ? color.aqua : color.gray
+    table.cell(info, 1, 11, sig_text, text_color=sig_col, text_size=size.tiny)
+
+    table.cell(info, 0, 12, "Exit Type", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 12, "TP/SL", text_color=color.orange, text_size=size.tiny)
+
+    table.cell(info, 0, 13, "Config", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 13, "RSI<" + str.tostring(rsi_donchian_max) + " Vol>" + str.tostring(vol_spike_mult, "#.0") + "x", text_color=color.aqua, text_size=size.tiny)
+
+// === ALERTS ===
+if can_enter
+    alert("CHAMPION TP/SL: BUY " + syminfo.ticker + " @ " + str.tostring(close) + " | RSI=" + str.tostring(rsi_val, "#.0") + " | Vol=" + str.tostring(vol_ratio, "#.1") + "x | TP=" + str.tostring(tp_level, "#.####") + " SL=" + str.tostring(sl_level, "#.####"), alert.freq_once_per_bar)
+
+if just_sold_tp
+    alert("CHAMPION TP/SL: TAKE PROFIT " + syminfo.ticker + " @ " + str.tostring(close) + " | +" + str.tostring(tp_pct) + "%", alert.freq_once_per_bar)
+
+if just_sold_sl
+    alert("CHAMPION TP/SL: STOP LOSS " + syminfo.ticker + " @ " + str.tostring(close) + " | -" + str.tostring(sl_pct) + "%", alert.freq_once_per_bar)
+
+if just_sold_time
+    alert("CHAMPION TP/SL: TIME MAX " + syminfo.ticker + " @ " + str.tostring(close) + " | " + str.tostring(tm_bars) + " bars", alert.freq_once_per_bar)

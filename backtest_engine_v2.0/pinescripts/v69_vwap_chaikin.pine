@@ -1,0 +1,119 @@
+//@version=5
+strategy("V69: VWAP + Chaikin (BTC 1H) - BEST RISK-ADJUSTED", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=95, commission_type=strategy.commission.percent, commission_value=0.1, initial_capital=10000)
+
+// === INPUTS ===
+fast_period      = input.int(20, "Fast EMA Period")
+mid_period       = input.int(50, "Mid EMA Period")
+slow_period      = input.int(100, "Slow EMA Period")
+vwma_period      = input.int(20, "VWMA Period")
+chaikin_period   = input.int(10, "Chaikin ATR Period")
+mom_lookback     = input.int(3, "Momentum Lookback")
+rsi_period       = input.int(14, "RSI Period")
+rsi_min          = input.int(45, "RSI Min")
+rsi_max          = input.int(75, "RSI Max")
+adx_period       = input.int(14, "ADX Period")
+adx_min          = input.int(20, "ADX Min Threshold")
+atr_period       = input.int(14, "ATR Period")
+atr_stop_mult    = input.float(6.0, "ATR Stop Multiplier")
+vol_lookback     = input.int(48, "Vol Lookback")
+vol_threshold    = input.float(1.5, "Vol Threshold")
+cooldown_bars    = input.int(8, "Cooldown Bars")
+
+// === INDICATORS ===
+fast_ema = ta.ema(close, fast_period)
+mid_ema  = ta.ema(close, mid_period)
+slow_ema = ta.ema(close, slow_period)
+rsi_val  = ta.rsi(close, rsi_period)
+atr_val  = ta.atr(atr_period)
+atr_sma  = ta.sma(atr_val, vol_lookback)
+
+// ADX
+[diplus, diminus, adx_val] = ta.dmi(adx_period, adx_period)
+
+// VWMA
+vwma_val = ta.vwma(close, vwma_period)
+
+// Chaikin Volatility (ATR expansion)
+chaikin_atr = ta.atr(chaikin_period)
+
+// === CONDITIONS ===
+triple_aligned = fast_ema > mid_ema and mid_ema > slow_ema
+ema_rising = fast_ema > fast_ema[1]
+price_above = close > fast_ema
+above_vwma = close > vwma_val
+rsi_ok = rsi_val > rsi_min and rsi_val < rsi_max
+adx_ok = adx_val > adx_min
+is_high_vol = atr_sma > 0 ? (atr_val / atr_sma > vol_threshold) : false
+
+// Chaikin volatility expansion: ATR rising for 2 consecutive bars
+atr_expanding = chaikin_atr > chaikin_atr[1] and chaikin_atr[1] > chaikin_atr[2]
+
+// Price momentum confirms direction
+price_momentum = close > close[mom_lookback]
+
+// === TRACKING VARIABLES ===
+var float stop_price = 0.0
+var float highest_price = 0.0
+var int last_exit_bar = -999
+
+in_cooldown = (bar_index - last_exit_bar) < cooldown_bars
+
+// === ENTRY ===
+long_entry = not in_cooldown and not is_high_vol and triple_aligned and ema_rising and price_above and above_vwma and atr_expanding and price_momentum and rsi_ok and adx_ok
+
+if long_entry and strategy.position_size == 0
+    strategy.entry("Long", strategy.long)
+    stop_price := close - atr_val * atr_stop_mult
+    highest_price := close
+
+// === EXIT: TRAILING STOP ONLY ===
+if strategy.position_size > 0
+    if close > highest_price
+        highest_price := close
+
+    mult = is_high_vol ? atr_stop_mult * 0.7 : atr_stop_mult
+    new_stop = highest_price - atr_val * mult
+    if new_stop > stop_price
+        stop_price := new_stop
+
+    if close < stop_price
+        strategy.close("Long", comment="Trailing Stop")
+        last_exit_bar := bar_index
+
+// === PLOTS ===
+plot(fast_ema, "EMA 20", color=color.new(color.blue, 0), linewidth=2)
+plot(mid_ema, "EMA 50", color=color.new(color.orange, 0), linewidth=1)
+plot(slow_ema, "EMA 100", color=color.new(color.red, 0), linewidth=1)
+plot(vwma_val, "VWMA 20", color=color.new(color.purple, 0), linewidth=2, style=plot.style_circles)
+plot(strategy.position_size > 0 ? stop_price : na, "Trailing Stop", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=2)
+
+// ATR expansion visualization
+bgcolor(atr_expanding and price_momentum ? color.new(color.teal, 92) : na, title="Vol Expanding + Momentum")
+bgcolor(triple_aligned and adx_ok and above_vwma ? color.new(color.green, 95) : na, title="Trend Active")
+bgcolor(is_high_vol ? color.new(color.red, 92) : na, title="High Vol Warning")
+
+// === INFO TABLE ===
+var table info = table.new(position.top_right, 2, 9, bgcolor=color.new(color.black, 80))
+if barstate.islast
+    table.cell(info, 0, 0, "V69 VWAP + Chaikin", text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 0, "BTC/USD 1H (SAFE)", text_color=color.lime, text_size=size.small)
+    table.cell(info, 0, 1, "ADX", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 1, str.tostring(adx_val, "#.0"), text_color=adx_val > adx_min ? color.green : color.red, text_size=size.tiny)
+    table.cell(info, 0, 2, "RSI", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 2, str.tostring(rsi_val, "#.0"), text_color=rsi_ok ? color.green : color.red, text_size=size.tiny)
+    table.cell(info, 0, 3, "VWMA", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 3, str.tostring(vwma_val, "#.0"), text_color=above_vwma ? color.green : color.red, text_size=size.tiny)
+    table.cell(info, 0, 4, "ATR Expand", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 4, atr_expanding ? "YES" : "NO", text_color=atr_expanding ? color.green : color.red, text_size=size.tiny)
+    table.cell(info, 0, 5, "Momentum", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 5, price_momentum ? "UP" : "DOWN", text_color=price_momentum ? color.green : color.red, text_size=size.tiny)
+    table.cell(info, 0, 6, "EMAs Aligned", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 6, triple_aligned ? "YES" : "NO", text_color=triple_aligned ? color.green : color.red, text_size=size.tiny)
+    table.cell(info, 0, 7, "Stop", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 7, strategy.position_size > 0 ? str.tostring(stop_price, "#.0") : "---", text_color=color.fuchsia, text_size=size.tiny)
+    table.cell(info, 0, 8, "Signal", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 8, long_entry and strategy.position_size == 0 ? "BUY" : strategy.position_size > 0 ? "IN TRADE" : "WAIT", text_color=long_entry and strategy.position_size == 0 ? color.lime : strategy.position_size > 0 ? color.yellow : color.gray, text_size=size.tiny)
+
+// === ALERTS ===
+alertcondition(long_entry and strategy.position_size == 0, title="V69 Long Entry", message="V69: BUY - VWAP + Chaikin expansion + Triple EMA + ADX confirmed")
+alertcondition(strategy.position_size > 0 and close < stop_price, title="V69 Exit", message="V69: SELL - Trailing stop hit")

@@ -1,0 +1,3 @@
+backtrader>=1.9.78
+pandas>=2.0.0
+yfinance>=0.2.30

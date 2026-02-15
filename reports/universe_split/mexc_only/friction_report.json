@@ -1,0 +1,166 @@
+{
+  "timestamp": "2026-02-15 01:09:46",
+  "dataset": "temp_mexc_only.json",
+  "dataset_hash": "47bf8fdfdbb1",
+  "seed": 42,
+  "universe_mode": "all",
+  "coin_count": 1564,
+  "go_thresholds": {
+    "wf_min_pass": 4,
+    "wf_soft_pass": 3,
+    "wf_max_dd": 40.0,
+    "friction_go": "2x_fee+20bps",
+    "mc_p95_dd_max": 50.0,
+    "mc_ruin_max": 5.0,
+    "jitter_min_positive_pct": 70.0,
+    "univ_min_subsets_positive": 2,
+    "univ_top1_share_max": 0.5,
+    "univ_top3_share_max": 0.8
+  },
+  "kill_switch": {
+    "max_dd_pct": 30.0,
+    "max_consecutive_losses": 6,
+    "max_loss_streak_usd": -400,
+    "min_trades_before_eval": 10,
+    "wr_floor": 40.0
+  },
+  "results": {
+    "C1_TPSL_RSI45": {
+      "matrix": {
+        "1.0x_fee+0bps": {
+          "fee_mult": 1.0,
+          "slippage_bps": 0,
+          "effective_fee_per_side": 0.0026,
+          "trades": 30,
+          "pnl": 1566.22,
+          "wr": 53.3,
+          "dd": 28.4,
+          "pf": 1.56
+        },
+        "1.0x_fee+10bps": {
+          "fee_mult": 1.0,
+          "slippage_bps": 10,
+          "effective_fee_per_side": 0.0036,
+          "trades": 30,
+          "pnl": 1359.28,
+          "wr": 53.3,
+          "dd": 28.9,
+          "pf": 1.5
+        },
+        "1.0x_fee+20bps": {
+          "fee_mult": 1.0,
+          "slippage_bps": 20,
+          "effective_fee_per_side": 0.0046,
+          "trades": 30,
+          "pnl": 1163.97,
+          "wr": 53.3,
+          "dd": 29.3,
+          "pf": 1.43
+        },
+        "1.0x_fee+35bps": {
+          "fee_mult": 1.0,
+          "slippage_bps": 35,
+          "effective_fee_per_side": 0.0061,
+          "trades": 30,
+          "pnl": 891.44,
+          "wr": 53.3,
+          "dd": 30.0,
+          "pf": 1.34
+        },
+        "2.0x_fee+0bps": {
+          "fee_mult": 2.0,
+          "slippage_bps": 0,
+          "effective_fee_per_side": 0.0052,
+          "trades": 30,
+          "pnl": 1052.1,
+          "wr": 53.3,
+          "dd": 29.6,
+          "pf": 1.4
+        },
+        "2.0x_fee+10bps": {
+          "fee_mult": 2.0,
+          "slippage_bps": 10,
+          "effective_fee_per_side": 0.0062,
+          "trades": 30,
+          "pnl": 874.1,
+          "wr": 53.3,
+          "dd": 30.0,
+          "pf": 1.33
+        },
+        "2.0x_fee+20bps": {
+          "fee_mult": 2.0,
+          "slippage_bps": 20,
+          "effective_fee_per_side": 0.0072,
+          "trades": 30,
+          "pnl": 706.15,
+          "wr": 50.0,
+          "dd": 30.4,
+          "pf": 1.27
+        },
+        "2.0x_fee+35bps": {
+          "fee_mult": 2.0,
+          "slippage_bps": 35,
+          "effective_fee_per_side": 0.0087,
+          "trades": 30,
+          "pnl": 471.88,
+          "wr": 50.0,
+          "dd": 31.1,
+          "pf": 1.19
+        },
+        "3.0x_fee+0bps": {
+          "fee_mult": 3.0,
+          "slippage_bps": 0,
+          "effective_fee_per_side": 0.0078,
+          "trades": 30,
+          "pnl": 609.98,
+          "wr": 50.0,
+          "dd": 30.7,
+          "pf": 1.24
+        },
+        "3.0x_fee+10bps": {
+          "fee_mult": 3.0,
+          "slippage_bps": 10,
+          "effective_fee_per_side": 0.0088,
+          "trades": 30,
+          "pnl": 456.98,
+          "wr": 50.0,
+          "dd": 31.1,
+          "pf": 1.18
+        },
+        "3.0x_fee+20bps": {
+          "fee_mult": 3.0,
+          "slippage_bps": 20,
+          "effective_fee_per_side": 0.0098,
+          "trades": 30,
+          "pnl": 312.68,
+          "wr": 50.0,
+          "dd": 31.6,
+          "pf": 1.13
+        },
+        "3.0x_fee+35bps": {
+          "fee_mult": 3.0,
+          "slippage_bps": 35,
+          "effective_fee_per_side": 0.0113,
+          "trades": 30,
+          "pnl": 111.46,
+          "wr": 50.0,
+          "dd": 32.2,
+          "pf": 1.05
+        },
+        "2x_fee+1candle_gap": {
+          "fee_mult": 2.0,
+          "slippage_bps": "50bps_gap",
+          "effective_fee_per_side": 0.0102,
+          "trades": 30,
+          "pnl": 257.28,
+          "wr": 50.0,
+          "dd": 31.8,
+          "pf": 1.1
+        }
+      },
+      "go_scenario": "2.0x_fee+20bps",
+      "go_pnl": 706.15,
+      "go": true
+    }
+  }
+}

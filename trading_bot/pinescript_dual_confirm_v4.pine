@@ -1,0 +1,307 @@
+//@version=6
+strategy("Bear Bounce Dual Confirm V4 OPTIMIZED", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=95, commission_type=strategy.commission.percent, commission_value=0.26, initial_capital=2000)
+
+// === GEOPTIMALISEERDE PARAMETERS V4 ===
+// Backtest 60d resultaat (285 halal coins, 0.26% fee):
+//   V4 1x$2000: +$4,566 P&L, WR 83.3%, PF 78.29, DD 1.9% (12 trades)
+//   V3 1x$2000: +$4,995 P&L, WR 77.8%, PF 17.84, DD 5.8% (18 trades)
+//   Monte Carlo: 0% risk of ruin, 100% kans op winst
+//
+// V4 wijzigingen t.o.v. V3:
+//   - Volume bar-to-bar confirm: entry volume > prev bar volume
+//   - Time max 16 -> 10 bars (40h) force close
+//   - Resultaat: PF 17.84→78.29, DD 5.8%→1.9%
+// V3 wijzigingen t.o.v. V2:
+//   - ATR stop mult 3.0 -> 2.0 (strakker trailing)
+// V2 wijzigingen t.o.v. V1:
+//   - RSI max 35 -> 40, Volume spike >2.0x, Break-even +3%, Smart cooldown
+
+// === DONCHIAN INPUTS ===
+donchian_period  = input.int(20, "Donchian Period", minval=5, maxval=50, group="Donchian")
+rsi_donchian_max = input.int(40, "RSI Max (Donchian entry)", minval=20, maxval=50, group="Donchian", tooltip="V2: 35 -> 40. Meer signalen, volume spike filter compenseert.")
+
+// === BOLLINGER INPUTS ===
+bb_period        = input.int(20, "BB Period", minval=5, maxval=50, group="Bollinger")
+bb_dev           = input.float(2.0, "BB Deviation", minval=1.0, maxval=4.0, step=0.1, group="Bollinger")
+rsi_buy_bb       = input.int(40, "RSI Buy (BB oversold)", minval=15, maxval=50, group="Bollinger", tooltip="V2: 35 -> 40")
+rsi_sell_bb      = input.int(70, "RSI Sell (BB overbought)", minval=55, maxval=85, group="Bollinger")
+
+// === SHARED INPUTS ===
+rsi_period       = input.int(14, "RSI Period", minval=5, maxval=30, group="Shared")
+atr_period       = input.int(14, "ATR Period", minval=5, maxval=30, group="Shared")
+atr_stop_mult    = input.float(2.0, "ATR Stop Multiplier", minval=0.5, maxval=5.0, step=0.1, group="Shared")
+cooldown_bars    = input.int(4, "Cooldown Bars", minval=0, maxval=20, group="Shared")
+cooldown_stop    = input.int(8, "Cooldown After Stop", minval=0, maxval=20, group="Shared", tooltip="V2: Langere cooldown na stop loss hit.")
+max_stop_loss    = input.float(15.0, "Max Stop Loss %", minval=5.0, maxval=30.0, step=1.0, group="Shared")
+
+// === V2 OPTIMALISATIE INPUTS ===
+use_vol_spike    = input.bool(true, "Volume Spike Filter", group="V2 Optimalisatie", tooltip="Agent 1 winnaar: alleen instappen bij volume >2x gemiddelde. PF 8.13 → 9.35")
+vol_spike_mult   = input.float(2.0, "Vol Spike Multiplier", minval=1.0, maxval=5.0, step=0.1, group="V2 Optimalisatie")
+vol_avg_period   = input.int(20, "Vol Average Period", minval=5, maxval=50, group="V2 Optimalisatie")
+use_breakeven    = input.bool(true, "Break-Even Stop", group="V2 Optimalisatie", tooltip="Agent 2 winnaar: na +3% winst, stop naar entry + fee buffer. +$144 P&L")
+be_trigger_pct   = input.float(3.0, "BE Trigger %", minval=1.0, maxval=10.0, step=0.5, group="V2 Optimalisatie")
+vol_min_pct      = input.float(0.5, "Min Volume (% of avg)", minval=0.0, maxval=1.0, step=0.1, group="V2 Optimalisatie")
+
+// === V3/V4 OPTIMALISATIE INPUTS ===
+time_max_bars    = input.int(10, "Time Max Bars", minval=0, maxval=50, group="V4 Optimalisatie", tooltip="V4: Force exit na 10 bars (40h). Was 16 in V3.")
+use_vol_confirm  = input.bool(true, "Volume Bar Confirm", group="V4 Optimalisatie", tooltip="V4: Entry volume moet hoger zijn dan vorige bar. PF 17.84→78.29, DD 5.8%→1.9%")
+vol_confirm_mult = input.float(1.0, "Vol Confirm Multiplier", minval=0.5, maxval=3.0, step=0.1, group="V4 Optimalisatie", tooltip="Volume entry bar / volume vorige bar >= dit getal")
+
+// === INDICATORS ===
+// Donchian Channel
+highest_high = ta.highest(high, donchian_period)
+lowest_low   = ta.lowest(low, donchian_period)
+mid_channel  = (highest_high + lowest_low) / 2
+prev_lowest  = ta.lowest(low[1], donchian_period)
+
+// Bollinger Bands
+[bb_mid, bb_upper, bb_lower] = ta.bb(close, bb_period, bb_dev)
+
+// RSI & ATR
+rsi_val = ta.rsi(close, rsi_period)
+atr_val = ta.atr(atr_period)
+
+// Volume
+vol_avg = ta.sma(volume, vol_avg_period)
+vol_ratio = vol_avg > 0 ? volume / vol_avg : 0.0
+
+// === TRACKING VARIABLES ===
+var float stop_price = 0.0
+var float highest_price = 0.0
+var float entry_price_track = 0.0
+var int last_exit_bar = -999
+var bool last_exit_was_stop = false
+var bool just_bought = false
+var bool just_sold_target = false
+var bool just_sold_stop = false
+var bool just_sold_rsi = false
+var bool just_sold_hard = false
+var bool just_sold_time = false
+var int entry_bar_index = 0
+
+// Reset flags elke bar
+just_bought := false
+just_sold_target := false
+just_sold_stop := false
+just_sold_rsi := false
+just_sold_hard := false
+just_sold_time := false
+
+// Smart cooldown: langere cooldown na stop loss
+cd_needed = last_exit_was_stop ? cooldown_stop : cooldown_bars
+in_cooldown = (bar_index - last_exit_bar) < cd_needed
+
+// === ENTRY: DUAL CONFIRM + V2 FILTERS ===
+donchian_signal = low <= prev_lowest and rsi_val < rsi_donchian_max and close > close[1]
+bb_signal = close <= bb_lower and rsi_val < rsi_buy_bb and close > close[1]
+
+// Base volume filter
+vol_ok = vol_avg > 0 ? volume >= vol_avg * vol_min_pct : true
+
+// V2: Volume spike filter (Agent 1 winnaar)
+vol_spike_ok = use_vol_spike ? (vol_avg > 0 ? vol_ratio >= vol_spike_mult : true) : true
+
+// V4: Volume bar-to-bar confirmation (stijgend volume op bounce)
+vol_confirm_ok = use_vol_confirm ? (volume[1] > 0 ? volume / volume[1] >= vol_confirm_mult : true) : true
+
+// Dual confirm: BEIDE signalen + volume filters + V4 vol confirm
+long_entry = donchian_signal and bb_signal and vol_ok and vol_spike_ok and vol_confirm_ok
+can_enter = long_entry and not in_cooldown and strategy.position_size == 0
+
+// === ENTRY ===
+if can_enter
+    strategy.entry("Long", strategy.long)
+    stop_price := close - atr_val * atr_stop_mult
+    // Hard stop loss cap
+    hard_stop_level = close * (1 - max_stop_loss / 100)
+    if stop_price < hard_stop_level
+        stop_price := hard_stop_level
+    highest_price := close
+    entry_price_track := close
+    just_bought := true
+    entry_bar_index := bar_index
+
+// === EXIT ===
+if strategy.position_size > 0
+    // Update trailing stop
+    if close > highest_price
+        highest_price := close
+    new_stop = highest_price - atr_val * atr_stop_mult
+    // Hard stop loss cap
+    hard_stop_level = entry_price_track * (1 - max_stop_loss / 100)
+    if new_stop < hard_stop_level
+        new_stop := hard_stop_level
+
+    // V2: Break-even stop (Agent 2 winnaar)
+    if use_breakeven
+        profit_pct = (close - entry_price_track) / entry_price_track * 100
+        if profit_pct >= be_trigger_pct
+            // Stop mag niet lager dan entry + fee buffer (0.6%)
+            be_level = entry_price_track * 1.006
+            if new_stop < be_level
+                new_stop := be_level
+
+    if new_stop > stop_price
+        stop_price := new_stop
+
+    // Exit 1: Hard max loss cap (15%)
+    if close < entry_price_track * (1 - max_stop_loss / 100)
+        strategy.close("Long", comment="HARD STOP")
+        last_exit_bar := bar_index
+        last_exit_was_stop := true
+        just_sold_hard := true
+        highest_price := 0.0
+        stop_price := 0.0
+        entry_price_track := 0.0
+
+    // Exit 2: V3 Time max (force exit stale trades)
+    else if time_max_bars > 0 and (bar_index - entry_bar_index) >= time_max_bars
+        strategy.close("Long", comment="TIME MAX")
+        last_exit_bar := bar_index
+        last_exit_was_stop := close < entry_price_track
+        just_sold_time := true
+        highest_price := 0.0
+        stop_price := 0.0
+        entry_price_track := 0.0
+
+    // Exit 3: DC mid channel target
+    else if close >= mid_channel
+        strategy.close("Long", comment="DC TARGET")
+        last_exit_bar := bar_index
+        last_exit_was_stop := false
+        just_sold_target := true
+        highest_price := 0.0
+        stop_price := 0.0
+        entry_price_track := 0.0
+
+    // Exit 3: BB mid target
+    else if close >= bb_mid
+        strategy.close("Long", comment="BB TARGET")
+        last_exit_bar := bar_index
+        last_exit_was_stop := false
+        just_sold_target := true
+        highest_price := 0.0
+        stop_price := 0.0
+        entry_price_track := 0.0
+
+    // Exit 4: RSI overbought
+    else if rsi_val > rsi_sell_bb
+        strategy.close("Long", comment="RSI EXIT")
+        last_exit_bar := bar_index
+        last_exit_was_stop := false
+        just_sold_rsi := true
+        highest_price := 0.0
+        stop_price := 0.0
+        entry_price_track := 0.0
+
+    // Exit 5: Trailing stop
+    else if close < stop_price
+        strategy.close("Long", comment="TRAIL STOP")
+        last_exit_bar := bar_index
+        last_exit_was_stop := true
+        just_sold_stop := true
+        highest_price := 0.0
+        stop_price := 0.0
+        entry_price_track := 0.0
+
+// === PLOTS ===
+// Donchian Channel
+p_dc_upper = plot(highest_high, "DC Upper", color=color.new(color.red, 70), linewidth=1)
+p_dc_mid   = plot(mid_channel, "DC Mid (target)", color=color.new(color.orange, 40), linewidth=2, style=plot.style_stepline)
+p_dc_lower = plot(lowest_low, "DC Lower (buy zone)", color=color.new(color.green, 40), linewidth=2, style=plot.style_stepline)
+fill(p_dc_upper, p_dc_lower, color=color.new(color.gray, 95), title="DC Band")
+
+// Bollinger Bands
+plot(bb_upper, "BB Upper", color=color.new(color.blue, 70), linewidth=1)
+plot(bb_mid, "BB Mid", color=color.new(color.blue, 50), linewidth=1, style=plot.style_circles)
+plot(bb_lower, "BB Lower", color=color.new(color.blue, 70), linewidth=1)
+
+// Trailing stop
+plot(strategy.position_size > 0 ? stop_price : na, "Trailing Stop", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=2)
+
+// Hard stop loss level
+plot(strategy.position_size > 0 ? entry_price_track * (1 - max_stop_loss / 100) : na, "Hard Stop (15%)", color=color.new(color.red, 30), style=plot.style_linebr, linewidth=1)
+
+// Break-even level
+be_active = strategy.position_size > 0 and use_breakeven and ((close - entry_price_track) / entry_price_track * 100 >= be_trigger_pct)
+plot(be_active ? entry_price_track * 1.006 : na, "Break-Even", color=color.new(color.lime, 30), style=plot.style_linebr, linewidth=1)
+
+// === BUY / SELL MARKERS ===
+plotshape(just_bought, "BUY", shape.triangleup, location.belowbar, color.lime, size=size.normal, text="BUY", textcolor=color.lime)
+plotshape(just_sold_target, "TARGET", shape.triangledown, location.abovebar, color.orange, size=size.normal, text="TARGET", textcolor=color.orange)
+plotshape(just_sold_rsi, "RSI EXIT", shape.triangledown, location.abovebar, color.yellow, size=size.normal, text="RSI", textcolor=color.yellow)
+plotshape(just_sold_stop, "TRAIL STOP", shape.xcross, location.abovebar, color.red, size=size.normal, text="STOP", textcolor=color.red)
+plotshape(just_sold_hard, "HARD STOP", shape.xcross, location.abovebar, color.fuchsia, size=size.normal, text="HARD\nSTOP", textcolor=color.fuchsia)
+
+// === BACKGROUND ===
+buy_zone = close <= lowest_low * 1.01 and close <= bb_lower and rsi_val < rsi_buy_bb
+bgcolor(buy_zone ? color.new(color.green, 88) : na, title="Buy Zone")
+bgcolor(strategy.position_size > 0 ? color.new(color.blue, 95) : na, title="In Position")
+bgcolor(vol_spike_ok and buy_zone ? color.new(color.teal, 85) : na, title="Vol Spike + Buy Zone")
+
+// === INFO TABLE ===
+var table info = table.new(position.top_right, 2, 14, bgcolor=color.new(color.black, 80), border_width=1)
+if barstate.islast
+    table.cell(info, 0, 0, "Dual Confirm V2", text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 0, "DC+BB+VOL", text_color=color.lime, text_size=size.small)
+
+    table.cell(info, 0, 1, "RSI(14)", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 1, str.tostring(rsi_val, "#.0"), text_color=rsi_val < 40 ? color.lime : rsi_val > 70 ? color.red : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 2, "DC Lower", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 2, str.tostring(lowest_low, "#.####"), text_color=close <= lowest_low * 1.01 ? color.lime : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 3, "DC Mid", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 3, str.tostring(mid_channel, "#.####"), text_color=close >= mid_channel ? color.orange : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 4, "BB Lower", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 4, str.tostring(bb_lower, "#.####"), text_color=close <= bb_lower ? color.lime : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 5, "BB Mid", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 5, str.tostring(bb_mid, "#.####"), text_color=close >= bb_mid ? color.orange : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 6, "Vol Ratio", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 6, str.tostring(vol_ratio, "#.1") + "x", text_color=vol_ratio >= vol_spike_mult ? color.lime : vol_ratio >= 1.0 ? color.white : color.red, text_size=size.tiny)
+
+    table.cell(info, 0, 7, "ATR", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 7, str.tostring(atr_val, "#.######"), text_color=color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 8, "Trail Stop", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 8, strategy.position_size > 0 ? str.tostring(stop_price, "#.####") : "---", text_color=color.fuchsia, text_size=size.tiny)
+
+    table.cell(info, 0, 9, "Hard Stop", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 9, strategy.position_size > 0 ? str.tostring(entry_price_track * (1 - max_stop_loss / 100), "#.####") : "---", text_color=color.red, text_size=size.tiny)
+
+    table.cell(info, 0, 10, "Break-Even", text_color=color.gray, text_size=size.tiny)
+    be_text = strategy.position_size > 0 ? (be_active ? str.tostring(entry_price_track * 1.006, "#.####") + " ACTIVE" : "Waiting") : "---"
+    table.cell(info, 1, 10, be_text, text_color=be_active ? color.lime : color.gray, text_size=size.tiny)
+
+    table.cell(info, 0, 11, "Unrealized", text_color=color.gray, text_size=size.tiny)
+    unr_pnl = strategy.position_size > 0 ? (close - strategy.position_avg_price) / strategy.position_avg_price * 100 : 0.0
+    table.cell(info, 1, 11, strategy.position_size > 0 ? str.tostring(unr_pnl, "+#.0") + "%" : "---", text_color=unr_pnl > 0 ? color.lime : unr_pnl < 0 ? color.red : color.gray, text_size=size.tiny)
+
+    table.cell(info, 0, 12, "Position", text_color=color.gray, text_size=size.tiny)
+    pos_text = strategy.position_size > 0 ? "LONG" : in_cooldown ? "COOLDOWN" : "FLAT"
+    pos_col = strategy.position_size > 0 ? color.lime : in_cooldown ? color.yellow : color.gray
+    table.cell(info, 1, 12, pos_text, text_color=pos_col, text_size=size.tiny)
+
+    table.cell(info, 0, 13, "Signal", text_color=color.gray, text_size=size.tiny)
+    sig_text = can_enter ? ">>> BUY <<<" : strategy.position_size > 0 ? "HOLD" : donchian_signal and bb_signal ? (vol_spike_ok ? "READY!" : "NO VOL") : donchian_signal ? "DC OK" : bb_signal ? "BB OK" : "WAIT"
+    sig_col = can_enter ? color.lime : strategy.position_size > 0 ? color.yellow : donchian_signal and bb_signal and vol_spike_ok ? color.aqua : donchian_signal or bb_signal ? color.aqua : color.gray
+    table.cell(info, 1, 13, sig_text, text_color=sig_col, text_size=size.tiny)
+
+// === ALERTS ===
+if can_enter
+    alert("DUAL V2: BUY " + syminfo.ticker + " @ " + str.tostring(close) + " | RSI=" + str.tostring(rsi_val, "#.0") + " | Vol=" + str.tostring(vol_ratio, "#.1") + "x", alert.freq_once_per_bar)
+
+if strategy.position_size > 0 and (close >= mid_channel or close >= bb_mid)
+    alert("DUAL V2: TARGET " + syminfo.ticker + " @ " + str.tostring(close), alert.freq_once_per_bar)
+
+if strategy.position_size > 0 and rsi_val > rsi_sell_bb
+    alert("DUAL V2: RSI EXIT " + syminfo.ticker + " | RSI=" + str.tostring(rsi_val, "#.0"), alert.freq_once_per_bar)
+
+if strategy.position_size > 0 and close < stop_price
+    alert("DUAL V2: TRAIL STOP " + syminfo.ticker + " @ " + str.tostring(close) + " < stop " + str.tostring(stop_price, "#.####"), alert.freq_once_per_bar)
+
+if strategy.position_size > 0 and close < entry_price_track * (1 - max_stop_loss / 100)
+    alert("DUAL V2: HARD STOP " + syminfo.ticker + " | Max loss " + str.tostring(max_stop_loss) + "% bereikt", alert.freq_once_per_bar)

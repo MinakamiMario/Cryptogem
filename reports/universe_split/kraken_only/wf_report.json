@@ -1,0 +1,115 @@
+{
+  "timestamp": "2026-02-15 01:07:03",
+  "dataset": "temp_kraken_only.json",
+  "dataset_hash": "d3f19bc94104",
+  "seed": 42,
+  "universe_mode": "all",
+  "coin_count": 522,
+  "go_thresholds": {
+    "wf_min_pass": 4,
+    "wf_soft_pass": 3,
+    "wf_max_dd": 40.0,
+    "friction_go": "2x_fee+20bps",
+    "mc_p95_dd_max": 50.0,
+    "mc_ruin_max": 5.0,
+    "jitter_min_positive_pct": 70.0,
+    "univ_min_subsets_positive": 2,
+    "univ_top1_share_max": 0.5,
+    "univ_top3_share_max": 0.8
+  },
+  "kill_switch": {
+    "max_dd_pct": 30.0,
+    "max_consecutive_losses": 6,
+    "max_loss_streak_usd": -400,
+    "min_trades_before_eval": 10,
+    "wr_floor": 40.0
+  },
+  "results": {
+    "C1_TPSL_RSI45": {
+      "n_folds": 5,
+      "embargo_bars": 2,
+      "passed_folds": 3,
+      "wf_label": "3/5",
+      "max_test_dd": 23.5,
+      "folds": [
+        {
+          "fold": 1,
+          "test_bars": "50-184",
+          "purge_zone": "50-186",
+          "embargo": 2,
+          "train_trades": 25,
+          "train_pnl": 1919.54,
+          "train_dd": 18.1,
+          "test_trades": 5,
+          "test_pnl": -156.81,
+          "test_wr": 40.0,
+          "test_dd": 23.5,
+          "test_pf": 0.72,
+          "pass": false
+        },
+        {
+          "fold": 2,
+          "test_bars": "184-318",
+          "purge_zone": "182-320",
+          "embargo": 2,
+          "train_trades": 25,
+          "train_pnl": 1438.86,
+          "train_dd": 23.5,
+          "test_trades": 5,
+          "test_pnl": 265.22,
+          "test_wr": 80.0,
+          "test_dd": 15.8,
+          "test_pf": 2.71,
+          "pass": true
+        },
+        {
+          "fold": 3,
+          "test_bars": "318-452",
+          "purge_zone": "316-454",
+          "embargo": 2,
+          "train_trades": 25,
+          "train_pnl": 1320.64,
+          "train_dd": 32.3,
+          "test_trades": 5,
+          "test_pnl": -52.19,
+          "test_wr": 20.0,
+          "test_dd": 9.2,
+          "test_pf": 0.72,
+          "pass": false
+        },
+        {
+          "fold": 4,
+          "test_bars": "452-586",
+          "purge_zone": "450-588",
+          "embargo": 2,
+          "train_trades": 23,
+          "train_pnl": 915.95,
+          "train_dd": 32.3,
+          "test_trades": 7,
+          "test_pnl": 306.98,
+          "test_wr": 42.9,
+          "test_dd": 17.3,
+          "test_pf": 1.56,
+          "pass": true
+        },
+        {
+          "fold": 5,
+          "test_bars": "586-721",
+          "purge_zone": "584-721",
+          "embargo": 2,
+          "train_trades": 22,
+          "train_pnl": 449.49,
+          "train_dd": 32.3,
+          "test_trades": 8,
+          "test_pnl": 949.37,
+          "test_wr": 87.5,
+          "test_dd": 18.1,
+          "test_pf": 3.95,
+          "pass": true
+        }
+      ],
+      "go": false,
+      "soft_go": true
+    }
+  }
+}

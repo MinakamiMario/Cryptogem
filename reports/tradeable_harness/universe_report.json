@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-02-15 01:08:37",
+  "dataset": "candle_cache_tradeable.json",
+  "dataset_hash": "1e947af64862",
+  "seed": 42,
+  "universe_mode": "all",
+  "coin_count": 417,
+  "go_thresholds": {
+    "wf_min_pass": 4,
+    "wf_soft_pass": 3,
+    "wf_max_dd": 40.0,
+    "friction_go": "2x_fee+20bps",
+    "mc_p95_dd_max": 50.0,
+    "mc_ruin_max": 5.0,
+    "jitter_min_positive_pct": 70.0,
+    "univ_min_subsets_positive": 2,
+    "univ_top1_share_max": 0.5,
+    "univ_top3_share_max": 0.8
+  },
+  "kill_switch": {
+    "max_dd_pct": 30.0,
+    "max_consecutive_losses": 6,
+    "max_loss_streak_usd": -400,
+    "min_trades_before_eval": 10,
+    "wr_floor": 40.0
+  },
+  "results": {
+    "C1_TPSL_RSI45": {
+      "concentration": {
+        "top1_coin": "MF/USD",
+        "top1_share": 0.17,
+        "top3_coins": [
+          "MF/USD",
+          "U/USD",
+          "ZEUS/USD"
+        ],
+        "top3_share": 0.394,
+        "unique_coins_traded": 26,
+        "total_profit": 4266.02,
+        "notop_pnl": 1205.42
+      },
+      "subsets": {
+        "top_volume": {
+          "n_coins": 139,
+          "trades": 16,
+          "pnl": -260.39,
+          "wr": 56.2,
+          "dd": 36.5,
+          "pf": 0.83,
+          "positive": false
+        },
+        "mid_volume": {
+          "n_coins": 139,
+          "trades": 17,
+          "pnl": 1623.31,
+          "wr": 64.7,
+          "dd": 16.4,
+          "pf": 2.41,
+          "positive": true
+        },
+        "exclude_top_winners": {
+          "n_coins": 414,
+          "trades": 24,
+          "pnl": -63.3,
+          "wr": 58.3,
+          "dd": 30.6,
+          "pf": 0.97,
+          "positive": false
+        },
+        "random_50pct": {
+          "n_coins": 208,
+          "n_sims": 100,
+          "win_pct": 73.0,
+          "median_equity": 2510.0,
+          "p5_equity": 1534.0,
+          "positive": true
+        }
+      },
+      "n_positive_subsets": 2,
+      "go_universe": true,
+      "go_concentration": true,
+      "go": true
+    }
+  }
+}

@@ -1,0 +1,165 @@
+//@version=5
+strategy("Bear Donchian Bounce 4H - BEST ALPHA", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=95, commission_type=strategy.commission.percent, commission_value=0.1, initial_capital=1000)
+
+// === INPUTS ===
+donchian_period  = input.int(20, "Donchian Period", minval=5, maxval=50)
+rsi_period       = input.int(14, "RSI Period", minval=5, maxval=30)
+rsi_max          = input.int(35, "RSI Max (entry filter)", minval=20, maxval=50)
+atr_period       = input.int(14, "ATR Period", minval=5, maxval=30)
+atr_stop_mult    = input.float(2.0, "ATR Stop Multiplier", minval=0.5, maxval=5.0, step=0.1)
+cooldown_bars    = input.int(4, "Cooldown Bars na exit", minval=0, maxval=20)
+
+// === INDICATORS ===
+// Donchian Channel
+highest_high = ta.highest(high, donchian_period)
+lowest_low   = ta.lowest(low, donchian_period)
+mid_channel  = (highest_high + lowest_low) / 2
+
+// RSI
+rsi_val = ta.rsi(close, rsi_period)
+
+// ATR voor trailing stop
+atr_val = ta.atr(atr_period)
+
+// Previous bar's lowest low (we vergelijken huidige low met vorige bar's channel)
+prev_lowest = ta.lowest(low[1], donchian_period)
+
+// === TRACKING VARIABLES ===
+var float stop_price = 0.0
+var float highest_price = 0.0
+var int last_exit_bar = -999
+var bool just_bought = false
+var bool just_sold_target = false
+var bool just_sold_stop = false
+
+// Reset signal flags
+just_bought := false
+just_sold_target := false
+just_sold_stop := false
+
+// Cooldown check
+in_cooldown = (bar_index - last_exit_bar) < cooldown_bars
+
+// === ENTRY CONDITIONS ===
+// Koop: low raakt vorige Donchian lower band + RSI < 35 + close > vorige close (bounce)
+price_at_lower = low <= prev_lowest
+rsi_oversold = rsi_val < rsi_max
+price_bouncing = close > close[1]
+
+long_entry = not in_cooldown and price_at_lower and rsi_oversold and price_bouncing and strategy.position_size == 0
+
+// === ENTRY ===
+if long_entry
+    strategy.entry("Long", strategy.long)
+    stop_price := close - atr_val * atr_stop_mult
+    highest_price := close
+    just_bought := true
+
+// === EXIT CONDITIONS ===
+if strategy.position_size > 0
+    // Update trailing stop
+    if close > highest_price
+        highest_price := close
+    new_stop = highest_price - atr_val * atr_stop_mult
+    if new_stop > stop_price
+        stop_price := new_stop
+
+    // Exit 1: Mid-channel bereikt (mean reversion target)
+    if close >= mid_channel
+        strategy.close("Long", comment="Mid Channel")
+        last_exit_bar := bar_index
+        just_sold_target := true
+        highest_price := 0.0
+        stop_price := 0.0
+
+    // Exit 2: Trailing stop geraakt
+    else if close < stop_price
+        strategy.close("Long", comment="Stop Loss")
+        last_exit_bar := bar_index
+        just_sold_stop := true
+        highest_price := 0.0
+        stop_price := 0.0
+
+// === PLOTS ===
+// Donchian Channel
+p_upper = plot(highest_high, "Donchian Upper", color=color.new(color.red, 60), linewidth=1)
+p_mid   = plot(mid_channel, "Donchian Mid (TARGET)", color=color.new(color.orange, 30), linewidth=2, style=plot.style_stepline)
+p_lower = plot(lowest_low, "Donchian Lower (BUY ZONE)", color=color.new(color.green, 30), linewidth=2, style=plot.style_stepline)
+
+// Fill channel
+fill(p_upper, p_mid, color=color.new(color.red, 92), title="Upper Band")
+fill(p_mid, p_lower, color=color.new(color.green, 92), title="Lower Band")
+
+// Trailing stop (alleen als in positie)
+plot(strategy.position_size > 0 ? stop_price : na, "Trailing Stop", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=2)
+
+// === BUY / SELL SIGNALS ===
+// BUY signal: groene driehoek onder de bar
+plotshape(just_bought, "BUY SIGNAL", shape.triangleup, location.belowbar, color.lime, size=size.normal, text="BUY", textcolor=color.lime)
+
+// SELL signal: rode driehoek boven de bar (target hit)
+plotshape(just_sold_target, "SELL TARGET", shape.triangledown, location.abovebar, color.orange, size=size.normal, text="TARGET", textcolor=color.orange)
+
+// STOP signal: rode kruis (stop loss)
+plotshape(just_sold_stop, "STOP LOSS", shape.xcross, location.abovebar, color.red, size=size.normal, text="STOP", textcolor=color.red)
+
+// === BACKGROUND ===
+// Highlight buy zone: prijs bij lower band + RSI oversold
+buy_zone = close <= lowest_low * 1.01 and rsi_val < rsi_max
+bgcolor(buy_zone ? color.new(color.green, 88) : na, title="Buy Zone")
+
+// In trade
+bgcolor(strategy.position_size > 0 ? color.new(color.blue, 95) : na, title="In Position")
+
+// Cooldown
+bgcolor(in_cooldown and strategy.position_size == 0 ? color.new(color.gray, 95) : na, title="Cooldown")
+
+// === INFO TABLE ===
+var table info = table.new(position.top_right, 2, 10, bgcolor=color.new(color.black, 80), border_width=1)
+if barstate.islast
+    table.cell(info, 0, 0, "Bear Donchian Bounce", text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 0, "4H - BEST ALPHA", text_color=color.lime, text_size=size.small)
+
+    table.cell(info, 0, 1, "RSI(" + str.tostring(rsi_period) + ")", text_color=color.gray, text_size=size.tiny)
+    rsi_col = rsi_val < rsi_max ? color.lime : rsi_val > 70 ? color.red : color.white
+    table.cell(info, 1, 1, str.tostring(rsi_val, "#.0"), text_color=rsi_col, text_size=size.tiny)
+
+    table.cell(info, 0, 2, "Donchian Low", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 2, str.tostring(lowest_low, "#.####"), text_color=close <= lowest_low * 1.01 ? color.lime : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 3, "Mid Channel", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 3, str.tostring(mid_channel, "#.####"), text_color=close >= mid_channel ? color.orange : color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 4, "ATR", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 4, str.tostring(atr_val, "#.######"), text_color=color.white, text_size=size.tiny)
+
+    table.cell(info, 0, 5, "Stop Price", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 5, strategy.position_size > 0 ? str.tostring(stop_price, "#.####") : "---", text_color=color.fuchsia, text_size=size.tiny)
+
+    table.cell(info, 0, 6, "Position", text_color=color.gray, text_size=size.tiny)
+    pos_text = strategy.position_size > 0 ? "LONG" : in_cooldown ? "COOLDOWN" : "FLAT"
+    pos_col = strategy.position_size > 0 ? color.lime : in_cooldown ? color.yellow : color.gray
+    table.cell(info, 1, 6, pos_text, text_color=pos_col, text_size=size.tiny)
+
+    table.cell(info, 0, 7, "Buy Zone?", text_color=color.gray, text_size=size.tiny)
+    table.cell(info, 1, 7, buy_zone ? "YES" : "NO", text_color=buy_zone ? color.lime : color.gray, text_size=size.tiny)
+
+    // P&L info
+    table.cell(info, 0, 8, "Unrealized P&L", text_color=color.gray, text_size=size.tiny)
+    unr_pnl = strategy.position_size > 0 ? (close - strategy.position_avg_price) / strategy.position_avg_price * 100 : 0.0
+    table.cell(info, 1, 8, strategy.position_size > 0 ? str.tostring(unr_pnl, "+#.0") + "%" : "---", text_color=unr_pnl > 0 ? color.lime : unr_pnl < 0 ? color.red : color.gray, text_size=size.tiny)
+
+    table.cell(info, 0, 9, "Signal", text_color=color.gray, text_size=size.tiny)
+    sig_text = long_entry ? ">>> BUY <<<" : strategy.position_size > 0 and close >= mid_channel ? ">>> SELL <<<" : strategy.position_size > 0 ? "HOLD" : "WAIT"
+    sig_col = long_entry ? color.lime : strategy.position_size > 0 and close >= mid_channel ? color.orange : strategy.position_size > 0 ? color.yellow : color.gray
+    table.cell(info, 1, 9, sig_text, text_color=sig_col, text_size=size.tiny)
+
+// === ALERTS ===
+alertcondition(long_entry, title="BUY Signal", message="DONCHIAN BOUNCE: BUY {{ticker}}\nPrijs bij 20-period low + RSI oversold + bounce\nEntry: {{close}}\nStop: {{close}} - ATR*2")
+
+alertcondition(strategy.position_size > 0 and close >= mid_channel, title="SELL Target", message="DONCHIAN BOUNCE: SELL {{ticker}}\nMid-channel target bereikt\nExit: {{close}}")
+
+alertcondition(strategy.position_size > 0 and close < stop_price, title="STOP Loss", message="DONCHIAN BOUNCE: STOP {{ticker}}\nTrailing stop geraakt\nExit: {{close}}")
+
+// Combined alert for any action
+alertcondition(long_entry or (strategy.position_size > 0 and (close >= mid_channel or close < stop_price)), title="Any Signal", message="DONCHIAN BOUNCE: Action on {{ticker}} at {{close}}")

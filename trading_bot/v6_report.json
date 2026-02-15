@@ -1,0 +1,4137 @@
+{
+  "timestamp": "2026-02-13T18:20:03.988495",
+  "coins": 526,
+  "configs_tested": 8,
+  "best_config": "v5_baseline",
+  "best_name": "V5 PROD (baseline)",
+  "results": {
+    "v5_baseline": {
+      "label": "V5 PROD (baseline)",
+      "coins": 526,
+      "trades": 46,
+      "wins": 22,
+      "losses": 24,
+      "wr": 47.82608695652174,
+      "pnl": 2881.8624233226847,
+      "roi": 144.09312116613424,
+      "pf": 2.050457121850908,
+      "dd": 75.31142806124664,
+      "avg_w": 255.69540619198608,
+      "avg_l": -114.30985470420872,
+      "avg_bars": 5.673913043478261,
+      "score": 34.07782330875782,
+      "reasons": {
+        "TRAIL STOP": {
+          "n": 17,
+          "pnl": -2111.4384684284632,
+          "wins": 0
+        },
+        "DC TARGET": {
+          "n": 9,
+          "pnl": 976.5685307820445,
+          "wins": 9
+        },
+        "TIME MAX": {
+          "n": 11,
+          "pnl": -482.9365620736453,
+          "wins": 4
+        },
+        "RSI RECOVERY": {
+          "n": 8,
+          "pnl": 4460.112791781955,
+          "wins": 8
+        },
+        "END": {
+          "n": 1,
+          "pnl": 39.55613126079439,
+          "wins": 1
+        }
+      },
+      "trade_list": [
+        {
+          "pair": "AIO/USD",
+          "entry": 0.09724,
+          "exit": 0.08851,
+          "pnl": -189.48889345948146,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 60,
+          "exit_bar": 62
+        },
+        {
+          "pair": "KULA/USD",
+          "entry": 0.4053,
+          "exit": 0.4086,
+          "pnl": 5.841894892672219,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 63,
+          "exit_bar": 65
+        },
+        {
+          "pair": "BTT/USD",
+          "entry": 4.74e-07,
+          "exit": 4.87e-07,
+          "pnl": 44.30970464135009,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 85,
+          "exit_bar": 94
+        },
+        {
+          "pair": "XTER/USD",
+          "entry": 0.06077,
+          "exit": 0.05242,
+          "pnl": -284.49215073226907,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 106,
+          "exit_bar": 115
+        },
+        {
+          "pair": "WCT/USD",
+          "entry": 0.10571,
+          "exit": 0.11474,
+          "pnl": 160.00056759057793,
+          "reason": "DC TARGET",
+          "bars": 5,
+          "entry_bar": 127,
+          "exit_bar": 132
+        },
+        {
+          "pair": "AKE/USD",
+          "entry": 0.0009968,
+          "exit": 0.0008927,
+          "pnl": -218.7253210272873,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 149,
+          "exit_bar": 155
+        },
+        {
+          "pair": "GHST/USD",
+          "entry": 0.2912,
+          "exit": 0.2707,
+          "pnl": -150.83063186813197,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 164,
+          "exit_bar": 169
+        },
+        {
+          "pair": "TVK/USD",
+          "entry": 0.012,
+          "exit": 0.01207,
+          "pnl": 1.2363333333334356,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 170,
+          "exit_bar": 179
+        },
+        {
+          "pair": "SHX/USD",
+          "entry": 0.008028,
+          "exit": 0.008005,
+          "pnl": -16.115047334329958,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 180,
+          "exit_bar": 186
+        },
+        {
+          "pair": "PYTH/USD",
+          "entry": 0.08445,
+          "exit": 0.08879,
+          "pnl": 92.11547661338062,
+          "reason": "DC TARGET",
+          "bars": 5,
+          "entry_bar": 194,
+          "exit_bar": 199
+        },
+        {
+          "pair": "OBOL/USD",
+          "entry": 0.02758,
+          "exit": 0.02445,
+          "pnl": -236.78593183466288,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 206,
+          "exit_bar": 209
+        },
+        {
+          "pair": "OGN/USD",
+          "entry": 0.03416,
+          "exit": 0.03563,
+          "pnl": 75.44180327868847,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 215,
+          "exit_bar": 224
+        },
+        {
+          "pair": "SOLV/USD",
+          "entry": 0.01152,
+          "exit": 0.01131,
+          "pnl": -46.76354166666668,
+          "reason": "TRAIL STOP",
+          "bars": 7,
+          "entry_bar": 234,
+          "exit_bar": 241
+        },
+        {
+          "pair": "FOREST/USD",
+          "entry": 0.04228,
+          "exit": 0.03605,
+          "pnl": -304.33576158940394,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 248,
+          "exit_bar": 249
+        },
+        {
+          "pair": "M/USD",
+          "entry": 1.27578,
+          "exit": 1.25991,
+          "pnl": -35.21421248177559,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 253,
+          "exit_bar": 256
+        },
+        {
+          "pair": "BIGTIME/USD",
+          "entry": 0.0218,
+          "exit": 0.0231,
+          "pnl": 108.5559633027522,
+          "reason": "DC TARGET",
+          "bars": 8,
+          "entry_bar": 274,
+          "exit_bar": 282
+        },
+        {
+          "pair": "DYDX/USD",
+          "entry": 0.1889,
+          "exit": 0.2055,
+          "pnl": 164.89740603493888,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 323,
+          "exit_bar": 325
+        },
+        {
+          "pair": "BDXN/USD",
+          "entry": 0.01815,
+          "exit": 0.01658,
+          "pnl": -182.95294765840202,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 331,
+          "exit_bar": 334
+        },
+        {
+          "pair": "RVV/USD",
+          "entry": 0.003238,
+          "exit": 0.003238,
+          "pnl": -10.4,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 334,
+          "exit_bar": 343
+        },
+        {
+          "pair": "WLFI/USD",
+          "entry": 0.1393,
+          "exit": 0.1339,
+          "pnl": -87.72893036611651,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 355,
+          "exit_bar": 360
+        },
+        {
+          "pair": "GAIA/USD",
+          "entry": 0.032715,
+          "exit": 0.032646,
+          "pnl": -14.60728106373221,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 360,
+          "exit_bar": 369
+        },
+        {
+          "pair": "NODE/USD",
+          "entry": 0.03774,
+          "exit": 0.03578,
+          "pnl": -113.99851616322222,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 369,
+          "exit_bar": 370
+        },
+        {
+          "pair": "KNC/USD",
+          "entry": 0.2204,
+          "exit": 0.2118,
+          "pnl": -88.23702359346665,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 374,
+          "exit_bar": 379
+        },
+        {
+          "pair": "TANSSI/USD",
+          "entry": 0.0106,
+          "exit": 0.01117,
+          "pnl": 96.86754716981119,
+          "reason": "RSI RECOVERY",
+          "bars": 7,
+          "entry_bar": 380,
+          "exit_bar": 387
+        },
+        {
+          "pair": "UNFI/USD",
+          "entry": 0.0823,
+          "exit": 0.078,
+          "pnl": -114.62405832320773,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 405,
+          "exit_bar": 414
+        },
+        {
+          "pair": "LCX/USD",
+          "entry": 0.05709,
+          "exit": 0.06035,
+          "pnl": 103.50870555263614,
+          "reason": "RSI RECOVERY",
+          "bars": 5,
+          "entry_bar": 435,
+          "exit_bar": 440
+        },
+        {
+          "pair": "ESPORTS/USD",
+          "entry": 0.3969,
+          "exit": 0.4053,
+          "pnl": 31.817989417989512,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 448,
+          "exit_bar": 450
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00207,
+          "exit": 0.00198,
+          "pnl": -97.13043478260852,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 451,
+          "exit_bar": 460
+        },
+        {
+          "pair": "ACA/USD",
+          "entry": 0.00873,
+          "exit": 0.0094,
+          "pnl": 142.69461626575037,
+          "reason": "RSI RECOVERY",
+          "bars": 6,
+          "entry_bar": 468,
+          "exit_bar": 474
+        },
+        {
+          "pair": "EWT/USD",
+          "entry": 0.751,
+          "exit": 0.774,
+          "pnl": 50.69241011984026,
+          "reason": "RSI RECOVERY",
+          "bars": 8,
+          "entry_bar": 493,
+          "exit_bar": 501
+        },
+        {
+          "pair": "DYM/USD",
+          "entry": 0.0679,
+          "exit": 0.071,
+          "pnl": 80.67334315169342,
+          "reason": "RSI RECOVERY",
+          "bars": 7,
+          "entry_bar": 528,
+          "exit_bar": 535
+        },
+        {
+          "pair": "APR/USD",
+          "entry": 0.10912,
+          "exit": 0.10949,
+          "pnl": -3.636107038122998,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 536,
+          "exit_bar": 541
+        },
+        {
+          "pair": "VELVET/USD",
+          "entry": 0.1135,
+          "exit": 0.1103,
+          "pnl": -66.64105726872262,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 542,
+          "exit_bar": 551
+        },
+        {
+          "pair": "AI3/USD",
+          "entry": 0.01894,
+          "exit": 0.01862,
+          "pnl": -44.103062302006066,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 564,
+          "exit_bar": 573
+        },
+        {
+          "pair": "DBR/USD",
+          "entry": 0.017,
+          "exit": 0.0164,
+          "pnl": -80.80470588235292,
+          "reason": "TRAIL STOP",
+          "bars": 8,
+          "entry_bar": 583,
+          "exit_bar": 591
+        },
+        {
+          "pair": "UMA/USD",
+          "entry": 0.656,
+          "exit": 0.684,
+          "pnl": 74.74390243902447,
+          "reason": "DC TARGET",
+          "bars": 7,
+          "entry_bar": 608,
+          "exit_bar": 615
+        },
+        {
+          "pair": "SUN/USD",
+          "entry": 0.01868,
+          "exit": 0.018,
+          "pnl": -83.01584582441114,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 616,
+          "exit_bar": 617
+        },
+        {
+          "pair": "AB/USD",
+          "entry": 0.003857,
+          "exit": 0.003357,
+          "pnl": -268.99476276899145,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 620,
+          "exit_bar": 623
+        },
+        {
+          "pair": "BERA/USD",
+          "entry": 0.589,
+          "exit": 0.6082,
+          "pnl": 54.62573853989811,
+          "reason": "DC TARGET",
+          "bars": 7,
+          "entry_bar": 628,
+          "exit_bar": 635
+        },
+        {
+          "pair": "KGEN/USD",
+          "entry": 0.1711,
+          "exit": 0.1744,
+          "pnl": 28.0736411455289,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 639,
+          "exit_bar": 648
+        },
+        {
+          "pair": "STRD/USD",
+          "entry": 0.01789,
+          "exit": 0.02053,
+          "pnl": 283.9695919508105,
+          "reason": "DC TARGET",
+          "bars": 5,
+          "entry_bar": 649,
+          "exit_bar": 654
+        },
+        {
+          "pair": "ZEUS/USD",
+          "entry": 0.0071,
+          "exit": 0.019,
+          "pnl": 3332.997183098591,
+          "reason": "RSI RECOVERY",
+          "bars": 6,
+          "entry_bar": 667,
+          "exit_bar": 673
+        },
+        {
+          "pair": "XCN/USD",
+          "entry": 0.00479,
+          "exit": 0.00564,
+          "pnl": 343.58329853862216,
+          "reason": "RSI RECOVERY",
+          "bars": 3,
+          "entry_bar": 674,
+          "exit_bar": 677
+        },
+        {
+          "pair": "B3/USD",
+          "entry": 0.000487,
+          "exit": 0.000565,
+          "pnl": 309.09568788501,
+          "reason": "RSI RECOVERY",
+          "bars": 3,
+          "entry_bar": 696,
+          "exit_bar": 699
+        },
+        {
+          "pair": "QI/USD",
+          "entry": 0.002119,
+          "exit": 0.002126,
+          "pnl": -3.810287871637505,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 702,
+          "exit_bar": 706
+        },
+        {
+          "pair": "U/USD",
+          "entry": 0.001158,
+          "exit": 0.001187,
+          "pnl": 39.55613126079439,
+          "reason": "END",
+          "bars": 6,
+          "entry_bar": 715,
+          "exit_bar": 721
+        }
+      ],
+      "herfindahl": 1.45237527334201,
+      "pnl_no_top": -451.13475977590633,
+      "avg_no_top": -10.02521688390903,
+      "trail_loss_pct": 36.95652173913043,
+      "be_wr": 30.894116053198072,
+      "ev_no_top": -10.02521688390903
+    },
+    "v6a_dyntrail": {
+      "label": "V6A Dynamic Trail",
+      "coins": 526,
+      "trades": 46,
+      "wins": 22,
+      "losses": 24,
+      "wr": 47.82608695652174,
+      "pnl": 2793.0807172931923,
+      "roi": 139.65403586465962,
+      "pf": 2.085781642988263,
+      "dd": 66.76034008155864,
+      "avg_w": 243.8861577545655,
+      "avg_l": -107.18394805446871,
+      "avg_bars": 5.434782608695652,
+      "score": 33.85615603710622,
+      "reasons": {
+        "TRAIL STOP": {
+          "n": 19,
+          "pnl": -2013.381017289754,
+          "wins": 1
+        },
+        "DC TARGET": {
+          "n": 8,
+          "pnl": 692.598938831234,
+          "wins": 8
+        },
+        "TIME MAX": {
+          "n": 10,
+          "pnl": -385.8061272910368,
+          "wins": 4
+        },
+        "RSI RECOVERY": {
+          "n": 8,
+          "pnl": 4460.112791781955,
+          "wins": 8
+        },
+        "END": {
+          "n": 1,
+          "pnl": 39.55613126079439,
+          "wins": 1
+        }
+      },
+      "trade_list": [
+        {
+          "pair": "AIO/USD",
+          "entry": 0.09724,
+          "exit": 0.08851,
+          "pnl": -189.48889345948146,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 60,
+          "exit_bar": 62
+        },
+        {
+          "pair": "KULA/USD",
+          "entry": 0.4053,
+          "exit": 0.4086,
+          "pnl": 5.841894892672219,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 63,
+          "exit_bar": 65
+        },
+        {
+          "pair": "BTT/USD",
+          "entry": 4.74e-07,
+          "exit": 4.87e-07,
+          "pnl": 44.30970464135009,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 85,
+          "exit_bar": 94
+        },
+        {
+          "pair": "XTER/USD",
+          "entry": 0.06077,
+          "exit": 0.05242,
+          "pnl": -284.49215073226907,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 106,
+          "exit_bar": 115
+        },
+        {
+          "pair": "WCT/USD",
+          "entry": 0.10571,
+          "exit": 0.11474,
+          "pnl": 160.00056759057793,
+          "reason": "DC TARGET",
+          "bars": 5,
+          "entry_bar": 127,
+          "exit_bar": 132
+        },
+        {
+          "pair": "AKE/USD",
+          "entry": 0.0009968,
+          "exit": 0.0009386,
+          "pnl": -126.87006420545727,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 149,
+          "exit_bar": 154
+        },
+        {
+          "pair": "GHST/USD",
+          "entry": 0.2912,
+          "exit": 0.2707,
+          "pnl": -150.83063186813197,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 164,
+          "exit_bar": 169
+        },
+        {
+          "pair": "TVK/USD",
+          "entry": 0.012,
+          "exit": 0.01207,
+          "pnl": 1.2363333333334356,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 170,
+          "exit_bar": 179
+        },
+        {
+          "pair": "SHX/USD",
+          "entry": 0.008028,
+          "exit": 0.008005,
+          "pnl": -16.115047334329958,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 180,
+          "exit_bar": 186
+        },
+        {
+          "pair": "PYTH/USD",
+          "entry": 0.08445,
+          "exit": 0.08879,
+          "pnl": 92.11547661338062,
+          "reason": "DC TARGET",
+          "bars": 5,
+          "entry_bar": 194,
+          "exit_bar": 199
+        },
+        {
+          "pair": "OBOL/USD",
+          "entry": 0.02758,
+          "exit": 0.02445,
+          "pnl": -236.78593183466288,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 206,
+          "exit_bar": 209
+        },
+        {
+          "pair": "OGN/USD",
+          "entry": 0.03416,
+          "exit": 0.03563,
+          "pnl": 75.44180327868847,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 215,
+          "exit_bar": 224
+        },
+        {
+          "pair": "SOLV/USD",
+          "entry": 0.01152,
+          "exit": 0.01138,
+          "pnl": -34.64236111111132,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 234,
+          "exit_bar": 240
+        },
+        {
+          "pair": "FOREST/USD",
+          "entry": 0.04228,
+          "exit": 0.03605,
+          "pnl": -304.33576158940394,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 248,
+          "exit_bar": 249
+        },
+        {
+          "pair": "M/USD",
+          "entry": 1.27578,
+          "exit": 1.25991,
+          "pnl": -35.21421248177559,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 253,
+          "exit_bar": 256
+        },
+        {
+          "pair": "BIGTIME/USD",
+          "entry": 0.0218,
+          "exit": 0.0231,
+          "pnl": 108.5559633027522,
+          "reason": "DC TARGET",
+          "bars": 8,
+          "entry_bar": 274,
+          "exit_bar": 282
+        },
+        {
+          "pair": "DYDX/USD",
+          "entry": 0.1889,
+          "exit": 0.2055,
+          "pnl": 164.89740603493888,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 323,
+          "exit_bar": 325
+        },
+        {
+          "pair": "BDXN/USD",
+          "entry": 0.01815,
+          "exit": 0.01674,
+          "pnl": -165.36793388429732,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 331,
+          "exit_bar": 333
+        },
+        {
+          "pair": "RVV/USD",
+          "entry": 0.003238,
+          "exit": 0.003238,
+          "pnl": -10.4,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 334,
+          "exit_bar": 343
+        },
+        {
+          "pair": "WLFI/USD",
+          "entry": 0.1393,
+          "exit": 0.1339,
+          "pnl": -87.72893036611651,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 355,
+          "exit_bar": 360
+        },
+        {
+          "pair": "GAIA/USD",
+          "entry": 0.032715,
+          "exit": 0.032646,
+          "pnl": -14.60728106373221,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 360,
+          "exit_bar": 369
+        },
+        {
+          "pair": "NODE/USD",
+          "entry": 0.03774,
+          "exit": 0.03578,
+          "pnl": -113.99851616322222,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 369,
+          "exit_bar": 370
+        },
+        {
+          "pair": "KNC/USD",
+          "entry": 0.2204,
+          "exit": 0.2162,
+          "pnl": -48.41343012704183,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 374,
+          "exit_bar": 376
+        },
+        {
+          "pair": "TANSSI/USD",
+          "entry": 0.0106,
+          "exit": 0.01117,
+          "pnl": 96.86754716981119,
+          "reason": "RSI RECOVERY",
+          "bars": 7,
+          "entry_bar": 380,
+          "exit_bar": 387
+        },
+        {
+          "pair": "UNFI/USD",
+          "entry": 0.0823,
+          "exit": 0.078,
+          "pnl": -114.62405832320773,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 405,
+          "exit_bar": 414
+        },
+        {
+          "pair": "LCX/USD",
+          "entry": 0.05709,
+          "exit": 0.06035,
+          "pnl": 103.50870555263614,
+          "reason": "RSI RECOVERY",
+          "bars": 5,
+          "entry_bar": 435,
+          "exit_bar": 440
+        },
+        {
+          "pair": "ESPORTS/USD",
+          "entry": 0.3969,
+          "exit": 0.4053,
+          "pnl": 31.817989417989512,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 448,
+          "exit_bar": 450
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00207,
+          "exit": 0.00199,
+          "pnl": -87.49371980676307,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 451,
+          "exit_bar": 456
+        },
+        {
+          "pair": "ACA/USD",
+          "entry": 0.00873,
+          "exit": 0.0094,
+          "pnl": 142.69461626575037,
+          "reason": "RSI RECOVERY",
+          "bars": 6,
+          "entry_bar": 468,
+          "exit_bar": 474
+        },
+        {
+          "pair": "EWT/USD",
+          "entry": 0.751,
+          "exit": 0.774,
+          "pnl": 50.69241011984026,
+          "reason": "RSI RECOVERY",
+          "bars": 8,
+          "entry_bar": 493,
+          "exit_bar": 501
+        },
+        {
+          "pair": "DYM/USD",
+          "entry": 0.0679,
+          "exit": 0.071,
+          "pnl": 80.67334315169342,
+          "reason": "RSI RECOVERY",
+          "bars": 7,
+          "entry_bar": 528,
+          "exit_bar": 535
+        },
+        {
+          "pair": "APR/USD",
+          "entry": 0.10912,
+          "exit": 0.10949,
+          "pnl": -3.636107038122998,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 536,
+          "exit_bar": 541
+        },
+        {
+          "pair": "VELVET/USD",
+          "entry": 0.1135,
+          "exit": 0.1103,
+          "pnl": -66.64105726872262,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 542,
+          "exit_bar": 551
+        },
+        {
+          "pair": "AI3/USD",
+          "entry": 0.01894,
+          "exit": 0.01862,
+          "pnl": -44.103062302006066,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 564,
+          "exit_bar": 573
+        },
+        {
+          "pair": "DBR/USD",
+          "entry": 0.017,
+          "exit": 0.0164,
+          "pnl": -80.80470588235292,
+          "reason": "TRAIL STOP",
+          "bars": 8,
+          "entry_bar": 583,
+          "exit_bar": 591
+        },
+        {
+          "pair": "UMA/USD",
+          "entry": 0.656,
+          "exit": 0.684,
+          "pnl": 74.74390243902447,
+          "reason": "DC TARGET",
+          "bars": 7,
+          "entry_bar": 608,
+          "exit_bar": 615
+        },
+        {
+          "pair": "SUN/USD",
+          "entry": 0.01868,
+          "exit": 0.018,
+          "pnl": -83.01584582441114,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 616,
+          "exit_bar": 617
+        },
+        {
+          "pair": "AB/USD",
+          "entry": 0.003857,
+          "exit": 0.003357,
+          "pnl": -268.99476276899145,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 620,
+          "exit_bar": 623
+        },
+        {
+          "pair": "BERA/USD",
+          "entry": 0.589,
+          "exit": 0.6082,
+          "pnl": 54.62573853989811,
+          "reason": "DC TARGET",
+          "bars": 7,
+          "entry_bar": 628,
+          "exit_bar": 635
+        },
+        {
+          "pair": "KGEN/USD",
+          "entry": 0.1711,
+          "exit": 0.1744,
+          "pnl": 28.0736411455289,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 639,
+          "exit_bar": 648
+        },
+        {
+          "pair": "STRD/USD",
+          "entry": 0.01789,
+          "exit": 0.0182,
+          "pnl": 24.16612632755743,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 649,
+          "exit_bar": 653
+        },
+        {
+          "pair": "ZEUS/USD",
+          "entry": 0.0071,
+          "exit": 0.019,
+          "pnl": 3332.997183098591,
+          "reason": "RSI RECOVERY",
+          "bars": 6,
+          "entry_bar": 667,
+          "exit_bar": 673
+        },
+        {
+          "pair": "XCN/USD",
+          "entry": 0.00479,
+          "exit": 0.00564,
+          "pnl": 343.58329853862216,
+          "reason": "RSI RECOVERY",
+          "bars": 3,
+          "entry_bar": 674,
+          "exit_bar": 677
+        },
+        {
+          "pair": "B3/USD",
+          "entry": 0.000487,
+          "exit": 0.000565,
+          "pnl": 309.09568788501,
+          "reason": "RSI RECOVERY",
+          "bars": 3,
+          "entry_bar": 696,
+          "exit_bar": 699
+        },
+        {
+          "pair": "QI/USD",
+          "entry": 0.002119,
+          "exit": 0.002126,
+          "pnl": -3.810287871637505,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 702,
+          "exit_bar": 706
+        },
+        {
+          "pair": "U/USD",
+          "entry": 0.001158,
+          "exit": 0.001187,
+          "pnl": 39.55613126079439,
+          "reason": "END",
+          "bars": 6,
+          "entry_bar": 715,
+          "exit_bar": 721
+        }
+      ],
+      "herfindahl": 1.530005842958839,
+      "pnl_no_top": -539.9164658053987,
+      "avg_no_top": -11.998143684564416,
+      "trail_loss_pct": 39.130434782608695,
+      "be_wr": 30.530639402482134,
+      "ev_no_top": -11.998143684564416
+    },
+    "v6b_combo": {
+      "label": "V6B Combo Exit",
+      "coins": 526,
+      "trades": 49,
+      "wins": 24,
+      "losses": 25,
+      "wr": 48.97959183673469,
+      "pnl": -432.0908971365259,
+      "roi": -21.604544856826294,
+      "pf": 0.8542133710137195,
+      "dd": 91.05334669074205,
+      "avg_w": 105.49030467615474,
+      "avg_l": -118.5543283745696,
+      "avg_bars": 4.959183673469388,
+      "score": 22.605938991980224,
+      "reasons": {
+        "TRAIL STOP": {
+          "n": 17,
+          "pnl": -2268.7921780930133,
+          "wins": 0
+        },
+        "DC TARGET": {
+          "n": 3,
+          "pnl": 202.55729034560062,
+          "wins": 3
+        },
+        "TIME MAX": {
+          "n": 9,
+          "pnl": -650.7563266298761,
+          "wins": 1
+        },
+        "COMBO PROFIT": {
+          "n": 15,
+          "pnl": 1242.0376507914314,
+          "wins": 15
+        },
+        "COMBO RSI": {
+          "n": 5,
+          "pnl": 1042.862666449332,
+          "wins": 5
+        }
+      },
+      "trade_list": [
+        {
+          "pair": "AIO/USD",
+          "entry": 0.09724,
+          "exit": 0.08851,
+          "pnl": -189.48889345948146,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 60,
+          "exit_bar": 62
+        },
+        {
+          "pair": "KULA/USD",
+          "entry": 0.4053,
+          "exit": 0.4086,
+          "pnl": 5.841894892672219,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 63,
+          "exit_bar": 65
+        },
+        {
+          "pair": "BTT/USD",
+          "entry": 4.74e-07,
+          "exit": 4.87e-07,
+          "pnl": 44.30970464135009,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 85,
+          "exit_bar": 94
+        },
+        {
+          "pair": "XTER/USD",
+          "entry": 0.06077,
+          "exit": 0.05242,
+          "pnl": -284.49215073226907,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 106,
+          "exit_bar": 115
+        },
+        {
+          "pair": "WCT/USD",
+          "entry": 0.10571,
+          "exit": 0.11053,
+          "pnl": 80.55578469397416,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 127,
+          "exit_bar": 131
+        },
+        {
+          "pair": "AKE/USD",
+          "entry": 0.0009968,
+          "exit": 0.0008927,
+          "pnl": -218.7253210272873,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 149,
+          "exit_bar": 155
+        },
+        {
+          "pair": "GHST/USD",
+          "entry": 0.2912,
+          "exit": 0.2707,
+          "pnl": -150.83063186813197,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 164,
+          "exit_bar": 169
+        },
+        {
+          "pair": "TVK/USD",
+          "entry": 0.012,
+          "exit": 0.01236,
+          "pnl": 49.44399999999986,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 170,
+          "exit_bar": 174
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00303,
+          "exit": 0.00295,
+          "pnl": -63.06798679868001,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 174,
+          "exit_bar": 183
+        },
+        {
+          "pair": "PYTH/USD",
+          "entry": 0.08445,
+          "exit": 0.08721,
+          "pnl": 54.79417406749552,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 194,
+          "exit_bar": 198
+        },
+        {
+          "pair": "OBOL/USD",
+          "entry": 0.02758,
+          "exit": 0.02445,
+          "pnl": -236.78593183466288,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 206,
+          "exit_bar": 209
+        },
+        {
+          "pair": "OGN/USD",
+          "entry": 0.03416,
+          "exit": 0.03549,
+          "pnl": 67.26639344262281,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 215,
+          "exit_bar": 219
+        },
+        {
+          "pair": "SOLV/USD",
+          "entry": 0.01152,
+          "exit": 0.01131,
+          "pnl": -46.76354166666668,
+          "reason": "TRAIL STOP",
+          "bars": 7,
+          "entry_bar": 234,
+          "exit_bar": 241
+        },
+        {
+          "pair": "FOREST/USD",
+          "entry": 0.04228,
+          "exit": 0.03605,
+          "pnl": -304.33576158940394,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 248,
+          "exit_bar": 249
+        },
+        {
+          "pair": "M/USD",
+          "entry": 1.27578,
+          "exit": 1.25991,
+          "pnl": -35.21421248177559,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 253,
+          "exit_bar": 256
+        },
+        {
+          "pair": "BIGTIME/USD",
+          "entry": 0.0218,
+          "exit": 0.0225,
+          "pnl": 53.65321100917425,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 274,
+          "exit_bar": 278
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00256,
+          "exit": 0.00274,
+          "pnl": 129.85937499999966,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 278,
+          "exit_bar": 282
+        },
+        {
+          "pair": "DYDX/USD",
+          "entry": 0.1889,
+          "exit": 0.2055,
+          "pnl": 164.89740603493888,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 323,
+          "exit_bar": 325
+        },
+        {
+          "pair": "BDXN/USD",
+          "entry": 0.01815,
+          "exit": 0.01658,
+          "pnl": -182.95294765840202,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 331,
+          "exit_bar": 334
+        },
+        {
+          "pair": "RVV/USD",
+          "entry": 0.003238,
+          "exit": 0.003238,
+          "pnl": -10.4,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 334,
+          "exit_bar": 343
+        },
+        {
+          "pair": "WLFI/USD",
+          "entry": 0.1393,
+          "exit": 0.1339,
+          "pnl": -87.72893036611651,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 355,
+          "exit_bar": 360
+        },
+        {
+          "pair": "GAIA/USD",
+          "entry": 0.032715,
+          "exit": 0.032646,
+          "pnl": -14.60728106373221,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 360,
+          "exit_bar": 369
+        },
+        {
+          "pair": "NODE/USD",
+          "entry": 0.03774,
+          "exit": 0.03578,
+          "pnl": -113.99851616322222,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 369,
+          "exit_bar": 370
+        },
+        {
+          "pair": "KNC/USD",
+          "entry": 0.2204,
+          "exit": 0.2118,
+          "pnl": -88.23702359346665,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 374,
+          "exit_bar": 379
+        },
+        {
+          "pair": "TANSSI/USD",
+          "entry": 0.0106,
+          "exit": 0.01089,
+          "pnl": 44.17471698113214,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 380,
+          "exit_bar": 384
+        },
+        {
+          "pair": "UNFI/USD",
+          "entry": 0.0823,
+          "exit": 0.078,
+          "pnl": -114.62405832320773,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 405,
+          "exit_bar": 414
+        },
+        {
+          "pair": "LCX/USD",
+          "entry": 0.05709,
+          "exit": 0.06035,
+          "pnl": 103.50870555263614,
+          "reason": "COMBO RSI",
+          "bars": 5,
+          "entry_bar": 435,
+          "exit_bar": 440
+        },
+        {
+          "pair": "ESPORTS/USD",
+          "entry": 0.3969,
+          "exit": 0.4053,
+          "pnl": 31.817989417989512,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 448,
+          "exit_bar": 450
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00207,
+          "exit": 0.00198,
+          "pnl": -97.13043478260852,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 451,
+          "exit_bar": 460
+        },
+        {
+          "pair": "ACA/USD",
+          "entry": 0.00873,
+          "exit": 0.00935,
+          "pnl": 131.26964490263475,
+          "reason": "COMBO PROFIT",
+          "bars": 5,
+          "entry_bar": 468,
+          "exit_bar": 473
+        },
+        {
+          "pair": "EWT/USD",
+          "entry": 0.751,
+          "exit": 0.777,
+          "pnl": 58.660985352862916,
+          "reason": "COMBO PROFIT",
+          "bars": 6,
+          "entry_bar": 493,
+          "exit_bar": 499
+        },
+        {
+          "pair": "REPV2/USD",
+          "entry": 0.893,
+          "exit": 0.82,
+          "pnl": -173.46875699888034,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 500,
+          "exit_bar": 506
+        },
+        {
+          "pair": "DYM/USD",
+          "entry": 0.0679,
+          "exit": 0.071,
+          "pnl": 80.67334315169342,
+          "reason": "COMBO RSI",
+          "bars": 7,
+          "entry_bar": 528,
+          "exit_bar": 535
+        },
+        {
+          "pair": "APR/USD",
+          "entry": 0.10912,
+          "exit": 0.10949,
+          "pnl": -3.636107038122998,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 536,
+          "exit_bar": 541
+        },
+        {
+          "pair": "VELVET/USD",
+          "entry": 0.1135,
+          "exit": 0.1103,
+          "pnl": -66.64105726872262,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 542,
+          "exit_bar": 551
+        },
+        {
+          "pair": "AI3/USD",
+          "entry": 0.01894,
+          "exit": 0.01862,
+          "pnl": -44.103062302006066,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 564,
+          "exit_bar": 573
+        },
+        {
+          "pair": "DBR/USD",
+          "entry": 0.017,
+          "exit": 0.0164,
+          "pnl": -80.80470588235292,
+          "reason": "TRAIL STOP",
+          "bars": 8,
+          "entry_bar": 583,
+          "exit_bar": 591
+        },
+        {
+          "pair": "UMA/USD",
+          "entry": 0.656,
+          "exit": 0.672,
+          "pnl": 38.253658536585405,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 608,
+          "exit_bar": 612
+        },
+        {
+          "pair": "SUN/USD",
+          "entry": 0.01868,
+          "exit": 0.018,
+          "pnl": -83.01584582441114,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 616,
+          "exit_bar": 617
+        },
+        {
+          "pair": "AB/USD",
+          "entry": 0.003857,
+          "exit": 0.003357,
+          "pnl": -268.99476276899145,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 620,
+          "exit_bar": 623
+        },
+        {
+          "pair": "BERA/USD",
+          "entry": 0.589,
+          "exit": 0.6048,
+          "pnl": 43.1107640067913,
+          "reason": "COMBO PROFIT",
+          "bars": 6,
+          "entry_bar": 628,
+          "exit_bar": 634
+        },
+        {
+          "pair": "KGEN/USD",
+          "entry": 0.1711,
+          "exit": 0.1782,
+          "pnl": 72.37662185856219,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 639,
+          "exit_bar": 643
+        },
+        {
+          "pair": "ES/USD",
+          "entry": 0.1226,
+          "exit": 0.1359,
+          "pnl": 206.00163132137018,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 643,
+          "exit_bar": 646
+        },
+        {
+          "pair": "STRD/USD",
+          "entry": 0.01789,
+          "exit": 0.02053,
+          "pnl": 283.9695919508105,
+          "reason": "COMBO PROFIT",
+          "bars": 5,
+          "entry_bar": 649,
+          "exit_bar": 654
+        },
+        {
+          "pair": "ZEUS/USD",
+          "entry": 0.0071,
+          "exit": 0.0075,
+          "pnl": 101.9830985915491,
+          "reason": "COMBO PROFIT",
+          "bars": 5,
+          "entry_bar": 667,
+          "exit_bar": 672
+        },
+        {
+          "pair": "XCN/USD",
+          "entry": 0.00479,
+          "exit": 0.00564,
+          "pnl": 343.58329853862216,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 674,
+          "exit_bar": 677
+        },
+        {
+          "pair": "B3/USD",
+          "entry": 0.000487,
+          "exit": 0.000565,
+          "pnl": 309.09568788501,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 696,
+          "exit_bar": 699
+        },
+        {
+          "pair": "QI/USD",
+          "entry": 0.002119,
+          "exit": 0.002126,
+          "pnl": -3.810287871637505,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 702,
+          "exit_bar": 706
+        },
+        {
+          "pair": "U/USD",
+          "entry": 0.001158,
+          "exit": 0.001183,
+          "pnl": 32.66563039723673,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 715,
+          "exit_bar": 719
+        }
+      ],
+      "herfindahl": 5.428940167770312,
+      "pnl_no_top": -775.674195675148,
+      "avg_no_top": -16.159879076565584,
+      "trail_loss_pct": 34.69387755102041,
+      "be_wr": 52.915495792183776,
+      "ev_no_top": -16.159879076565584
+    },
+    "v6c_quality": {
+      "label": "V6C Quality Gate",
+      "coins": 526,
+      "trades": 48,
+      "wins": 22,
+      "losses": 26,
+      "wr": 45.83333333333333,
+      "pnl": 2729.4085724869256,
+      "roi": 136.47042862434628,
+      "pf": 1.914203841966578,
+      "dd": 82.93412060303461,
+      "avg_w": 259.7712067699783,
+      "avg_l": -114.82915294048448,
+      "avg_bars": 5.479166666666667,
+      "score": 33.48735522370571,
+      "reasons": {
+        "TRAIL STOP": {
+          "n": 19,
+          "pnl": -2353.55993198005,
+          "wins": 0
+        },
+        "DC TARGET": {
+          "n": 9,
+          "pnl": 976.5685307820445,
+          "wins": 9
+        },
+        "TIME MAX": {
+          "n": 11,
+          "pnl": -482.9365620736453,
+          "wins": 4
+        },
+        "RSI RECOVERY": {
+          "n": 8,
+          "pnl": 4549.780404497782,
+          "wins": 8
+        },
+        "END": {
+          "n": 1,
+          "pnl": 39.55613126079439,
+          "wins": 1
+        }
+      },
+      "trade_list": [
+        {
+          "pair": "AIO/USD",
+          "entry": 0.09724,
+          "exit": 0.08851,
+          "pnl": -189.48889345948146,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 60,
+          "exit_bar": 62
+        },
+        {
+          "pair": "KULA/USD",
+          "entry": 0.4053,
+          "exit": 0.4086,
+          "pnl": 5.841894892672219,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 63,
+          "exit_bar": 65
+        },
+        {
+          "pair": "BTT/USD",
+          "entry": 4.74e-07,
+          "exit": 4.87e-07,
+          "pnl": 44.30970464135009,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 85,
+          "exit_bar": 94
+        },
+        {
+          "pair": "XTER/USD",
+          "entry": 0.06077,
+          "exit": 0.05242,
+          "pnl": -284.49215073226907,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 106,
+          "exit_bar": 115
+        },
+        {
+          "pair": "WCT/USD",
+          "entry": 0.10571,
+          "exit": 0.11474,
+          "pnl": 160.00056759057793,
+          "reason": "DC TARGET",
+          "bars": 5,
+          "entry_bar": 127,
+          "exit_bar": 132
+        },
+        {
+          "pair": "AKE/USD",
+          "entry": 0.0009968,
+          "exit": 0.0008927,
+          "pnl": -218.7253210272873,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 149,
+          "exit_bar": 155
+        },
+        {
+          "pair": "GHST/USD",
+          "entry": 0.2912,
+          "exit": 0.2707,
+          "pnl": -150.83063186813197,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 164,
+          "exit_bar": 169
+        },
+        {
+          "pair": "TVK/USD",
+          "entry": 0.012,
+          "exit": 0.01207,
+          "pnl": 1.2363333333334356,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 170,
+          "exit_bar": 179
+        },
+        {
+          "pair": "SHX/USD",
+          "entry": 0.008028,
+          "exit": 0.008005,
+          "pnl": -16.115047334329958,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 180,
+          "exit_bar": 186
+        },
+        {
+          "pair": "PYTH/USD",
+          "entry": 0.08445,
+          "exit": 0.08879,
+          "pnl": 92.11547661338062,
+          "reason": "DC TARGET",
+          "bars": 5,
+          "entry_bar": 194,
+          "exit_bar": 199
+        },
+        {
+          "pair": "OBOL/USD",
+          "entry": 0.02758,
+          "exit": 0.02445,
+          "pnl": -236.78593183466288,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 206,
+          "exit_bar": 209
+        },
+        {
+          "pair": "OGN/USD",
+          "entry": 0.03416,
+          "exit": 0.03563,
+          "pnl": 75.44180327868847,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 215,
+          "exit_bar": 224
+        },
+        {
+          "pair": "SOLV/USD",
+          "entry": 0.01152,
+          "exit": 0.01131,
+          "pnl": -46.76354166666668,
+          "reason": "TRAIL STOP",
+          "bars": 7,
+          "entry_bar": 234,
+          "exit_bar": 241
+        },
+        {
+          "pair": "FOREST/USD",
+          "entry": 0.04228,
+          "exit": 0.03605,
+          "pnl": -304.33576158940394,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 248,
+          "exit_bar": 249
+        },
+        {
+          "pair": "M/USD",
+          "entry": 1.27578,
+          "exit": 1.25991,
+          "pnl": -35.21421248177559,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 253,
+          "exit_bar": 256
+        },
+        {
+          "pair": "BIGTIME/USD",
+          "entry": 0.0218,
+          "exit": 0.0231,
+          "pnl": 108.5559633027522,
+          "reason": "DC TARGET",
+          "bars": 8,
+          "entry_bar": 274,
+          "exit_bar": 282
+        },
+        {
+          "pair": "DYDX/USD",
+          "entry": 0.1889,
+          "exit": 0.2055,
+          "pnl": 164.89740603493888,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 323,
+          "exit_bar": 325
+        },
+        {
+          "pair": "BDXN/USD",
+          "entry": 0.01815,
+          "exit": 0.01658,
+          "pnl": -182.95294765840202,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 331,
+          "exit_bar": 334
+        },
+        {
+          "pair": "RVV/USD",
+          "entry": 0.003238,
+          "exit": 0.003238,
+          "pnl": -10.4,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 334,
+          "exit_bar": 343
+        },
+        {
+          "pair": "WLFI/USD",
+          "entry": 0.1393,
+          "exit": 0.1339,
+          "pnl": -87.72893036611651,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 355,
+          "exit_bar": 360
+        },
+        {
+          "pair": "GAIA/USD",
+          "entry": 0.032715,
+          "exit": 0.032646,
+          "pnl": -14.60728106373221,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 360,
+          "exit_bar": 369
+        },
+        {
+          "pair": "NODE/USD",
+          "entry": 0.03774,
+          "exit": 0.03578,
+          "pnl": -113.99851616322222,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 369,
+          "exit_bar": 370
+        },
+        {
+          "pair": "KNC/USD",
+          "entry": 0.2204,
+          "exit": 0.2118,
+          "pnl": -88.23702359346665,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 374,
+          "exit_bar": 379
+        },
+        {
+          "pair": "TANSSI/USD",
+          "entry": 0.0106,
+          "exit": 0.01117,
+          "pnl": 96.86754716981119,
+          "reason": "RSI RECOVERY",
+          "bars": 7,
+          "entry_bar": 380,
+          "exit_bar": 387
+        },
+        {
+          "pair": "UNFI/USD",
+          "entry": 0.0823,
+          "exit": 0.078,
+          "pnl": -114.62405832320773,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 405,
+          "exit_bar": 414
+        },
+        {
+          "pair": "LCX/USD",
+          "entry": 0.05709,
+          "exit": 0.06035,
+          "pnl": 103.50870555263614,
+          "reason": "RSI RECOVERY",
+          "bars": 5,
+          "entry_bar": 435,
+          "exit_bar": 440
+        },
+        {
+          "pair": "ESPORTS/USD",
+          "entry": 0.3969,
+          "exit": 0.4053,
+          "pnl": 31.817989417989512,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 448,
+          "exit_bar": 450
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00207,
+          "exit": 0.00198,
+          "pnl": -97.13043478260852,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 451,
+          "exit_bar": 460
+        },
+        {
+          "pair": "ACA/USD",
+          "entry": 0.00873,
+          "exit": 0.0094,
+          "pnl": 142.69461626575037,
+          "reason": "RSI RECOVERY",
+          "bars": 6,
+          "entry_bar": 468,
+          "exit_bar": 474
+        },
+        {
+          "pair": "MF/USD",
+          "entry": 0.0091,
+          "exit": 0.00993,
+          "pnl": 171.5432967032965,
+          "reason": "RSI RECOVERY",
+          "bars": 4,
+          "entry_bar": 494,
+          "exit_bar": 498
+        },
+        {
+          "pair": "EAT/USD",
+          "entry": 0.02808,
+          "exit": 0.02726,
+          "pnl": -68.65270655270665,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 498,
+          "exit_bar": 499
+        },
+        {
+          "pair": "REPV2/USD",
+          "entry": 0.893,
+          "exit": 0.82,
+          "pnl": -173.46875699888034,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 500,
+          "exit_bar": 506
+        },
+        {
+          "pair": "BICO/USD",
+          "entry": 0.0433,
+          "exit": 0.0446,
+          "pnl": 49.49006928406478,
+          "reason": "RSI RECOVERY",
+          "bars": 6,
+          "entry_bar": 528,
+          "exit_bar": 534
+        },
+        {
+          "pair": "APR/USD",
+          "entry": 0.10912,
+          "exit": 0.10949,
+          "pnl": -3.636107038122998,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 536,
+          "exit_bar": 541
+        },
+        {
+          "pair": "VELVET/USD",
+          "entry": 0.1135,
+          "exit": 0.1103,
+          "pnl": -66.64105726872262,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 542,
+          "exit_bar": 551
+        },
+        {
+          "pair": "AI3/USD",
+          "entry": 0.01894,
+          "exit": 0.01862,
+          "pnl": -44.103062302006066,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 564,
+          "exit_bar": 573
+        },
+        {
+          "pair": "DBR/USD",
+          "entry": 0.017,
+          "exit": 0.0164,
+          "pnl": -80.80470588235292,
+          "reason": "TRAIL STOP",
+          "bars": 8,
+          "entry_bar": 583,
+          "exit_bar": 591
+        },
+        {
+          "pair": "UMA/USD",
+          "entry": 0.656,
+          "exit": 0.684,
+          "pnl": 74.74390243902447,
+          "reason": "DC TARGET",
+          "bars": 7,
+          "entry_bar": 608,
+          "exit_bar": 615
+        },
+        {
+          "pair": "SUN/USD",
+          "entry": 0.01868,
+          "exit": 0.018,
+          "pnl": -83.01584582441114,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 616,
+          "exit_bar": 617
+        },
+        {
+          "pair": "AB/USD",
+          "entry": 0.003857,
+          "exit": 0.003357,
+          "pnl": -268.99476276899145,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 620,
+          "exit_bar": 623
+        },
+        {
+          "pair": "BERA/USD",
+          "entry": 0.589,
+          "exit": 0.6082,
+          "pnl": 54.62573853989811,
+          "reason": "DC TARGET",
+          "bars": 7,
+          "entry_bar": 628,
+          "exit_bar": 635
+        },
+        {
+          "pair": "KGEN/USD",
+          "entry": 0.1711,
+          "exit": 0.1744,
+          "pnl": 28.0736411455289,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 639,
+          "exit_bar": 648
+        },
+        {
+          "pair": "STRD/USD",
+          "entry": 0.01789,
+          "exit": 0.02053,
+          "pnl": 283.9695919508105,
+          "reason": "DC TARGET",
+          "bars": 5,
+          "entry_bar": 649,
+          "exit_bar": 654
+        },
+        {
+          "pair": "ZEUS/USD",
+          "entry": 0.0071,
+          "exit": 0.019,
+          "pnl": 3332.997183098591,
+          "reason": "RSI RECOVERY",
+          "bars": 6,
+          "entry_bar": 667,
+          "exit_bar": 673
+        },
+        {
+          "pair": "XCN/USD",
+          "entry": 0.00479,
+          "exit": 0.00564,
+          "pnl": 343.58329853862216,
+          "reason": "RSI RECOVERY",
+          "bars": 3,
+          "entry_bar": 674,
+          "exit_bar": 677
+        },
+        {
+          "pair": "B3/USD",
+          "entry": 0.000487,
+          "exit": 0.000565,
+          "pnl": 309.09568788501,
+          "reason": "RSI RECOVERY",
+          "bars": 3,
+          "entry_bar": 696,
+          "exit_bar": 699
+        },
+        {
+          "pair": "QI/USD",
+          "entry": 0.002119,
+          "exit": 0.002126,
+          "pnl": -3.810287871637505,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 702,
+          "exit_bar": 706
+        },
+        {
+          "pair": "U/USD",
+          "entry": 0.001158,
+          "exit": 0.001187,
+          "pnl": 39.55613126079439,
+          "reason": "END",
+          "bars": 6,
+          "entry_bar": 715,
+          "exit_bar": 721
+        }
+      ],
+      "herfindahl": 1.6268865775372787,
+      "pnl_no_top": -603.5886106116654,
+      "avg_no_top": -12.842310864077989,
+      "trail_loss_pct": 39.58333333333333,
+      "be_wr": 30.653775407273653,
+      "ev_no_top": -12.842310864077989
+    },
+    "v6d_trail_combo": {
+      "label": "V6D Trail+Combo",
+      "coins": 526,
+      "trades": 49,
+      "wins": 24,
+      "losses": 25,
+      "wr": 48.97959183673469,
+      "pnl": -520.8726031660186,
+      "roi": -26.043630158300928,
+      "pf": 0.8134969188013768,
+      "dd": 82.50225871105403,
+      "avg_w": 94.66516027518587,
+      "avg_l": -111.71345799081917,
+      "avg_bars": 4.73469387755102,
+      "score": 22.264207025565938,
+      "reasons": {
+        "TRAIL STOP": {
+          "n": 19,
+          "pnl": -2170.7347269543047,
+          "wins": 1
+        },
+        "DC TARGET": {
+          "n": 3,
+          "pnl": 202.55729034560062,
+          "wins": 3
+        },
+        "TIME MAX": {
+          "n": 8,
+          "pnl": -553.6258918472676,
+          "wins": 1
+        },
+        "COMBO PROFIT": {
+          "n": 14,
+          "pnl": 958.0680588406208,
+          "wins": 14
+        },
+        "COMBO RSI": {
+          "n": 5,
+          "pnl": 1042.862666449332,
+          "wins": 5
+        }
+      },
+      "trade_list": [
+        {
+          "pair": "AIO/USD",
+          "entry": 0.09724,
+          "exit": 0.08851,
+          "pnl": -189.48889345948146,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 60,
+          "exit_bar": 62
+        },
+        {
+          "pair": "KULA/USD",
+          "entry": 0.4053,
+          "exit": 0.4086,
+          "pnl": 5.841894892672219,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 63,
+          "exit_bar": 65
+        },
+        {
+          "pair": "BTT/USD",
+          "entry": 4.74e-07,
+          "exit": 4.87e-07,
+          "pnl": 44.30970464135009,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 85,
+          "exit_bar": 94
+        },
+        {
+          "pair": "XTER/USD",
+          "entry": 0.06077,
+          "exit": 0.05242,
+          "pnl": -284.49215073226907,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 106,
+          "exit_bar": 115
+        },
+        {
+          "pair": "WCT/USD",
+          "entry": 0.10571,
+          "exit": 0.11053,
+          "pnl": 80.55578469397416,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 127,
+          "exit_bar": 131
+        },
+        {
+          "pair": "AKE/USD",
+          "entry": 0.0009968,
+          "exit": 0.0009386,
+          "pnl": -126.87006420545727,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 149,
+          "exit_bar": 154
+        },
+        {
+          "pair": "GHST/USD",
+          "entry": 0.2912,
+          "exit": 0.2707,
+          "pnl": -150.83063186813197,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 164,
+          "exit_bar": 169
+        },
+        {
+          "pair": "TVK/USD",
+          "entry": 0.012,
+          "exit": 0.01236,
+          "pnl": 49.44399999999986,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 170,
+          "exit_bar": 174
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00303,
+          "exit": 0.00295,
+          "pnl": -63.06798679868001,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 174,
+          "exit_bar": 183
+        },
+        {
+          "pair": "PYTH/USD",
+          "entry": 0.08445,
+          "exit": 0.08721,
+          "pnl": 54.79417406749552,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 194,
+          "exit_bar": 198
+        },
+        {
+          "pair": "OBOL/USD",
+          "entry": 0.02758,
+          "exit": 0.02445,
+          "pnl": -236.78593183466288,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 206,
+          "exit_bar": 209
+        },
+        {
+          "pair": "OGN/USD",
+          "entry": 0.03416,
+          "exit": 0.03549,
+          "pnl": 67.26639344262281,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 215,
+          "exit_bar": 219
+        },
+        {
+          "pair": "SOLV/USD",
+          "entry": 0.01152,
+          "exit": 0.01138,
+          "pnl": -34.64236111111132,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 234,
+          "exit_bar": 240
+        },
+        {
+          "pair": "FOREST/USD",
+          "entry": 0.04228,
+          "exit": 0.03605,
+          "pnl": -304.33576158940394,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 248,
+          "exit_bar": 249
+        },
+        {
+          "pair": "M/USD",
+          "entry": 1.27578,
+          "exit": 1.25991,
+          "pnl": -35.21421248177559,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 253,
+          "exit_bar": 256
+        },
+        {
+          "pair": "BIGTIME/USD",
+          "entry": 0.0218,
+          "exit": 0.0225,
+          "pnl": 53.65321100917425,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 274,
+          "exit_bar": 278
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00256,
+          "exit": 0.00274,
+          "pnl": 129.85937499999966,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 278,
+          "exit_bar": 282
+        },
+        {
+          "pair": "DYDX/USD",
+          "entry": 0.1889,
+          "exit": 0.2055,
+          "pnl": 164.89740603493888,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 323,
+          "exit_bar": 325
+        },
+        {
+          "pair": "BDXN/USD",
+          "entry": 0.01815,
+          "exit": 0.01674,
+          "pnl": -165.36793388429732,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 331,
+          "exit_bar": 333
+        },
+        {
+          "pair": "RVV/USD",
+          "entry": 0.003238,
+          "exit": 0.003238,
+          "pnl": -10.4,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 334,
+          "exit_bar": 343
+        },
+        {
+          "pair": "WLFI/USD",
+          "entry": 0.1393,
+          "exit": 0.1339,
+          "pnl": -87.72893036611651,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 355,
+          "exit_bar": 360
+        },
+        {
+          "pair": "GAIA/USD",
+          "entry": 0.032715,
+          "exit": 0.032646,
+          "pnl": -14.60728106373221,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 360,
+          "exit_bar": 369
+        },
+        {
+          "pair": "NODE/USD",
+          "entry": 0.03774,
+          "exit": 0.03578,
+          "pnl": -113.99851616322222,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 369,
+          "exit_bar": 370
+        },
+        {
+          "pair": "KNC/USD",
+          "entry": 0.2204,
+          "exit": 0.2162,
+          "pnl": -48.41343012704183,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 374,
+          "exit_bar": 376
+        },
+        {
+          "pair": "TANSSI/USD",
+          "entry": 0.0106,
+          "exit": 0.01089,
+          "pnl": 44.17471698113214,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 380,
+          "exit_bar": 384
+        },
+        {
+          "pair": "UNFI/USD",
+          "entry": 0.0823,
+          "exit": 0.078,
+          "pnl": -114.62405832320773,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 405,
+          "exit_bar": 414
+        },
+        {
+          "pair": "LCX/USD",
+          "entry": 0.05709,
+          "exit": 0.06035,
+          "pnl": 103.50870555263614,
+          "reason": "COMBO RSI",
+          "bars": 5,
+          "entry_bar": 435,
+          "exit_bar": 440
+        },
+        {
+          "pair": "ESPORTS/USD",
+          "entry": 0.3969,
+          "exit": 0.4053,
+          "pnl": 31.817989417989512,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 448,
+          "exit_bar": 450
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00207,
+          "exit": 0.00199,
+          "pnl": -87.49371980676307,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 451,
+          "exit_bar": 456
+        },
+        {
+          "pair": "ACA/USD",
+          "entry": 0.00873,
+          "exit": 0.00935,
+          "pnl": 131.26964490263475,
+          "reason": "COMBO PROFIT",
+          "bars": 5,
+          "entry_bar": 468,
+          "exit_bar": 473
+        },
+        {
+          "pair": "EWT/USD",
+          "entry": 0.751,
+          "exit": 0.777,
+          "pnl": 58.660985352862916,
+          "reason": "COMBO PROFIT",
+          "bars": 6,
+          "entry_bar": 493,
+          "exit_bar": 499
+        },
+        {
+          "pair": "REPV2/USD",
+          "entry": 0.893,
+          "exit": 0.82,
+          "pnl": -173.46875699888034,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 500,
+          "exit_bar": 506
+        },
+        {
+          "pair": "DYM/USD",
+          "entry": 0.0679,
+          "exit": 0.071,
+          "pnl": 80.67334315169342,
+          "reason": "COMBO RSI",
+          "bars": 7,
+          "entry_bar": 528,
+          "exit_bar": 535
+        },
+        {
+          "pair": "APR/USD",
+          "entry": 0.10912,
+          "exit": 0.10949,
+          "pnl": -3.636107038122998,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 536,
+          "exit_bar": 541
+        },
+        {
+          "pair": "VELVET/USD",
+          "entry": 0.1135,
+          "exit": 0.1103,
+          "pnl": -66.64105726872262,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 542,
+          "exit_bar": 551
+        },
+        {
+          "pair": "AI3/USD",
+          "entry": 0.01894,
+          "exit": 0.01862,
+          "pnl": -44.103062302006066,
+          "reason": "TIME MAX",
+          "bars": 9,
+          "entry_bar": 564,
+          "exit_bar": 573
+        },
+        {
+          "pair": "DBR/USD",
+          "entry": 0.017,
+          "exit": 0.0164,
+          "pnl": -80.80470588235292,
+          "reason": "TRAIL STOP",
+          "bars": 8,
+          "entry_bar": 583,
+          "exit_bar": 591
+        },
+        {
+          "pair": "UMA/USD",
+          "entry": 0.656,
+          "exit": 0.672,
+          "pnl": 38.253658536585405,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 608,
+          "exit_bar": 612
+        },
+        {
+          "pair": "SUN/USD",
+          "entry": 0.01868,
+          "exit": 0.018,
+          "pnl": -83.01584582441114,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 616,
+          "exit_bar": 617
+        },
+        {
+          "pair": "AB/USD",
+          "entry": 0.003857,
+          "exit": 0.003357,
+          "pnl": -268.99476276899145,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 620,
+          "exit_bar": 623
+        },
+        {
+          "pair": "BERA/USD",
+          "entry": 0.589,
+          "exit": 0.6048,
+          "pnl": 43.1107640067913,
+          "reason": "COMBO PROFIT",
+          "bars": 6,
+          "entry_bar": 628,
+          "exit_bar": 634
+        },
+        {
+          "pair": "KGEN/USD",
+          "entry": 0.1711,
+          "exit": 0.1782,
+          "pnl": 72.37662185856219,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 639,
+          "exit_bar": 643
+        },
+        {
+          "pair": "ES/USD",
+          "entry": 0.1226,
+          "exit": 0.1359,
+          "pnl": 206.00163132137018,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 643,
+          "exit_bar": 646
+        },
+        {
+          "pair": "STRD/USD",
+          "entry": 0.01789,
+          "exit": 0.0182,
+          "pnl": 24.16612632755743,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 649,
+          "exit_bar": 653
+        },
+        {
+          "pair": "ZEUS/USD",
+          "entry": 0.0071,
+          "exit": 0.0075,
+          "pnl": 101.9830985915491,
+          "reason": "COMBO PROFIT",
+          "bars": 5,
+          "entry_bar": 667,
+          "exit_bar": 672
+        },
+        {
+          "pair": "XCN/USD",
+          "entry": 0.00479,
+          "exit": 0.00564,
+          "pnl": 343.58329853862216,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 674,
+          "exit_bar": 677
+        },
+        {
+          "pair": "B3/USD",
+          "entry": 0.000487,
+          "exit": 0.000565,
+          "pnl": 309.09568788501,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 696,
+          "exit_bar": 699
+        },
+        {
+          "pair": "QI/USD",
+          "entry": 0.002119,
+          "exit": 0.002126,
+          "pnl": -3.810287871637505,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 702,
+          "exit_bar": 706
+        },
+        {
+          "pair": "U/USD",
+          "entry": 0.001158,
+          "exit": 0.001183,
+          "pnl": 32.66563039723673,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 715,
+          "exit_bar": 719
+        }
+      ],
+      "herfindahl": 3.2710555244335557,
+      "pnl_no_top": -864.4559017046408,
+      "avg_no_top": -18.009497952180016,
+      "trail_loss_pct": 36.734693877551024,
+      "be_wr": 54.13034495987841,
+      "ev_no_top": -18.009497952180016
+    },
+    "v6e_full": {
+      "label": "V6E FULL ROBUST \u2605",
+      "coins": 526,
+      "trades": 48,
+      "wins": 24,
+      "losses": 24,
+      "wr": 50.0,
+      "pnl": -480.5474204761748,
+      "roi": -24.02737102380874,
+      "pf": 0.8304475078287479,
+      "dd": 80.48599957656182,
+      "avg_w": 98.06928683696941,
+      "avg_l": -118.0920960234767,
+      "avg_bars": 4.770833333333333,
+      "score": 22.37004853389945,
+      "reasons": {
+        "TRAIL STOP": {
+          "n": 20,
+          "pnl": -2475.466154112239,
+          "wins": 1
+        },
+        "DC TARGET": {
+          "n": 3,
+          "pnl": 202.55729034560062,
+          "wins": 3
+        },
+        "COMBO PROFIT": {
+          "n": 14,
+          "pnl": 943.716778129108,
+          "wins": 14
+        },
+        "TIME MAX": {
+          "n": 5,
+          "pnl": -334.578024123645,
+          "wins": 0
+        },
+        "COMBO RSI": {
+          "n": 6,
+          "pnl": 1183.2226892849997,
+          "wins": 6
+        }
+      },
+      "trade_list": [
+        {
+          "pair": "AIO/USD",
+          "entry": 0.09724,
+          "exit": 0.08851,
+          "pnl": -189.48889345948146,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 60,
+          "exit_bar": 62
+        },
+        {
+          "pair": "KULA/USD",
+          "entry": 0.4053,
+          "exit": 0.4086,
+          "pnl": 5.841894892672219,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 63,
+          "exit_bar": 65
+        },
+        {
+          "pair": "BTT/USD",
+          "entry": 4.74e-07,
+          "exit": 4.87e-07,
+          "pnl": 44.30970464135009,
+          "reason": "COMBO PROFIT",
+          "bars": 9,
+          "entry_bar": 85,
+          "exit_bar": 94
+        },
+        {
+          "pair": "XTER/USD",
+          "entry": 0.06077,
+          "exit": 0.05242,
+          "pnl": -284.49215073226907,
+          "reason": "TRAIL STOP",
+          "bars": 9,
+          "entry_bar": 106,
+          "exit_bar": 115
+        },
+        {
+          "pair": "WCT/USD",
+          "entry": 0.10571,
+          "exit": 0.11053,
+          "pnl": 80.55578469397416,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 127,
+          "exit_bar": 131
+        },
+        {
+          "pair": "AKE/USD",
+          "entry": 0.0009968,
+          "exit": 0.0009386,
+          "pnl": -126.87006420545727,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 149,
+          "exit_bar": 154
+        },
+        {
+          "pair": "GHST/USD",
+          "entry": 0.2912,
+          "exit": 0.2707,
+          "pnl": -150.83063186813197,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 164,
+          "exit_bar": 169
+        },
+        {
+          "pair": "TVK/USD",
+          "entry": 0.012,
+          "exit": 0.01236,
+          "pnl": 49.44399999999986,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 170,
+          "exit_bar": 174
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00303,
+          "exit": 0.00297,
+          "pnl": -49.90099009901001,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 174,
+          "exit_bar": 185
+        },
+        {
+          "pair": "PYTH/USD",
+          "entry": 0.08445,
+          "exit": 0.08721,
+          "pnl": 54.79417406749552,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 194,
+          "exit_bar": 198
+        },
+        {
+          "pair": "OBOL/USD",
+          "entry": 0.02758,
+          "exit": 0.02445,
+          "pnl": -236.78593183466288,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 206,
+          "exit_bar": 209
+        },
+        {
+          "pair": "OGN/USD",
+          "entry": 0.03416,
+          "exit": 0.03549,
+          "pnl": 67.26639344262281,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 215,
+          "exit_bar": 219
+        },
+        {
+          "pair": "SOLV/USD",
+          "entry": 0.01152,
+          "exit": 0.01138,
+          "pnl": -34.64236111111132,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 234,
+          "exit_bar": 240
+        },
+        {
+          "pair": "FOREST/USD",
+          "entry": 0.04228,
+          "exit": 0.03605,
+          "pnl": -304.33576158940394,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 248,
+          "exit_bar": 249
+        },
+        {
+          "pair": "M/USD",
+          "entry": 1.27578,
+          "exit": 1.25991,
+          "pnl": -35.21421248177559,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 253,
+          "exit_bar": 256
+        },
+        {
+          "pair": "BIGTIME/USD",
+          "entry": 0.0218,
+          "exit": 0.0225,
+          "pnl": 53.65321100917425,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 274,
+          "exit_bar": 278
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00256,
+          "exit": 0.00274,
+          "pnl": 129.85937499999966,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 278,
+          "exit_bar": 282
+        },
+        {
+          "pair": "DYDX/USD",
+          "entry": 0.1889,
+          "exit": 0.2055,
+          "pnl": 164.89740603493888,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 323,
+          "exit_bar": 325
+        },
+        {
+          "pair": "BDXN/USD",
+          "entry": 0.01815,
+          "exit": 0.01674,
+          "pnl": -165.36793388429732,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 331,
+          "exit_bar": 333
+        },
+        {
+          "pair": "RVV/USD",
+          "entry": 0.003238,
+          "exit": 0.003238,
+          "pnl": -10.4,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 334,
+          "exit_bar": 345
+        },
+        {
+          "pair": "WLFI/USD",
+          "entry": 0.1393,
+          "exit": 0.1339,
+          "pnl": -87.72893036611651,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 355,
+          "exit_bar": 360
+        },
+        {
+          "pair": "NODE/USD",
+          "entry": 0.03774,
+          "exit": 0.03578,
+          "pnl": -113.99851616322222,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 369,
+          "exit_bar": 370
+        },
+        {
+          "pair": "TANSSI/USD",
+          "entry": 0.0106,
+          "exit": 0.01089,
+          "pnl": 44.17471698113214,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 380,
+          "exit_bar": 384
+        },
+        {
+          "pair": "UNFI/USD",
+          "entry": 0.0823,
+          "exit": 0.0752,
+          "pnl": -182.49088699878482,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 405,
+          "exit_bar": 416
+        },
+        {
+          "pair": "LCX/USD",
+          "entry": 0.05709,
+          "exit": 0.06035,
+          "pnl": 103.50870555263614,
+          "reason": "COMBO RSI",
+          "bars": 5,
+          "entry_bar": 435,
+          "exit_bar": 440
+        },
+        {
+          "pair": "ESPORTS/USD",
+          "entry": 0.3969,
+          "exit": 0.4053,
+          "pnl": 31.817989417989512,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 448,
+          "exit_bar": 450
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00207,
+          "exit": 0.00199,
+          "pnl": -87.49371980676307,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 451,
+          "exit_bar": 456
+        },
+        {
+          "pair": "ACA/USD",
+          "entry": 0.00873,
+          "exit": 0.00935,
+          "pnl": 131.26964490263475,
+          "reason": "COMBO PROFIT",
+          "bars": 5,
+          "entry_bar": 468,
+          "exit_bar": 473
+        },
+        {
+          "pair": "MF/USD",
+          "entry": 0.0091,
+          "exit": 0.00993,
+          "pnl": 171.5432967032965,
+          "reason": "COMBO RSI",
+          "bars": 4,
+          "entry_bar": 494,
+          "exit_bar": 498
+        },
+        {
+          "pair": "EAT/USD",
+          "entry": 0.02808,
+          "exit": 0.02726,
+          "pnl": -68.65270655270665,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 498,
+          "exit_bar": 499
+        },
+        {
+          "pair": "REPV2/USD",
+          "entry": 0.893,
+          "exit": 0.82,
+          "pnl": -173.46875699888034,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 500,
+          "exit_bar": 506
+        },
+        {
+          "pair": "BICO/USD",
+          "entry": 0.0433,
+          "exit": 0.0446,
+          "pnl": 49.49006928406478,
+          "reason": "COMBO RSI",
+          "bars": 6,
+          "entry_bar": 528,
+          "exit_bar": 534
+        },
+        {
+          "pair": "APR/USD",
+          "entry": 0.10912,
+          "exit": 0.10949,
+          "pnl": -3.636107038122998,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 536,
+          "exit_bar": 541
+        },
+        {
+          "pair": "VELVET/USD",
+          "entry": 0.1135,
+          "exit": 0.1103,
+          "pnl": -66.64105726872262,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 542,
+          "exit_bar": 553
+        },
+        {
+          "pair": "AI3/USD",
+          "entry": 0.01894,
+          "exit": 0.0188,
+          "pnl": -25.14508975712754,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 564,
+          "exit_bar": 575
+        },
+        {
+          "pair": "DBR/USD",
+          "entry": 0.017,
+          "exit": 0.0164,
+          "pnl": -80.80470588235292,
+          "reason": "TRAIL STOP",
+          "bars": 8,
+          "entry_bar": 583,
+          "exit_bar": 591
+        },
+        {
+          "pair": "UMA/USD",
+          "entry": 0.656,
+          "exit": 0.672,
+          "pnl": 38.253658536585405,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 608,
+          "exit_bar": 612
+        },
+        {
+          "pair": "SUN/USD",
+          "entry": 0.01868,
+          "exit": 0.018,
+          "pnl": -83.01584582441114,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 616,
+          "exit_bar": 617
+        },
+        {
+          "pair": "AB/USD",
+          "entry": 0.003857,
+          "exit": 0.003357,
+          "pnl": -268.99476276899145,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 620,
+          "exit_bar": 623
+        },
+        {
+          "pair": "BERA/USD",
+          "entry": 0.589,
+          "exit": 0.6048,
+          "pnl": 43.1107640067913,
+          "reason": "COMBO PROFIT",
+          "bars": 6,
+          "entry_bar": 628,
+          "exit_bar": 634
+        },
+        {
+          "pair": "KGEN/USD",
+          "entry": 0.1711,
+          "exit": 0.1782,
+          "pnl": 72.37662185856219,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 639,
+          "exit_bar": 643
+        },
+        {
+          "pair": "ES/USD",
+          "entry": 0.1226,
+          "exit": 0.1359,
+          "pnl": 206.00163132137018,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 643,
+          "exit_bar": 646
+        },
+        {
+          "pair": "STRD/USD",
+          "entry": 0.01789,
+          "exit": 0.0182,
+          "pnl": 24.16612632755743,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 649,
+          "exit_bar": 653
+        },
+        {
+          "pair": "ZEUS/USD",
+          "entry": 0.0071,
+          "exit": 0.0075,
+          "pnl": 101.9830985915491,
+          "reason": "COMBO PROFIT",
+          "bars": 5,
+          "entry_bar": 667,
+          "exit_bar": 672
+        },
+        {
+          "pair": "XCN/USD",
+          "entry": 0.00479,
+          "exit": 0.00564,
+          "pnl": 343.58329853862216,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 674,
+          "exit_bar": 677
+        },
+        {
+          "pair": "B3/USD",
+          "entry": 0.000487,
+          "exit": 0.000565,
+          "pnl": 309.09568788501,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 696,
+          "exit_bar": 699
+        },
+        {
+          "pair": "QI/USD",
+          "entry": 0.002119,
+          "exit": 0.002126,
+          "pnl": -3.810287871637505,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 702,
+          "exit_bar": 706
+        },
+        {
+          "pair": "U/USD",
+          "entry": 0.001158,
+          "exit": 0.001183,
+          "pnl": 32.66563039723673,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 715,
+          "exit_bar": 719
+        }
+      ],
+      "herfindahl": 4.022553266645145,
+      "pnl_no_top": -824.130719014797,
+      "avg_no_top": -17.534696149251,
+      "trail_loss_pct": 39.58333333333333,
+      "be_wr": 54.631449179670085,
+      "ev_no_top": -17.534696149251
+    },
+    "v6f_quick": {
+      "label": "V6F Quick+Robust",
+      "coins": 526,
+      "trades": 49,
+      "wins": 28,
+      "losses": 21,
+      "wr": 57.14285714285714,
+      "pnl": -423.3587420580207,
+      "roi": -21.167937102901035,
+      "pf": 0.8553430822832754,
+      "dd": 78.55044408263076,
+      "avg_w": 89.40290710381666,
+      "avg_l": -139.36381623642322,
+      "avg_bars": 4.3061224489795915,
+      "score": 23.85950052715506,
+      "reasons": {
+        "TRAIL STOP": {
+          "n": 16,
+          "pnl": -2456.9716730482596,
+          "wins": 0
+        },
+        "DC TARGET": {
+          "n": 3,
+          "pnl": 81.96958895201182,
+          "wins": 3
+        },
+        "QUICK PROFIT": {
+          "n": 21,
+          "pnl": 1787.6740505298474,
+          "wins": 21
+        },
+        "TIME MAX": {
+          "n": 5,
+          "pnl": -469.6684679166278,
+          "wins": 0
+        },
+        "RSI RECOVERY": {
+          "n": 4,
+          "pnl": 633.6377594250074,
+          "wins": 4
+        }
+      },
+      "trade_list": [
+        {
+          "pair": "AIO/USD",
+          "entry": 0.09724,
+          "exit": 0.08851,
+          "pnl": -189.48889345948146,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 60,
+          "exit_bar": 62
+        },
+        {
+          "pair": "KULA/USD",
+          "entry": 0.4053,
+          "exit": 0.4086,
+          "pnl": 5.841894892672219,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 63,
+          "exit_bar": 65
+        },
+        {
+          "pair": "BTT/USD",
+          "entry": 4.74e-07,
+          "exit": 4.87e-07,
+          "pnl": 44.30970464135009,
+          "reason": "DC TARGET",
+          "bars": 9,
+          "entry_bar": 85,
+          "exit_bar": 94
+        },
+        {
+          "pair": "XTER/USD",
+          "entry": 0.06077,
+          "exit": 0.05242,
+          "pnl": -284.49215073226907,
+          "reason": "TRAIL STOP",
+          "bars": 9,
+          "entry_bar": 106,
+          "exit_bar": 115
+        },
+        {
+          "pair": "WCT/USD",
+          "entry": 0.10571,
+          "exit": 0.10977,
+          "pnl": 66.214208684136,
+          "reason": "QUICK PROFIT",
+          "bars": 2,
+          "entry_bar": 127,
+          "exit_bar": 129
+        },
+        {
+          "pair": "AKE/USD",
+          "entry": 0.0009968,
+          "exit": 0.0009386,
+          "pnl": -126.87006420545727,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 149,
+          "exit_bar": 154
+        },
+        {
+          "pair": "GHST/USD",
+          "entry": 0.2912,
+          "exit": 0.2707,
+          "pnl": -150.83063186813197,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 164,
+          "exit_bar": 169
+        },
+        {
+          "pair": "TVK/USD",
+          "entry": 0.012,
+          "exit": 0.01261,
+          "pnl": 91.00233333333324,
+          "reason": "QUICK PROFIT",
+          "bars": 5,
+          "entry_bar": 170,
+          "exit_bar": 175
+        },
+        {
+          "pair": "SHX/USD",
+          "entry": 0.008028,
+          "exit": 0.008318,
+          "pnl": 61.65929247633292,
+          "reason": "QUICK PROFIT",
+          "bars": 2,
+          "entry_bar": 180,
+          "exit_bar": 182
+        },
+        {
+          "pair": "PYTH/USD",
+          "entry": 0.08445,
+          "exit": 0.08721,
+          "pnl": 54.79417406749552,
+          "reason": "QUICK PROFIT",
+          "bars": 4,
+          "entry_bar": 194,
+          "exit_bar": 198
+        },
+        {
+          "pair": "OBOL/USD",
+          "entry": 0.02758,
+          "exit": 0.02445,
+          "pnl": -236.78593183466288,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 206,
+          "exit_bar": 209
+        },
+        {
+          "pair": "OGN/USD",
+          "entry": 0.03416,
+          "exit": 0.03555,
+          "pnl": 70.77014051522221,
+          "reason": "QUICK PROFIT",
+          "bars": 3,
+          "entry_bar": 215,
+          "exit_bar": 218
+        },
+        {
+          "pair": "SOLV/USD",
+          "entry": 0.01152,
+          "exit": 0.01138,
+          "pnl": -34.64236111111132,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 234,
+          "exit_bar": 240
+        },
+        {
+          "pair": "FOREST/USD",
+          "entry": 0.04228,
+          "exit": 0.03605,
+          "pnl": -304.33576158940394,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 248,
+          "exit_bar": 249
+        },
+        {
+          "pair": "M/USD",
+          "entry": 1.27578,
+          "exit": 1.32046,
+          "pnl": 59.4613115113892,
+          "reason": "QUICK PROFIT",
+          "bars": 2,
+          "entry_bar": 253,
+          "exit_bar": 255
+        },
+        {
+          "pair": "BIGTIME/USD",
+          "entry": 0.0218,
+          "exit": 0.0225,
+          "pnl": 53.65321100917425,
+          "reason": "QUICK PROFIT",
+          "bars": 1,
+          "entry_bar": 274,
+          "exit_bar": 275
+        },
+        {
+          "pair": "DENT/USD",
+          "entry": 0.0002685,
+          "exit": 0.000245,
+          "pnl": -184.99143389199276,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 277,
+          "exit_bar": 288
+        },
+        {
+          "pair": "DYDX/USD",
+          "entry": 0.1889,
+          "exit": 0.2055,
+          "pnl": 164.89740603493888,
+          "reason": "QUICK PROFIT",
+          "bars": 2,
+          "entry_bar": 323,
+          "exit_bar": 325
+        },
+        {
+          "pair": "BDXN/USD",
+          "entry": 0.01815,
+          "exit": 0.01674,
+          "pnl": -165.36793388429732,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 331,
+          "exit_bar": 333
+        },
+        {
+          "pair": "RVV/USD",
+          "entry": 0.003238,
+          "exit": 0.003238,
+          "pnl": -10.4,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 334,
+          "exit_bar": 345
+        },
+        {
+          "pair": "WLFI/USD",
+          "entry": 0.1393,
+          "exit": 0.1339,
+          "pnl": -87.72893036611651,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 355,
+          "exit_bar": 360
+        },
+        {
+          "pair": "NODE/USD",
+          "entry": 0.03774,
+          "exit": 0.03578,
+          "pnl": -113.99851616322222,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 369,
+          "exit_bar": 370
+        },
+        {
+          "pair": "TANSSI/USD",
+          "entry": 0.0106,
+          "exit": 0.01092,
+          "pnl": 49.820377358490404,
+          "reason": "QUICK PROFIT",
+          "bars": 3,
+          "entry_bar": 380,
+          "exit_bar": 383
+        },
+        {
+          "pair": "UNFI/USD",
+          "entry": 0.0823,
+          "exit": 0.0752,
+          "pnl": -182.49088699878482,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 405,
+          "exit_bar": 416
+        },
+        {
+          "pair": "LCX/USD",
+          "entry": 0.05709,
+          "exit": 0.06035,
+          "pnl": 103.50870555263614,
+          "reason": "RSI RECOVERY",
+          "bars": 5,
+          "entry_bar": 435,
+          "exit_bar": 440
+        },
+        {
+          "pair": "ESPORTS/USD",
+          "entry": 0.3969,
+          "exit": 0.4053,
+          "pnl": 31.817989417989512,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 448,
+          "exit_bar": 450
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00207,
+          "exit": 0.00199,
+          "pnl": -87.49371980676307,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 451,
+          "exit_bar": 456
+        },
+        {
+          "pair": "ACA/USD",
+          "entry": 0.00873,
+          "exit": 0.00935,
+          "pnl": 131.26964490263475,
+          "reason": "QUICK PROFIT",
+          "bars": 5,
+          "entry_bar": 468,
+          "exit_bar": 473
+        },
+        {
+          "pair": "MF/USD",
+          "entry": 0.0091,
+          "exit": 0.00993,
+          "pnl": 171.5432967032965,
+          "reason": "RSI RECOVERY",
+          "bars": 4,
+          "entry_bar": 494,
+          "exit_bar": 498
+        },
+        {
+          "pair": "EAT/USD",
+          "entry": 0.02808,
+          "exit": 0.02726,
+          "pnl": -68.65270655270665,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 498,
+          "exit_bar": 499
+        },
+        {
+          "pair": "REPV2/USD",
+          "entry": 0.893,
+          "exit": 0.82,
+          "pnl": -173.46875699888034,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 500,
+          "exit_bar": 506
+        },
+        {
+          "pair": "BICO/USD",
+          "entry": 0.0433,
+          "exit": 0.0446,
+          "pnl": 49.49006928406478,
+          "reason": "RSI RECOVERY",
+          "bars": 6,
+          "entry_bar": 528,
+          "exit_bar": 534
+        },
+        {
+          "pair": "APR/USD",
+          "entry": 0.10912,
+          "exit": 0.11373,
+          "pnl": 73.87445014662762,
+          "reason": "QUICK PROFIT",
+          "bars": 1,
+          "entry_bar": 536,
+          "exit_bar": 537
+        },
+        {
+          "pair": "VELVET/USD",
+          "entry": 0.1135,
+          "exit": 0.1103,
+          "pnl": -66.64105726872262,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 542,
+          "exit_bar": 553
+        },
+        {
+          "pair": "AI3/USD",
+          "entry": 0.01894,
+          "exit": 0.0188,
+          "pnl": -25.14508975712754,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 564,
+          "exit_bar": 575
+        },
+        {
+          "pair": "DBR/USD",
+          "entry": 0.017,
+          "exit": 0.0164,
+          "pnl": -80.80470588235292,
+          "reason": "TRAIL STOP",
+          "bars": 8,
+          "entry_bar": 583,
+          "exit_bar": 591
+        },
+        {
+          "pair": "UMA/USD",
+          "entry": 0.656,
+          "exit": 0.683,
+          "pnl": 71.70304878048788,
+          "reason": "QUICK PROFIT",
+          "bars": 5,
+          "entry_bar": 608,
+          "exit_bar": 613
+        },
+        {
+          "pair": "SUN/USD",
+          "entry": 0.01868,
+          "exit": 0.018,
+          "pnl": -83.01584582441114,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 616,
+          "exit_bar": 617
+        },
+        {
+          "pair": "AB/USD",
+          "entry": 0.003857,
+          "exit": 0.003357,
+          "pnl": -268.99476276899145,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 620,
+          "exit_bar": 623
+        },
+        {
+          "pair": "BERA/USD",
+          "entry": 0.589,
+          "exit": 0.6082,
+          "pnl": 54.62573853989811,
+          "reason": "QUICK PROFIT",
+          "bars": 7,
+          "entry_bar": 628,
+          "exit_bar": 635
+        },
+        {
+          "pair": "KGEN/USD",
+          "entry": 0.1711,
+          "exit": 0.1778,
+          "pnl": 67.71315020455887,
+          "reason": "QUICK PROFIT",
+          "bars": 2,
+          "entry_bar": 639,
+          "exit_bar": 641
+        },
+        {
+          "pair": "ES/USD",
+          "entry": 0.1226,
+          "exit": 0.1282,
+          "pnl": 80.71647634584026,
+          "reason": "QUICK PROFIT",
+          "bars": 1,
+          "entry_bar": 643,
+          "exit_bar": 644
+        },
+        {
+          "pair": "STRD/USD",
+          "entry": 0.01789,
+          "exit": 0.01991,
+          "pnl": 214.83733929569604,
+          "reason": "QUICK PROFIT",
+          "bars": 2,
+          "entry_bar": 649,
+          "exit_bar": 651
+        },
+        {
+          "pair": "ZEUS/USD",
+          "entry": 0.0071,
+          "exit": 0.0075,
+          "pnl": 101.9830985915491,
+          "reason": "QUICK PROFIT",
+          "bars": 5,
+          "entry_bar": 667,
+          "exit_bar": 672
+        },
+        {
+          "pair": "XCN/USD",
+          "entry": 0.00479,
+          "exit": 0.00512,
+          "pnl": 127.02881002087699,
+          "reason": "QUICK PROFIT",
+          "bars": 1,
+          "entry_bar": 674,
+          "exit_bar": 675
+        },
+        {
+          "pair": "B3/USD",
+          "entry": 0.000508,
+          "exit": 0.000525,
+          "pnl": 56.355118110236134,
+          "reason": "QUICK PROFIT",
+          "bars": 3,
+          "entry_bar": 675,
+          "exit_bar": 678
+        },
+        {
+          "pair": "B3/USD",
+          "entry": 0.000487,
+          "exit": 0.000565,
+          "pnl": 309.09568788501,
+          "reason": "RSI RECOVERY",
+          "bars": 3,
+          "entry_bar": 696,
+          "exit_bar": 699
+        },
+        {
+          "pair": "QI/USD",
+          "entry": 0.002119,
+          "exit": 0.002186,
+          "pnl": 52.67295894289781,
+          "reason": "QUICK PROFIT",
+          "bars": 3,
+          "entry_bar": 702,
+          "exit_bar": 705
+        },
+        {
+          "pair": "U/USD",
+          "entry": 0.001158,
+          "exit": 0.001212,
+          "pnl": 82.62176165803112,
+          "reason": "QUICK PROFIT",
+          "bars": 3,
+          "entry_bar": 715,
+          "exit_bar": 718
+        }
+      ],
+      "herfindahl": 4.930180167995398,
+      "pnl_no_top": -732.4544299430307,
+      "avg_no_top": -15.259467290479806,
+      "trail_loss_pct": 32.6530612244898,
+      "be_wr": 60.91961899071763,
+      "ev_no_top": -15.259467290479806
+    },
+    "v6g_conservative": {
+      "label": "V6G Conservative",
+      "coins": 526,
+      "trades": 37,
+      "wins": 19,
+      "losses": 18,
+      "wr": 51.35135135135135,
+      "pnl": -242.85070013243646,
+      "roi": -24.285070013243644,
+      "pf": 0.7847078101542364,
+      "dd": 75.50903038497498,
+      "avg_w": 46.587076609912344,
+      "avg_l": -62.66695309559839,
+      "avg_bars": 4.702702702702703,
+      "score": 21.043332912400793,
+      "reasons": {
+        "TRAIL STOP": {
+          "n": 13,
+          "pnl": -955.6549272198334,
+          "wins": 0
+        },
+        "DC TARGET": {
+          "n": 3,
+          "pnl": 101.27864517280031,
+          "wins": 3
+        },
+        "COMBO PROFIT": {
+          "n": 11,
+          "pnl": 383.39151736304177,
+          "wins": 11
+        },
+        "TIME MAX": {
+          "n": 5,
+          "pnl": -172.35022850093756,
+          "wins": 0
+        },
+        "COMBO RSI": {
+          "n": 5,
+          "pnl": 400.4842930524925,
+          "wins": 5
+        }
+      },
+      "trade_list": [
+        {
+          "pair": "AIO/USD",
+          "entry": 0.09724,
+          "exit": 0.08851,
+          "pnl": -94.74444672974073,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 60,
+          "exit_bar": 62
+        },
+        {
+          "pair": "KULA/USD",
+          "entry": 0.4053,
+          "exit": 0.4086,
+          "pnl": 2.9209474463361094,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 63,
+          "exit_bar": 65
+        },
+        {
+          "pair": "BTT/USD",
+          "entry": 4.74e-07,
+          "exit": 4.87e-07,
+          "pnl": 22.154852320675044,
+          "reason": "COMBO PROFIT",
+          "bars": 9,
+          "entry_bar": 85,
+          "exit_bar": 94
+        },
+        {
+          "pair": "XTER/USD",
+          "entry": 0.06077,
+          "exit": 0.05242,
+          "pnl": -142.24607536613453,
+          "reason": "TRAIL STOP",
+          "bars": 9,
+          "entry_bar": 106,
+          "exit_bar": 115
+        },
+        {
+          "pair": "AKE/USD",
+          "entry": 0.0009968,
+          "exit": 0.0010164,
+          "pnl": 14.411797752809033,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 149,
+          "exit_bar": 153
+        },
+        {
+          "pair": "KULA/USD",
+          "entry": 0.3891,
+          "exit": 0.3827,
+          "pnl": -21.60544847083016,
+          "reason": "TRAIL STOP",
+          "bars": 4,
+          "entry_bar": 166,
+          "exit_bar": 170
+        },
+        {
+          "pair": "TVK/USD",
+          "entry": 0.012,
+          "exit": 0.01236,
+          "pnl": 24.72199999999993,
+          "reason": "COMBO PROFIT",
+          "bars": 4,
+          "entry_bar": 170,
+          "exit_bar": 174
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00303,
+          "exit": 0.00297,
+          "pnl": -24.950495049505005,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 174,
+          "exit_bar": 185
+        },
+        {
+          "pair": "PYTH/USD",
+          "entry": 0.08445,
+          "exit": 0.08603,
+          "pnl": 13.460651272942549,
+          "reason": "COMBO PROFIT",
+          "bars": 3,
+          "entry_bar": 194,
+          "exit_bar": 197
+        },
+        {
+          "pair": "OBOL/USD",
+          "entry": 0.02758,
+          "exit": 0.02445,
+          "pnl": -118.39296591733144,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 206,
+          "exit_bar": 209
+        },
+        {
+          "pair": "CHR/USD",
+          "entry": 0.0555,
+          "exit": 0.056,
+          "pnl": 3.7855855855855953,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 216,
+          "exit_bar": 219
+        },
+        {
+          "pair": "SOLV/USD",
+          "entry": 0.01152,
+          "exit": 0.01138,
+          "pnl": -17.32118055555566,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 234,
+          "exit_bar": 240
+        },
+        {
+          "pair": "FOREST/USD",
+          "entry": 0.04228,
+          "exit": 0.03605,
+          "pnl": -152.16788079470197,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 248,
+          "exit_bar": 249
+        },
+        {
+          "pair": "BIGTIME/USD",
+          "entry": 0.0218,
+          "exit": 0.0225,
+          "pnl": 26.826605504587125,
+          "reason": "COMBO PROFIT",
+          "bars": 3,
+          "entry_bar": 274,
+          "exit_bar": 277
+        },
+        {
+          "pair": "DENT/USD",
+          "entry": 0.0002685,
+          "exit": 0.000245,
+          "pnl": -92.49571694599638,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 277,
+          "exit_bar": 288
+        },
+        {
+          "pair": "DYDX/USD",
+          "entry": 0.1889,
+          "exit": 0.2055,
+          "pnl": 82.44870301746944,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 323,
+          "exit_bar": 325
+        },
+        {
+          "pair": "GAIA/USD",
+          "entry": 0.032715,
+          "exit": 0.03259,
+          "pnl": -9.010942992511085,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 360,
+          "exit_bar": 371
+        },
+        {
+          "pair": "KNC/USD",
+          "entry": 0.2204,
+          "exit": 0.2162,
+          "pnl": -24.206715063520914,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 374,
+          "exit_bar": 376
+        },
+        {
+          "pair": "ESPORTS/USD",
+          "entry": 0.3969,
+          "exit": 0.4053,
+          "pnl": 15.908994708994756,
+          "reason": "DC TARGET",
+          "bars": 2,
+          "entry_bar": 448,
+          "exit_bar": 450
+        },
+        {
+          "pair": "SGB/USD",
+          "entry": 0.00207,
+          "exit": 0.00199,
+          "pnl": -43.746859903381534,
+          "reason": "TRAIL STOP",
+          "bars": 5,
+          "entry_bar": 451,
+          "exit_bar": 456
+        },
+        {
+          "pair": "MF/USD",
+          "entry": 0.0091,
+          "exit": 0.00993,
+          "pnl": 85.77164835164825,
+          "reason": "COMBO RSI",
+          "bars": 4,
+          "entry_bar": 494,
+          "exit_bar": 498
+        },
+        {
+          "pair": "REPV2/USD",
+          "entry": 0.893,
+          "exit": 0.82,
+          "pnl": -86.73437849944017,
+          "reason": "TRAIL STOP",
+          "bars": 6,
+          "entry_bar": 500,
+          "exit_bar": 506
+        },
+        {
+          "pair": "BICO/USD",
+          "entry": 0.0433,
+          "exit": 0.0446,
+          "pnl": 24.74503464203239,
+          "reason": "COMBO RSI",
+          "bars": 6,
+          "entry_bar": 528,
+          "exit_bar": 534
+        },
+        {
+          "pair": "APR/USD",
+          "entry": 0.10912,
+          "exit": 0.11348,
+          "pnl": 34.65212609970677,
+          "reason": "COMBO PROFIT",
+          "bars": 3,
+          "entry_bar": 536,
+          "exit_bar": 539
+        },
+        {
+          "pair": "VELVET/USD",
+          "entry": 0.1135,
+          "exit": 0.1103,
+          "pnl": -33.32052863436131,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 542,
+          "exit_bar": 553
+        },
+        {
+          "pair": "AI3/USD",
+          "entry": 0.01894,
+          "exit": 0.0188,
+          "pnl": -12.57254487856377,
+          "reason": "TIME MAX",
+          "bars": 11,
+          "entry_bar": 564,
+          "exit_bar": 575
+        },
+        {
+          "pair": "DBR/USD",
+          "entry": 0.017,
+          "exit": 0.0164,
+          "pnl": -40.40235294117646,
+          "reason": "TRAIL STOP",
+          "bars": 8,
+          "entry_bar": 583,
+          "exit_bar": 591
+        },
+        {
+          "pair": "HBAR/USD",
+          "entry": 0.10313,
+          "exit": 0.10585,
+          "pnl": 21.105905168234266,
+          "reason": "COMBO PROFIT",
+          "bars": 3,
+          "entry_bar": 608,
+          "exit_bar": 611
+        },
+        {
+          "pair": "SUN/USD",
+          "entry": 0.01868,
+          "exit": 0.018,
+          "pnl": -41.50792291220557,
+          "reason": "TRAIL STOP",
+          "bars": 1,
+          "entry_bar": 616,
+          "exit_bar": 617
+        },
+        {
+          "pair": "AB/USD",
+          "entry": 0.003857,
+          "exit": 0.003357,
+          "pnl": -134.49738138449572,
+          "reason": "TRAIL STOP",
+          "bars": 3,
+          "entry_bar": 620,
+          "exit_bar": 623
+        },
+        {
+          "pair": "LOBO/USD",
+          "entry": 0.0001092,
+          "exit": 0.0001056,
+          "pnl": -38.08131868131861,
+          "reason": "TRAIL STOP",
+          "bars": 2,
+          "entry_bar": 631,
+          "exit_bar": 633
+        },
+        {
+          "pair": "ES/USD",
+          "entry": 0.1226,
+          "exit": 0.1373,
+          "pnl": 114.39037520391521,
+          "reason": "COMBO RSI",
+          "bars": 2,
+          "entry_bar": 643,
+          "exit_bar": 645
+        },
+        {
+          "pair": "STRD/USD",
+          "entry": 0.01789,
+          "exit": 0.01991,
+          "pnl": 107.41866964784802,
+          "reason": "COMBO PROFIT",
+          "bars": 3,
+          "entry_bar": 649,
+          "exit_bar": 652
+        },
+        {
+          "pair": "ZEUS/USD",
+          "entry": 0.0071,
+          "exit": 0.0075,
+          "pnl": 50.99154929577455,
+          "reason": "COMBO PROFIT",
+          "bars": 5,
+          "entry_bar": 667,
+          "exit_bar": 672
+        },
+        {
+          "pair": "XCN/USD",
+          "entry": 0.00479,
+          "exit": 0.00564,
+          "pnl": 171.79164926931108,
+          "reason": "COMBO RSI",
+          "bars": 3,
+          "entry_bar": 674,
+          "exit_bar": 677
+        },
+        {
+          "pair": "QI/USD",
+          "entry": 0.002119,
+          "exit": 0.002186,
+          "pnl": 26.336479471448904,
+          "reason": "COMBO PROFIT",
+          "bars": 3,
+          "entry_bar": 702,
+          "exit_bar": 705
+        },
+        {
+          "pair": "U/USD",
+          "entry": 0.001158,
+          "exit": 0.001212,
+          "pnl": 41.31088082901556,
+          "reason": "COMBO PROFIT",
+          "bars": 3,
+          "entry_bar": 715,
+          "exit_bar": 718
+        }
+      ],
+      "herfindahl": 3.19840500253974,
+      "pnl_no_top": -414.64234940174754,
+      "avg_no_top": -11.517843038937432,
+      "trail_loss_pct": 35.13513513513514,
+      "be_wr": 57.35893977047283,
+      "ev_no_top": -11.517843038937432
+    }
+  }
+}

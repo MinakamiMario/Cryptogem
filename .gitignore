@@ -1,0 +1,21 @@
+# Data — te groot voor git; refereer naar MD5 hashes in docs/
+data/*.json
+trading_bot/candle_cache*.json
+backtest_engine_v2.0/data/
+
+# Runtime
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.log
+logs/
+cache/
+
+# Generated output
+*.xlsx
+trading_bot/trades/
+
+# OS
+.DS_Store
+Thumbs.db

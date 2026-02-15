@@ -1,0 +1,261 @@
+{
+  "generated": "2026-02-15T08:41:47.751914",
+  "dataset": "candle_cache_tradeable.json",
+  "dataset_md5": "f6fd2ca303b677fe67ceede4a6b8f7ba",
+  "max_bars": 721,
+  "n_coins": 425,
+  "configs": {
+    "C1": {
+      "exit_type": "tp_sl",
+      "max_pos": 1,
+      "rsi_max": 45,
+      "sl_pct": 15,
+      "time_max_bars": 15,
+      "tp_pct": 15,
+      "vol_confirm": true,
+      "vol_spike_mult": 3.0
+    },
+    "GRID_BEST": {
+      "exit_type": "tp_sl",
+      "max_pos": 1,
+      "rsi_max": 45,
+      "sl_pct": 10,
+      "time_max_bars": 15,
+      "tp_pct": 12,
+      "vol_confirm": true,
+      "vol_spike_mult": 2.5
+    }
+  },
+  "windows": {
+    "fixed_30d": {
+      "start": 541,
+      "end": 721
+    },
+    "fixed_60d": {
+      "start": 361,
+      "end": 721
+    },
+    "fixed_90d": {
+      "start": 181,
+      "end": 721
+    },
+    "fixed_120d": {
+      "start": 50,
+      "end": 721
+    },
+    "roll_1": {
+      "start": 50,
+      "end": 230
+    },
+    "roll_2": {
+      "start": 230,
+      "end": 410
+    },
+    "roll_3": {
+      "start": 410,
+      "end": 590
+    },
+    "roll_4": {
+      "start": 590,
+      "end": 721
+    }
+  },
+  "results": {
+    "C1": {
+      "fixed_120d": {
+        "trades": 27,
+        "pnl": 1930.37,
+        "wr": 66.7,
+        "pf": 1.83,
+        "dd": 29.3,
+        "start_bar": 50,
+        "end_bar": 721,
+        "n_bars": 671
+      },
+      "fixed_30d": {
+        "trades": 9,
+        "pnl": 522.88,
+        "wr": 66.7,
+        "pf": 1.62,
+        "dd": 18.4,
+        "start_bar": 541,
+        "end_bar": 721,
+        "n_bars": 180
+      },
+      "fixed_60d": {
+        "trades": 16,
+        "pnl": 2020.08,
+        "wr": 68.8,
+        "pf": 2.45,
+        "dd": 18.4,
+        "start_bar": 361,
+        "end_bar": 721,
+        "n_bars": 360
+      },
+      "fixed_90d": {
+        "trades": 22,
+        "pnl": 3077.64,
+        "wr": 72.7,
+        "pf": 2.51,
+        "dd": 18.4,
+        "start_bar": 181,
+        "end_bar": 721,
+        "n_bars": 540
+      },
+      "roll_1": {
+        "trades": 7,
+        "pnl": -386.62,
+        "wr": 57.1,
+        "pf": 0.49,
+        "dd": 29.3,
+        "start_bar": 50,
+        "end_bar": 230,
+        "n_bars": 180
+      },
+      "roll_2": {
+        "trades": 5,
+        "pnl": 512.26,
+        "wr": 80.0,
+        "pf": 2.86,
+        "dd": 14.7,
+        "start_bar": 230,
+        "end_bar": 410,
+        "n_bars": 180
+      },
+      "roll_3": {
+        "trades": 8,
+        "pnl": 1285.66,
+        "wr": 62.5,
+        "pf": 6.06,
+        "dd": 11.9,
+        "start_bar": 410,
+        "end_bar": 590,
+        "n_bars": 180
+      },
+      "roll_4": {
+        "trades": 7,
+        "pnl": 361.03,
+        "wr": 71.4,
+        "pf": 1.55,
+        "dd": 18.4,
+        "start_bar": 590,
+        "end_bar": 721,
+        "n_bars": 131
+      }
+    },
+    "GRID_BEST": {
+      "fixed_120d": {
+        "trades": 32,
+        "pnl": 4718.27,
+        "wr": 68.8,
+        "pf": 2.61,
+        "dd": 16.4,
+        "start_bar": 50,
+        "end_bar": 721,
+        "n_bars": 671
+      },
+      "fixed_30d": {
+        "trades": 11,
+        "pnl": 1094.09,
+        "wr": 72.7,
+        "pf": 2.76,
+        "dd": 13.3,
+        "start_bar": 541,
+        "end_bar": 721,
+        "n_bars": 180
+      },
+      "fixed_60d": {
+        "trades": 18,
+        "pnl": 1800.0,
+        "wr": 66.7,
+        "pf": 2.56,
+        "dd": 16.4,
+        "start_bar": 361,
+        "end_bar": 721,
+        "n_bars": 360
+      },
+      "fixed_90d": {
+        "trades": 25,
+        "pnl": 3892.11,
+        "wr": 72.0,
+        "pf": 2.98,
+        "dd": 16.4,
+        "start_bar": 181,
+        "end_bar": 721,
+        "n_bars": 540
+      },
+      "roll_1": {
+        "trades": 9,
+        "pnl": 376.57,
+        "wr": 66.7,
+        "pf": 1.55,
+        "dd": 14.8,
+        "start_bar": 50,
+        "end_bar": 230,
+        "n_bars": 180
+      },
+      "roll_2": {
+        "trades": 6,
+        "pnl": 1084.07,
+        "wr": 83.3,
+        "pf": 7.63,
+        "dd": 8.0,
+        "start_bar": 230,
+        "end_bar": 410,
+        "n_bars": 180
+      },
+      "roll_3": {
+        "trades": 8,
+        "pnl": 466.2,
+        "wr": 50.0,
+        "pf": 1.87,
+        "dd": 16.4,
+        "start_bar": 410,
+        "end_bar": 590,
+        "n_bars": 180
+      },
+      "roll_4": {
+        "trades": 9,
+        "pnl": 973.34,
+        "wr": 77.8,
+        "pf": 3.07,
+        "dd": 13.3,
+        "start_bar": 590,
+        "end_bar": 721,
+        "n_bars": 131
+      }
+    }
+  },
+  "stability": {
+    "C1": {
+      "config": "C1",
+      "total_windows": 8,
+      "positive_windows": 7,
+      "positive_ratio": 0.88,
+      "zero_trade_windows": 0,
+      "worst_pnl": -386.62,
+      "worst_window": "roll_1",
+      "max_dd": 29.3,
+      "max_dd_window": "fixed_120d",
+      "rolling_mean_pnl": 443.08,
+      "rolling_cv": 1.55,
+      "verdict": "STABLE",
+      "fail_reasons": []
+    },
+    "GRID_BEST": {
+      "config": "GRID_BEST",
+      "total_windows": 8,
+      "positive_windows": 8,
+      "positive_ratio": 1.0,
+      "zero_trade_windows": 0,
+      "worst_pnl": 376.57,
+      "worst_window": "roll_1",
+      "max_dd": 16.4,
+      "max_dd_window": "fixed_120d",
+      "rolling_mean_pnl": 725.04,
+      "rolling_cv": 0.49,
+      "verdict": "STABLE",
+      "fail_reasons": []
+    }
+  }
+}

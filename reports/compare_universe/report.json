@@ -1,0 +1,69 @@
+{
+  "generated": "2026-02-14 23:56 CET",
+  "all": {
+    "universe_mode": "all",
+    "coin_count": 884,
+    "dataset_hash": "0bd301f2488b",
+    "configs": {
+      "C1_TPSL_RSI45": {
+        "trades": 34,
+        "pnl": 1192.04,
+        "wr": 58.8,
+        "dd": 32.2,
+        "pf": 1.39,
+        "wf_label": "4/5",
+        "wf_pass": 4,
+        "wf_go": true,
+        "fric_go_pnl": 332.48,
+        "fric_go": true,
+        "mc_ruin": 4.4,
+        "mc_p95_dd": 49.3,
+        "mc_win_pct": 100.0,
+        "mc_go": true,
+        "jitter_pct": 82.0,
+        "jitter_go": true,
+        "univ_n_pos": 3,
+        "univ_go": true,
+        "top1_coin": "ZEUS/USD",
+        "top1_share": 0.096,
+        "top3_share": 0.277,
+        "notop_pnl": 780.82,
+        "verdict": "GO",
+        "fails": []
+      }
+    }
+  },
+  "halal": {
+    "universe_mode": "halal",
+    "coin_count": 281,
+    "dataset_hash": "0bd301f2488b",
+    "configs": {
+      "C1_TPSL_RSI45": {
+        "trades": 19,
+        "pnl": 711.94,
+        "wr": 57.9,
+        "dd": 23.4,
+        "pf": 1.57,
+        "wf_label": "4/5",
+        "wf_pass": 4,
+        "wf_go": true,
+        "fric_go_pnl": 276.33,
+        "fric_go": true,
+        "mc_ruin": 0.0,
+        "mc_p95_dd": 38.5,
+        "mc_win_pct": 100.0,
+        "mc_go": true,
+        "jitter_pct": 96.0,
+        "jitter_go": true,
+        "univ_n_pos": 4,
+        "univ_go": true,
+        "top1_coin": "B3/USD",
+        "top1_share": 0.175,
+        "top3_share": 0.464,
+        "notop_pnl": 369.73,
+        "verdict": "GO",
+        "fails": []
+      }
+    }
+  }
+}

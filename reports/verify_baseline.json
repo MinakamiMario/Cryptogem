@@ -1,0 +1,685 @@
+{
+  "timestamp": "2026-02-15 08:12:15",
+  "config": {
+    "exit_type": "tp_sl",
+    "max_pos": 1,
+    "rsi_max": 45,
+    "sl_pct": 15,
+    "time_max_bars": 15,
+    "tp_pct": 15,
+    "vol_confirm": true,
+    "vol_spike_mult": 3.0
+  },
+  "settings": {
+    "KRAKEN_FEE": 0.0026,
+    "INITIAL_CAPITAL": 2000,
+    "START_BAR": 50
+  },
+  "results": {
+    "LIVE_CURRENT": {
+      "cache_name": "LIVE_CURRENT",
+      "cache_path": "/Users/oussama/Cryptogem/trading_bot/candle_cache_532.json",
+      "cache_md5": "3b1dba2eeb4d95ac68d0874b50de3d4d",
+      "cache_size_bytes": 48777273,
+      "n_coins": 523,
+      "bar_stats": {
+        "min": 54,
+        "max": 721,
+        "avg": 665.0
+      },
+      "config": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 15,
+        "time_max_bars": 15,
+        "tp_pct": 15,
+        "vol_confirm": true,
+        "vol_spike_mult": 3.0
+      },
+      "settings": {
+        "KRAKEN_FEE": 0.0026,
+        "INITIAL_CAPITAL": 2000,
+        "START_BAR": 50
+      },
+      "baseline": {
+        "trades": 30,
+        "pnl": 3745.5,
+        "wr": 70.0,
+        "dd": 27.9,
+        "pf": 3.31,
+        "final_equity": 5745.5
+      },
+      "exit_classes": {
+        "A": {
+          "PROFIT TARGET": {
+            "count": 8,
+            "pnl": 3850.234655371349,
+            "wins": 8
+          }
+        },
+        "B": {
+          "TIME MAX": {
+            "count": 20,
+            "pnl": 898.4044224375964,
+            "wins": 13
+          },
+          "FIXED STOP": {
+            "count": 2,
+            "pnl": -1003.1366985400452,
+            "wins": 0
+          }
+        }
+      },
+      "concentration": {
+        "top1_coin": "MF/USD",
+        "top1_share": 0.1691,
+        "top3_coins": [
+          "MF/USD",
+          "B3/USD",
+          "XCN/USD"
+        ],
+        "top3_share": 0.4305,
+        "notop_pnl": 2837.97,
+        "unique_coins_traded": 28
+      },
+      "walk_forward": {
+        "n_folds": 5,
+        "embargo_bars": 2,
+        "passed_folds": 4,
+        "wf_label": "4/5",
+        "max_test_dd": 23.5,
+        "go": true,
+        "soft_go": true,
+        "folds": [
+          {
+            "fold": 1,
+            "test_bars": "50-184",
+            "purge_zone": "50-186",
+            "embargo": 2,
+            "train_trades": 24,
+            "train_pnl": 4074.17,
+            "train_dd": 18.1,
+            "test_trades": 6,
+            "test_pnl": -108.22,
+            "test_wr": 50.0,
+            "test_dd": 23.5,
+            "test_pf": 0.81,
+            "pass": false
+          },
+          {
+            "fold": 2,
+            "test_bars": "184-318",
+            "purge_zone": "182-320",
+            "embargo": 2,
+            "train_trades": 25,
+            "train_pnl": 2451.24,
+            "train_dd": 23.5,
+            "test_trades": 5,
+            "test_pnl": 664.43,
+            "test_wr": 100.0,
+            "test_dd": 10.3,
+            "test_pf": "INF",
+            "pass": true
+          },
+          {
+            "fold": 3,
+            "test_bars": "318-452",
+            "purge_zone": "316-454",
+            "embargo": 2,
+            "train_trades": 25,
+            "train_pnl": 2471.25,
+            "train_dd": 27.9,
+            "test_trades": 5,
+            "test_pnl": 201.38,
+            "test_wr": 40.0,
+            "test_dd": 7.7,
+            "test_pf": 8.37,
+            "pass": true
+          },
+          {
+            "fold": 4,
+            "test_bars": "452-586",
+            "purge_zone": "450-588",
+            "embargo": 2,
+            "train_trades": 23,
+            "train_pnl": 1824.73,
+            "train_dd": 27.9,
+            "test_trades": 6,
+            "test_pnl": 328.96,
+            "test_wr": 33.3,
+            "test_dd": 10.5,
+            "test_pf": 2.16,
+            "pass": true
+          },
+          {
+            "fold": 5,
+            "test_bars": "586-721",
+            "purge_zone": "584-721",
+            "embargo": 2,
+            "train_trades": 21,
+            "train_pnl": 1404.45,
+            "train_dd": 27.9,
+            "test_trades": 8,
+            "test_pnl": 949.37,
+            "test_wr": 87.5,
+            "test_dd": 18.1,
+            "test_pf": 3.95,
+            "pass": true
+          }
+        ]
+      },
+      "friction": {
+        "go_scenario": "2.0x_fee+20bps",
+        "go_pnl": 2369.98,
+        "go": true,
+        "detail_2x_20bps": {
+          "fee_mult": 2.0,
+          "slippage_bps": 20,
+          "effective_fee_per_side": 0.0072,
+          "trades": 30,
+          "pnl": 2369.98,
+          "wr": 70.0,
+          "dd": 29.3,
+          "pf": 2.46
+        },
+        "matrix_summary": {
+          "1.0x_fee+0bps": {
+            "pnl": 3745.5,
+            "trades": 30,
+            "wr": 70.0
+          },
+          "1.0x_fee+10bps": {
+            "pnl": 3414.81,
+            "trades": 30,
+            "wr": 70.0
+          },
+          "1.0x_fee+20bps": {
+            "pnl": 3102.56,
+            "trades": 30,
+            "wr": 70.0
+          },
+          "1.0x_fee+35bps": {
+            "pnl": 2666.58,
+            "trades": 30,
+            "wr": 70.0
+          },
+          "2.0x_fee+0bps": {
+            "pnl": 2923.64,
+            "trades": 30,
+            "wr": 70.0
+          },
+          "2.0x_fee+10bps": {
+            "pnl": 2638.83,
+            "trades": 30,
+            "wr": 70.0
+          },
+          "2.0x_fee+20bps": {
+            "pnl": 2369.98,
+            "trades": 30,
+            "wr": 70.0
+          },
+          "2.0x_fee+35bps": {
+            "pnl": 1994.74,
+            "trades": 30,
+            "wr": 70.0
+          },
+          "3.0x_fee+0bps": {
+            "pnl": 2215.96,
+            "trades": 30,
+            "wr": 70.0
+          },
+          "3.0x_fee+10bps": {
+            "pnl": 1970.86,
+            "trades": 30,
+            "wr": 66.7
+          },
+          "3.0x_fee+20bps": {
+            "pnl": 1739.56,
+            "trades": 30,
+            "wr": 60.0
+          },
+          "3.0x_fee+35bps": {
+            "pnl": 1416.85,
+            "trades": 30,
+            "wr": 56.7
+          },
+          "2x_fee+1candle_gap": {
+            "pnl": 1650.73,
+            "trades": 30,
+            "wr": 60.0
+          }
+        }
+      },
+      "monte_carlo": {
+        "n_sims": 1000,
+        "n_trades": 30,
+        "seed": 42,
+        "equity": {
+          "p5": 5746.0,
+          "median": 5746.0,
+          "p95": 5746.0,
+          "win_pct": 100.0,
+          "cvar95": 5746.0
+        },
+        "max_dd": {
+          "p5": 15.5,
+          "median": 20.2,
+          "p95": 31.5
+        },
+        "ruin_prob_pct": 0.0,
+        "broke_pct": 0.0,
+        "go": true
+      },
+      "param_jitter": {
+        "n_variants": 50,
+        "n_positive": 50,
+        "positive_pct": 100.0,
+        "median_pnl": 1649.86,
+        "worst_pnl": 31.68,
+        "best_pnl": 4158.53,
+        "p10_pnl": 542.11,
+        "go": true
+      },
+      "universe": {
+        "concentration": {
+          "top1_coin": "MF/USD",
+          "top1_share": 0.169,
+          "top3_coins": [
+            "MF/USD",
+            "B3/USD",
+            "XCN/USD"
+          ],
+          "top3_share": 0.43,
+          "unique_coins_traded": 28,
+          "total_profit": 5368.06,
+          "notop_pnl": 2837.97
+        },
+        "subsets": {
+          "top_volume": {
+            "n_coins": 174,
+            "trades": 20,
+            "pnl": 315.79,
+            "wr": 65.0,
+            "dd": 36.6,
+            "pf": 1.23,
+            "positive": true
+          },
+          "mid_volume": {
+            "n_coins": 174,
+            "trades": 18,
+            "pnl": 1357.54,
+            "wr": 66.7,
+            "dd": 22.4,
+            "pf": 2.44,
+            "positive": true
+          },
+          "exclude_top_winners": {
+            "n_coins": 520,
+            "trades": 27,
+            "pnl": 1193.84,
+            "wr": 63.0,
+            "dd": 29.4,
+            "pf": 1.68,
+            "positive": true
+          },
+          "random_50pct": {
+            "n_coins": 261,
+            "n_sims": 100,
+            "win_pct": 72.0,
+            "median_equity": 2614.0,
+            "p5_equity": 1507.0,
+            "positive": true
+          }
+        },
+        "n_positive_subsets": 4,
+        "go_universe": true,
+        "go_concentration": true,
+        "go": true
+      },
+      "timing": {
+        "precompute_s": 30.6,
+        "backtest_s": 0.4,
+        "wf_s": 1.6,
+        "friction_s": 4.5,
+        "mc_s": 0.3,
+        "jitter_s": 15.6,
+        "universe_s": 14.1,
+        "total_s": 67.6
+      }
+    },
+    "RESEARCH_ALL": {
+      "cache_name": "RESEARCH_ALL",
+      "cache_path": "/Users/oussama/Cryptogem/data/candle_cache_research_all.json",
+      "cache_md5": "a68399c0da2ed8283558aea315b6e3bf",
+      "cache_size_bytes": 152419003,
+      "n_coins": 2086,
+      "bar_stats": {
+        "min": 51,
+        "max": 721,
+        "avg": 528.0
+      },
+      "config": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 15,
+        "time_max_bars": 15,
+        "tp_pct": 15,
+        "vol_confirm": true,
+        "vol_spike_mult": 3.0
+      },
+      "settings": {
+        "KRAKEN_FEE": 0.0026,
+        "INITIAL_CAPITAL": 2000,
+        "START_BAR": 50
+      },
+      "baseline": {
+        "trades": 45,
+        "pnl": 528.52,
+        "wr": 51.1,
+        "dd": 40.8,
+        "pf": 1.14,
+        "final_equity": 2528.52
+      },
+      "exit_classes": {
+        "A": {
+          "PROFIT TARGET": {
+            "count": 12,
+            "pnl": 3496.5188537105446,
+            "wins": 12
+          }
+        },
+        "B": {
+          "TIME MAX": {
+            "count": 24,
+            "pnl": 319.9050752505939,
+            "wins": 11
+          },
+          "FIXED STOP": {
+            "count": 9,
+            "pnl": -3287.9040355317084,
+            "wins": 0
+          }
+        }
+      },
+      "concentration": {
+        "top1_coin": "MF/USD",
+        "top1_share": 0.1251,
+        "top3_coins": [
+          "MF/USD",
+          "CHESS/USD",
+          "ZEUS/USD"
+        ],
+        "top3_share": 0.2726,
+        "notop_pnl": -23.8,
+        "unique_coins_traded": 44
+      },
+      "walk_forward": {
+        "n_folds": 5,
+        "embargo_bars": 2,
+        "passed_folds": 3,
+        "wf_label": "3/5",
+        "max_test_dd": 37.9,
+        "go": false,
+        "soft_go": true,
+        "folds": [
+          {
+            "fold": 1,
+            "test_bars": "50-184",
+            "purge_zone": "50-186",
+            "embargo": 2,
+            "train_trades": 36,
+            "train_pnl": 1113.82,
+            "train_dd": 38.1,
+            "test_trades": 9,
+            "test_pnl": -375.94,
+            "test_wr": 22.2,
+            "test_dd": 33.5,
+            "test_pf": 0.54,
+            "pass": false
+          },
+          {
+            "fold": 2,
+            "test_bars": "184-318",
+            "purge_zone": "182-320",
+            "embargo": 2,
+            "train_trades": 35,
+            "train_pnl": -340.93,
+            "train_dd": 37.9,
+            "test_trades": 9,
+            "test_pnl": 459.18,
+            "test_wr": 66.7,
+            "test_dd": 14.6,
+            "test_pf": 2.88,
+            "pass": true
+          },
+          {
+            "fold": 3,
+            "test_bars": "318-452",
+            "purge_zone": "316-454",
+            "embargo": 2,
+            "train_trades": 35,
+            "train_pnl": -139.97,
+            "train_dd": 40.8,
+            "test_trades": 9,
+            "test_pnl": 10.08,
+            "test_wr": 55.6,
+            "test_dd": 28.4,
+            "test_pf": 1.01,
+            "pass": true
+          },
+          {
+            "fold": 4,
+            "test_bars": "452-586",
+            "purge_zone": "450-588",
+            "embargo": 2,
+            "train_trades": 35,
+            "train_pnl": 266.75,
+            "train_dd": 40.8,
+            "test_trades": 10,
+            "test_pnl": -114.04,
+            "test_wr": 40.0,
+            "test_dd": 37.9,
+            "test_pf": 0.88,
+            "pass": false
+          },
+          {
+            "fold": 5,
+            "test_bars": "586-721",
+            "purge_zone": "584-721",
+            "embargo": 2,
+            "train_trades": 38,
+            "train_pnl": 355.15,
+            "train_dd": 40.8,
+            "test_trades": 7,
+            "test_pnl": 147.23,
+            "test_wr": 71.4,
+            "test_dd": 18.1,
+            "test_pf": 1.22,
+            "pass": true
+          }
+        ]
+      },
+      "friction": {
+        "go_scenario": "2.0x_fee+20bps",
+        "go_pnl": -333.86,
+        "go": false,
+        "detail_2x_20bps": {
+          "fee_mult": 2.0,
+          "slippage_bps": 20,
+          "effective_fee_per_side": 0.0072,
+          "trades": 45,
+          "pnl": -333.86,
+          "wr": 48.9,
+          "dd": 47.1,
+          "pf": 0.9
+        },
+        "matrix_summary": {
+          "1.0x_fee+0bps": {
+            "pnl": 528.52,
+            "trades": 45,
+            "wr": 51.1
+          },
+          "1.0x_fee+10bps": {
+            "pnl": 310.08,
+            "trades": 45,
+            "wr": 51.1
+          },
+          "1.0x_fee+20bps": {
+            "pnl": 110.13,
+            "trades": 45,
+            "wr": 51.1
+          },
+          "1.0x_fee+35bps": {
+            "pnl": -158.45,
+            "trades": 45,
+            "wr": 48.9
+          },
+          "2.0x_fee+0bps": {
+            "pnl": -1.6,
+            "trades": 45,
+            "wr": 51.1
+          },
+          "2.0x_fee+10bps": {
+            "pnl": -175.11,
+            "trades": 45,
+            "wr": 48.9
+          },
+          "2.0x_fee+20bps": {
+            "pnl": -333.86,
+            "trades": 45,
+            "wr": 48.9
+          },
+          "2.0x_fee+35bps": {
+            "pnl": -546.98,
+            "trades": 45,
+            "wr": 48.9
+          },
+          "3.0x_fee+0bps": {
+            "pnl": -422.54,
+            "trades": 45,
+            "wr": 48.9
+          },
+          "3.0x_fee+10bps": {
+            "pnl": -560.19,
+            "trades": 45,
+            "wr": 48.9
+          },
+          "3.0x_fee+20bps": {
+            "pnl": -686.08,
+            "trades": 45,
+            "wr": 44.4
+          },
+          "3.0x_fee+35bps": {
+            "pnl": -854.98,
+            "trades": 45,
+            "wr": 44.4
+          },
+          "2x_fee+1candle_gap": {
+            "pnl": -733.36,
+            "trades": 45,
+            "wr": 44.4
+          }
+        }
+      },
+      "monte_carlo": {
+        "n_sims": 1000,
+        "n_trades": 45,
+        "seed": 42,
+        "equity": {
+          "p5": 2529.0,
+          "median": 2529.0,
+          "p95": 2529.0,
+          "win_pct": 100.0,
+          "cvar95": 2529.0
+        },
+        "max_dd": {
+          "p5": 33.1,
+          "median": 46.7,
+          "p95": 62.6
+        },
+        "ruin_prob_pct": 37.5,
+        "broke_pct": 0.0,
+        "go": false
+      },
+      "param_jitter": {
+        "n_variants": 50,
+        "n_positive": 21,
+        "positive_pct": 42.0,
+        "median_pnl": -140.16,
+        "worst_pnl": -1181.36,
+        "best_pnl": 1064.89,
+        "p10_pnl": -763.65,
+        "go": false
+      },
+      "universe": {
+        "concentration": {
+          "top1_coin": "MF/USD",
+          "top1_share": 0.125,
+          "top3_coins": [
+            "MF/USD",
+            "CHESS/USD",
+            "ZEUS/USD"
+          ],
+          "top3_share": 0.273,
+          "unique_coins_traded": 44,
+          "total_profit": 4416.39,
+          "notop_pnl": -23.8
+        },
+        "subsets": {
+          "top_volume": {
+            "n_coins": 695,
+            "trades": 24,
+            "pnl": -1013.38,
+            "wr": 37.5,
+            "dd": 57.0,
+            "pf": 0.57,
+            "positive": false
+          },
+          "mid_volume": {
+            "n_coins": 695,
+            "trades": 30,
+            "pnl": 1856.55,
+            "wr": 56.7,
+            "dd": 35.1,
+            "pf": 1.71,
+            "positive": true
+          },
+          "exclude_top_winners": {
+            "n_coins": 2083,
+            "trades": 41,
+            "pnl": -258.21,
+            "wr": 46.3,
+            "dd": 45.9,
+            "pf": 0.92,
+            "positive": false
+          },
+          "random_50pct": {
+            "n_coins": 1043,
+            "n_sims": 100,
+            "win_pct": 76.0,
+            "median_equity": 2938.0,
+            "p5_equity": 1235.0,
+            "positive": true
+          }
+        },
+        "n_positive_subsets": 2,
+        "go_universe": true,
+        "go_concentration": true,
+        "go": true
+      },
+      "timing": {
+        "precompute_s": 85.9,
+        "backtest_s": 9.1,
+        "wf_s": 13.2,
+        "friction_s": 30.7,
+        "mc_s": 2.4,
+        "jitter_s": 126.5,
+        "universe_s": 110.4,
+        "total_s": 379.7
+      }
+    }
+  },
+  "total_time_s": 448.1
+}

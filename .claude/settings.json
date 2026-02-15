@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(python *)",
+      "Bash(pip3 *)",
+      "Bash(pip *)",
+      "Bash(kill *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(find *)",
+      "Bash(du *)",
+      "Bash(wc *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(xargs *)",
+      "Bash(ps *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm *.py)",
+      "Bash(rm *.json)",
+      "Bash(rm *.xlsx)",
+      "Bash(git *)",
+      "Bash(nohup *)"
+    ]
+  }
+}

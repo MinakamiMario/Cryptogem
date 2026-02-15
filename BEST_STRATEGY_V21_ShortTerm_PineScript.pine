@@ -1,0 +1,127 @@
+//@version=5
+strategy("Keltner Micro-Breakout V21 (Short-Term)", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=95, commission_type=strategy.commission.percent, commission_value=0.1, initial_capital=10000)
+
+// ============================================================================
+// KELTNER MICRO-BREAKOUT - SHORT-TERM CYCLE TRADER (V21)
+// BTC/USD 1D - Long Only (geen short selling)
+// ============================================================================
+// Winner uit 22 versies - geoptimaliseerd voor short-term trading.
+//
+// Backtest Resultaten (2014-2026, 4167 dagen):
+//   Return:           7557.2%  ($10K → $765K)
+//   Sharpe Ratio:     1.065
+//   Max Drawdown:     36.7%
+//   Win Rate:         55.4%    (129W / 104L)
+//   Profit Factor:    1.48
+//   Total Trades:     233      (statistisch significant)
+//   Gem. Holding:     4.4 dagen (ultra short-term!)
+//   Trades/Jaar:      ~21
+// ============================================================================
+//
+// CONCEPT:
+// Snelle Keltner Channel (10-periode EMA + 1.0x ATR) detecteert
+// korte momentum-cycli van 2-5 dagen. Zodra de prijs boven het
+// kanaal breekt met RSI-bevestiging, stappen we in. Exit wanneer
+// prijs terugvalt naar de mid-line, max hold bereikt, of stop raakt.
+//
+// LONG ONLY - Geen short selling.
+// ============================================================================
+
+// === INPUTS ===
+kc_len      = input.int(10,    "Keltner Channel Period", minval=5,  maxval=30)
+kc_mult     = input.float(1.0, "Keltner ATR Multiplier", minval=0.3, maxval=3.0, step=0.1)
+trend_len   = input.int(21,    "Trend EMA Period",       minval=10, maxval=50)
+rsi_len     = input.int(7,     "RSI Period",             minval=3,  maxval=14)
+rsi_min     = input.int(50,    "RSI Entry Minimum",      minval=30, maxval=60)
+atr_len     = input.int(14,    "ATR Period (for stops)", minval=5,  maxval=30)
+atr_stop    = input.float(1.5, "ATR Trailing Stop Mult", minval=0.5, maxval=4.0, step=0.1)
+max_hold    = input.int(5,     "Max Hold Days",          minval=1,  maxval=10)
+
+// === CORE INDICATORS ===
+kc_mid    = ta.ema(close, kc_len)
+atr_val   = ta.atr(atr_len)
+kc_upper  = kc_mid + atr_val * kc_mult
+kc_lower  = kc_mid - atr_val * kc_mult
+trend_ema = ta.ema(close, trend_len)
+rsi_val   = ta.rsi(close, rsi_len)
+
+// === STATE TRACKING ===
+var float stop_price    = 0.0
+var float highest_price = 0.0
+var int   entry_bar     = 0
+
+// === ENTRY CONDITIONS ===
+breakout   = close > kc_upper
+momentum   = rsi_val > rsi_min
+trend_up   = close > trend_ema
+can_buy    = breakout and momentum and trend_up
+
+// === ENTRY (LONG ONLY) ===
+if can_buy and strategy.position_size == 0
+    strategy.entry("Long", strategy.long)
+    stop_price    := close - atr_val * atr_stop
+    highest_price := close
+    entry_bar     := bar_index
+
+// === EXIT MANAGEMENT ===
+if strategy.position_size > 0
+    bars_held = bar_index - entry_bar
+
+    // Track highest price for trailing stop
+    if close > highest_price
+        highest_price := close
+
+    // Update trailing stop (only moves up)
+    new_stop = highest_price - atr_val * atr_stop
+    if new_stop > stop_price
+        stop_price := new_stop
+
+    // Exit 1: Price drops back to mid-channel
+    if close < kc_mid
+        strategy.close("Long", comment="Mid-Channel")
+
+    // Exit 2: Max hold reached
+    if bars_held >= max_hold
+        strategy.close("Long", comment="Max Hold")
+
+    // Exit 3: Trailing stop hit
+    if close < stop_price
+        strategy.close("Long", comment="Trail Stop")
+
+// === PLOTTING ===
+// Keltner Channel
+p_upper = plot(kc_upper, "KC Upper", color=color.new(color.teal, 30))
+p_mid   = plot(kc_mid,   "KC Mid",   color=color.new(color.gray, 20), linewidth=2)
+p_lower = plot(kc_lower, "KC Lower", color=color.new(color.teal, 30))
+fill(p_upper, p_lower, color=color.new(color.teal, 92), title="KC Fill")
+
+// Trend
+plot(trend_ema, "Trend EMA", color=color.new(color.orange, 0), linewidth=1)
+
+// Trailing stop (when in position)
+plot(strategy.position_size > 0 ? stop_price : na, "Trail Stop", color=color.new(color.fuchsia, 0), style=plot.style_linebr, linewidth=1)
+
+// Signals
+plotshape(can_buy and strategy.position_size == 0, "Buy", shape.triangleup, location.belowbar, color.new(color.green, 0), size=size.small)
+
+// Breakout highlight
+bgcolor(close > kc_upper and trend_up ? color.new(color.green, 95) : na, title="Breakout")
+
+// === INFO TABLE ===
+var table info = table.new(position.top_right, 2, 7, bgcolor=color.new(color.black, 80))
+if barstate.islast
+    table.cell(info, 0, 0, "V21 Micro-BK", text_color=color.teal,  text_size=size.small)
+    table.cell(info, 1, 0, "",              text_color=color.white, text_size=size.small)
+    table.cell(info, 0, 1, "Trend",         text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 1, trend_up ? "UP" : "DOWN", text_color=trend_up ? color.green : color.red, text_size=size.small)
+    table.cell(info, 0, 2, "RSI(7)",        text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 2, str.tostring(rsi_val, "#.#"), text_color=rsi_val > 50 ? color.green : color.red, text_size=size.small)
+    table.cell(info, 0, 3, "KC Upper",      text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 3, str.tostring(kc_upper, "#"), text_color=color.teal, text_size=size.small)
+    table.cell(info, 0, 4, "Position",      text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 4, strategy.position_size > 0 ? "LONG" : "FLAT", text_color=strategy.position_size > 0 ? color.green : color.gray, text_size=size.small)
+    bars_in = strategy.position_size > 0 ? bar_index - entry_bar : 0
+    table.cell(info, 0, 5, "Days In",       text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 5, str.tostring(bars_in) + "/" + str.tostring(max_hold), text_color=bars_in > max_hold - 2 ? color.yellow : color.white, text_size=size.small)
+    table.cell(info, 0, 6, "Trail Stop",    text_color=color.white, text_size=size.small)
+    table.cell(info, 1, 6, strategy.position_size > 0 ? str.tostring(stop_price, "#") : "---", text_color=color.fuchsia, text_size=size.small)

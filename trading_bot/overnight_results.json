@@ -1,0 +1,414 @@
+{
+  "timestamp": "2026-02-14 00:35:04",
+  "elapsed_hours": 0.5,
+  "configs_evaluated": 26080,
+  "n_sims": 3000,
+  "best": {
+    "label": "explore-15500",
+    "score": 96.2,
+    "cfg": {
+      "exit_type": "trail",
+      "rsi_max": 35,
+      "atr_mult": 2.0,
+      "vol_spike_mult": 4.0,
+      "vol_confirm": true,
+      "breakeven": true,
+      "be_trigger": 3.0,
+      "time_max_bars": 10,
+      "rsi_recovery": true,
+      "rsi_rec_target": 45,
+      "max_stop_pct": 15.0,
+      "max_pos": 3
+    },
+    "backtest": {
+      "trades": 47,
+      "wr": 53.2,
+      "pnl": 1611.47,
+      "final_equity": 3611.47,
+      "pf": 3.83,
+      "dd": 14.3,
+      "broke": false
+    },
+    "monte_carlo": {
+      "win_pct": 100.0,
+      "median_eq": 7337.0,
+      "mean_eq": 7337.0,
+      "p5": 7337.0,
+      "p95": 7337.0,
+      "broke_pct": 0.0
+    },
+    "notop_win_pct": 100.0
+  },
+  "top10": [
+    {
+      "rank": 1,
+      "label": "HC-rsi_rec_target=40",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 15.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1662.78,
+        "final_equity": 3662.78,
+        "pf": 4.12,
+        "dd": 11.3,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 7681.0,
+        "mean_eq": 7681.0,
+        "p5": 7681.0,
+        "p95": 7681.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    },
+    {
+      "rank": 2,
+      "label": "explore-15501",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 15.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1662.78,
+        "final_equity": 3662.78,
+        "pf": 4.12,
+        "dd": 11.3,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 7681.0,
+        "mean_eq": 7681.0,
+        "p5": 7681.0,
+        "p95": 7681.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    },
+    {
+      "rank": 3,
+      "label": "explore-15505",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 15.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1662.78,
+        "final_equity": 3662.78,
+        "pf": 4.12,
+        "dd": 11.3,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 7681.0,
+        "mean_eq": 7681.0,
+        "p5": 7681.0,
+        "p95": 7681.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    },
+    {
+      "rank": 4,
+      "label": "explore-15508",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 15.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1662.78,
+        "final_equity": 3662.78,
+        "pf": 4.12,
+        "dd": 11.3,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 7681.0,
+        "mean_eq": 7681.0,
+        "p5": 7681.0,
+        "p95": 7681.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    },
+    {
+      "rank": 5,
+      "label": "explore-15510",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 15.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1552.75,
+        "final_equity": 3552.75,
+        "pf": 3.58,
+        "dd": 11.2,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 6861.0,
+        "mean_eq": 6861.0,
+        "p5": 6861.0,
+        "p95": 6861.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    },
+    {
+      "rank": 6,
+      "label": "explore-15516",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 15.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1662.78,
+        "final_equity": 3662.78,
+        "pf": 4.12,
+        "dd": 11.3,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 7681.0,
+        "mean_eq": 7681.0,
+        "p5": 7681.0,
+        "p95": 7681.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    },
+    {
+      "rank": 7,
+      "label": "explore-15518",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 15.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1662.78,
+        "final_equity": 3662.78,
+        "pf": 4.12,
+        "dd": 11.3,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 7681.0,
+        "mean_eq": 7681.0,
+        "p5": 7681.0,
+        "p95": 7681.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    },
+    {
+      "rank": 8,
+      "label": "explore-15519",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 15.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1662.78,
+        "final_equity": 3662.78,
+        "pf": 4.12,
+        "dd": 11.3,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 7681.0,
+        "mean_eq": 7681.0,
+        "p5": 7681.0,
+        "p95": 7681.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    },
+    {
+      "rank": 9,
+      "label": "explore-15523",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 12.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1662.78,
+        "final_equity": 3662.78,
+        "pf": 4.12,
+        "dd": 11.3,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 7681.0,
+        "mean_eq": 7681.0,
+        "p5": 7681.0,
+        "p95": 7681.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    },
+    {
+      "rank": 10,
+      "label": "explore-15526",
+      "score": 96.9,
+      "cfg": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 40,
+        "max_stop_pct": 15.0,
+        "max_pos": 3
+      },
+      "backtest": {
+        "trades": 47,
+        "wr": 53.2,
+        "pnl": 1552.75,
+        "final_equity": 3552.75,
+        "pf": 3.58,
+        "dd": 11.2,
+        "broke": false
+      },
+      "monte_carlo": {
+        "win_pct": 100.0,
+        "median_eq": 6861.0,
+        "mean_eq": 6861.0,
+        "p5": 6861.0,
+        "p95": 6861.0,
+        "broke_pct": 0.0
+      },
+      "notop_win_pct": 100.0
+    }
+  ]
+}

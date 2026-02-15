@@ -1,0 +1,36 @@
+{
+  "cfg": {
+    "rsi_max": 45,
+    "vol_spike_mult": 3.0,
+    "vol_confirm": true,
+    "exit_type": "tp_sl",
+    "tp_pct": 15,
+    "sl_pct": 15,
+    "tm_bars": 15,
+    "max_pos": 1
+  },
+  "score": 71.8,
+  "label": "abl-rsi_max=45",
+  "backtest": {
+    "trades": 29,
+    "wr": 75.9,
+    "pnl": 4931.48,
+    "final_equity": 6931.48,
+    "pf": 4.93,
+    "dd": 23.0
+  },
+  "mc_block": {
+    "win_pct": 100.0,
+    "median_eq": 7075.0,
+    "p5": 4500.0,
+    "p10": 4980.0,
+    "p95": 10512.0,
+    "cvar95": 4151.0
+  },
+  "notop_pnl": 4074.0,
+  "class_a_ratio": 0.71,
+  "hash": "7d53b6926ad6",
+  "promoted": false,
+  "run_id": "20260214_131525",
+  "timestamp": "2026-02-14 13:15:25"
+}

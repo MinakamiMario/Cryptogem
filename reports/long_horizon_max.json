@@ -1,0 +1,995 @@
+{
+  "generated": "2026-02-15T09:01:29.268958",
+  "runtime_s": 150.6,
+  "target_horizon": "365d",
+  "actual_horizon": "~112d (max available)",
+  "results": {
+    "TRADEABLE": {
+      "cache_file": "/Users/oussama/Cryptogem/data/candle_cache_tradeable.json",
+      "md5": "f6fd2ca303b677fe67ceede4a6b8f7ba",
+      "n_coins": 425,
+      "max_bars": 721,
+      "actual_days": 111.8,
+      "configs": {
+        "C1": {
+          "config": {
+            "exit_type": "tp_sl",
+            "max_pos": 1,
+            "rsi_max": 45,
+            "sl_pct": 15,
+            "time_max_bars": 15,
+            "tp_pct": 15,
+            "vol_confirm": true,
+            "vol_spike_mult": 3.0
+          },
+          "actual_days": 111.8,
+          "max_bars": 721,
+          "usable_bars": 671,
+          "baseline": {
+            "trades": 27,
+            "pnl": 1930.37,
+            "wr": 66.7,
+            "pf": 1.83,
+            "dd": 29.3
+          },
+          "wf": {
+            "n_folds": 5,
+            "embargo": 2,
+            "passed": 3,
+            "label": "3/5",
+            "total_test_pnl": 1742.43,
+            "folds": [
+              {
+                "fold": 1,
+                "test_bars": "50-184",
+                "test_trades": 5,
+                "test_pnl": -451.89,
+                "test_wr": 40.0,
+                "test_dd": 25.3,
+                "pass": false
+              },
+              {
+                "fold": 2,
+                "test_bars": "184-318",
+                "test_trades": 5,
+                "test_pnl": 840.26,
+                "test_wr": 100.0,
+                "test_dd": 8.1,
+                "pass": true
+              },
+              {
+                "fold": 3,
+                "test_bars": "318-452",
+                "test_trades": 4,
+                "test_pnl": -161.5,
+                "test_wr": 25.0,
+                "test_dd": 10.9,
+                "pass": false
+              },
+              {
+                "fold": 4,
+                "test_bars": "452-586",
+                "test_trades": 6,
+                "test_pnl": 1154.53,
+                "test_wr": 66.7,
+                "test_dd": 11.9,
+                "pass": true
+              },
+              {
+                "fold": 5,
+                "test_bars": "586-721",
+                "test_trades": 7,
+                "test_pnl": 361.03,
+                "test_wr": 71.4,
+                "test_dd": 18.4,
+                "pass": true
+              }
+            ]
+          },
+          "slippage_ladder": [
+            {
+              "regime": "1x_fees_0bps",
+              "fee_mult": 1,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.26,
+              "trades": 27,
+              "pnl": 1930.37,
+              "wr": 66.7,
+              "pf": 1.83,
+              "dd": 29.3,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_10bps",
+              "fee_mult": 1,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.36,
+              "trades": 27,
+              "pnl": 1724.96,
+              "wr": 66.7,
+              "pf": 1.75,
+              "dd": 30.0,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_20bps",
+              "fee_mult": 1,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.46,
+              "trades": 27,
+              "pnl": 1529.91,
+              "wr": 66.7,
+              "pf": 1.67,
+              "dd": 30.7,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_35bps",
+              "fee_mult": 1,
+              "slip_bps": 35,
+              "eff_fee_pct": 0.61,
+              "trades": 27,
+              "pnl": 1255.65,
+              "wr": 66.7,
+              "pf": 1.56,
+              "dd": 31.8,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_0bps",
+              "fee_mult": 2,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.52,
+              "trades": 27,
+              "pnl": 1417.63,
+              "wr": 66.7,
+              "pf": 1.62,
+              "dd": 31.1,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_10bps",
+              "fee_mult": 2,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.62,
+              "trades": 27,
+              "pnl": 1238.11,
+              "wr": 66.7,
+              "pf": 1.55,
+              "dd": 31.8,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_20bps",
+              "fee_mult": 2,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.72,
+              "trades": 27,
+              "pnl": 1067.69,
+              "wr": 66.7,
+              "pf": 1.48,
+              "dd": 32.5,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_35bps",
+              "fee_mult": 2,
+              "slip_bps": 35,
+              "eff_fee_pct": 0.87,
+              "trades": 27,
+              "pnl": 828.14,
+              "wr": 66.7,
+              "pf": 1.38,
+              "dd": 33.6,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_0bps",
+              "fee_mult": 3,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.78,
+              "trades": 27,
+              "pnl": 969.61,
+              "wr": 66.7,
+              "pf": 1.44,
+              "dd": 33.0,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_10bps",
+              "fee_mult": 3,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.88,
+              "trades": 27,
+              "pnl": 812.83,
+              "wr": 66.7,
+              "pf": 1.37,
+              "dd": 33.7,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_20bps",
+              "fee_mult": 3,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.98,
+              "trades": 27,
+              "pnl": 664.03,
+              "wr": 63.0,
+              "pf": 1.3,
+              "dd": 34.4,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_35bps",
+              "fee_mult": 3,
+              "slip_bps": 35,
+              "eff_fee_pct": 1.13,
+              "trades": 27,
+              "pnl": 454.96,
+              "wr": 63.0,
+              "pf": 1.21,
+              "dd": 35.4,
+              "pass": true
+            },
+            {
+              "regime": "1_candle_later",
+              "fee_mult": 2,
+              "slip_bps": 50,
+              "eff_fee_pct": 1.02,
+              "trades": 27,
+              "pnl": 606.66,
+              "wr": 63.0,
+              "pf": 1.28,
+              "dd": 34.6,
+              "pass": true
+            }
+          ],
+          "friction_2x_20bps": 1067.69,
+          "candle_later_pnl": 606.66,
+          "jitter_pct_positive": 100.0,
+          "mc_ruin_pct": 0.0,
+          "top1_share": 11.6,
+          "top3_share": 32.3,
+          "verdict": "SOFT-GO"
+        },
+        "GRID_BEST": {
+          "config": {
+            "exit_type": "tp_sl",
+            "max_pos": 1,
+            "rsi_max": 45,
+            "sl_pct": 10,
+            "time_max_bars": 15,
+            "tp_pct": 12,
+            "vol_confirm": true,
+            "vol_spike_mult": 2.5
+          },
+          "actual_days": 111.8,
+          "max_bars": 721,
+          "usable_bars": 671,
+          "baseline": {
+            "trades": 32,
+            "pnl": 4718.27,
+            "wr": 68.8,
+            "pf": 2.61,
+            "dd": 16.4
+          },
+          "wf": {
+            "n_folds": 5,
+            "embargo": 2,
+            "passed": 5,
+            "label": "5/5",
+            "total_test_pnl": 2740.55,
+            "folds": [
+              {
+                "fold": 1,
+                "test_bars": "50-184",
+                "test_trades": 7,
+                "test_pnl": 280.43,
+                "test_wr": 57.1,
+                "test_dd": 12.2,
+                "pass": true
+              },
+              {
+                "fold": 2,
+                "test_bars": "184-318",
+                "test_trades": 5,
+                "test_pnl": 766.0,
+                "test_wr": 100.0,
+                "test_dd": 8.1,
+                "pass": true
+              },
+              {
+                "fold": 3,
+                "test_bars": "318-452",
+                "test_trades": 5,
+                "test_pnl": 429.34,
+                "test_wr": 60.0,
+                "test_dd": 8.0,
+                "pass": true
+              },
+              {
+                "fold": 4,
+                "test_bars": "452-586",
+                "test_trades": 6,
+                "test_pnl": 291.44,
+                "test_wr": 50.0,
+                "test_dd": 16.4,
+                "pass": true
+              },
+              {
+                "fold": 5,
+                "test_bars": "586-721",
+                "test_trades": 9,
+                "test_pnl": 973.34,
+                "test_wr": 77.8,
+                "test_dd": 13.3,
+                "pass": true
+              }
+            ]
+          },
+          "slippage_ladder": [
+            {
+              "regime": "1x_fees_0bps",
+              "fee_mult": 1,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.26,
+              "trades": 32,
+              "pnl": 4718.27,
+              "wr": 68.8,
+              "pf": 2.61,
+              "dd": 16.4,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_10bps",
+              "fee_mult": 1,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.36,
+              "trades": 32,
+              "pnl": 4307.1,
+              "wr": 68.8,
+              "pf": 2.49,
+              "dd": 16.8,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_20bps",
+              "fee_mult": 1,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.46,
+              "trades": 32,
+              "pnl": 3920.36,
+              "wr": 68.8,
+              "pf": 2.37,
+              "dd": 17.1,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_35bps",
+              "fee_mult": 1,
+              "slip_bps": 35,
+              "eff_fee_pct": 0.61,
+              "trades": 32,
+              "pnl": 3382.99,
+              "wr": 68.8,
+              "pf": 2.2,
+              "dd": 17.7,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_0bps",
+              "fee_mult": 2,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.52,
+              "trades": 32,
+              "pnl": 3699.45,
+              "wr": 68.8,
+              "pf": 2.3,
+              "dd": 17.3,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_10bps",
+              "fee_mult": 2,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.62,
+              "trades": 32,
+              "pnl": 3348.89,
+              "wr": 68.8,
+              "pf": 2.19,
+              "dd": 17.7,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_20bps",
+              "fee_mult": 2,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.72,
+              "trades": 32,
+              "pnl": 3019.26,
+              "wr": 68.8,
+              "pf": 2.08,
+              "dd": 18.0,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_35bps",
+              "fee_mult": 2,
+              "slip_bps": 35,
+              "eff_fee_pct": 0.87,
+              "trades": 32,
+              "pnl": 2561.42,
+              "wr": 68.8,
+              "pf": 1.93,
+              "dd": 18.6,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_0bps",
+              "fee_mult": 3,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.78,
+              "trades": 32,
+              "pnl": 2831.02,
+              "wr": 68.8,
+              "pf": 2.02,
+              "dd": 18.2,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_10bps",
+              "fee_mult": 3,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.88,
+              "trades": 32,
+              "pnl": 2532.38,
+              "wr": 68.8,
+              "pf": 1.93,
+              "dd": 18.6,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_20bps",
+              "fee_mult": 3,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.98,
+              "trades": 32,
+              "pnl": 2251.66,
+              "wr": 65.6,
+              "pf": 1.83,
+              "dd": 19.4,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_35bps",
+              "fee_mult": 3,
+              "slip_bps": 35,
+              "eff_fee_pct": 1.13,
+              "trades": 32,
+              "pnl": 1861.91,
+              "wr": 65.6,
+              "pf": 1.7,
+              "dd": 20.7,
+              "pass": true
+            },
+            {
+              "regime": "1_candle_later",
+              "fee_mult": 2,
+              "slip_bps": 50,
+              "eff_fee_pct": 1.02,
+              "trades": 32,
+              "pnl": 2144.16,
+              "wr": 65.6,
+              "pf": 1.8,
+              "dd": 19.8,
+              "pass": true
+            }
+          ],
+          "friction_2x_20bps": 3019.26,
+          "candle_later_pnl": 2144.16,
+          "jitter_pct_positive": 100.0,
+          "mc_ruin_pct": 0.0,
+          "top1_share": 9.0,
+          "top3_share": 24.4,
+          "verdict": "GO"
+        }
+      }
+    },
+    "LIVE_CURRENT": {
+      "cache_file": "/Users/oussama/Cryptogem/trading_bot/candle_cache_532.json",
+      "md5": "3b1dba2eeb4d95ac68d0874b50de3d4d",
+      "n_coins": 526,
+      "max_bars": 721,
+      "actual_days": 111.8,
+      "configs": {
+        "C1": {
+          "config": {
+            "exit_type": "tp_sl",
+            "max_pos": 1,
+            "rsi_max": 45,
+            "sl_pct": 15,
+            "time_max_bars": 15,
+            "tp_pct": 15,
+            "vol_confirm": true,
+            "vol_spike_mult": 3.0
+          },
+          "actual_days": 111.8,
+          "max_bars": 721,
+          "usable_bars": 671,
+          "baseline": {
+            "trades": 30,
+            "pnl": 3745.5,
+            "wr": 70.0,
+            "pf": 3.31,
+            "dd": 27.9
+          },
+          "wf": {
+            "n_folds": 5,
+            "embargo": 2,
+            "passed": 4,
+            "label": "4/5",
+            "total_test_pnl": 2035.92,
+            "folds": [
+              {
+                "fold": 1,
+                "test_bars": "50-184",
+                "test_trades": 6,
+                "test_pnl": -108.22,
+                "test_wr": 50.0,
+                "test_dd": 23.5,
+                "pass": false
+              },
+              {
+                "fold": 2,
+                "test_bars": "184-318",
+                "test_trades": 5,
+                "test_pnl": 664.43,
+                "test_wr": 100.0,
+                "test_dd": 10.3,
+                "pass": true
+              },
+              {
+                "fold": 3,
+                "test_bars": "318-452",
+                "test_trades": 5,
+                "test_pnl": 201.38,
+                "test_wr": 40.0,
+                "test_dd": 7.7,
+                "pass": true
+              },
+              {
+                "fold": 4,
+                "test_bars": "452-586",
+                "test_trades": 6,
+                "test_pnl": 328.96,
+                "test_wr": 33.3,
+                "test_dd": 10.5,
+                "pass": true
+              },
+              {
+                "fold": 5,
+                "test_bars": "586-721",
+                "test_trades": 8,
+                "test_pnl": 949.37,
+                "test_wr": 87.5,
+                "test_dd": 18.1,
+                "pass": true
+              }
+            ]
+          },
+          "slippage_ladder": [
+            {
+              "regime": "1x_fees_0bps",
+              "fee_mult": 1,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.26,
+              "trades": 30,
+              "pnl": 3745.5,
+              "wr": 70.0,
+              "pf": 3.31,
+              "dd": 27.9,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_10bps",
+              "fee_mult": 1,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.36,
+              "trades": 30,
+              "pnl": 3414.81,
+              "wr": 70.0,
+              "pf": 3.1,
+              "dd": 28.2,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_20bps",
+              "fee_mult": 1,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.46,
+              "trades": 30,
+              "pnl": 3102.56,
+              "wr": 70.0,
+              "pf": 2.91,
+              "dd": 28.5,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_35bps",
+              "fee_mult": 1,
+              "slip_bps": 35,
+              "eff_fee_pct": 0.61,
+              "trades": 30,
+              "pnl": 2666.58,
+              "wr": 70.0,
+              "pf": 2.64,
+              "dd": 29.0,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_0bps",
+              "fee_mult": 2,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.52,
+              "trades": 30,
+              "pnl": 2923.64,
+              "wr": 70.0,
+              "pf": 2.8,
+              "dd": 28.7,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_10bps",
+              "fee_mult": 2,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.62,
+              "trades": 30,
+              "pnl": 2638.83,
+              "wr": 70.0,
+              "pf": 2.62,
+              "dd": 29.0,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_20bps",
+              "fee_mult": 2,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.72,
+              "trades": 30,
+              "pnl": 2369.98,
+              "wr": 70.0,
+              "pf": 2.46,
+              "dd": 29.3,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_35bps",
+              "fee_mult": 2,
+              "slip_bps": 35,
+              "eff_fee_pct": 0.87,
+              "trades": 30,
+              "pnl": 1994.74,
+              "wr": 70.0,
+              "pf": 2.23,
+              "dd": 29.8,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_0bps",
+              "fee_mult": 3,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.78,
+              "trades": 30,
+              "pnl": 2215.96,
+              "wr": 70.0,
+              "pf": 2.37,
+              "dd": 29.5,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_10bps",
+              "fee_mult": 3,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.88,
+              "trades": 30,
+              "pnl": 1970.86,
+              "wr": 66.7,
+              "pf": 2.22,
+              "dd": 29.8,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_20bps",
+              "fee_mult": 3,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.98,
+              "trades": 30,
+              "pnl": 1739.56,
+              "wr": 60.0,
+              "pf": 2.07,
+              "dd": 30.1,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_35bps",
+              "fee_mult": 3,
+              "slip_bps": 35,
+              "eff_fee_pct": 1.13,
+              "trades": 30,
+              "pnl": 1416.85,
+              "wr": 56.7,
+              "pf": 1.86,
+              "dd": 30.6,
+              "pass": true
+            },
+            {
+              "regime": "1_candle_later",
+              "fee_mult": 2,
+              "slip_bps": 50,
+              "eff_fee_pct": 1.02,
+              "trades": 30,
+              "pnl": 1650.73,
+              "wr": 60.0,
+              "pf": 2.01,
+              "dd": 30.2,
+              "pass": true
+            }
+          ],
+          "friction_2x_20bps": 2369.98,
+          "candle_later_pnl": 1650.73,
+          "jitter_pct_positive": 96.0,
+          "mc_ruin_pct": 0.0,
+          "top1_share": 13.3,
+          "top3_share": 34.9,
+          "verdict": "GO"
+        },
+        "GRID_BEST": {
+          "config": {
+            "exit_type": "tp_sl",
+            "max_pos": 1,
+            "rsi_max": 45,
+            "sl_pct": 10,
+            "time_max_bars": 15,
+            "tp_pct": 12,
+            "vol_confirm": true,
+            "vol_spike_mult": 2.5
+          },
+          "actual_days": 111.8,
+          "max_bars": 721,
+          "usable_bars": 671,
+          "baseline": {
+            "trades": 35,
+            "pnl": 1833.39,
+            "wr": 60.0,
+            "pf": 1.68,
+            "dd": 23.6
+          },
+          "wf": {
+            "n_folds": 5,
+            "embargo": 2,
+            "passed": 3,
+            "label": "3/5",
+            "total_test_pnl": 1596.05,
+            "folds": [
+              {
+                "fold": 1,
+                "test_bars": "50-184",
+                "test_trades": 8,
+                "test_pnl": -209.63,
+                "test_wr": 37.5,
+                "test_dd": 19.0,
+                "pass": false
+              },
+              {
+                "fold": 2,
+                "test_bars": "184-318",
+                "test_trades": 5,
+                "test_pnl": 594.76,
+                "test_wr": 100.0,
+                "test_dd": 10.3,
+                "pass": true
+              },
+              {
+                "fold": 3,
+                "test_bars": "318-452",
+                "test_trades": 6,
+                "test_pnl": 591.9,
+                "test_wr": 66.7,
+                "test_dd": 6.4,
+                "pass": true
+              },
+              {
+                "fold": 4,
+                "test_bars": "452-586",
+                "test_trades": 7,
+                "test_pnl": -23.03,
+                "test_wr": 28.6,
+                "test_dd": 19.2,
+                "pass": false
+              },
+              {
+                "fold": 5,
+                "test_bars": "586-721",
+                "test_trades": 9,
+                "test_pnl": 642.05,
+                "test_wr": 77.8,
+                "test_dd": 17.6,
+                "pass": true
+              }
+            ]
+          },
+          "slippage_ladder": [
+            {
+              "regime": "1x_fees_0bps",
+              "fee_mult": 1,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.26,
+              "trades": 35,
+              "pnl": 1833.39,
+              "wr": 60.0,
+              "pf": 1.68,
+              "dd": 23.6,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_10bps",
+              "fee_mult": 1,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.36,
+              "trades": 35,
+              "pnl": 1575.18,
+              "wr": 60.0,
+              "pf": 1.59,
+              "dd": 24.0,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_20bps",
+              "fee_mult": 1,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.46,
+              "trades": 35,
+              "pnl": 1333.89,
+              "wr": 60.0,
+              "pf": 1.51,
+              "dd": 24.3,
+              "pass": true
+            },
+            {
+              "regime": "1x_fees_35bps",
+              "fee_mult": 1,
+              "slip_bps": 35,
+              "eff_fee_pct": 0.61,
+              "trades": 35,
+              "pnl": 1001.37,
+              "wr": 60.0,
+              "pf": 1.39,
+              "dd": 24.8,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_0bps",
+              "fee_mult": 2,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.52,
+              "trades": 35,
+              "pnl": 1196.8,
+              "wr": 60.0,
+              "pf": 1.46,
+              "dd": 24.5,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_10bps",
+              "fee_mult": 2,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.62,
+              "trades": 35,
+              "pnl": 980.38,
+              "wr": 60.0,
+              "pf": 1.38,
+              "dd": 24.8,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_20bps",
+              "fee_mult": 2,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.72,
+              "trades": 35,
+              "pnl": 778.23,
+              "wr": 60.0,
+              "pf": 1.3,
+              "dd": 25.1,
+              "pass": true
+            },
+            {
+              "regime": "2x_fees_35bps",
+              "fee_mult": 2,
+              "slip_bps": 35,
+              "eff_fee_pct": 0.87,
+              "trades": 35,
+              "pnl": 499.74,
+              "wr": 60.0,
+              "pf": 1.2,
+              "dd": 25.6,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_0bps",
+              "fee_mult": 3,
+              "slip_bps": 0,
+              "eff_fee_pct": 0.78,
+              "trades": 35,
+              "pnl": 663.39,
+              "wr": 60.0,
+              "pf": 1.26,
+              "dd": 25.3,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_10bps",
+              "fee_mult": 3,
+              "slip_bps": 10,
+              "eff_fee_pct": 0.88,
+              "trades": 35,
+              "pnl": 482.18,
+              "wr": 57.1,
+              "pf": 1.19,
+              "dd": 25.6,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_20bps",
+              "fee_mult": 3,
+              "slip_bps": 20,
+              "eff_fee_pct": 0.98,
+              "trades": 35,
+              "pnl": 312.96,
+              "wr": 51.4,
+              "pf": 1.13,
+              "dd": 25.9,
+              "pass": true
+            },
+            {
+              "regime": "3x_fees_35bps",
+              "fee_mult": 3,
+              "slip_bps": 35,
+              "eff_fee_pct": 1.13,
+              "trades": 35,
+              "pnl": 79.96,
+              "wr": 48.6,
+              "pf": 1.03,
+              "dd": 26.8,
+              "pass": true
+            },
+            {
+              "regime": "1_candle_later",
+              "fee_mult": 2,
+              "slip_bps": 50,
+              "eff_fee_pct": 1.02,
+              "trades": 35,
+              "pnl": 248.46,
+              "wr": 51.4,
+              "pf": 1.1,
+              "dd": 26.1,
+              "pass": true
+            }
+          ],
+          "friction_2x_20bps": 778.23,
+          "candle_later_pnl": 248.46,
+          "jitter_pct_positive": 84.0,
+          "mc_ruin_pct": 0.0,
+          "top1_share": 9.5,
+          "top3_share": 25.6,
+          "verdict": "SOFT-GO"
+        }
+      }
+    }
+  },
+  "best_long_term": {
+    "universe": "TRADEABLE",
+    "config": "GRID_BEST",
+    "verdict": "GO"
+  }
+}

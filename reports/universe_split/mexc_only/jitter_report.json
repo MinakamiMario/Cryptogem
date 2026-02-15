@@ -1,0 +1,41 @@
+{
+  "timestamp": "2026-02-15 01:09:46",
+  "dataset": "temp_mexc_only.json",
+  "dataset_hash": "47bf8fdfdbb1",
+  "seed": 42,
+  "universe_mode": "all",
+  "coin_count": 1564,
+  "go_thresholds": {
+    "wf_min_pass": 4,
+    "wf_soft_pass": 3,
+    "wf_max_dd": 40.0,
+    "friction_go": "2x_fee+20bps",
+    "mc_p95_dd_max": 50.0,
+    "mc_ruin_max": 5.0,
+    "jitter_min_positive_pct": 70.0,
+    "univ_min_subsets_positive": 2,
+    "univ_top1_share_max": 0.5,
+    "univ_top3_share_max": 0.8
+  },
+  "kill_switch": {
+    "max_dd_pct": 30.0,
+    "max_consecutive_losses": 6,
+    "max_loss_streak_usd": -400,
+    "min_trades_before_eval": 10,
+    "wr_floor": 40.0
+  },
+  "results": {
+    "C1_TPSL_RSI45": {
+      "base_pnl": 1566.22,
+      "n_variants": 50,
+      "seed": 42,
+      "n_positive": 29,
+      "positive_pct": 58.0,
+      "median_pnl": 83.77,
+      "worst_pnl": -653.03,
+      "best_pnl": 2006.25,
+      "p10_pnl": -337.68,
+      "go": false
+    }
+  }
+}

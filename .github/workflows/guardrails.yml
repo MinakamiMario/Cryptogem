@@ -1,0 +1,34 @@
+name: Config Schema & Regression Tests
+
+on:
+  push:
+    paths:
+      - 'trading_bot/**'
+      - 'scripts/**'
+  pull_request:
+    paths:
+      - 'trading_bot/**'
+      - 'scripts/**'
+
+jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install numpy
+
+      - name: Schema check (no legacy tm_bars in active code)
+        run: python3 scripts/check_cfg_schema.py
+
+      - name: Regression tests (66 param sensitivity tests)
+        run: python3 trading_bot/test_param_sensitivity.py
+
+      - name: Context drift sentinel
+        run: python3 scripts/check_cfg_schema.py --check-context

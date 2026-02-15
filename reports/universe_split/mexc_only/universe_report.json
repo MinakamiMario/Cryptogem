@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-02-15 01:09:46",
+  "dataset": "temp_mexc_only.json",
+  "dataset_hash": "47bf8fdfdbb1",
+  "seed": 42,
+  "universe_mode": "all",
+  "coin_count": 1564,
+  "go_thresholds": {
+    "wf_min_pass": 4,
+    "wf_soft_pass": 3,
+    "wf_max_dd": 40.0,
+    "friction_go": "2x_fee+20bps",
+    "mc_p95_dd_max": 50.0,
+    "mc_ruin_max": 5.0,
+    "jitter_min_positive_pct": 70.0,
+    "univ_min_subsets_positive": 2,
+    "univ_top1_share_max": 0.5,
+    "univ_top3_share_max": 0.8
+  },
+  "kill_switch": {
+    "max_dd_pct": 30.0,
+    "max_consecutive_losses": 6,
+    "max_loss_streak_usd": -400,
+    "min_trades_before_eval": 10,
+    "wr_floor": 40.0
+  },
+  "results": {
+    "C1_TPSL_RSI45": {
+      "concentration": {
+        "top1_coin": "BILLY/USD",
+        "top1_share": 0.11,
+        "top3_coins": [
+          "BILLY/USD",
+          "GHIBLI/USD",
+          "CUDIS/USD"
+        ],
+        "top3_share": 0.327,
+        "unique_coins_traded": 29,
+        "total_profit": 4341.48,
+        "notop_pnl": 1088.06
+      },
+      "subsets": {
+        "top_volume": {
+          "n_coins": 521,
+          "trades": 21,
+          "pnl": -290.45,
+          "wr": 42.9,
+          "dd": 39.4,
+          "pf": 0.86,
+          "positive": false
+        },
+        "mid_volume": {
+          "n_coins": 521,
+          "trades": 15,
+          "pnl": 2807.69,
+          "wr": 66.7,
+          "dd": 17.2,
+          "pf": 5.44,
+          "positive": true
+        },
+        "exclude_top_winners": {
+          "n_coins": 1561,
+          "trades": 28,
+          "pnl": 11.03,
+          "wr": 46.4,
+          "dd": 45.9,
+          "pf": 1.0,
+          "positive": true
+        },
+        "random_50pct": {
+          "n_coins": 782,
+          "n_sims": 100,
+          "win_pct": 61.0,
+          "median_equity": 2277.0,
+          "p5_equity": 1203.0,
+          "positive": true
+        }
+      },
+      "n_positive_subsets": 3,
+      "go_universe": true,
+      "go_concentration": true,
+      "go": true
+    }
+  }
+}

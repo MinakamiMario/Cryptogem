@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-02-15 01:08:37",
+  "dataset": "candle_cache_tradeable.json",
+  "dataset_hash": "1e947af64862",
+  "seed": 42,
+  "universe_mode": "all",
+  "coin_count": 417,
+  "go_thresholds": {
+    "wf_min_pass": 4,
+    "wf_soft_pass": 3,
+    "wf_max_dd": 40.0,
+    "friction_go": "2x_fee+20bps",
+    "mc_p95_dd_max": 50.0,
+    "mc_ruin_max": 5.0,
+    "jitter_min_positive_pct": 70.0,
+    "univ_min_subsets_positive": 2,
+    "univ_top1_share_max": 0.5,
+    "univ_top3_share_max": 0.8
+  },
+  "kill_switch": {
+    "max_dd_pct": 30.0,
+    "max_consecutive_losses": 6,
+    "max_loss_streak_usd": -400,
+    "min_trades_before_eval": 10,
+    "wr_floor": 40.0
+  },
+  "results": {
+    "C1_TPSL_RSI45": {
+      "n_sims": 1000,
+      "n_trades": 27,
+      "seed": 42,
+      "equity": {
+        "p5": 3930.0,
+        "median": 3930.0,
+        "p95": 3930.0,
+        "win_pct": 100.0,
+        "cvar95": 3930.0
+      },
+      "max_dd": {
+        "p5": 19.4,
+        "median": 29.3,
+        "p95": 43.7
+      },
+      "ruin_prob_pct": 1.0,
+      "broke_pct": 0.0,
+      "go": true
+    }
+  }
+}

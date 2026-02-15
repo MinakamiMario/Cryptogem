@@ -1,0 +1,909 @@
+{
+  "config": {
+    "exit_type": "tp_sl",
+    "max_pos": 1,
+    "rsi_max": 45,
+    "sl_pct": 15,
+    "time_max_bars": 15,
+    "tp_pct": 15,
+    "vol_confirm": true,
+    "vol_spike_mult": 3.0
+  },
+  "research_all": {
+    "total_coins": 2090,
+    "coins_with_trades": 44,
+    "backtest": {
+      "trades": 45,
+      "pnl": 528.52,
+      "wr": 51.1,
+      "dd": 40.8,
+      "pf": 1.14,
+      "final_equity": 2528.52
+    },
+    "winners": 22,
+    "destroyers": 22,
+    "per_coin": {
+      "MF/USD": {
+        "coin": "MF/USD",
+        "trades": 2,
+        "total_pnl": 552.32,
+        "win_rate": 100.0,
+        "avg_pnl": 276.16,
+        "wins": 2,
+        "losses": 0,
+        "is_winner": true
+      },
+      "CHESS/USD": {
+        "coin": "CHESS/USD",
+        "trades": 1,
+        "total_pnl": 325.83,
+        "win_rate": 100.0,
+        "avg_pnl": 325.83,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "ZEUS/USD": {
+        "coin": "ZEUS/USD",
+        "trades": 1,
+        "total_pnl": 325.74,
+        "win_rate": 100.0,
+        "avg_pnl": 325.74,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "CLUB/USD": {
+        "coin": "CLUB/USD",
+        "trades": 1,
+        "total_pnl": 319.65,
+        "win_rate": 100.0,
+        "avg_pnl": 319.65,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "HMND/USD": {
+        "coin": "HMND/USD",
+        "trades": 1,
+        "total_pnl": 315.16,
+        "win_rate": 100.0,
+        "avg_pnl": 315.16,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "B3/USD": {
+        "coin": "B3/USD",
+        "trades": 1,
+        "total_pnl": 315.07,
+        "win_rate": 100.0,
+        "avg_pnl": 315.07,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "WCT/USD": {
+        "coin": "WCT/USD",
+        "trades": 1,
+        "total_pnl": 301.46,
+        "win_rate": 100.0,
+        "avg_pnl": 301.46,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "GHIBLI/USD": {
+        "coin": "GHIBLI/USD",
+        "trades": 1,
+        "total_pnl": 282.41,
+        "win_rate": 100.0,
+        "avg_pnl": 282.41,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "LOCK/USD": {
+        "coin": "LOCK/USD",
+        "trades": 1,
+        "total_pnl": 279.32,
+        "win_rate": 100.0,
+        "avg_pnl": 279.32,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "DYM/USD": {
+        "coin": "DYM/USD",
+        "trades": 1,
+        "total_pnl": 246.77,
+        "win_rate": 100.0,
+        "avg_pnl": 246.77,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "AITPROTOCOL/USD": {
+        "coin": "AITPROTOCOL/USD",
+        "trades": 1,
+        "total_pnl": 232.79,
+        "win_rate": 100.0,
+        "avg_pnl": 232.79,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "ES/USD": {
+        "coin": "ES/USD",
+        "trades": 1,
+        "total_pnl": 184.67,
+        "win_rate": 100.0,
+        "avg_pnl": 184.67,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "WEMIX/USD": {
+        "coin": "WEMIX/USD",
+        "trades": 1,
+        "total_pnl": 140.88,
+        "win_rate": 100.0,
+        "avg_pnl": 140.88,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "XPIN/USD": {
+        "coin": "XPIN/USD",
+        "trades": 1,
+        "total_pnl": 136.41,
+        "win_rate": 100.0,
+        "avg_pnl": 136.41,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "UMA/USD": {
+        "coin": "UMA/USD",
+        "trades": 1,
+        "total_pnl": 95.18,
+        "win_rate": 100.0,
+        "avg_pnl": 95.18,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "DEXTF/USD": {
+        "coin": "DEXTF/USD",
+        "trades": 1,
+        "total_pnl": 85.03,
+        "win_rate": 100.0,
+        "avg_pnl": 85.03,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "DYDX/USD": {
+        "coin": "DYDX/USD",
+        "trades": 1,
+        "total_pnl": 77.1,
+        "win_rate": 100.0,
+        "avg_pnl": 77.1,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "UBERON/USD": {
+        "coin": "UBERON/USD",
+        "trades": 1,
+        "total_pnl": 68.73,
+        "win_rate": 100.0,
+        "avg_pnl": 68.73,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "KNC/USD": {
+        "coin": "KNC/USD",
+        "trades": 1,
+        "total_pnl": 67.99,
+        "win_rate": 100.0,
+        "avg_pnl": 67.99,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "QI/USD": {
+        "coin": "QI/USD",
+        "trades": 1,
+        "total_pnl": 31.68,
+        "win_rate": 100.0,
+        "avg_pnl": 31.68,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "RPL/USD": {
+        "coin": "RPL/USD",
+        "trades": 1,
+        "total_pnl": 23.17,
+        "win_rate": 100.0,
+        "avg_pnl": 23.17,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "AMZNX/USD": {
+        "coin": "AMZNX/USD",
+        "trades": 1,
+        "total_pnl": 9.05,
+        "win_rate": 100.0,
+        "avg_pnl": 9.05,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "PMG/USD": {
+        "coin": "PMG/USD",
+        "trades": 1,
+        "total_pnl": -6.67,
+        "win_rate": 0.0,
+        "avg_pnl": -6.67,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "NERO/USD": {
+        "coin": "NERO/USD",
+        "trades": 1,
+        "total_pnl": -11.99,
+        "win_rate": 0.0,
+        "avg_pnl": -11.99,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "MAON/USD": {
+        "coin": "MAON/USD",
+        "trades": 1,
+        "total_pnl": -13.8,
+        "win_rate": 0.0,
+        "avg_pnl": -13.8,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "BABYBONK/USD": {
+        "coin": "BABYBONK/USD",
+        "trades": 1,
+        "total_pnl": -17.59,
+        "win_rate": 0.0,
+        "avg_pnl": -17.59,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "GSON/USD": {
+        "coin": "GSON/USD",
+        "trades": 1,
+        "total_pnl": -20.86,
+        "win_rate": 0.0,
+        "avg_pnl": -20.86,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "NEIRO/USD": {
+        "coin": "NEIRO/USD",
+        "trades": 1,
+        "total_pnl": -23.77,
+        "win_rate": 0.0,
+        "avg_pnl": -23.77,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "ACA/USD": {
+        "coin": "ACA/USD",
+        "trades": 1,
+        "total_pnl": -24.4,
+        "win_rate": 0.0,
+        "avg_pnl": -24.4,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "APR/USD": {
+        "coin": "APR/USD",
+        "trades": 1,
+        "total_pnl": -33.93,
+        "win_rate": 0.0,
+        "avg_pnl": -33.93,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "YOLO/USD": {
+        "coin": "YOLO/USD",
+        "trades": 1,
+        "total_pnl": -41.92,
+        "win_rate": 0.0,
+        "avg_pnl": -41.92,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "DINGO/USD": {
+        "coin": "DINGO/USD",
+        "trades": 1,
+        "total_pnl": -65.42,
+        "win_rate": 0.0,
+        "avg_pnl": -65.42,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "NTRN/USD": {
+        "coin": "NTRN/USD",
+        "trades": 1,
+        "total_pnl": -67.6,
+        "win_rate": 0.0,
+        "avg_pnl": -67.6,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "OBOL/USD": {
+        "coin": "OBOL/USD",
+        "trades": 1,
+        "total_pnl": -125.92,
+        "win_rate": 0.0,
+        "avg_pnl": -125.92,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "AI3/USD": {
+        "coin": "AI3/USD",
+        "trades": 1,
+        "total_pnl": -146.1,
+        "win_rate": 0.0,
+        "avg_pnl": -146.1,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "MORE/USD": {
+        "coin": "MORE/USD",
+        "trades": 1,
+        "total_pnl": -309.85,
+        "win_rate": 0.0,
+        "avg_pnl": -309.85,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "EAT/USD": {
+        "coin": "EAT/USD",
+        "trades": 1,
+        "total_pnl": -313.0,
+        "win_rate": 0.0,
+        "avg_pnl": -313.0,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "HAIO/USD": {
+        "coin": "HAIO/USD",
+        "trades": 1,
+        "total_pnl": -323.6,
+        "win_rate": 0.0,
+        "avg_pnl": -323.6,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "AKE/USD": {
+        "coin": "AKE/USD",
+        "trades": 1,
+        "total_pnl": -366.61,
+        "win_rate": 0.0,
+        "avg_pnl": -366.61,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "BERA/USD": {
+        "coin": "BERA/USD",
+        "trades": 1,
+        "total_pnl": -379.33,
+        "win_rate": 0.0,
+        "avg_pnl": -379.33,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "MASA/USD": {
+        "coin": "MASA/USD",
+        "trades": 1,
+        "total_pnl": -382.87,
+        "win_rate": 0.0,
+        "avg_pnl": -382.87,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "COQ/USD": {
+        "coin": "COQ/USD",
+        "trades": 1,
+        "total_pnl": -399.63,
+        "win_rate": 0.0,
+        "avg_pnl": -399.63,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "MOCHI/USD": {
+        "coin": "MOCHI/USD",
+        "trades": 1,
+        "total_pnl": -399.74,
+        "win_rate": 0.0,
+        "avg_pnl": -399.74,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "SNIFT/USD": {
+        "coin": "SNIFT/USD",
+        "trades": 1,
+        "total_pnl": -413.28,
+        "win_rate": 0.0,
+        "avg_pnl": -413.28,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      }
+    },
+    "top10_winners": [
+      "MF/USD",
+      "CHESS/USD",
+      "ZEUS/USD",
+      "CLUB/USD",
+      "HMND/USD",
+      "B3/USD",
+      "WCT/USD",
+      "GHIBLI/USD",
+      "LOCK/USD",
+      "DYM/USD"
+    ],
+    "top10_destroyers": [
+      "SNIFT/USD",
+      "MOCHI/USD",
+      "COQ/USD",
+      "MASA/USD",
+      "BERA/USD",
+      "AKE/USD",
+      "HAIO/USD",
+      "EAT/USD",
+      "MORE/USD",
+      "AI3/USD"
+    ],
+    "exclusion_test_10": {
+      "excluded": [
+        "AI3/USD",
+        "AKE/USD",
+        "BERA/USD",
+        "COQ/USD",
+        "EAT/USD",
+        "HAIO/USD",
+        "MASA/USD",
+        "MOCHI/USD",
+        "MORE/USD",
+        "SNIFT/USD"
+      ],
+      "metrics": {
+        "trades": 41,
+        "pnl": 7458.64,
+        "wr": 61.0,
+        "dd": 17.9,
+        "pf": 4.64,
+        "final_equity": 9458.64
+      }
+    },
+    "exclusion_test_25": {
+      "excluded": [
+        "ACA/USD",
+        "AI3/USD",
+        "AKE/USD",
+        "AMZNX/USD",
+        "APR/USD",
+        "BABYBONK/USD",
+        "BERA/USD",
+        "COQ/USD",
+        "DINGO/USD",
+        "EAT/USD",
+        "GSON/USD",
+        "HAIO/USD",
+        "MAON/USD",
+        "MASA/USD",
+        "MOCHI/USD",
+        "MORE/USD",
+        "NEIRO/USD",
+        "NERO/USD",
+        "NTRN/USD",
+        "OBOL/USD",
+        "PMG/USD",
+        "QI/USD",
+        "RPL/USD",
+        "SNIFT/USD",
+        "YOLO/USD"
+      ],
+      "metrics": {
+        "trades": 40,
+        "pnl": 7741.42,
+        "wr": 70.0,
+        "dd": 27.8,
+        "pf": 3.8,
+        "final_equity": 9741.42
+      }
+    }
+  },
+  "live_current": {
+    "total_coins": 526,
+    "coins_with_trades": 28,
+    "backtest": {
+      "trades": 30,
+      "pnl": 3745.5,
+      "wr": 70.0,
+      "dd": 27.9,
+      "pf": 3.31,
+      "final_equity": 5745.5
+    },
+    "top1_share_pct": 16.9,
+    "top3_share_pct": 43.0,
+    "top1_coin": "MF/USD",
+    "loo_results": [
+      {
+        "coin": "MF/USD",
+        "coin_pnl": 907.53,
+        "without_pnl": 1707.82,
+        "delta_pnl": -2037.68,
+        "without_trades": 29,
+        "without_wr": 65.5
+      },
+      {
+        "coin": "B3/USD",
+        "coin_pnl": 786.47,
+        "without_pnl": 3412.18,
+        "delta_pnl": -333.32,
+        "without_trades": 29,
+        "without_wr": 69.0
+      },
+      {
+        "coin": "XCN/USD",
+        "coin_pnl": 616.68,
+        "without_pnl": 3663.75,
+        "delta_pnl": -81.75,
+        "without_trades": 29,
+        "without_wr": 69.0
+      },
+      {
+        "coin": "ZEUS/USD",
+        "coin_pnl": 538.87,
+        "without_pnl": 3020.49,
+        "delta_pnl": -725.01,
+        "without_trades": 29,
+        "without_wr": 69.0
+      },
+      {
+        "coin": "DYM/USD",
+        "coin_pnl": 475.96,
+        "without_pnl": 3262.24,
+        "delta_pnl": -483.26,
+        "without_trades": 29,
+        "without_wr": 72.4
+      }
+    ],
+    "per_coin": {
+      "MF/USD": {
+        "coin": "MF/USD",
+        "trades": 2,
+        "total_pnl": 907.53,
+        "win_rate": 100.0,
+        "avg_pnl": 453.77,
+        "wins": 2,
+        "losses": 0,
+        "is_winner": true
+      },
+      "B3/USD": {
+        "coin": "B3/USD",
+        "trades": 2,
+        "total_pnl": 786.47,
+        "win_rate": 100.0,
+        "avg_pnl": 393.23,
+        "wins": 2,
+        "losses": 0,
+        "is_winner": true
+      },
+      "XCN/USD": {
+        "coin": "XCN/USD",
+        "trades": 1,
+        "total_pnl": 616.68,
+        "win_rate": 100.0,
+        "avg_pnl": 616.68,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "ZEUS/USD": {
+        "coin": "ZEUS/USD",
+        "trades": 1,
+        "total_pnl": 538.87,
+        "win_rate": 100.0,
+        "avg_pnl": 538.87,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "DYM/USD": {
+        "coin": "DYM/USD",
+        "trades": 1,
+        "total_pnl": 475.96,
+        "win_rate": 100.0,
+        "avg_pnl": 475.96,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "WCT/USD": {
+        "coin": "WCT/USD",
+        "trades": 1,
+        "total_pnl": 306.16,
+        "win_rate": 100.0,
+        "avg_pnl": 306.16,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "ES/USD": {
+        "coin": "ES/USD",
+        "trades": 1,
+        "total_pnl": 305.5,
+        "win_rate": 100.0,
+        "avg_pnl": 305.5,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "M/USD": {
+        "coin": "M/USD",
+        "trades": 1,
+        "total_pnl": 289.11,
+        "win_rate": 100.0,
+        "avg_pnl": 289.11,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "BIGTIME/USD": {
+        "coin": "BIGTIME/USD",
+        "trades": 1,
+        "total_pnl": 229.18,
+        "win_rate": 100.0,
+        "avg_pnl": 229.18,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "TANSSI/USD": {
+        "coin": "TANSSI/USD",
+        "trades": 1,
+        "total_pnl": 182.86,
+        "win_rate": 100.0,
+        "avg_pnl": 182.86,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "UMA/USD": {
+        "coin": "UMA/USD",
+        "trades": 1,
+        "total_pnl": 157.45,
+        "win_rate": 100.0,
+        "avg_pnl": 157.45,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "SGB/USD": {
+        "coin": "SGB/USD",
+        "trades": 1,
+        "total_pnl": 119.86,
+        "win_rate": 100.0,
+        "avg_pnl": 119.86,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "XTER/USD": {
+        "coin": "XTER/USD",
+        "trades": 1,
+        "total_pnl": 113.4,
+        "win_rate": 100.0,
+        "avg_pnl": 113.4,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "DYDX/USD": {
+        "coin": "DYDX/USD",
+        "trades": 1,
+        "total_pnl": 105.33,
+        "win_rate": 100.0,
+        "avg_pnl": 105.33,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "QI/USD": {
+        "coin": "QI/USD",
+        "trades": 1,
+        "total_pnl": 71.98,
+        "win_rate": 100.0,
+        "avg_pnl": 71.98,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "OGN/USD": {
+        "coin": "OGN/USD",
+        "trades": 1,
+        "total_pnl": 52.67,
+        "win_rate": 100.0,
+        "avg_pnl": 52.67,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "BTT/USD": {
+        "coin": "BTT/USD",
+        "trades": 1,
+        "total_pnl": 51.54,
+        "win_rate": 100.0,
+        "avg_pnl": 51.54,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "SOLV/USD": {
+        "coin": "SOLV/USD",
+        "trades": 1,
+        "total_pnl": 34.07,
+        "win_rate": 100.0,
+        "avg_pnl": 34.07,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "PYTH/USD": {
+        "coin": "PYTH/USD",
+        "trades": 1,
+        "total_pnl": 23.45,
+        "win_rate": 100.0,
+        "avg_pnl": 23.45,
+        "wins": 1,
+        "losses": 0,
+        "is_winner": true
+      },
+      "LCX/USD": {
+        "coin": "LCX/USD",
+        "trades": 1,
+        "total_pnl": -3.79,
+        "win_rate": 0.0,
+        "avg_pnl": -3.79,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "GAIA/USD": {
+        "coin": "GAIA/USD",
+        "trades": 1,
+        "total_pnl": -16.13,
+        "win_rate": 0.0,
+        "avg_pnl": -16.13,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "ACA/USD": {
+        "coin": "ACA/USD",
+        "trades": 1,
+        "total_pnl": -28.41,
+        "win_rate": 0.0,
+        "avg_pnl": -28.41,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "KULA/USD": {
+        "coin": "KULA/USD",
+        "trades": 1,
+        "total_pnl": -44.85,
+        "win_rate": 0.0,
+        "avg_pnl": -44.85,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "VELVET/USD": {
+        "coin": "VELVET/USD",
+        "trades": 1,
+        "total_pnl": -125.68,
+        "win_rate": 0.0,
+        "avg_pnl": -125.68,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "GHST/USD": {
+        "coin": "GHST/USD",
+        "trades": 1,
+        "total_pnl": -158.86,
+        "win_rate": 0.0,
+        "avg_pnl": -158.86,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "AI3/USD": {
+        "coin": "AI3/USD",
+        "trades": 1,
+        "total_pnl": -241.69,
+        "win_rate": 0.0,
+        "avg_pnl": -241.69,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "AKE/USD": {
+        "coin": "AKE/USD",
+        "trades": 1,
+        "total_pnl": -375.61,
+        "win_rate": 0.0,
+        "avg_pnl": -375.61,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      },
+      "BERA/USD": {
+        "coin": "BERA/USD",
+        "trades": 1,
+        "total_pnl": -627.53,
+        "win_rate": 0.0,
+        "avg_pnl": -627.53,
+        "wins": 0,
+        "losses": 1,
+        "is_winner": false
+      }
+    }
+  },
+  "venue_breakdown": {
+    "mexc_only_count": 1568,
+    "mexc_with_trades": 26,
+    "mexc_winners": 12,
+    "mexc_destroyers": 14,
+    "mexc_total_pnl": -212.56,
+    "mexc_trades": 26,
+    "mexc_avg_pnl": -8.18,
+    "kraken_with_trades": 18,
+    "kraken_winners": 10,
+    "kraken_destroyers": 8,
+    "kraken_total_pnl": 741.09,
+    "kraken_trades": 19,
+    "kraken_avg_pnl": 39.0
+  },
+  "conclusion": {
+    "mexc_dilutes_edge": "JA",
+    "evidence": "MEXC P&L: $-213 (26tr avg$-8.18), Kraken P&L: $+741 (19tr avg$+39.00)"
+  }
+}

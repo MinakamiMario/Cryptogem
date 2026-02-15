@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-02-14 23:55:30",
+  "dataset": "candle_cache_unfiltered.json",
+  "dataset_hash": "0bd301f2488b",
+  "seed": 42,
+  "universe_mode": "all",
+  "coin_count": 884,
+  "go_thresholds": {
+    "wf_min_pass": 4,
+    "wf_soft_pass": 3,
+    "wf_max_dd": 40.0,
+    "friction_go": "2x_fee+20bps",
+    "mc_p95_dd_max": 50.0,
+    "mc_ruin_max": 5.0,
+    "jitter_min_positive_pct": 70.0,
+    "univ_min_subsets_positive": 2,
+    "univ_top1_share_max": 0.5,
+    "univ_top3_share_max": 0.8
+  },
+  "kill_switch": {
+    "max_dd_pct": 30.0,
+    "max_consecutive_losses": 6,
+    "max_loss_streak_usd": -400,
+    "min_trades_before_eval": 10,
+    "wr_floor": 40.0
+  },
+  "results": {
+    "C1_TPSL_RSI45": {
+      "concentration": {
+        "top1_coin": "ZEUS/USD",
+        "top1_share": 0.096,
+        "top3_coins": [
+          "ZEUS/USD",
+          "B3/USD",
+          "MF/USD"
+        ],
+        "top3_share": 0.277,
+        "unique_coins_traded": 34,
+        "total_profit": 4271.55,
+        "notop_pnl": 780.82
+      },
+      "subsets": {
+        "top_volume": {
+          "n_coins": 294,
+          "trades": 20,
+          "pnl": -228.75,
+          "wr": 50.0,
+          "dd": 44.5,
+          "pf": 0.89,
+          "positive": false
+        },
+        "mid_volume": {
+          "n_coins": 295,
+          "trades": 24,
+          "pnl": 3442.3,
+          "wr": 75.0,
+          "dd": 23.0,
+          "pf": 3.23,
+          "positive": true
+        },
+        "exclude_top_winners": {
+          "n_coins": 881,
+          "trades": 32,
+          "pnl": 679.95,
+          "wr": 56.2,
+          "dd": 32.2,
+          "pf": 1.23,
+          "positive": true
+        },
+        "random_50pct": {
+          "n_coins": 442,
+          "n_sims": 100,
+          "win_pct": 88.0,
+          "median_equity": 3328.0,
+          "p5_equity": 1729.0,
+          "positive": true
+        }
+      },
+      "n_positive_subsets": 3,
+      "go_universe": true,
+      "go_concentration": true,
+      "go": true
+    }
+  }
+}

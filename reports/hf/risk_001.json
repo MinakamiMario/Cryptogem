@@ -1,0 +1,750 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15 12:53",
+    "universe": "tradeable",
+    "data_file": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/data/candle_cache_tradeable.json",
+    "n_coins": 425,
+    "total_bars": 721,
+    "window_size": 180,
+    "friction_levels": 7,
+    "total_time_s": 25.67,
+    "variant": "4H variant research"
+  },
+  "configs": {
+    "Champion_H2": {
+      "label": "Champion_H2",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_confirm": true,
+        "vol_spike_mult": 3.0
+      },
+      "baseline": {
+        "trades": 31,
+        "wr": 67.7,
+        "pnl": 4113.5,
+        "final_equity": 6113.5,
+        "pf": 2.73,
+        "dd": 24.7,
+        "broke": false
+      },
+      "trade_sufficiency": {
+        "warning": null,
+        "trades": 31,
+        "minimum_required": 20
+      },
+      "drawdown_windows": [
+        {
+          "window": 1,
+          "bar_start": 50,
+          "bar_end": 230,
+          "trades": 9,
+          "pnl": 140.67,
+          "max_dd_pct": 18.9,
+          "flagged_dd_gt_30": false
+        },
+        {
+          "window": 2,
+          "bar_start": 230,
+          "bar_end": 410,
+          "trades": 5,
+          "pnl": 633.11,
+          "max_dd_pct": 8.5,
+          "flagged_dd_gt_30": false
+        },
+        {
+          "window": 3,
+          "bar_start": 410,
+          "bar_end": 590,
+          "trades": 8,
+          "pnl": 1161.09,
+          "max_dd_pct": 14.6,
+          "flagged_dd_gt_30": false
+        },
+        {
+          "window": 4,
+          "bar_start": 590,
+          "bar_end": 771,
+          "trades": 9,
+          "pnl": 2178.63,
+          "max_dd_pct": 8.5,
+          "flagged_dd_gt_30": false
+        }
+      ],
+      "worst_coin": {
+        "coins_traded": 30,
+        "coin_details": [
+          {
+            "pair": "COQ/USD",
+            "pnl": -410.22,
+            "trades": 1,
+            "pnl_pct_of_total": -10.0
+          },
+          {
+            "pair": "APR/USD",
+            "pnl": -351.23,
+            "trades": 1,
+            "pnl_pct_of_total": -8.5
+          },
+          {
+            "pair": "BERA/USD",
+            "pnl": -347.95,
+            "trades": 1,
+            "pnl_pct_of_total": -8.5
+          },
+          {
+            "pair": "AI3/USD",
+            "pnl": -250.65,
+            "trades": 1,
+            "pnl_pct_of_total": -6.1
+          },
+          {
+            "pair": "BLUR/USD",
+            "pnl": -248.59,
+            "trades": 1,
+            "pnl_pct_of_total": -6.0
+          },
+          {
+            "pair": "AKE/USD",
+            "pnl": -215.31,
+            "trades": 1,
+            "pnl_pct_of_total": -5.2
+          },
+          {
+            "pair": "GHST/USD",
+            "pnl": -197.01,
+            "trades": 1,
+            "pnl_pct_of_total": -4.8
+          },
+          {
+            "pair": "YGG/USD",
+            "pnl": -189.45,
+            "trades": 1,
+            "pnl_pct_of_total": -4.6
+          },
+          {
+            "pair": "PUFFER/USD",
+            "pnl": -106.02,
+            "trades": 1,
+            "pnl_pct_of_total": -2.6
+          },
+          {
+            "pair": "SGB/USD",
+            "pnl": -66.88,
+            "trades": 1,
+            "pnl_pct_of_total": -1.6
+          },
+          {
+            "pair": "RPL/USD",
+            "pnl": 29.3,
+            "trades": 1,
+            "pnl_pct_of_total": 0.7
+          },
+          {
+            "pair": "OGN/USD",
+            "pnl": 57.3,
+            "trades": 1,
+            "pnl_pct_of_total": 1.4
+          },
+          {
+            "pair": "KNC/USD",
+            "pnl": 97.51,
+            "trades": 1,
+            "pnl_pct_of_total": 2.4
+          },
+          {
+            "pair": "KGEN/USD",
+            "pnl": 155.95,
+            "trades": 1,
+            "pnl_pct_of_total": 3.8
+          },
+          {
+            "pair": "UMA/USD",
+            "pnl": 159.02,
+            "trades": 1,
+            "pnl_pct_of_total": 3.9
+          },
+          {
+            "pair": "BTT/USD",
+            "pnl": 228.98,
+            "trades": 1,
+            "pnl_pct_of_total": 5.6
+          },
+          {
+            "pair": "SOON/USD",
+            "pnl": 233.5,
+            "trades": 1,
+            "pnl_pct_of_total": 5.7
+          },
+          {
+            "pair": "BIGTIME/USD",
+            "pnl": 238.65,
+            "trades": 1,
+            "pnl_pct_of_total": 5.8
+          },
+          {
+            "pair": "M/USD",
+            "pnl": 245.08,
+            "trades": 1,
+            "pnl_pct_of_total": 6.0
+          },
+          {
+            "pair": "WCT/USD",
+            "pnl": 260.23,
+            "trades": 1,
+            "pnl_pct_of_total": 6.3
+          },
+          {
+            "pair": "DYDX/USD",
+            "pnl": 300.46,
+            "trades": 1,
+            "pnl_pct_of_total": 7.3
+          },
+          {
+            "pair": "LCX/USD",
+            "pnl": 317.56,
+            "trades": 1,
+            "pnl_pct_of_total": 7.7
+          },
+          {
+            "pair": "DYM/USD",
+            "pnl": 380.91,
+            "trades": 1,
+            "pnl_pct_of_total": 9.3
+          },
+          {
+            "pair": "GHIBLI/USD",
+            "pnl": 424.52,
+            "trades": 1,
+            "pnl_pct_of_total": 10.3
+          },
+          {
+            "pair": "ES/USD",
+            "pnl": 428.87,
+            "trades": 1,
+            "pnl_pct_of_total": 10.4
+          },
+          {
+            "pair": "ZEUS/USD",
+            "pnl": 495.82,
+            "trades": 1,
+            "pnl_pct_of_total": 12.1
+          },
+          {
+            "pair": "MOODENG/USD",
+            "pnl": 505.62,
+            "trades": 1,
+            "pnl_pct_of_total": 12.3
+          },
+          {
+            "pair": "CHEEMS/USD",
+            "pnl": 563.51,
+            "trades": 1,
+            "pnl_pct_of_total": 13.7
+          },
+          {
+            "pair": "U/USD",
+            "pnl": 628.02,
+            "trades": 1,
+            "pnl_pct_of_total": 15.3
+          },
+          {
+            "pair": "MF/USD",
+            "pnl": 746.0,
+            "trades": 2,
+            "pnl_pct_of_total": 18.1
+          }
+        ],
+        "worst_1": {
+          "pair": "COQ/USD",
+          "pnl": -410.22,
+          "pnl_without": 4523.73,
+          "delta": 410.22
+        },
+        "worst_3": {
+          "pairs": [
+            "COQ/USD",
+            "APR/USD",
+            "BERA/USD"
+          ],
+          "combined_pnl": -1109.4,
+          "pnl_without": 5222.91,
+          "delta": 1109.4
+        }
+      },
+      "friction_ladder": {
+        "ladder": [
+          {
+            "label": "baseline",
+            "fee": 0.0026,
+            "fee_bps": 26.0,
+            "pnl": 4113.5,
+            "trades": 31,
+            "dd": 24.7,
+            "profitable": true
+          },
+          {
+            "label": "1.5x_fees",
+            "fee": 0.0039,
+            "fee_bps": 39.0,
+            "pnl": 3645.63,
+            "trades": 31,
+            "dd": 25.3,
+            "profitable": true
+          },
+          {
+            "label": "2x_fees",
+            "fee": 0.0052,
+            "fee_bps": 52.0,
+            "pnl": 3212.5,
+            "trades": 31,
+            "dd": 25.9,
+            "profitable": true
+          },
+          {
+            "label": "2x+10bps",
+            "fee": 0.0062,
+            "fee_bps": 62.0,
+            "pnl": 2901.38,
+            "trades": 31,
+            "dd": 26.4,
+            "profitable": true
+          },
+          {
+            "label": "2x+20bps",
+            "fee": 0.0072,
+            "fee_bps": 72.0,
+            "pnl": 2608.27,
+            "trades": 31,
+            "dd": 26.9,
+            "profitable": true
+          },
+          {
+            "label": "2x+35bps",
+            "fee": 0.0087,
+            "fee_bps": 87.0,
+            "pnl": 2200.16,
+            "trades": 31,
+            "dd": 27.5,
+            "profitable": true
+          },
+          {
+            "label": "1_candle_later",
+            "fee": 0.0102,
+            "fee_bps": 102.0,
+            "pnl": 1827.13,
+            "trades": 31,
+            "dd": 28.2,
+            "profitable": true
+          }
+        ],
+        "breakeven_fee": null,
+        "breakeven_fee_bps": null,
+        "breakeven_note": "Still profitable at max tested friction"
+      },
+      "latency_sensitivity": {
+        "baseline_pnl": 4113.5,
+        "one_candle_later_pnl": 1827.13,
+        "pnl_delta": -2286.37,
+        "pnl_delta_pct": -55.6,
+        "still_profitable": true,
+        "fee_used_bps": 102.0
+      },
+      "consecutive_losses": {
+        "max_consecutive_losses": 3,
+        "worst_streak_by_length": {
+          "length": 3,
+          "pnl": -479.2,
+          "start_idx": 4,
+          "end_idx": 6
+        },
+        "worst_streak_by_pnl": {
+          "length": 2,
+          "pnl": -601.88,
+          "start_idx": 19,
+          "end_idx": 20
+        },
+        "equity_impact_pct": 14.6,
+        "equity_before_worst": 4132.54,
+        "equity_after_worst": 3530.66,
+        "total_losing_streaks": 7,
+        "streak_length_distribution": {
+          "1": 5,
+          "2": 1,
+          "3": 1
+        }
+      }
+    },
+    "GRID_BEST": {
+      "label": "GRID_BEST",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 10,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_confirm": true,
+        "vol_spike_mult": 2.5
+      },
+      "baseline": {
+        "trades": 32,
+        "wr": 68.8,
+        "pnl": 4718.27,
+        "final_equity": 6718.27,
+        "pf": 2.61,
+        "dd": 16.4,
+        "broke": false
+      },
+      "trade_sufficiency": {
+        "warning": null,
+        "trades": 32,
+        "minimum_required": 20
+      },
+      "drawdown_windows": [
+        {
+          "window": 1,
+          "bar_start": 50,
+          "bar_end": 230,
+          "trades": 9,
+          "pnl": 376.57,
+          "max_dd_pct": 10.5,
+          "flagged_dd_gt_30": false
+        },
+        {
+          "window": 2,
+          "bar_start": 230,
+          "bar_end": 410,
+          "trades": 6,
+          "pnl": 1288.18,
+          "max_dd_pct": 5.4,
+          "flagged_dd_gt_30": false
+        },
+        {
+          "window": 3,
+          "bar_start": 410,
+          "bar_end": 590,
+          "trades": 8,
+          "pnl": 854.25,
+          "max_dd_pct": 16.4,
+          "flagged_dd_gt_30": false
+        },
+        {
+          "window": 4,
+          "bar_start": 590,
+          "bar_end": 771,
+          "trades": 9,
+          "pnl": 2199.26,
+          "max_dd_pct": 10.5,
+          "flagged_dd_gt_30": false
+        }
+      ],
+      "worst_coin": {
+        "coins_traded": 30,
+        "coin_details": [
+          {
+            "pair": "COQ/USD",
+            "pnl": -569.01,
+            "trades": 1,
+            "pnl_pct_of_total": -12.1
+          },
+          {
+            "pair": "APR/USD",
+            "pnl": -509.15,
+            "trades": 1,
+            "pnl_pct_of_total": -10.8
+          },
+          {
+            "pair": "BERA/USD",
+            "pnl": -493.39,
+            "trades": 1,
+            "pnl_pct_of_total": -10.5
+          },
+          {
+            "pair": "AI3/USD",
+            "pnl": -287.86,
+            "trades": 1,
+            "pnl_pct_of_total": -6.1
+          },
+          {
+            "pair": "AKE/USD",
+            "pnl": -260.05,
+            "trades": 1,
+            "pnl_pct_of_total": -5.5
+          },
+          {
+            "pair": "YGG/USD",
+            "pnl": -233.91,
+            "trades": 1,
+            "pnl_pct_of_total": -5.0
+          },
+          {
+            "pair": "USUAL/USD",
+            "pnl": -194.18,
+            "trades": 1,
+            "pnl_pct_of_total": -4.1
+          },
+          {
+            "pair": "GHST/USD",
+            "pnl": -191.5,
+            "trades": 1,
+            "pnl_pct_of_total": -4.1
+          },
+          {
+            "pair": "PUFFER/USD",
+            "pnl": -140.08,
+            "trades": 1,
+            "pnl_pct_of_total": -3.0
+          },
+          {
+            "pair": "HPOS10I/USD",
+            "pnl": -42.43,
+            "trades": 1,
+            "pnl_pct_of_total": -0.9
+          },
+          {
+            "pair": "RPL/USD",
+            "pnl": 32.53,
+            "trades": 1,
+            "pnl_pct_of_total": 0.7
+          },
+          {
+            "pair": "OGN/USD",
+            "pnl": 63.61,
+            "trades": 1,
+            "pnl_pct_of_total": 1.3
+          },
+          {
+            "pair": "KGEN/USD",
+            "pnl": 175.19,
+            "trades": 1,
+            "pnl_pct_of_total": 3.7
+          },
+          {
+            "pair": "UMA/USD",
+            "pnl": 182.63,
+            "trades": 1,
+            "pnl_pct_of_total": 3.9
+          },
+          {
+            "pair": "SOON/USD",
+            "pnl": 228.41,
+            "trades": 1,
+            "pnl_pct_of_total": 4.8
+          },
+          {
+            "pair": "BTT/USD",
+            "pnl": 228.98,
+            "trades": 1,
+            "pnl_pct_of_total": 4.9
+          },
+          {
+            "pair": "TANSSI/USD",
+            "pnl": 239.99,
+            "trades": 1,
+            "pnl_pct_of_total": 5.1
+          },
+          {
+            "pair": "WCT/USD",
+            "pnl": 254.56,
+            "trades": 1,
+            "pnl_pct_of_total": 5.4
+          },
+          {
+            "pair": "BIGTIME/USD",
+            "pnl": 264.95,
+            "trades": 1,
+            "pnl_pct_of_total": 5.6
+          },
+          {
+            "pair": "M/USD",
+            "pnl": 272.09,
+            "trades": 1,
+            "pnl_pct_of_total": 5.8
+          },
+          {
+            "pair": "DYDX/USD",
+            "pnl": 333.57,
+            "trades": 1,
+            "pnl_pct_of_total": 7.1
+          },
+          {
+            "pair": "ME/USD",
+            "pnl": 371.76,
+            "trades": 1,
+            "pnl_pct_of_total": 7.9
+          },
+          {
+            "pair": "LCX/USD",
+            "pnl": 419.57,
+            "trades": 1,
+            "pnl_pct_of_total": 8.9
+          },
+          {
+            "pair": "ES/USD",
+            "pnl": 481.79,
+            "trades": 1,
+            "pnl_pct_of_total": 10.2
+          },
+          {
+            "pair": "GHIBLI/USD",
+            "pnl": 498.41,
+            "trades": 1,
+            "pnl_pct_of_total": 10.6
+          },
+          {
+            "pair": "MOODENG/USD",
+            "pnl": 555.64,
+            "trades": 1,
+            "pnl_pct_of_total": 11.8
+          },
+          {
+            "pair": "ZEUS/USD",
+            "pnl": 557.01,
+            "trades": 1,
+            "pnl_pct_of_total": 11.8
+          },
+          {
+            "pair": "U/USD",
+            "pnl": 690.15,
+            "trades": 1,
+            "pnl_pct_of_total": 14.6
+          },
+          {
+            "pair": "CHEEMS/USD",
+            "pnl": 873.18,
+            "trades": 2,
+            "pnl_pct_of_total": 18.5
+          },
+          {
+            "pair": "MF/USD",
+            "pnl": 915.79,
+            "trades": 2,
+            "pnl_pct_of_total": 19.4
+          }
+        ],
+        "worst_1": {
+          "pair": "COQ/USD",
+          "pnl": -569.01,
+          "pnl_without": 5287.28,
+          "delta": 569.01
+        },
+        "worst_3": {
+          "pairs": [
+            "COQ/USD",
+            "APR/USD",
+            "BERA/USD"
+          ],
+          "combined_pnl": -1571.55,
+          "pnl_without": 6289.81,
+          "delta": 1571.55
+        }
+      },
+      "friction_ladder": {
+        "ladder": [
+          {
+            "label": "baseline",
+            "fee": 0.0026,
+            "fee_bps": 26.0,
+            "pnl": 4718.27,
+            "trades": 32,
+            "dd": 16.4,
+            "profitable": true
+          },
+          {
+            "label": "1.5x_fees",
+            "fee": 0.0039,
+            "fee_bps": 39.0,
+            "pnl": 4188.58,
+            "trades": 32,
+            "dd": 16.9,
+            "profitable": true
+          },
+          {
+            "label": "2x_fees",
+            "fee": 0.0052,
+            "fee_bps": 52.0,
+            "pnl": 3699.45,
+            "trades": 32,
+            "dd": 17.3,
+            "profitable": true
+          },
+          {
+            "label": "2x+10bps",
+            "fee": 0.0062,
+            "fee_bps": 62.0,
+            "pnl": 3348.89,
+            "trades": 32,
+            "dd": 17.7,
+            "profitable": true
+          },
+          {
+            "label": "2x+20bps",
+            "fee": 0.0072,
+            "fee_bps": 72.0,
+            "pnl": 3019.26,
+            "trades": 32,
+            "dd": 18.0,
+            "profitable": true
+          },
+          {
+            "label": "2x+35bps",
+            "fee": 0.0087,
+            "fee_bps": 87.0,
+            "pnl": 2561.42,
+            "trades": 32,
+            "dd": 18.6,
+            "profitable": true
+          },
+          {
+            "label": "1_candle_later",
+            "fee": 0.0102,
+            "fee_bps": 102.0,
+            "pnl": 2144.16,
+            "trades": 32,
+            "dd": 19.8,
+            "profitable": true
+          }
+        ],
+        "breakeven_fee": null,
+        "breakeven_fee_bps": null,
+        "breakeven_note": "Still profitable at max tested friction"
+      },
+      "latency_sensitivity": {
+        "baseline_pnl": 4718.27,
+        "one_candle_later_pnl": 2144.16,
+        "pnl_delta": -2574.11,
+        "pnl_delta_pct": -54.6,
+        "still_profitable": true,
+        "fee_used_bps": 102.0
+      },
+      "consecutive_losses": {
+        "max_consecutive_losses": 2,
+        "worst_streak_by_length": {
+          "length": 2,
+          "pnl": -797.01,
+          "start_idx": 20,
+          "end_idx": 21
+        },
+        "worst_streak_by_pnl": {
+          "length": 2,
+          "pnl": -797.01,
+          "start_idx": 20,
+          "end_idx": 21
+        },
+        "equity_impact_pct": 16.4,
+        "equity_before_worst": 4851.79,
+        "equity_after_worst": 4054.78,
+        "total_losing_streaks": 9,
+        "streak_length_distribution": {
+          "1": 8,
+          "2": 1
+        }
+      }
+    }
+  }
+}

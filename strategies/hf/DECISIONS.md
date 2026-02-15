@@ -1136,3 +1136,89 @@ Key MEXC advantage: 0% maker fee (promotional since Q4 2022) + 10bps taker (vs K
 3. **Validation criteria**: Live PF > 1.2, live Exp/trade within 50% of backtest, fill rate > 90%
 4. **Data action**: Resume 1H download (Kraken K-Z, then MEXC) to expand universe coverage before next backtest iteration
 5. **Abort trigger**: If paper trading PF < 1.0 after 20 trades, HALT and reassess
+
+
+---
+
+### ADR-HF-031: GO/NO-GO — Full Universe (316 coins) Throughput + Fill Model + Stress Validation
+
+**Date**: 2026-02-15
+**Status**: **CONDITIONAL HALT**
+**Commit**: da5db72
+**Reports**: `reports/hf/h20_fill_analysis_003.json`, `reports/hf/h20_throughput_tp10_003.json`
+**Supersedes partial data in**: `reports/hf/h20_throughput_002.json`, `reports/hf/h20_robustness_002.json` (135-coin subset)
+
+**Context**: ADR-HF-030 showed a CONDITIONAL GO on a 135-coin subset (43% of tier universe). This ADR reruns the same gates on the **full 316-coin tier universe** (T1=100 + T2=216) after completing the K-Z Kraken downloads. The expanded universe reveals that the edge is concentrated in the first ~135 coins and dilutes substantially when lower-volume T2 coins are included. The fill model (fill_model_002) adverse selection analysis remains valid and is incorporated unchanged.
+
+**Hard Gates (full 316-coin universe)**:
+
+| Gate | Metric | Threshold | v5 (tp=8) | tp=10 | Verdict |
+|------|--------|-----------|-----------|-------|---------|
+| G1 | Trades/week | >= 10 | 16.75 | 16.75 | **PASS** |
+| G2 | Max gap | <= 2.5d | 1.42d | 1.42d | **PASS** |
+| G3 | Exp/week (market fills) | > $0 | +$86/wk | +$54/wk | **PASS** |
+| G4 | Exp/week (P95 stress, 2x fees) | > $0 | -$33/wk | -$65/wk | **FAIL** |
+| G5 | Max DD | <= 20% | 53.1% | 52.4% | **FAIL** |
+| G6 | Walk-forward | >= 4/5 | 3/5 | 3/5 | **FAIL** |
+| G7 | Neighbor stability | >= 8/12 | 11/12 | n/a (002 data) | **PASS** |
+| G8 | Top-1 fold concentration | < 35% | 48.6% | 57.3% | **FAIL** |
+
+G4 note: Both configs go negative under 2x fee stress. v5 stress PF=0.949 (-$33/wk), tp=10 stress PF=0.902 (-$65/wk). This is a hard failure — no margin of safety under adverse cost scenarios.
+
+G5 note: DD exploded from 11% (135 coins) to 53% (316 coins). The extra T2 coins add losing trades that deepen drawdowns without proportional winners.
+
+G6 note: WF dropped from 5/5 (135 coins) to 3/5 (316 coins). Folds 1 and 2 are now negative: v5 folds = [+$416, -$199, -$499, +$227, +$608]. Two consecutive losing folds represent ~6 weeks of losses.
+
+G8 note: v5 fold concentration = 607.76 / (415.88+226.57+607.76) = 48.6%. tp=10 = 651.60 / (360.41+124.59+651.60) = 57.3%. Both fail; tp=10 is now worse than v5 (reversed from 002).
+
+**Gate summary**: 4/8 PASS, 4/8 FAIL (G4, G5, G6, G8). Three failures are hard disqualifiers (stress, DD, WF). The strategy does not survive the full tier universe test.
+
+**135-coin vs 316-coin comparison — why the edge diluted**:
+
+| Metric | 135 coins (002) | 316 coins (003) | Delta |
+|--------|----------------|----------------|-------|
+| v5 PF | 1.847 | 1.138 | -0.709 |
+| v5 Exp/wk | +$250 | +$86 | -$164 |
+| v5 DD | 11.4% | 53.1% | +41.7pp |
+| v5 WF | 5/5 | 3/5 | -2 folds |
+| v5 Stress PF | 1.58 | 0.949 | -0.63 |
+| tp=10 PF | 1.956 | 1.085 | -0.871 |
+| tp=10 Exp/wk | +$326 | +$54 | -$272 |
+| Trades | 43 | 72 | +29 |
+
+The 29 extra trades (from 181 newly added coins) are net-negative. The signal works on higher-volume coins but generates noise on lower-volume T2 coins with wider spreads.
+
+**v5 (tp=8) vs tp=10 on full universe — reversal from 002**:
+
+| Metric | v5 (tp=8) | tp=10 | Winner |
+|--------|-----------|-------|--------|
+| PnL | $370 | $233 | v5 |
+| PF | 1.138 | 1.085 | v5 |
+| Exp/wk | $86 | $54 | v5 |
+| Composite | 51.6 | 32.5 | v5 |
+| Stress PF | 0.949 | 0.902 | v5 |
+| DD | 53.1% | 52.4% | tp=10 |
+
+v5 is now strictly better than tp=10 on the full universe (opposite of 002 findings). tp=10's wider target hurts on the noisier T2 coins.
+
+**Fill model evidence** (from fill_model_002, unchanged):
+- **Market execution**: Only profitable mode. v5 T1: +$778, T2: +$233. tp=10 T1: +$625, T2: +$98.
+- **Hybrid optimistic**: Marginal. v5 T1: +$109 (positive), v5 T2: -$162 (negative). tp=10: negative on both tiers.
+- **Pure limit**: Deeply negative on all tiers. Ruled out.
+- **Adverse selection fragility**: PF<1.0 when ~15% top winners missed. Edge is narrow.
+
+**Decision**: **CONDITIONAL HALT** — do not proceed to paper trading on the full 316-coin universe. The signal has edge but it is concentrated in higher-volume coins.
+
+**Evidence**:
+- 4/8 hard gates fail on the full universe. Three are hard disqualifiers (stress negative, DD 53%, WF 3/5).
+- The edge is real but concentrated: 135 higher-volume coins produce strong results (PF 1.85, 5/5 WF), but adding 181 lower-volume T2 coins dilutes the edge below profitability under stress.
+- tp=10 is no longer the preferred variant — v5 (tp=8) wins on the full universe.
+- Fill model confirms market-only execution regardless of universe size.
+
+**Consequence — path forward**:
+1. **Tighten the universe**: Redefine tier boundaries to exclude low-volume T2 coins that add losing trades. Target: find the volume cutoff where WF >= 4/5 and stress PF > 1.0.
+2. **Volume-filter sweep**: Run the strategy with progressively tighter T2 volume floors (e.g., T2 minimum 4H volume from $8K to $50K, $100K, $200K) and find the breakeven cutoff.
+3. **T1-only test**: Run v5 on T1 (100 coins) only to see if the edge is isolated to high-volume coins.
+4. **Do NOT paper trade the full 316-coin universe** — the strategy loses money under any cost stress scenario on this universe.
+5. **Retain v5 (tp=8) as baseline** — tp=10 no longer dominates on the full universe.
+6. **Future ADR**: After volume-filter sweep, write ADR-HF-032 with refined universe and updated GO/NO-GO.

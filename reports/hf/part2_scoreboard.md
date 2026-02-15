@@ -1,6 +1,6 @@
 # Part 2 Scoreboard — Gate Status per Candidate
 
-> Last updated: Cycle 3 complete (2026-02-16)
+> Last updated: Cycle 4 complete (2026-02-16)
 
 ## Hard Gates
 
@@ -35,8 +35,11 @@
 > Stress 2x: PF=2.306, Exp/wk=$571
 > G7: ALL 12/12 neighbors profitable, ALL 12/12 survive stress 2x
 > Breakeven: 5.00x fee multiplier (C2-A6) — massive margin over 2x stress
-> OOS validation: STRUCTURAL_FEATURE — exclusion helps out-of-sample (C2-A3)
+> OOS validation: STRUCTURAL_FEATURE (C2-A3) but expanding window NOT_CONFIRMED (C4-A2)
 > Minimum exclusion: 12 coins (not 21) for 7/7 gates — 9 coins of headroom (C2-A5)
+> Multi-pos: max_pos=2 passes 7/7 but -60% P&L — keep max_pos=1 (C4-A1)
+> Tier split: T1=32.3% ($1058), T2=67.7% ($2214) — T2 is dominant edge contributor (C4-A4)
+> Time-of-day: filtering worst hours causes REGRESSION 7/7→6/7 (G8 fails) — not viable (C4-A3)
 
 ### ⭐ sl=7 on 295 coins (excl_all_negative) — 7/7 gates PASS (ALTERNATIVE)
 | Gate | Value | Verdict |
@@ -149,7 +152,14 @@
 
 ## Key Insights
 
-### Cycle 3 (NEW)
+### Cycle 4 (NEW)
+1. **max_pos=2 passes 7/7 but NOT worth it**: Both max_pos=1 and max_pos=2 pass all gates, but max_pos=2 has -60% P&L ($1309 vs $3272) and -60% exp/wk ($305 vs $762). Lower DD (5.0% vs 8.6%) is the only advantage. Recommendation: keep max_pos=1.
+2. **Expanding window OOS: NOT_CONFIRMED**: Exclusion helped 0/2 OOS windows, aggregate delta -$106. 11 stable exclusions all match oracle list, but exclusion doesn't improve OOS P&L. Contradicts C2-A3 STRUCTURAL_FEATURE — exclusion benefit may be largely in-sample. OOS gate score: 4/7.
+3. **Time-of-day filtering: REGRESSION**: Signal fires 23/24 hours. Filtering worst hours (06, 14, 19 UTC) improves PF (2.834→3.795) but causes G8 FAIL (fold_conc 34.2%→38.5%). 7/7→6/7 gates. Not viable.
+4. **T2 is the dominant edge contributor**: T2 provides 67.7% of total P&L ($2214 of $3272), has better WF (5/5 vs T1's 3/5), lower DD (8.4% vs 11.1%). Fee drag: T2=14.5% vs T1=6.6%, but T2 still strongly profitable. Keep T2 in universe.
+5. **OOS caution flag raised**: The expanding window test (C4-A2) is more pessimistic than the split-half test (C2-A3). The in-sample exclusion advantage may not generalize as strongly as initially believed. Paper trading will be the definitive test.
+
+### Cycle 3
 1. **G7 PASS 12/12 on 304 coins**: excl_worst12 also gets perfect G7 — TWO universes now pass all 8 gates
 2. **sl=7 on 295 coins: 7/7 gates + WF=5/5**: Better walk-forward (5/5 vs 4/5) and fold_conc (33.1% vs 34.2%) than v5 baseline
 3. **Rolling lookback: MARGINAL**: Only retains 22% of oracle P&L. Best rolling variant = $729 (vs oracle $3272). Not viable as sole production mechanism.

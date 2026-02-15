@@ -1,0 +1,651 @@
+{
+  "run_header": {
+    "task": "part2_time_of_day",
+    "agent": "C4-A3",
+    "date": "2026-02-16",
+    "commit": "16cf97f",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 5,
+      "time_limit": 10
+    },
+    "cost_regime": "MEXC Market",
+    "fees_bps": {
+      "tier1": 12.5,
+      "tier2": 23.5
+    },
+    "stress_fees_bps": {
+      "tier1": 25.0,
+      "tier2": 47.0
+    },
+    "universe": "T1(96)+T2(199)",
+    "universe_total": 295,
+    "excluded_coins": [
+      "AI3/USD",
+      "ALKIMI/USD",
+      "ANIME/USD",
+      "CFG/USD",
+      "DBR/USD",
+      "ESX/USD",
+      "GST/USD",
+      "HOUSE/USD",
+      "KET/USD",
+      "LMWR/USD",
+      "MXC/USD",
+      "ODOS/USD",
+      "PERP/USD",
+      "PNUT/USD",
+      "POLIS/USD",
+      "RARI/USD",
+      "SUKU/USD",
+      "TANSSI/USD",
+      "TITCOIN/USD",
+      "TOSHI/USD",
+      "WMTX/USD"
+    ],
+    "timeframe": "1h",
+    "total_bars": 721,
+    "total_weeks": 4.3,
+    "runtime_s": 28.7
+  },
+  "baseline_metrics": {
+    "trades": 56,
+    "pnl": 3272.13,
+    "pf": 2.834,
+    "wr": 64.3,
+    "trades_per_week": 13.05,
+    "exp_per_week": 762.4382,
+    "max_dd_pct": 8.6,
+    "max_gap_days": 1.5,
+    "expectancy": 58.4309
+  },
+  "hourly_breakdown": [
+    {
+      "hour": 0,
+      "trades": 2,
+      "wins": 1,
+      "wr": 50.0,
+      "avg_pnl": 16.78,
+      "total_pnl": 33.55,
+      "pf": 4.291,
+      "avg_pnl_pct": 0.92
+    },
+    {
+      "hour": 1,
+      "trades": 1,
+      "wins": 0,
+      "wr": 0.0,
+      "avg_pnl": -176.71,
+      "total_pnl": -176.71,
+      "pf": 0.0,
+      "avg_pnl_pct": -5.46
+    },
+    {
+      "hour": 2,
+      "trades": 1,
+      "wins": 1,
+      "wr": 100.0,
+      "avg_pnl": 20.31,
+      "total_pnl": 20.31,
+      "pf": 999.0,
+      "avg_pnl_pct": 0.69
+    },
+    {
+      "hour": 3,
+      "trades": 2,
+      "wins": 1,
+      "wr": 50.0,
+      "avg_pnl": 25.29,
+      "total_pnl": 50.57,
+      "pf": 1.235,
+      "avg_pnl_pct": 1.03
+    },
+    {
+      "hour": 4,
+      "trades": 1,
+      "wins": 0,
+      "wr": 0.0,
+      "avg_pnl": -36.12,
+      "total_pnl": -36.12,
+      "pf": 0.0,
+      "avg_pnl_pct": -1.33
+    },
+    {
+      "hour": 5,
+      "trades": 0,
+      "wins": 0,
+      "wr": 0.0,
+      "avg_pnl": 0.0,
+      "total_pnl": 0.0,
+      "pf": 0.0,
+      "avg_pnl_pct": 0.0
+    },
+    {
+      "hour": 6,
+      "trades": 2,
+      "wins": 0,
+      "wr": 0.0,
+      "avg_pnl": -59.4,
+      "total_pnl": -118.81,
+      "pf": 0.0,
+      "avg_pnl_pct": -2.75
+    },
+    {
+      "hour": 7,
+      "trades": 3,
+      "wins": 1,
+      "wr": 33.3,
+      "avg_pnl": 53.03,
+      "total_pnl": 159.08,
+      "pf": 2.367,
+      "avg_pnl_pct": 0.89
+    },
+    {
+      "hour": 8,
+      "trades": 3,
+      "wins": 2,
+      "wr": 66.7,
+      "avg_pnl": 184.14,
+      "total_pnl": 552.41,
+      "pf": 13.174,
+      "avg_pnl_pct": 4.61
+    },
+    {
+      "hour": 9,
+      "trades": 1,
+      "wins": 1,
+      "wr": 100.0,
+      "avg_pnl": 96.21,
+      "total_pnl": 96.21,
+      "pf": 999.0,
+      "avg_pnl_pct": 2.66
+    },
+    {
+      "hour": 10,
+      "trades": 1,
+      "wins": 1,
+      "wr": 100.0,
+      "avg_pnl": 126.63,
+      "total_pnl": 126.63,
+      "pf": 999.0,
+      "avg_pnl_pct": 5.08
+    },
+    {
+      "hour": 11,
+      "trades": 1,
+      "wins": 1,
+      "wr": 100.0,
+      "avg_pnl": 214.2,
+      "total_pnl": 214.2,
+      "pf": 999.0,
+      "avg_pnl_pct": 7.51
+    },
+    {
+      "hour": 12,
+      "trades": 2,
+      "wins": 1,
+      "wr": 50.0,
+      "avg_pnl": 28.27,
+      "total_pnl": 56.54,
+      "pf": 1.522,
+      "avg_pnl_pct": 1.13
+    },
+    {
+      "hour": 13,
+      "trades": 6,
+      "wins": 5,
+      "wr": 83.3,
+      "avg_pnl": 82.32,
+      "total_pnl": 493.93,
+      "pf": 5.371,
+      "avg_pnl_pct": 3.01
+    },
+    {
+      "hour": 14,
+      "trades": 2,
+      "wins": 1,
+      "wr": 50.0,
+      "avg_pnl": -24.27,
+      "total_pnl": -48.54,
+      "pf": 0.494,
+      "avg_pnl_pct": -0.64
+    },
+    {
+      "hour": 15,
+      "trades": 8,
+      "wins": 6,
+      "wr": 75.0,
+      "avg_pnl": 65.27,
+      "total_pnl": 522.13,
+      "pf": 9.136,
+      "avg_pnl_pct": 2.2
+    },
+    {
+      "hour": 16,
+      "trades": 3,
+      "wins": 3,
+      "wr": 100.0,
+      "avg_pnl": 133.24,
+      "total_pnl": 399.71,
+      "pf": 999.0,
+      "avg_pnl_pct": 6.12
+    },
+    {
+      "hour": 17,
+      "trades": 3,
+      "wins": 2,
+      "wr": 66.7,
+      "avg_pnl": 56.87,
+      "total_pnl": 170.61,
+      "pf": 5.962,
+      "avg_pnl_pct": 2.58
+    },
+    {
+      "hour": 18,
+      "trades": 1,
+      "wins": 1,
+      "wr": 100.0,
+      "avg_pnl": 178.99,
+      "total_pnl": 178.99,
+      "pf": 999.0,
+      "avg_pnl_pct": 7.74
+    },
+    {
+      "hour": 19,
+      "trades": 3,
+      "wins": 1,
+      "wr": 33.3,
+      "avg_pnl": -39.79,
+      "total_pnl": -119.36,
+      "pf": 0.597,
+      "avg_pnl_pct": 0.07
+    },
+    {
+      "hour": 20,
+      "trades": 3,
+      "wins": 2,
+      "wr": 66.7,
+      "avg_pnl": 93.68,
+      "total_pnl": 281.03,
+      "pf": 3.017,
+      "avg_pnl_pct": 3.77
+    },
+    {
+      "hour": 21,
+      "trades": 3,
+      "wins": 2,
+      "wr": 66.7,
+      "avg_pnl": 86.02,
+      "total_pnl": 258.06,
+      "pf": 2.519,
+      "avg_pnl_pct": 3.26
+    },
+    {
+      "hour": 22,
+      "trades": 1,
+      "wins": 1,
+      "wr": 100.0,
+      "avg_pnl": 39.3,
+      "total_pnl": 39.3,
+      "pf": 999.0,
+      "avg_pnl_pct": 1.87
+    },
+    {
+      "hour": 23,
+      "trades": 3,
+      "wins": 2,
+      "wr": 66.7,
+      "avg_pnl": 39.47,
+      "total_pnl": 118.41,
+      "pf": 3.669,
+      "avg_pnl_pct": 2.2
+    }
+  ],
+  "best_hours": [
+    {
+      "hour": 8,
+      "trades": 3,
+      "wins": 2,
+      "wr": 66.7,
+      "avg_pnl": 184.14,
+      "total_pnl": 552.41,
+      "pf": 13.174,
+      "avg_pnl_pct": 4.61
+    },
+    {
+      "hour": 15,
+      "trades": 8,
+      "wins": 6,
+      "wr": 75.0,
+      "avg_pnl": 65.27,
+      "total_pnl": 522.13,
+      "pf": 9.136,
+      "avg_pnl_pct": 2.2
+    },
+    {
+      "hour": 13,
+      "trades": 6,
+      "wins": 5,
+      "wr": 83.3,
+      "avg_pnl": 82.32,
+      "total_pnl": 493.93,
+      "pf": 5.371,
+      "avg_pnl_pct": 3.01
+    },
+    {
+      "hour": 16,
+      "trades": 3,
+      "wins": 3,
+      "wr": 100.0,
+      "avg_pnl": 133.24,
+      "total_pnl": 399.71,
+      "pf": 999.0,
+      "avg_pnl_pct": 6.12
+    },
+    {
+      "hour": 20,
+      "trades": 3,
+      "wins": 2,
+      "wr": 66.7,
+      "avg_pnl": 93.68,
+      "total_pnl": 281.03,
+      "pf": 3.017,
+      "avg_pnl_pct": 3.77
+    }
+  ],
+  "worst_hours": [
+    {
+      "hour": 19,
+      "trades": 3,
+      "wins": 1,
+      "wr": 33.3,
+      "avg_pnl": -39.79,
+      "total_pnl": -119.36,
+      "pf": 0.597,
+      "avg_pnl_pct": 0.07
+    },
+    {
+      "hour": 6,
+      "trades": 2,
+      "wins": 0,
+      "wr": 0.0,
+      "avg_pnl": -59.4,
+      "total_pnl": -118.81,
+      "pf": 0.0,
+      "avg_pnl_pct": -2.75
+    },
+    {
+      "hour": 14,
+      "trades": 2,
+      "wins": 1,
+      "wr": 50.0,
+      "avg_pnl": -24.27,
+      "total_pnl": -48.54,
+      "pf": 0.494,
+      "avg_pnl_pct": -0.64
+    },
+    {
+      "hour": 0,
+      "trades": 2,
+      "wins": 1,
+      "wr": 50.0,
+      "avg_pnl": 16.78,
+      "total_pnl": 33.55,
+      "pf": 4.291,
+      "avg_pnl_pct": 0.92
+    },
+    {
+      "hour": 3,
+      "trades": 2,
+      "wins": 1,
+      "wr": 50.0,
+      "avg_pnl": 25.29,
+      "total_pnl": 50.57,
+      "pf": 1.235,
+      "avg_pnl_pct": 1.03
+    }
+  ],
+  "negative_hours": [
+    6,
+    14,
+    19
+  ],
+  "full_evaluation": {
+    "label": "v5_full",
+    "metrics": {
+      "trades": 56,
+      "pnl": 3272.13,
+      "pf": 2.834,
+      "wr": 64.3,
+      "trades_per_week": 13.05,
+      "exp_per_week": 762.4382,
+      "max_dd_pct": 8.6,
+      "max_gap_days": 1.5,
+      "expectancy": 58.4309
+    },
+    "stress_metrics": {
+      "trades": 56,
+      "pnl": 2452.31,
+      "pf": 2.306,
+      "exp_per_week": 571.413
+    },
+    "wf_folds_positive": 4,
+    "wf_fold_details": [
+      {
+        "fold": 0,
+        "trades": 10,
+        "pnl": 909.08,
+        "positive": true
+      },
+      {
+        "fold": 1,
+        "trades": 13,
+        "pnl": 57.53,
+        "positive": true
+      },
+      {
+        "fold": 2,
+        "trades": 9,
+        "pnl": -17.57,
+        "positive": false
+      },
+      {
+        "fold": 3,
+        "trades": 9,
+        "pnl": 792.44,
+        "positive": true
+      },
+      {
+        "fold": 4,
+        "trades": 15,
+        "pnl": 913.43,
+        "positive": true
+      }
+    ],
+    "fold_concentration": {
+      "top1_fold_conc_pct": 34.2,
+      "fold_pnls": {
+        "0": 909.08,
+        "1": 57.53,
+        "2": -17.57,
+        "3": 792.44,
+        "4": 913.43
+      }
+    },
+    "gate_evaluation": {
+      "gates": {
+        "G1": {
+          "name": "Trades/week",
+          "value": 13.05,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max gap (days)",
+          "value": 1.5,
+          "threshold": "<= 2.5",
+          "pass": true
+        },
+        "G3": {
+          "name": "Exp/week (market)",
+          "value": 762.44,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Exp/week (P95 stress)",
+          "value": 571.41,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max DD%",
+          "value": 8.6,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "WF folds positive",
+          "value": "4/5",
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "name": "Top-1 fold conc.",
+          "value": "34.2%",
+          "threshold": "< 35%",
+          "pass": true
+        }
+      },
+      "pass_count": 7,
+      "total_count": 7,
+      "score": "7/7",
+      "all_pass": true
+    }
+  },
+  "filtered_evaluation": {
+    "label": "v5_excl_h6,14,19",
+    "metrics": {
+      "trades": 49,
+      "pnl": 3558.83,
+      "pf": 3.795,
+      "wr": 69.4,
+      "trades_per_week": 11.42,
+      "exp_per_week": 829.242,
+      "max_dd_pct": 8.6,
+      "max_gap_days": 1.5,
+      "expectancy": 72.6292
+    },
+    "stress_metrics": {
+      "trades": 49,
+      "pnl": 2781.8,
+      "pf": 3.046,
+      "exp_per_week": 648.1865
+    },
+    "wf_folds_positive": 5,
+    "wf_fold_details": [
+      {
+        "fold": 0,
+        "trades": 9,
+        "pnl": 731.94,
+        "positive": true
+      },
+      {
+        "fold": 1,
+        "trades": 11,
+        "pnl": 164.3,
+        "positive": true
+      },
+      {
+        "fold": 2,
+        "trades": 8,
+        "pnl": 18.58,
+        "positive": true
+      },
+      {
+        "fold": 3,
+        "trades": 9,
+        "pnl": 792.44,
+        "positive": true
+      },
+      {
+        "fold": 4,
+        "trades": 12,
+        "pnl": 1070.53,
+        "positive": true
+      }
+    ],
+    "fold_concentration": {
+      "top1_fold_conc_pct": 38.5,
+      "fold_pnls": {
+        "0": 731.94,
+        "1": 164.3,
+        "2": 18.58,
+        "3": 792.44,
+        "4": 1070.53
+      }
+    },
+    "gate_evaluation": {
+      "gates": {
+        "G1": {
+          "name": "Trades/week",
+          "value": 11.42,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max gap (days)",
+          "value": 1.5,
+          "threshold": "<= 2.5",
+          "pass": true
+        },
+        "G3": {
+          "name": "Exp/week (market)",
+          "value": 829.24,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Exp/week (P95 stress)",
+          "value": 648.19,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max DD%",
+          "value": 8.6,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "WF folds positive",
+          "value": "5/5",
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "name": "Top-1 fold conc.",
+          "value": "38.5%",
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "pass_count": 6,
+      "total_count": 7,
+      "score": "6/7",
+      "all_pass": false
+    }
+  },
+  "verdict": {
+    "text": "REGRESSION: Filtering hours [6, 14, 19] reduces gate score from 7/7 to 6/7.",
+    "filtering_worth_it": false,
+    "full_gates": 7,
+    "filtered_gates": 6,
+    "full_exp_per_week": 762.4382,
+    "filtered_exp_per_week": 829.242,
+    "trades_removed": 7,
+    "pnl_removed": -286.71
+  }
+}

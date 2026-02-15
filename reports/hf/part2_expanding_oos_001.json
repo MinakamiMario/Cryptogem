@@ -1,0 +1,300 @@
+{
+  "run_header": {
+    "task": "part2_expanding_oos",
+    "agent": "C4-A2",
+    "date": "2026-02-16",
+    "commit": "16cf97f",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 5,
+      "time_limit": 10
+    },
+    "cost_regime": "MEXC Market",
+    "fees_bps": {
+      "tier1": 12.5,
+      "tier2": 23.5
+    },
+    "stress_fees_bps": {
+      "tier1": 19.2,
+      "tier2": 59.3
+    },
+    "universe": "T1(100)+T2(216)",
+    "timeframe": "1h",
+    "total_bars": 722,
+    "runtime_s": 30.0,
+    "config": {
+      "warmup_bars": 50,
+      "min_train_bars": 336,
+      "test_size": 168,
+      "step": 168
+    }
+  },
+  "expanding_oos": {
+    "n_windows": 2,
+    "total_oos_bars": 336,
+    "total_oos_weeks": 2.0,
+    "total_bars": 722,
+    "window_results": [
+      {
+        "window": 0,
+        "train_bars": 336,
+        "train_weeks": 2.0,
+        "test_range": [
+          386,
+          554
+        ],
+        "n_excluded": 12,
+        "excluded_coins": [
+          "AI3/USD",
+          "ANIME/USD",
+          "DBR/USD",
+          "ELX/USD",
+          "HOUSE/USD",
+          "KET/USD",
+          "LMWR/USD",
+          "PNUT/USD",
+          "RARI/USD",
+          "TANSSI/USD",
+          "TITCOIN/USD",
+          "TOSHI/USD"
+        ],
+        "test_full": {
+          "trades": 17,
+          "pnl": -139.98
+        },
+        "test_excl": {
+          "trades": 15,
+          "pnl": -159.1
+        },
+        "pnl_delta": -19.12,
+        "exclusion_helped": false,
+        "runtime_s": 0.2
+      },
+      {
+        "window": 1,
+        "train_bars": 504,
+        "train_weeks": 3.0,
+        "test_range": [
+          554,
+          722
+        ],
+        "n_excluded": 20,
+        "excluded_coins": [
+          "AI3/USD",
+          "ALKIMI/USD",
+          "ANIME/USD",
+          "CFG/USD",
+          "DBR/USD",
+          "GST/USD",
+          "HOUSE/USD",
+          "KET/USD",
+          "KOBAN/USD",
+          "LMWR/USD",
+          "MXC/USD",
+          "ODOS/USD",
+          "PERP/USD",
+          "PNUT/USD",
+          "POLIS/USD",
+          "RARI/USD",
+          "SUKU/USD",
+          "TANSSI/USD",
+          "TITCOIN/USD",
+          "TOSHI/USD"
+        ],
+        "test_full": {
+          "trades": 20,
+          "pnl": 712.36
+        },
+        "test_excl": {
+          "trades": 16,
+          "pnl": 625.93
+        },
+        "pnl_delta": -86.43,
+        "exclusion_helped": false,
+        "runtime_s": 0.1
+      }
+    ],
+    "aggregate_full": {
+      "trades": 37,
+      "pnl": 572.39,
+      "pf": 1.464,
+      "wr": 51.4,
+      "trades_per_week": 18.5,
+      "exp_per_week": 286.1929,
+      "max_dd_pct": 34.3,
+      "max_gap_days": 0.92,
+      "expectancy": 15.4699
+    },
+    "aggregate_excl": {
+      "trades": 31,
+      "pnl": 466.83,
+      "pf": 1.449,
+      "wr": 54.8,
+      "trades_per_week": 15.5,
+      "exp_per_week": 233.4151,
+      "max_dd_pct": 29.7,
+      "max_gap_days": 0.92,
+      "expectancy": 15.059
+    },
+    "aggregate_delta": {
+      "pnl": -105.56,
+      "pf": -0.015,
+      "trades": -6
+    },
+    "windows_helped": 0,
+    "windows_helped_pct": 0.0,
+    "stability": {
+      "avg_overlap_pct": 52.4,
+      "min_overlap_pct": 52.4,
+      "max_overlap_pct": 52.4,
+      "excl_sizes": [
+        12,
+        20
+      ],
+      "overlaps": [
+        52.4
+      ]
+    },
+    "stable_exclusions": [
+      "AI3/USD",
+      "ANIME/USD",
+      "DBR/USD",
+      "HOUSE/USD",
+      "KET/USD",
+      "LMWR/USD",
+      "PNUT/USD",
+      "RARI/USD",
+      "TANSSI/USD",
+      "TITCOIN/USD",
+      "TOSHI/USD"
+    ],
+    "n_stable": 11,
+    "frequent_exclusions": [
+      "AI3/USD",
+      "ANIME/USD",
+      "DBR/USD",
+      "HOUSE/USD",
+      "KET/USD",
+      "LMWR/USD",
+      "PNUT/USD",
+      "RARI/USD",
+      "TANSSI/USD",
+      "TITCOIN/USD",
+      "TOSHI/USD"
+    ],
+    "n_frequent": 11,
+    "coin_exclusion_frequency": {
+      "PNUT/USD": 100.0,
+      "ANIME/USD": 100.0,
+      "TANSSI/USD": 100.0,
+      "RARI/USD": 100.0,
+      "DBR/USD": 100.0,
+      "LMWR/USD": 100.0,
+      "HOUSE/USD": 100.0,
+      "AI3/USD": 100.0,
+      "TOSHI/USD": 100.0,
+      "TITCOIN/USD": 100.0,
+      "KET/USD": 100.0,
+      "ELX/USD": 50.0,
+      "KOBAN/USD": 50.0,
+      "POLIS/USD": 50.0,
+      "MXC/USD": 50.0,
+      "ALKIMI/USD": 50.0,
+      "SUKU/USD": 50.0,
+      "PERP/USD": 50.0,
+      "CFG/USD": 50.0,
+      "GST/USD": 50.0,
+      "ODOS/USD": 50.0
+    },
+    "oracle_overlap": {
+      "stable_in_oracle": 11,
+      "stable_total": 11,
+      "frequent_in_oracle": 11,
+      "frequent_total": 11,
+      "oracle_total": 21
+    },
+    "oos_gate_evaluation": {
+      "gates": {
+        "G1": {
+          "name": "Trades/week",
+          "value": 15.5,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max gap (days)",
+          "value": 0.92,
+          "threshold": "<= 2.5",
+          "pass": true
+        },
+        "G3": {
+          "name": "Exp/week (market)",
+          "value": 233.42,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Exp/week (P95 stress)",
+          "value": 227.45,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max DD%",
+          "value": 29.7,
+          "threshold": "<= 20%",
+          "pass": false
+        },
+        "G6": {
+          "name": "WF folds positive",
+          "value": "2/5",
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "name": "Top-1 fold conc.",
+          "value": "100.0%",
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "pass_count": 4,
+      "total_count": 7,
+      "score": "4/7",
+      "all_pass": false
+    },
+    "oos_positive_windows_full": 1,
+    "oos_positive_windows_excl": 1,
+    "oos_fold_conc_full": {
+      "top1_fold_conc_pct": 100.0,
+      "fold_pnls": {
+        "0": -139.98,
+        "1": 712.36
+      }
+    },
+    "oos_fold_conc_excl": {
+      "top1_fold_conc_pct": 100.0,
+      "fold_pnls": {
+        "0": -159.1,
+        "1": 625.93
+      }
+    },
+    "stress_metrics": {
+      "trades": 61,
+      "pnl": 977.51,
+      "pf": 1.453,
+      "exp_per_week": 227.4542
+    }
+  },
+  "verdict": {
+    "result": "NOT_CONFIRMED",
+    "detail": "Expanding window OOS does NOT confirm the structural feature. Exclusion helped in only 0% of windows. Aggregate delta $-106. The exclusion benefit is largely in-sample.",
+    "aggregate_pnl_delta": -105.56,
+    "aggregate_pf_delta": -0.015,
+    "pct_windows_helped": 0.0,
+    "n_stable_exclusions": 11,
+    "oos_gate_score": "4/7"
+  }
+}

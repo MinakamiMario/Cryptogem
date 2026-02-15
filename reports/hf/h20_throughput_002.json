@@ -1,0 +1,9 @@
+{
+  "run_header": {
+    "task": "h20_throughput_analysis",
+    "status": "PENDING",
+    "reason": "Runner created, awaiting 1H candle cache",
+    "runner": "strategies/hf/screening/run_h20_throughput.py",
+    "command": "python -m strategies.hf.screening.run_h20_throughput"
+  }
+}

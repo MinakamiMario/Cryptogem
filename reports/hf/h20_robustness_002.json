@@ -1,0 +1,11 @@
+{
+  "run_header": {
+    "task": "h20_robustness_neighborhood",
+    "status": "PENDING",
+    "reason": "Runner updated, awaiting 1H candle cache",
+    "runner": "strategies/hf/screening/run_h20_robustness.py",
+    "command": "python -m strategies.hf.screening.run_h20_robustness",
+    "variants": 12,
+    "cost_regime": "MEXC Market (from costs_mexc_v2 or hardcoded fallback)"
+  }
+}

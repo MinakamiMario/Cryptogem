@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-02-15T10:36:12.363241",
+  "universe": "tradeable",
+  "data_file": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/data/candle_cache_tradeable.json",
+  "n_coins": 425,
+  "total_time_s": 24.87,
+  "results": [
+    {
+      "name": "GRID_BEST_baseline",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 10,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_confirm": true,
+        "vol_spike_mult": 2.5
+      },
+      "trades": 32,
+      "wr": 68.8,
+      "pnl": 4718.27,
+      "final_equity": 6718.27,
+      "pf": 2.61,
+      "dd": 16.4,
+      "exit_reasons": {
+        "PROFIT TARGET": 16,
+        "FIXED STOP": 5,
+        "TIME MAX": 11
+      },
+      "elapsed_s": 0.28
+    },
+    {
+      "name": "H1_mean_reversion",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 30,
+        "vol_spike_mult": 2.0,
+        "vol_confirm": true,
+        "tp_pct": 8,
+        "sl_pct": 6,
+        "time_max_bars": 8
+      },
+      "trades": 33,
+      "wr": 51.5,
+      "pnl": 322.7,
+      "final_equity": 2322.7,
+      "pf": 1.18,
+      "dd": 28.5,
+      "exit_reasons": {
+        "PROFIT TARGET": 10,
+        "FIXED STOP": 9,
+        "TIME MAX": 14
+      },
+      "elapsed_s": 0.2
+    },
+    {
+      "name": "H2_momentum_burst",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 55,
+        "vol_spike_mult": 4.0,
+        "vol_confirm": true,
+        "tp_pct": 15,
+        "sl_pct": 8,
+        "time_max_bars": 12
+      },
+      "trades": 24,
+      "wr": 66.7,
+      "pnl": 2288.06,
+      "final_equity": 4288.06,
+      "pf": 2.43,
+      "dd": 22.1,
+      "exit_reasons": {
+        "TIME MAX": 11,
+        "FIXED STOP": 6,
+        "PROFIT TARGET": 7
+      },
+      "elapsed_s": 0.22
+    },
+    {
+      "name": "H3_vol_breakout",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "vol_spike_mult": 5.0,
+        "vol_confirm": true,
+        "tp_pct": 20,
+        "sl_pct": 10,
+        "time_max_bars": 20
+      },
+      "trades": 15,
+      "wr": 60.0,
+      "pnl": 49.45,
+      "final_equity": 2049.45,
+      "pf": 1.05,
+      "dd": 28.5,
+      "exit_reasons": {
+        "TIME MAX": 8,
+        "FIXED STOP": 5,
+        "PROFIT TARGET": 2
+      },
+      "elapsed_s": 0.21
+    }
+  ]
+}

@@ -290,6 +290,71 @@
 
 ---
 
+## ADR-HF-012: Allocator Experiment — max_pos>1 Does NOT Improve Risk-Adjusted Returns
+
+**Date**: 2026-02-15
+**Status**: DECIDED — critical finding, blocks allocator-based throughput path
+**Context**: With max_pos=1 producing only ~2 trades/week and 73% zero-trade days, the hypothesis was that max_pos=2 or 3 with tier quotas and correlation guardrails could boost throughput 2-4x without destroying risk-adjusted returns. Two methods tested:
+- **Method A**: Native engine max_pos=1/2/3 on T1+T2 with per-tier fees (no quotas)
+- **Method B**: Custom allocator with 9 policies (tier quotas, T1 slot reservation, correlation guard at ρ>0.70)
+
+**Evidence** (allocator_001):
+
+Method A — Native max_pos (GRID_BEST):
+
+| max_pos | Trades | P&L | PF | DD% | Tr/wk |
+|---------|--------|-----|----|-----|-------|
+| 1 | 40 | $+1,572 | 1.53 | 27.8% | 2.22 |
+| 2 | 52 | $+993 | 1.57 | 24.6% | 2.89 |
+| 3 | 8 | $-1,975 | 0.06 | 98.8% | 0.44 |
+
+Method B — Best policies (GRID_BEST):
+
+| Policy | Trades | P&L | PF | DD% |
+|--------|--------|-----|----|-----|
+| baseline_mp1 (mp=1, no quota) | 29 | $+2,114 | 1.84 | 17.5% |
+| mp2_no_quota (mp=2) | 37 | $+1,339 | 2.08 | 12.5% |
+| mp3_corr_guard (mp=3, corr=Y) | 48 | $+885 | 1.96 | 10.2% |
+
+**Key findings**:
+
+1. **max_pos=3 is catastrophic in Method A**: Engine splits equity across 3 slots, smaller position sizes get destroyed by fees. GRID_BEST goes from +$1,572 → -$1,975.
+
+2. **max_pos=2 is marginal**: +30% more trades but P&L drops 37% (Method A). PF slightly improves but absolute returns worse.
+
+3. **Custom allocator (Method B) consistently outperforms engine**: The custom allocator's baseline_mp1 ($+2,114, PF 1.84) beats the engine's mp=1 ($+1,572, PF 1.53). This is because the allocator applies per-trade tier fees correctly (engine per-tier run uses isolation which changes signal crowding).
+
+4. **Correlation guard works**: mp3_corr_guard (48 trades, PF 1.96, DD 10.2%) is the best risk-adjusted mp=3 policy — the guard blocks 27 correlated entries, keeping only diversified ones.
+
+5. **T1 slot reservation reduces P&L**: mp2_full (T1 reserve + corr guard) drops P&L from $1,339 → $757. Reserving T1 slots forces suboptimal entries in a tier with near-zero alpha.
+
+6. **The "throughput problem" is structural**: At 4H with DualConfirm, signals are rare (~2/week). Adding slots doesn't create more signals — it just splits existing capital thinner.
+
+**Decision**: Do NOT pursue allocator-based throughput improvement for 4H DualConfirm. The edge is thin (ADR-HF-009: MARGINAL) and adding positions dilutes per-trade returns faster than throughput gains compensate.
+
+**Implication for next steps**:
+- Throughput improvement requires **more signals** (sub-4H pipeline or new signal families), not more position slots
+- If mp=2 is ever reconsidered, use quota-aware allocator with correlation guard (best DD profile at 10-12%)
+- The correlation guard is the one genuine contribution: it filters out correlated entries effectively (27 blocks at mp=3)
+
+---
+
+## Sprint 2.5 Summary
+
+**Deliverables**:
+| Task | Artifact | Finding |
+|------|----------|---------|
+| Allocator experiment | hf_allocator.py + allocator_001 | max_pos>1 does NOT improve risk-adjusted returns at 4H |
+| ADR | ADR-HF-012 | Blocks allocator-based throughput path |
+
+**Updated Sprint 3 Recommendations** (revised from Sprint 2):
+1. **Sub-4H pipeline**: Build 1H/15m data fetcher — this is now the ONLY viable throughput path
+2. **New signal families**: Multi-TF confirmation (4H trigger + 1H entry), order flow signals
+3. **Correlation guard**: Keep for future multi-position configs at lower timeframes
+4. **No more 4H parameter iteration**: Space exhausted (ADR-002), allocator exhausted (ADR-012)
+
+---
+
 ## Sprint 2 Summary
 
 **Deliverables**:

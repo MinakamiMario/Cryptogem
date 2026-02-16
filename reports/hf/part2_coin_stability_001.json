@@ -1,0 +1,1057 @@
+{
+  "run_header": {
+    "task": "part2_coin_stability_001",
+    "agent": "C8-E",
+    "date": "2026-02-16",
+    "commit": "1787377",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "baseline": "v5 (dev_thresh=2.0, tp_pct=8, sl_pct=5, time_limit=10)",
+    "cost_regime": "MEXC Market (costs_mexc_v2)",
+    "fees": {
+      "baseline": {
+        "tier1_bps": 12.5,
+        "tier2_bps": 23.5
+      },
+      "stress_2x": {
+        "tier1_bps": 25.0,
+        "tier2_bps": 47.0
+      }
+    },
+    "universe": "T1(96)+T2(199)=295 [excl 21 net-negative]",
+    "total_bars": 721,
+    "total_weeks": 4.3,
+    "runtime_s": 27.5
+  },
+  "full_295_baseline": {
+    "metrics": {
+      "trades": 56,
+      "pnl": 3272.13,
+      "pf": 2.834,
+      "wr": 64.29,
+      "dd": 8.63,
+      "expectancy": 58.4309,
+      "trades_per_week": 13.05,
+      "exp_per_week": 762.4382,
+      "max_gap_days": 1.42,
+      "top1_share": 6.16
+    },
+    "wf_folds_positive": 4,
+    "wf_fold_details": [
+      {
+        "fold": 0,
+        "trades": 10,
+        "pnl": 909.08,
+        "positive": true
+      },
+      {
+        "fold": 1,
+        "trades": 13,
+        "pnl": 57.53,
+        "positive": true
+      },
+      {
+        "fold": 2,
+        "trades": 9,
+        "pnl": -17.57,
+        "positive": false
+      },
+      {
+        "fold": 3,
+        "trades": 9,
+        "pnl": 792.44,
+        "positive": true
+      },
+      {
+        "fold": 4,
+        "trades": 15,
+        "pnl": 913.43,
+        "positive": true
+      }
+    ],
+    "stress_metrics": {
+      "pnl": 2452.31,
+      "pf": 2.306,
+      "trades": 56
+    },
+    "gates": {
+      "G1_throughput": {
+        "value": 13.05,
+        "threshold": ">= 10/wk",
+        "pass": true
+      },
+      "G2_max_gap": {
+        "value": 1.42,
+        "threshold": "<= 2.5d",
+        "pass": true
+      },
+      "G3_pnl": {
+        "value": 3272.13,
+        "threshold": "> $0",
+        "pass": true
+      },
+      "G5_top1_share": {
+        "value": 6.16,
+        "threshold": "<= 20%",
+        "pass": true
+      },
+      "G6_wf_folds": {
+        "value": 4,
+        "threshold": ">= 4/5",
+        "pass": true
+      },
+      "G8_dd": {
+        "value": 8.63,
+        "threshold": "< 35%",
+        "pass": true
+      },
+      "G4_stress_pnl": {
+        "value": 2452.31,
+        "threshold": "> $0",
+        "pass": true
+      }
+    },
+    "all_gates_pass": true
+  },
+  "coin_stability": {
+    "summary": {
+      "total_coins_with_trades": 41,
+      "n_stable_winners": 1,
+      "n_stable_losers": 0,
+      "n_one_shot": 31,
+      "n_mixed": 9,
+      "stable_winners": [
+        "AURA/USD"
+      ],
+      "stable_losers": [],
+      "one_shots": [
+        "ALPHA/USD",
+        "ALT/USD",
+        "ARPA/USD",
+        "AUDIO/USD",
+        "BANANAS31/USD",
+        "BILLY/USD",
+        "BLZ/USD",
+        "BODEN/USD",
+        "CAMP/USD",
+        "CVC/USD",
+        "DEEP/USD",
+        "DOGS/USD",
+        "DRV/USD",
+        "GHIBLI/USD",
+        "GLMR/USD",
+        "INIT/USD",
+        "JUNO/USD",
+        "MEME/USD",
+        "MF/USD",
+        "NOBODY/USD",
+        "OGN/USD",
+        "PHA/USD",
+        "PUPS/USD",
+        "SAMO/USD",
+        "SAROS/USD",
+        "SBR/USD",
+        "SGB/USD",
+        "SPICE/USD",
+        "SUSHI/USD",
+        "TOKEN/USD",
+        "XAN/USD"
+      ],
+      "mixed_coins": [
+        "BTT/USD",
+        "ELX/USD",
+        "GOMINING/USD",
+        "KOBAN/USD",
+        "NYM/USD",
+        "REKT/USD",
+        "SIGMA/USD",
+        "XL1/USD",
+        "XYO/USD"
+      ],
+      "pnl_by_class": {
+        "stable_winner": 486.12,
+        "stable_loser": 0,
+        "one_shot": 1451.33,
+        "mixed": 1334.69,
+        "total": 3272.13
+      },
+      "profit_concentration": {
+        "stable_winner_profit_share_pct": 9.8,
+        "one_shot_profit_share_pct": 50.9,
+        "total_profit": 5056.61
+      },
+      "fold_diversity": {
+        "0": {
+          "unique_coins": 10,
+          "trades": 10,
+          "pnl": 909.08,
+          "coins": [
+            "BLZ/USD",
+            "CAMP/USD",
+            "ELX/USD",
+            "GHIBLI/USD",
+            "JUNO/USD",
+            "NYM/USD",
+            "REKT/USD",
+            "SIGMA/USD",
+            "TOKEN/USD",
+            "XYO/USD"
+          ]
+        },
+        "1": {
+          "unique_coins": 11,
+          "trades": 13,
+          "pnl": 57.53,
+          "coins": [
+            "ALPHA/USD",
+            "AURA/USD",
+            "BTT/USD",
+            "GOMINING/USD",
+            "NOBODY/USD",
+            "NYM/USD",
+            "REKT/USD",
+            "SBR/USD",
+            "SGB/USD",
+            "SIGMA/USD",
+            "XYO/USD"
+          ]
+        },
+        "2": {
+          "unique_coins": 9,
+          "trades": 9,
+          "pnl": -17.57,
+          "coins": [
+            "ARPA/USD",
+            "AUDIO/USD",
+            "AURA/USD",
+            "BANANAS31/USD",
+            "DEEP/USD",
+            "GOMINING/USD",
+            "KOBAN/USD",
+            "MF/USD",
+            "SAMO/USD"
+          ]
+        },
+        "3": {
+          "unique_coins": 9,
+          "trades": 9,
+          "pnl": 792.44,
+          "coins": [
+            "AURA/USD",
+            "BILLY/USD",
+            "BODEN/USD",
+            "CVC/USD",
+            "DOGS/USD",
+            "DRV/USD",
+            "ELX/USD",
+            "SAROS/USD",
+            "XL1/USD"
+          ]
+        },
+        "4": {
+          "unique_coins": 14,
+          "trades": 15,
+          "pnl": 913.43,
+          "coins": [
+            "ALT/USD",
+            "BTT/USD",
+            "GLMR/USD",
+            "INIT/USD",
+            "KOBAN/USD",
+            "MEME/USD",
+            "OGN/USD",
+            "PHA/USD",
+            "PUPS/USD",
+            "SIGMA/USD",
+            "SPICE/USD",
+            "SUSHI/USD",
+            "XAN/USD",
+            "XL1/USD"
+          ]
+        }
+      }
+    },
+    "coin_profiles": {
+      "ALPHA/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "1": 61.98
+        },
+        "total_fold_pnl": 61.98,
+        "full_pnl": 83.36,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          1
+        ],
+        "classification": "one_shot"
+      },
+      "ALT/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "4": 46.17
+        },
+        "total_fold_pnl": 46.17,
+        "full_pnl": 85.76,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "ARPA/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "2": -30.15
+        },
+        "total_fold_pnl": -30.15,
+        "full_pnl": -44.37,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          2
+        ],
+        "classification": "one_shot"
+      },
+      "AUDIO/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "2": 145.55
+        },
+        "total_fold_pnl": 145.55,
+        "full_pnl": 214.2,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          2
+        ],
+        "classification": "one_shot"
+      },
+      "AURA/USD": {
+        "folds_present": 3,
+        "folds_positive": 3,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "1": 9.49,
+          "2": 153.7,
+          "3": 161.51
+        },
+        "total_fold_pnl": 324.7,
+        "full_pnl": 486.12,
+        "full_trades": 4,
+        "consistency_score": 1.0,
+        "folds_list": [
+          1,
+          2,
+          3
+        ],
+        "classification": "stable_winner"
+      },
+      "BANANAS31/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "2": 7.82
+        },
+        "total_fold_pnl": 7.82,
+        "full_pnl": 8.04,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          2
+        ],
+        "classification": "one_shot"
+      },
+      "BILLY/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "3": 150.22
+        },
+        "total_fold_pnl": 150.22,
+        "full_pnl": 229.9,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          3
+        ],
+        "classification": "one_shot"
+      },
+      "BLZ/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "0": 10.35
+        },
+        "total_fold_pnl": 10.35,
+        "full_pnl": 10.35,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          0
+        ],
+        "classification": "one_shot"
+      },
+      "BODEN/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "3": 62.87
+        },
+        "total_fold_pnl": 62.87,
+        "full_pnl": 96.21,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          3
+        ],
+        "classification": "one_shot"
+      },
+      "BTT/USD": {
+        "folds_present": 2,
+        "folds_positive": 2,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "1": 1.38,
+          "4": 6.9
+        },
+        "total_fold_pnl": 8.28,
+        "full_pnl": 9.49,
+        "full_trades": 2,
+        "consistency_score": 1.0,
+        "folds_list": [
+          1,
+          4
+        ],
+        "classification": "mixed"
+      },
+      "CAMP/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "0": -16.7
+        },
+        "total_fold_pnl": -16.7,
+        "full_pnl": -36.12,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          0
+        ],
+        "classification": "one_shot"
+      },
+      "CVC/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "3": 173.64
+        },
+        "total_fold_pnl": 173.64,
+        "full_pnl": 265.74,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          3
+        ],
+        "classification": "one_shot"
+      },
+      "DEEP/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "2": -6.93
+        },
+        "total_fold_pnl": -6.93,
+        "full_pnl": -10.19,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          2
+        ],
+        "classification": "one_shot"
+      },
+      "DOGS/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "3": 40.2
+        },
+        "total_fold_pnl": 40.2,
+        "full_pnl": 39.3,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          3
+        ],
+        "classification": "one_shot"
+      },
+      "DRV/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "3": -91.03
+        },
+        "total_fold_pnl": -91.03,
+        "full_pnl": -139.32,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          3
+        ],
+        "classification": "one_shot"
+      },
+      "ELX/USD": {
+        "folds_present": 2,
+        "folds_positive": 1,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "0": -112.99,
+          "3": 154.8
+        },
+        "total_fold_pnl": 41.81,
+        "full_pnl": 38.38,
+        "full_trades": 2,
+        "consistency_score": 0.5,
+        "folds_list": [
+          0,
+          3
+        ],
+        "classification": "mixed"
+      },
+      "GHIBLI/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "0": 158.04
+        },
+        "total_fold_pnl": 158.04,
+        "full_pnl": 158.04,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          0
+        ],
+        "classification": "one_shot"
+      },
+      "GLMR/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "4": -130.97
+        },
+        "total_fold_pnl": -130.97,
+        "full_pnl": -243.29,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "GOMINING/USD": {
+        "folds_present": 2,
+        "folds_positive": 1,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "1": 161.72,
+          "2": -36.15
+        },
+        "total_fold_pnl": 125.57,
+        "full_pnl": 164.3,
+        "full_trades": 2,
+        "consistency_score": 0.5,
+        "folds_list": [
+          1,
+          2
+        ],
+        "classification": "mixed"
+      },
+      "INIT/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "4": 167.64
+        },
+        "total_fold_pnl": 167.64,
+        "full_pnl": 311.41,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "JUNO/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "0": 150.22
+        },
+        "total_fold_pnl": 150.22,
+        "full_pnl": 150.22,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          0
+        ],
+        "classification": "one_shot"
+      },
+      "KOBAN/USD": {
+        "folds_present": 2,
+        "folds_positive": 1,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "2": -105.29,
+          "4": 190.0
+        },
+        "total_fold_pnl": 84.71,
+        "full_pnl": 111.46,
+        "full_trades": 2,
+        "consistency_score": 0.5,
+        "folds_list": [
+          2,
+          4
+        ],
+        "classification": "mixed"
+      },
+      "MEME/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "4": 7.27
+        },
+        "total_fold_pnl": 7.27,
+        "full_pnl": 8.4,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "MF/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "2": -120.08
+        },
+        "total_fold_pnl": -120.08,
+        "full_pnl": -176.71,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          2
+        ],
+        "classification": "one_shot"
+      },
+      "NOBODY/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "1": 154.88
+        },
+        "total_fold_pnl": 154.88,
+        "full_pnl": 208.3,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          1
+        ],
+        "classification": "one_shot"
+      },
+      "NYM/USD": {
+        "folds_present": 2,
+        "folds_positive": 1,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "0": 190.45,
+          "1": -39.38
+        },
+        "total_fold_pnl": 151.07,
+        "full_pnl": 137.49,
+        "full_trades": 2,
+        "consistency_score": 0.5,
+        "folds_list": [
+          0,
+          1
+        ],
+        "classification": "mixed"
+      },
+      "OGN/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "4": 25.49
+        },
+        "total_fold_pnl": 25.49,
+        "full_pnl": 47.35,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "PHA/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "4": 25.28
+        },
+        "total_fold_pnl": 25.28,
+        "full_pnl": 46.96,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "PUPS/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "4": -115.83
+        },
+        "total_fold_pnl": -115.83,
+        "full_pnl": -215.17,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "REKT/USD": {
+        "folds_present": 2,
+        "folds_positive": 1,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "0": 154.8,
+          "1": -101.16
+        },
+        "total_fold_pnl": 53.64,
+        "full_pnl": 43.54,
+        "full_trades": 2,
+        "consistency_score": 0.5,
+        "folds_list": [
+          0,
+          1
+        ],
+        "classification": "mixed"
+      },
+      "SAMO/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "2": -26.06
+        },
+        "total_fold_pnl": -26.06,
+        "full_pnl": -38.34,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          2
+        ],
+        "classification": "one_shot"
+      },
+      "SAROS/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "3": -29.65
+        },
+        "total_fold_pnl": -29.65,
+        "full_pnl": -45.37,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          3
+        ],
+        "classification": "one_shot"
+      },
+      "SBR/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "1": 39.77
+        },
+        "total_fold_pnl": 39.77,
+        "full_pnl": 43.75,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          1
+        ],
+        "classification": "one_shot"
+      },
+      "SGB/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "1": -70.9
+        },
+        "total_fold_pnl": -70.9,
+        "full_pnl": -77.99,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          1
+        ],
+        "classification": "one_shot"
+      },
+      "SIGMA/USD": {
+        "folds_present": 3,
+        "folds_positive": 2,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "0": 177.14,
+          "1": -151.91,
+          "4": 154.17
+        },
+        "total_fold_pnl": 179.4,
+        "full_pnl": 259.21,
+        "full_trades": 4,
+        "consistency_score": 0.667,
+        "folds_list": [
+          0,
+          1,
+          4
+        ],
+        "classification": "mixed"
+      },
+      "SPICE/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "4": 148.26
+        },
+        "total_fold_pnl": 148.26,
+        "full_pnl": 275.41,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "SUSHI/USD": {
+        "folds_present": 1,
+        "folds_positive": 0,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "4": -51.62
+        },
+        "total_fold_pnl": -51.62,
+        "full_pnl": -95.89,
+        "full_trades": 1,
+        "consistency_score": 0.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "TOKEN/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "0": 164.76
+        },
+        "total_fold_pnl": 164.76,
+        "full_pnl": 164.76,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          0
+        ],
+        "classification": "one_shot"
+      },
+      "XAN/USD": {
+        "folds_present": 1,
+        "folds_positive": 1,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "4": 109.52
+        },
+        "total_fold_pnl": 109.52,
+        "full_pnl": 126.63,
+        "full_trades": 1,
+        "consistency_score": 1.0,
+        "folds_list": [
+          4
+        ],
+        "classification": "one_shot"
+      },
+      "XL1/USD": {
+        "folds_present": 2,
+        "folds_positive": 2,
+        "folds_negative": 0,
+        "fold_pnls": {
+          "3": 169.89,
+          "4": 331.15
+        },
+        "total_fold_pnl": 501.04,
+        "full_pnl": 549.02,
+        "full_trades": 3,
+        "consistency_score": 1.0,
+        "folds_list": [
+          3,
+          4
+        ],
+        "classification": "mixed"
+      },
+      "XYO/USD": {
+        "folds_present": 2,
+        "folds_positive": 1,
+        "folds_negative": 1,
+        "fold_pnls": {
+          "0": 33.01,
+          "1": -8.34
+        },
+        "total_fold_pnl": 24.67,
+        "full_pnl": 21.8,
+        "full_trades": 2,
+        "consistency_score": 0.5,
+        "folds_list": [
+          0,
+          1
+        ],
+        "classification": "mixed"
+      }
+    }
+  },
+  "stable_winners_only": {
+    "universe_size": 1,
+    "tier_split": {
+      "tier1": 0,
+      "tier2": 1
+    },
+    "baseline_metrics": {
+      "trades": 4,
+      "pnl": 321.87,
+      "pf": 64.611,
+      "wr": 75.0,
+      "dd": 0.25,
+      "expectancy": 80.4682,
+      "trades_per_week": 0.93,
+      "exp_per_week": 74.9995,
+      "max_gap_days": 9.21,
+      "top1_share": 49.62
+    },
+    "wf_folds_positive": 3,
+    "wf_fold_details": [
+      {
+        "fold": 0,
+        "trades": 0,
+        "pnl": 0,
+        "positive": false
+      },
+      {
+        "fold": 1,
+        "trades": 2,
+        "pnl": 8.77,
+        "positive": true
+      },
+      {
+        "fold": 2,
+        "trades": 1,
+        "pnl": 150.22,
+        "positive": true
+      },
+      {
+        "fold": 3,
+        "trades": 1,
+        "pnl": 150.22,
+        "positive": true
+      },
+      {
+        "fold": 4,
+        "trades": 0,
+        "pnl": 0,
+        "positive": false
+      }
+    ],
+    "stress_metrics": {
+      "pnl": 279.2,
+      "pf": 20.295,
+      "trades": 4
+    },
+    "gates": {
+      "G1_throughput": {
+        "value": 0.93,
+        "threshold": ">= 10/wk",
+        "pass": false
+      },
+      "G2_max_gap": {
+        "value": 9.21,
+        "threshold": "<= 2.5d",
+        "pass": false
+      },
+      "G3_pnl": {
+        "value": 321.87,
+        "threshold": "> $0",
+        "pass": true
+      },
+      "G5_top1_share": {
+        "value": 49.62,
+        "threshold": "<= 20%",
+        "pass": false
+      },
+      "G6_wf_folds": {
+        "value": 3,
+        "threshold": ">= 4/5",
+        "pass": false
+      },
+      "G8_dd": {
+        "value": 0.25,
+        "threshold": "< 35%",
+        "pass": true
+      },
+      "G4_stress_pnl": {
+        "value": 279.2,
+        "threshold": "> $0",
+        "pass": true
+      }
+    },
+    "all_gates_pass": false
+  },
+  "verdict": {
+    "full_295_gates": "PASS",
+    "sw_only_gates": "FAIL",
+    "edge_persistence": "WEAK",
+    "recommendation": "Limited stable winners (1 coins). WARNING: One-shot coins dominate profit (51%). Stable-winners-only fails: G1_throughput, G2_max_gap, G5_top1_share, G6_wf_folds."
+  }
+}

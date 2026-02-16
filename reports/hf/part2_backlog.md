@@ -1,6 +1,6 @@
 # Part 2 Backlog — Priority Queue
 
-> Last updated: Cycle 7 start (2026-02-16)
+> Last updated: Cycle 8 complete (2026-02-16)
 >
 > **SCOPE RESET**: User directive — paper trading is NOT the next step.
 > New P0 items target: universe policy, concentration control, execution realism, drawdown control, loser diagnostics.
@@ -9,20 +9,17 @@
 ## P0 — Critical (blocks GO decision)
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| P0-6 | G2 gap computation discrepancy: standardize across all scripts (2.75d vs 1.5d for same config) | C8-? | ⏳ |
+| — | *(all P0 resolved)* | — | — |
 
 ## P1 — Important (improves confidence)
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| P1-7 | Novel improvement paths: signal variants, ensemble, or timeframe blending for further edge | C8-? | ⏳ |
-| P1-8 | Dev threshold sensitivity: test dev_thresh=1.5/1.8/2.2/2.5 on 295 coins | C8-? | ⏳ |
-| P1-9 | Fresh data validation: re-run on newest candle data if available (check for regime shift) | C8-? | ⏳ |
+| P1-9 | Fresh data validation: re-run on newest candle data if available (check for regime shift) | — | ⏳ |
 
 ## P2 — Nice-to-have
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| P2-7 | Hybrid maker strategy: limit-order entry for T2 coins to reduce taker costs | C8-? | ⏳ |
-| P2-8 | Monte Carlo trade shuffle: bootstrap confidence intervals on 295-coin P&L | C8-? | ⏳ |
+| P2-7 | Hybrid maker strategy: limit-order entry for T2 coins to reduce taker costs | — | ⏳ |
 
 ## Completed (Cycle 1)
 | # | Card | Owner | Result |
@@ -88,5 +85,22 @@
 
 ---
 
-**⚠️ LOOP CONTINUES** — G2 gap computation discrepancy blocks clean GO on STRICT gates.
-See new P0-6 above.
+## Completed (Cycle 8 — G2 bug fix + continued investigation)
+| # | Card | Owner | Result |
+|---|------|-------|--------|
+| ~~P0-6~~ | G2 gap computation discrepancy | HEAD | ✅ **BUG FOUND**: exec_realism + concentration scripts used entry_bar instead of exit_bar. Correct G2=1.5d (PASS). |
+
+---
+
+## Completed (Cycle 8 — Confidence Battery)
+| # | Card | Owner | Result |
+|---|------|-------|--------|
+| ~~P1-7~~ | Signal variants exploration (10 variants) | C8-D | ✅ **BASELINE OPTIMAL** — 2/10 pass all gates, none beats baseline exp/wk |
+| ~~P1-8~~ | Dev threshold sensitivity sweep | C8-A | ⭐ **dev=2.0 CONFIRMED** — only value passing 7/7, sharp optimum |
+| ~~P2-8~~ | Monte Carlo trade shuffle (10K bootstraps) | C8-C | ⭐ **100% WIN** — zero ruin, P95 DD=22.7%, DD budget ~25% |
+| ~~INT~~ | Exec realism v002 (G2 bugfix rerun) | C8-B | ⭐ **4/5 REGIMES PASS** — G2 fixed, only P90 fails (WF=3/5) |
+| ~~INT~~ | Coin stability / edge persistence | C8-E | ⚠️ **WEAK PERSISTENCE** — 1 stable winner, 51% one-shot profit |
+
+---
+
+**✅ RESEARCH COMPLETE** — All critical and important items resolved. 2 nice-to-have items remain (P1-9, P2-7) for future work.

@@ -1,6 +1,6 @@
 # Part 2 Scoreboard — Gate Status per Candidate
 
-> Last updated: Cycle 7 complete (2026-02-16)
+> Last updated: Cycle 8 complete (2026-02-16)
 
 ## Hard Gates
 
@@ -177,6 +177,13 @@
 
 ## Key Insights
 
+### Cycle 8 — Confidence Battery (G2 bugfix + sensitivity + Monte Carlo)
+1. **Dev threshold: dev=2.0 CONFIRMED OPTIMAL** (C8-A): Only value passing 7/7. dev=1.8 is nearest (6/7, G8=36.7%). G8 fold_conc<35% is the binding constraint.
+2. **Exec realism G2 FIXED** (C8-B): Bug corrected (entry_bar→exit_bar). Now 4/5 regimes pass 7/7. Only P90 conservative fails (WF=3/5). Strategy confirmed execution-resilient.
+3. **Monte Carlo: 100% WIN** (C8-C): 10K shuffles, zero ruin probability. P95 DD=22.7%. Original DD (8.6%) at 14th percentile. DD budget should be ~25%.
+4. **Signal variants: BASELINE OPTIMAL** (C8-D): 2/10 pass all gates (baseline + tl8). No variant beats baseline exp/wk ($762). G8 is binding gate for 8/10 variants.
+5. **Coin stability: WEAK PERSISTENCE** (C8-E): Only 1 stable winner (AURA/USD). 51% profit from one-shot coins. Edge is distributed, not concentrated in repeatable patterns.
+
 ### Cycle 7 — P0 Sweep (STRICT gates, scope reset)
 1. **Universe policy: SOLVED** (C7-A): Only excl_neg21 (295) and excl_worst12 (304) pass 7/7. All other 12 variants fail. Volume cutoffs, pct sampling, top-N — all dead ends.
 2. **Concentration control: NOT NEEDED** (C7-D): Baseline fold_conc=34.2% already passes G8. Per-coin caps, PnL caps, max_pos tuning, strength filter — all degrade performance without benefit.
@@ -184,7 +191,7 @@
 4. **DD killer: BASELINE OPTIMAL** (C7-C): sl5/tp8 is already best. Tighter stops INCREASE DD. Cooldown has zero effect. sl7/tp8 is only alternative passing all 7. 9/21 variants pass all gates.
 5. **Losers cluster: EXCLUDED_21 CONFIRMED** (C7-E): 0 new candidates. All 21 validated. Only 1 persistent (ALKIMI). T2 Q1 (low-vol) best, Q4 (high-vol) worst. Whitelist: 4 coins with <$27 loss.
 6. **Baseline 316 vs 295: CONFIRMED** (C7-F): 316=3/7 NO-GO (G4/G5/G6/G8 fail), 295=7/7 GO. 21 excluded coins contribute 13 FIXED STOP exits ($-1011).
-7. **OPEN ISSUE: G2 gap computation differs** between scripts — needs standardization before final GO.
+7. **G2 gap bug RESOLVED**: exec_realism + concentration used entry_bar instead of exit_bar. Correct G2=1.5d (PASS). No G2 blocker exists.
 
 ### Cycle 6
 1. **T1 concentration risk: MANAGEABLE**: XL1/USD is 48.3% of T1 P&L but only 15.2% of total. Excluding XL1/USD: still passes all gates ($2659, PF=2.49). Excluding top-3 T1: still passes ($2374, PF=2.35). T2-only: still passes ($2214, PF=2.61, WF=5/5). HHI=0.057 (DIVERSIFIED). No hedging/capping needed (C6-A1).

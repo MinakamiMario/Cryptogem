@@ -187,3 +187,32 @@ def stress_multiplier(regime: str, multiplier: float) -> dict:
         )
         result[tier_key] = new_t
     return result
+
+
+def register_regime(name: str, regime: dict) -> None:
+    """Register measured regime at runtime (no hardcoded values changed).
+
+    Validates regime structure and anti-double-counting invariant:
+    component sum must match total_per_side_bps within 0.15 bps tolerance.
+
+    Args:
+        name: regime name, e.g. 'measured_ob_maker_p50'
+        regime: dict with 'execution_mode', 'tier1', 'tier2', each tier having
+                'total_per_side_bps' and cost components that sum to total.
+
+    Raises:
+        AssertionError: if regime structure is invalid or components don't sum to total.
+    """
+    assert "execution_mode" in regime, "Regime must specify execution_mode"
+    for tier_key in ("tier1", "tier2"):
+        assert tier_key in regime, f"Missing {tier_key} in regime"
+        t = regime[tier_key]
+        assert "total_per_side_bps" in t, f"Missing total_per_side_bps in {tier_key}"
+        # Anti-double-counting: component sum must match total
+        computed = sum(t.get(k, 0.0) for k in _COMPONENT_KEYS)
+        computed += t.get("adverse_selection_bps", 0.0)
+        assert abs(computed - t["total_per_side_bps"]) < 0.15, (
+            f"Component sum {computed:.1f} != total {t['total_per_side_bps']:.1f} "
+            f"in {name}/{tier_key}"
+        )
+    COST_REGIMES[name] = regime

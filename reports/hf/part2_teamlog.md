@@ -313,3 +313,85 @@ All 4 Cycle 4 investigations confirm the leader config (v5/295) is well-position
 **Status**: All P0 and P1 items resolved. Remaining items are P2 (nice-to-have). Research is substantively complete.
 
 ---
+
+## Cycle 5
+
+### Assignments
+| Agent | Task | Status |
+|-------|------|--------|
+| C5-A1 (Hybrid Exclusion) | Static 12 + dynamic rolling layer hybrid | ✅ DONE |
+| C5-A2 (sl7/304 Cross-Test) | sl=7 on 304 coins: 4-way comparison | ✅ DONE |
+| C5-A3 (BTC Regime) | BTC regime correlation: BULL/BEAR/SIDEWAYS | ✅ DONE |
+| C5-A4 (DD Duration) | Max drawdown duration across 3 production configs | ✅ DONE |
+
+### Agent Log Entries
+
+#### C5-A1 — Hybrid Exclusion ❌ DEGRADES
+- **Report**: `part2_hybrid_exclusion_001.json` + `.md`
+- **Attempt**: Static 12 worst coins + dynamic rolling layer (168/336/504 bar lookback) to identify additional coins to exclude
+- **Metrics**:
+  - Static 12 only (304 coins): 7/7 gates (PF=2.518, fold_conc=34.0%)
+  - Hybrid best (25 coins excl, lb504): 6/7 gates (PF=4.112, fold_conc=**35.3%** → G8 FAIL)
+  - Oracle 21 (295 coins): 7/7 gates (PF=2.834, fold_conc=34.2%)
+- **Learnings**: Dynamic layer is counterproductive. It improves PF (2.518→4.112) and WF (4/5→5/5) but reduces trade count (58→47), which concentrates fold P&L and breaks G8. The hybrid's 9 extra exclusions beyond static-12 include coins that aren't in the oracle list (ARPA, CAMP, DEEP, DRV, KOBAN, SAMO, SAROS, SGB, SIGMA). Dynamic exclusion has 0% stability between segments.
+- **Next move**: → Hybrid rejected. Use static-12 exclusion only in production.
+
+#### C5-A2 — sl=7 on 304 Coins (4-Way Cross-Test) ⭐ ALL 4 PASS
+- **Report**: `part2_sl7_304_001.json` + `.md`
+- **Attempt**: Head-to-head of all 4 combinations: sl7/304, sl7/295, v5/304, v5/295
+- **Metrics**:
+  - sl7/304: 57 trades, PF=2.242, P&L=$2169, DD=14.6%, WF=4/5, fold_conc=33.8%, gates=7/7
+  - sl7/295: 55 trades, PF=2.715, P&L=$3196, DD=9.8%, WF=5/5, fold_conc=33.1%, gates=7/7
+  - v5/304: 58 trades, PF=2.518, P&L=$2403, DD=11.8%, WF=4/5, fold_conc=34.0%, gates=7/7
+  - v5/295: 56 trades, PF=2.834, P&L=$3272, DD=8.6%, WF=4/5, fold_conc=34.2%, gates=7/7
+- **Learnings**: All 4 configs pass 7/7 gates. The 9 extra coins in 304 are clearly dilutive: PF drops 0.3-0.5, P&L drops $800-$1000, DD increases 2-5%. sl7/295 is the best overall by composite score (unique 5/5 WF). sl7/304 is the weakest of the four but still viable.
+- **Next move**: → 4th viable config confirmed but 295-coin universe remains superior.
+
+#### C5-A3 — BTC Regime Correlation ✅ REGIME-ROBUST
+- **Report**: `part2_btc_regime_001.json` + `.md`
+- **Attempt**: Classify BTC into BULL/BEAR/SIDEWAYS using 48-bar SMA + return threshold (±1%), analyze signal performance per regime
+- **Metrics**:
+  - Regime distribution: BEAR=50.2%, SIDEWAYS=32.2%, BULL=17.5%
+  - BULL: 13 trades, PF=5.65, WR=76.9%, P&L=+$1104
+  - BEAR: 25 trades, PF=1.57, WR=52.0%, P&L=+$585
+  - SIDEWAYS: 18 trades, PF=4.08, WR=72.2%, P&L=+$1583
+  - Filter tests: No-BEAR=4/7, BULL-only=3/7, SIDEWAYS-only=4/7
+- **Learnings**: Signal is profitable in ALL three BTC regimes. BEAR is weakest (PF=1.57) but still positive. Regime filtering kills trade count → G1/G2/G8 fail. The 50% BEAR exposure is a feature, not a bug — it provides volume for statistical significance. No regime filter recommended.
+- **Next move**: → Signal is regime-robust. No action needed.
+
+#### C5-A4 — Drawdown Duration Analysis ⭐ sl7/295 BEST
+- **Report**: `part2_dd_duration_001.json` + `.md`
+- **Attempt**: Compare DD duration, consecutive losses, and inter-trade gaps across 3 production configs
+- **Metrics**:
+  - v5/295 (leader): max DD duration 8.6d, 8 episodes, max consec losses=4, max gap=1.50d
+  - sl7/295 (robustness alt): max DD duration **3.8d** (BEST), 9 episodes, max consec losses=5, max gap=1.50d
+  - v5/304 (conservative alt): max DD duration 11.7d (WORST), 7 episodes, max consec losses=5, max gap=1.50d
+- **Learnings**: sl7/295 has the shortest max underwater period at 3.8 days — less than half of the leader's 8.6 days. This is a significant psychological advantage for paper trading. v5/304 is worst at 11.7 days. Inter-trade gaps are identical across all configs (max 1.50d). Consecutive loss streaks are similar (4-5 max).
+- **Next move**: → sl7/295's shorter DD duration further strengthens its case as the robustness alternative.
+
+### Cycle 5 Synthesis
+
+**P2 CLEANUP — RESEARCH SUBSTANTIVELY COMPLETE** ⭐
+
+All four Cycle 5 investigations were P2 nice-to-haves that refine the production picture:
+
+| Investigation | Verdict | Key Finding |
+|---------------|---------|-------------|
+| Hybrid exclusion (C5-A1) | DEGRADES (6/7) | Dynamic layer counterproductive — use static-12 only |
+| sl7/304 cross-test (C5-A2) | ALL 4 PASS (7/7) | 4th viable config, but 295-coin universe superior |
+| BTC regime (C5-A3) | REGIME-ROBUST | Profitable in all regimes, filtering NOT recommended |
+| DD duration (C5-A4) | sl7/295 BEST | 3.8d max underwater vs leader's 8.6d |
+
+**FOUR VIABLE PRODUCTION CONFIGS (ranked)**:
+1. **v5/295** — LEADER (best raw P&L/PF, 8/8 gates)
+2. **sl7/295** — ROBUSTNESS ALT (best WF 5/5, shortest DD duration 3.8d, 7/7 gates)
+3. **v5/304** — CONSERVATIVE ALT (fewer exclusions, 8/8 gates)
+4. **sl7/304** — 4th OPTION (weakest, but all gates pass, 7/7 gates)
+
+**Remaining P2 items** (2 of 6 still open):
+- P2-5: T2-focused fee optimization (contingent on MEXC fee changes — no action now)
+- P2-6: T1 concentration risk hedge/cap study (XL1/USD=48.3% of T1 P&L)
+
+**Recommendation**: Research is complete enough for paper trading deployment. The two remaining P2 items are low-priority and can be addressed during paper trading if needed.
+
+---

@@ -1,6 +1,6 @@
 # Part 2 Scoreboard — Gate Status per Candidate
 
-> Last updated: Cycle 4 complete (2026-02-16)
+> Last updated: Cycle 5 complete (2026-02-16)
 
 ## Hard Gates
 
@@ -40,6 +40,9 @@
 > Multi-pos: max_pos=2 passes 7/7 but -60% P&L — keep max_pos=1 (C4-A1)
 > Tier split: T1=32.3% ($1058), T2=67.7% ($2214) — T2 is dominant edge contributor (C4-A4)
 > Time-of-day: filtering worst hours causes REGRESSION 7/7→6/7 (G8 fails) — not viable (C4-A3)
+> BTC regime: profitable in ALL regimes (BULL PF=5.65, BEAR PF=1.57, SIDEWAYS PF=4.08) — filtering NOT recommended (C5-A3)
+> DD duration: max 8.6d underwater (29% of observation), max consec losses=4 (C5-A4)
+> Hybrid exclusion: dynamic layer DEGRADES (6/7 vs static-12's 7/7) — use static exclusion only (C5-A1)
 
 ### ⭐ sl=7 on 295 coins (excl_all_negative) — 7/7 gates PASS (ALTERNATIVE)
 | Gate | Value | Verdict |
@@ -57,6 +60,8 @@
 > Source: C3-A3 sl7_295_001. sl=7 variant: better WF (5/5 vs 4/5) and fold_conc (33.1% vs 34.2%).
 > PF=2.715, 55 trades, DD=9.8%. V5 wins on raw P&L/PF but sl=7 wins on robustness metrics.
 > Both pass all 7 testable gates. sl=7 is more conservative (wider stop loss).
+> DD duration: max 3.8d underwater (BEST of all configs), avg 1.9d — less than half of leader's 8.6d (C5-A4)
+> Cross-test: sl7/295 is best of all 4 configs by composite score (C5-A2)
 
 ### v5 on 304 coins (excl_worst12) — 8/8 gates PASS (CONSERVATIVE ALT)
 | Gate | Value | Verdict |
@@ -74,6 +79,24 @@
 > Source: C2-A5 excl_sweep_001 + C3-A1 robustness_304_001. More conservative: only 12 worst coins excluded.
 > PF=2.518, 58 trades, DD=11.8%, fold_conc=34.0%. G7=12/12 (all survive stress, all WF>=3/5).
 > Top variant on 304: time_limit-2 (score=510.6, exp/wk=$638).
+> DD duration: max 11.7d underwater (WORST of all configs) — 39% of observation period (C5-A4)
+> 9 extra coins vs 295 are clearly dilutive: lower PF, higher DD, longer underwater periods (C5-A2)
+
+### sl=7 on 304 coins (excl_worst12) — 7/7 gates PASS (NEW C5-A2)
+| Gate | Value | Verdict |
+|------|-------|---------|
+| G1 | 13.26/wk | PASS |
+| G2 | 1.50d | PASS |
+| G3 | +$505/wk | PASS |
+| G4 | +$345/wk (2x stress) | PASS |
+| G5 | 14.6% | PASS |
+| G6 | 4/5 | PASS |
+| G8 | 33.8% | PASS |
+| **Score** | **7/7 ALL GATES PASS** | **🟢 4th viable** |
+
+> Source: C5-A2 sl7_304_001. 4th viable config but weakest of the four.
+> PF=2.242, 57 trades, DD=14.6%, fold_conc=33.8%, WF=4/5.
+> Dilution from 9 extra coins: PF drops from 2.715 (sl7/295) to 2.242, P&L from $3196 to $2169.
 
 ### tp10_sl4_tl8 on 295 coins — 6/7 gates (G8 FAIL)
 | Gate | Value | Verdict |
@@ -152,7 +175,14 @@
 
 ## Key Insights
 
-### Cycle 4 (NEW)
+### Cycle 5 (NEW)
+1. **Hybrid exclusion DEGRADES**: Static 12 + dynamic rolling layer → 25 coins excluded, 6/7 gates (G8 FAIL at 35.3%). Static 12 alone passes 7/7. Dynamic layer is counterproductive — reduces trade count and concentrates folds. Production: use static-12 only (C5-A1).
+2. **sl7/304 passes 7/7 — 4th viable config**: All 4 combinations (sl5/sl7 × 295/304) pass all gates. But 304-coin configs are clearly weaker: sl7/304 PF=2.242 vs sl7/295 PF=2.715. The 9 extra coins dilute performance across all metrics (C5-A2).
+3. **BTC regime: signal is regime-robust**: Profitable in ALL three regimes (BULL PF=5.65, BEAR PF=1.57, SIDEWAYS PF=4.08). BEAR trades are not negative — they're just weaker. Filtering any regime causes gate regression (7/7→3-4/7). No regime filter recommended (C5-A3).
+4. **DD duration favors sl7/295**: Max underwater 3.8d vs leader's 8.6d vs v5/304's 11.7d. sl7/295 also has shortest avg DD (1.9d) and most recovered episodes (8/9). Shorter DD duration = less psychological stress in paper trading (C5-A4).
+5. **Research substantively complete**: All P2 items resolved except two niche analyses (T2 fee optimization contingent on MEXC changes, T1 concentration hedge study). Four viable configs identified, all passing all gates. Paper trading is the next step.
+
+### Cycle 4
 1. **max_pos=2 passes 7/7 but NOT worth it**: Both max_pos=1 and max_pos=2 pass all gates, but max_pos=2 has -60% P&L ($1309 vs $3272) and -60% exp/wk ($305 vs $762). Lower DD (5.0% vs 8.6%) is the only advantage. Recommendation: keep max_pos=1.
 2. **Expanding window OOS: NOT_CONFIRMED**: Exclusion helped 0/2 OOS windows, aggregate delta -$106. 11 stable exclusions all match oracle list, but exclusion doesn't improve OOS P&L. Contradicts C2-A3 STRUCTURAL_FEATURE — exclusion benefit may be largely in-sample. OOS gate score: 4/7.
 3. **Time-of-day filtering: REGRESSION**: Signal fires 23/24 hours. Filtering worst hours (06, 14, 19 UTC) improves PF (2.834→3.795) but causes G8 FAIL (fold_conc 34.2%→38.5%). 7/7→6/7 gates. Not viable.

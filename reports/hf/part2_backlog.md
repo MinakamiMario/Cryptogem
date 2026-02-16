@@ -1,6 +1,6 @@
 # Part 2 Backlog — Priority Queue
 
-> Last updated: Cycle 4 complete (2026-02-16)
+> Last updated: Cycle 5 complete (2026-02-16)
 
 ## P0 — Critical (blocks GO decision)
 | # | Card | Owner | Status |
@@ -18,12 +18,10 @@
 ## P2 — Nice-to-have
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| P2-1 | Hybrid exclusion: static persistent + periodic rolling review | — | ⏳ |
-| P2-2 | sl=7 + excl_worst12 (304 coins) cross-test | — | ⏳ |
-| P2-3 | Correlation analysis: coin P&L vs BTC regime | — | ⏳ |
-| P2-4 | Max drawdown duration analysis on v5/295 | — | ⏳ |
-| P2-5 | T2-focused fee optimization analysis (if MEXC fee changes) | — | ⏳ |
+| P2-5 | T2-focused fee optimization analysis (if MEXC fee changes) | — | ⏳ (contingent) |
 | P2-6 | T1 concentration risk: XL1/USD=48.3% of T1 P&L — hedge/cap study | — | ⏳ |
+
+**4 of 6 P2 items resolved in Cycle 5. Remaining 2 are low-priority / contingent.**
 
 ## Completed (Cycle 1)
 | # | Card | Owner | Result |
@@ -60,3 +58,11 @@
 | ~~P1-4~~ | Expanding window OOS | C4-A2 | ⚠️ **NOT_CONFIRMED** — exclusion helped 0/2 windows, delta -$106 |
 | ~~P1-5~~ | Time-of-day analysis | C4-A3 | ❌ REGRESSION — filtering breaks G8 (fold_conc 38.5%) |
 | ~~P1-6~~ | Per-tier edge decomposition | C4-A4 | ⭐ **T2 validated — 67.7% of edge, WF=5/5, lower DD** |
+
+## Completed (Cycle 5)
+| # | Card | Owner | Result |
+|---|------|-------|--------|
+| ~~P2-1~~ | Hybrid exclusion (static+dynamic) | C5-A1 | ❌ **HYBRID_DEGRADES** — dynamic layer breaks G8 (35.3%), static-12 alone passes 7/7 |
+| ~~P2-2~~ | sl=7 + excl_worst12 (304 coins) | C5-A2 | ⭐ **ALL 4 configs pass 7/7** — sl7/295 best by composite, sl7/304 viable but weakest |
+| ~~P2-3~~ | BTC regime correlation | C5-A3 | ✅ **REGIME-ROBUST** — profitable in all regimes, filtering NOT recommended |
+| ~~P2-4~~ | Max drawdown duration | C5-A4 | ⭐ **sl7/295 BEST** — 3.8d max underwater vs leader's 8.6d |

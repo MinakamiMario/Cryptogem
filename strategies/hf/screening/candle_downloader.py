@@ -137,13 +137,15 @@ def download_candles(
                     break
 
                 for row in ohlcv:
+                    h, l, c = row[2], row[3], row[4]
                     all_candles.append({
                         "timestamp": row[0],
                         "open": row[1],
-                        "high": row[2],
-                        "low": row[3],
-                        "close": row[4],
+                        "high": h,
+                        "low": l,
+                        "close": c,
                         "volume": row[5],
+                        "vwap": (h + l + c) / 3,  # HLC3 proxy
                     })
 
                 # Next page: last timestamp + 1h

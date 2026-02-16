@@ -1,0 +1,3186 @@
+{
+  "total": 454,
+  "success": 454,
+  "failed": 0,
+  "skipped_existing": 0,
+  "coverage": [
+    {
+      "internal": "0G/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1758621600000,
+      "last_ts": 1761213600000
+    },
+    {
+      "internal": "AAVE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ADA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AERO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "APEX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "APT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ARB/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ARKM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ASTER/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1758445200000,
+      "last_ts": 1761037200000
+    },
+    {
+      "internal": "ATH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ATOM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AVAX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AZTEC/USD",
+      "bars": 109,
+      "status": "ok",
+      "first_ts": 1770879600000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "BCH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BNB/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BTC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1762758000000,
+      "last_ts": 1765350000000
+    },
+    {
+      "internal": "COMP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CORN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CRV/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DEEP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DOGE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DOT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ELSA/USD",
+      "bars": 659,
+      "status": "ok",
+      "first_ts": 1768899600000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "ENA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ENSO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1760432400000,
+      "last_ts": 1763024400000
+    },
+    {
+      "internal": "ETH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FF/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1759150800000,
+      "last_ts": 1761742800000
+    },
+    {
+      "internal": "FHE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FIGHT/USD",
+      "bars": 607,
+      "status": "ok",
+      "first_ts": 1769086800000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "FIL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FOGO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1768485600000,
+      "last_ts": 1771077600000
+    },
+    {
+      "internal": "GALA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "H/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1750842000000,
+      "last_ts": 1753434000000
+    },
+    {
+      "internal": "HAEDAL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HBAR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HNT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HYPE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1752224400000,
+      "last_ts": 1754816400000
+    },
+    {
+      "internal": "ICNT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1751536800000,
+      "last_ts": 1754128800000
+    },
+    {
+      "internal": "ICP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "INIT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "IO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "IP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "KAS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LINEA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1757516400000,
+      "last_ts": 1760108400000
+    },
+    {
+      "internal": "LINK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LIT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1768485600000,
+      "last_ts": 1771077600000
+    },
+    {
+      "internal": "LTC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LUNA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ME/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MERL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "METH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MNT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MON/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1763996400000,
+      "last_ts": 1766588400000
+    },
+    {
+      "internal": "MONPRO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MORPHO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MOVE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NEAR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NIGHT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1765274400000,
+      "last_ts": 1767866400000
+    },
+    {
+      "internal": "ONDO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "OP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PENGU/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PENGUIN/USD",
+      "bars": 386,
+      "status": "ok",
+      "first_ts": 1769882400000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "PEPE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "POL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "POPCAT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PUMP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1752512400000,
+      "last_ts": 1755104400000
+    },
+    {
+      "internal": "PYTH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RENDER/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RLUSD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1758895200000,
+      "last_ts": 1761487200000
+    },
+    {
+      "internal": "S/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SCOR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1765965600000,
+      "last_ts": 1768557600000
+    },
+    {
+      "internal": "SEI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SENT/USD",
+      "bars": 608,
+      "status": "ok",
+      "first_ts": 1769083200000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "SHIB/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SKR/USD",
+      "bars": 642,
+      "status": "ok",
+      "first_ts": 1768960800000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "SNX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SOL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SOMI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1756821600000,
+      "last_ts": 1759413600000
+    },
+    {
+      "internal": "SPX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "STABLE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1765198800000,
+      "last_ts": 1767790800000
+    },
+    {
+      "internal": "STETH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "STRK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SUI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TIA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TNSR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TON/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TOSHI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TOWNS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1754402400000,
+      "last_ts": 1756994400000
+    },
+    {
+      "internal": "TRIA/USD",
+      "bars": 322,
+      "status": "ok",
+      "first_ts": 1770112800000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "TRUMP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TRX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "UNI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "USD1/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1752055200000,
+      "last_ts": 1754647200000
+    },
+    {
+      "internal": "USDC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "USDE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VIRTUAL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VVV/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WAVES/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WHITEWHALE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1767700800000,
+      "last_ts": 1770292800000
+    },
+    {
+      "internal": "WIF/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WLD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WLFI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1756731600000,
+      "last_ts": 1759323600000
+    },
+    {
+      "internal": "XAN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1759140000000,
+      "last_ts": 1761732000000
+    },
+    {
+      "internal": "XAUT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XDC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XLM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XPL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1758805200000,
+      "last_ts": 1761397200000
+    },
+    {
+      "internal": "XRP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZAMA/USD",
+      "bars": 343,
+      "status": "ok",
+      "first_ts": 1770037200000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "ZK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZKP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1766149200000,
+      "last_ts": 1768741200000
+    },
+    {
+      "internal": "ZORA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZRO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "1INCH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "2Z/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1759410000000,
+      "last_ts": 1762002000000
+    },
+    {
+      "internal": "A/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "A8/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ACH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ACS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AEVO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AFC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AGI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AGLD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AIOZ/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AIXBT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ALCH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ALGO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ALMANAK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1765454400000,
+      "last_ts": 1768046400000
+    },
+    {
+      "internal": "ALT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AMI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ANIME/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ANKR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "APE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ARTY/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AURORA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AVA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AVAIL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AVL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AVNT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1757426400000,
+      "last_ts": 1760018400000
+    },
+    {
+      "internal": "AXL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "AXS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "B3/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BABY1/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BABYDOGE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BAN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BARD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1758193200000,
+      "last_ts": 1760785200000
+    },
+    {
+      "internal": "BAT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BB/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BBSOL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BDXN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748944800000,
+      "last_ts": 1751536800000
+    },
+    {
+      "internal": "BEAM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BERA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BICO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BIRB/USD",
+      "bars": 463,
+      "status": "ok",
+      "first_ts": 1769605200000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "BLAST/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BLUR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BMT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BOBA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BOME/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BONK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BRETT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "BREV/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1767708000000,
+      "last_ts": 1770300000000
+    },
+    {
+      "internal": "BTT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "C98/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CAKE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CAMP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1756285200000,
+      "last_ts": 1758877200000
+    },
+    {
+      "internal": "CARV/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CAT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1753257600000,
+      "last_ts": 1755849600000
+    },
+    {
+      "internal": "CATI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CBK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CELO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CFG/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1756202400000,
+      "last_ts": 1758794400000
+    },
+    {
+      "internal": "CGPT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CHILLGUY/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CHZ/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CITY/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CLOUD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CMETH/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "COMMON/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1761570000000,
+      "last_ts": 1764162000000
+    },
+    {
+      "internal": "COOK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "COOKIE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "COQ/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CORE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CPOOL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CRCLX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1751378400000,
+      "last_ts": 1753970400000
+    },
+    {
+      "internal": "CSPR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CTA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CTC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "CUDIS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1749124800000,
+      "last_ts": 1751716800000
+    },
+    {
+      "internal": "CYBER/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DAI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DBR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DEGEN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DGB/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DIAM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DOGS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DOLO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DOOD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DRIFT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DYDX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "DYM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "EAT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1761742800000,
+      "last_ts": 1764334800000
+    },
+    {
+      "internal": "EGLD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "EIGEN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ELIZAOS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1762934400000,
+      "last_ts": 1765526400000
+    },
+    {
+      "internal": "ELON/USD",
+      "bars": 342,
+      "status": "ok",
+      "first_ts": 1770040800000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "ENJ/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ENS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "EPT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ERA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1752764400000,
+      "last_ts": 1755356400000
+    },
+    {
+      "internal": "ES/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1752660000000,
+      "last_ts": 1755252000000
+    },
+    {
+      "internal": "ESE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ETC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ETHFI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "F/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FET/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FIDA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FITFI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FLIP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FLOCK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FLOKI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FLOW/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FLR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FLUID/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FORT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FOXY/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FRAX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1768222800000,
+      "last_ts": 1770814800000
+    },
+    {
+      "internal": "FTT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "FUEL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "G/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GAME/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GLMR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GMT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GMX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GOAT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GODS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GPS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GRASS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GRT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "GTAI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HFT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HMSTR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HOLO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1757592000000,
+      "last_ts": 1760184000000
+    },
+    {
+      "internal": "HOME/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1749553200000,
+      "last_ts": 1752145200000
+    },
+    {
+      "internal": "HOODX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1751464800000,
+      "last_ts": 1754056800000
+    },
+    {
+      "internal": "HOOK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HPOS10I/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HTX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HUMA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "HYPER/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ICX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ID/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "IMU/USD",
+      "bars": 606,
+      "status": "ok",
+      "first_ts": 1769090400000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "IMX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "INJ/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "INSP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "INTER/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "IZI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "J/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "JASMY/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "JST/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "JTO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "JUP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "JUV/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "K/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1754636400000,
+      "last_ts": 1757228400000
+    },
+    {
+      "internal": "KAIA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "KAVA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "KCS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "KILO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "KMNO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "KSM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "KUB/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "L3/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1749038400000,
+      "last_ts": 1751630400000
+    },
+    {
+      "internal": "LAVA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LAYER/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LDO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LMWR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LRC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LUNAI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "LUNC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MAGIC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MANA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MANTA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MASK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MAVIA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MBOX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MBX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MCRT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MEE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MEME/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MET/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1761228000000,
+      "last_ts": 1763820000000
+    },
+    {
+      "internal": "MEW/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MINA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MMT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1762257600000,
+      "last_ts": 1764849600000
+    },
+    {
+      "internal": "MOCA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MOG/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MOVR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MPLX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MVL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "MX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NAKA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NAVX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NEIROCTO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NEON/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NEWT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1750773600000,
+      "last_ts": 1753365600000
+    },
+    {
+      "internal": "NEXO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NFT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NOM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1759305600000,
+      "last_ts": 1761897600000
+    },
+    {
+      "internal": "NOT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NRN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NXPC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "NYM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "OAS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "OBOL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "OBT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "OL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "OM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ONE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ORDER/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ORDI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PAAL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PARTI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PENDLE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PEOPLE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PERP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PIEVERSE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1763125200000,
+      "last_ts": 1765717200000
+    },
+    {
+      "internal": "PIRATE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PLUME/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PNUT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PONKE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PORTAL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PORTALS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1758024000000,
+      "last_ts": 1760616000000
+    },
+    {
+      "internal": "PRCL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PRIME/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PROVE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1757332800000,
+      "last_ts": 1759924800000
+    },
+    {
+      "internal": "PSG/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PUFF/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PUFFER/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "PUMPBTC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751428800000
+    },
+    {
+      "internal": "PYBOBO/USD",
+      "bars": 514,
+      "status": "ok",
+      "first_ts": 1769421600000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "PYUSD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "QNT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "QORPO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "QTUM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RATS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RDNT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RECALL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1760529600000,
+      "last_ts": 1763121600000
+    },
+    {
+      "internal": "RED/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RESOLV/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1749560400000,
+      "last_ts": 1752152400000
+    },
+    {
+      "internal": "ROAM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ROSE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RPL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RSS3/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RUNE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "RVN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SAFE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SAHARA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1750939200000,
+      "last_ts": 1753531200000
+    },
+    {
+      "internal": "SAND/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SAROS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SATS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SCA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SCR/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SCRT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SFUND/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SIGN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SIS/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SKATE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1749463200000,
+      "last_ts": 1752055200000
+    },
+    {
+      "internal": "SKY/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1756972800000,
+      "last_ts": 1759564800000
+    },
+    {
+      "internal": "SLP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SOLO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SOLV/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SONIC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SOSO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SPELL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SPK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1750150800000,
+      "last_ts": 1752742800000
+    },
+    {
+      "internal": "SQD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SSV/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "STX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SUN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SUNDOG/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SUPRA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SUSHI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SVL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SWEAT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SWELL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SXT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "SYND/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1761555600000,
+      "last_ts": 1764147600000
+    },
+    {
+      "internal": "TA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1753088400000,
+      "last_ts": 1755680400000
+    },
+    {
+      "internal": "TAC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1752573600000,
+      "last_ts": 1755165600000
+    },
+    {
+      "internal": "TAI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TAIKO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TEL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "THETA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TIME/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TOKEN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "TREE/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1753797600000,
+      "last_ts": 1756389600000
+    },
+    {
+      "internal": "TSLAX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1751983200000,
+      "last_ts": 1754575200000
+    },
+    {
+      "internal": "TUNA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1753887600000,
+      "last_ts": 1756479600000
+    },
+    {
+      "internal": "TWT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "U/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1756976400000,
+      "last_ts": 1759568400000
+    },
+    {
+      "internal": "UMA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "USAT/USD",
+      "bars": 486,
+      "status": "ok",
+      "first_ts": 1769522400000,
+      "last_ts": 1771268400000
+    },
+    {
+      "internal": "USDD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "USDTB/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "USTC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "UXLINK/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VANA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VANRY/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VELO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VENOM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VET/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VIC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VINU/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VOOI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1766062800000,
+      "last_ts": 1768654800000
+    },
+    {
+      "internal": "VRA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "VTHO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "W/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WAL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WAXP/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WBTC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WCT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WEMIX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WEN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "WET/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1765292400000,
+      "last_ts": 1767884400000
+    },
+    {
+      "internal": "WOO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XAI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XAVA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XEM/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XION/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XTER/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XTZ/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "XUSD/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1757498400000,
+      "last_ts": 1760090400000
+    },
+    {
+      "internal": "YB/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1760526000000,
+      "last_ts": 1763118000000
+    },
+    {
+      "internal": "YFI/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZBT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1760706000000,
+      "last_ts": 1763298000000
+    },
+    {
+      "internal": "ZEN/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZENT/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZEREBRO/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZETA/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZEX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZIG/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZIL/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZKC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1757944800000,
+      "last_ts": 1760536800000
+    },
+    {
+      "internal": "ZKJ/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZRC/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    },
+    {
+      "internal": "ZRX/USD",
+      "bars": 721,
+      "status": "ok",
+      "first_ts": 1748736000000,
+      "last_ts": 1751328000000
+    }
+  ]
+}

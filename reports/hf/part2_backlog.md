@@ -1,6 +1,6 @@
 # Part 2 Backlog — Priority Queue
 
-> Last updated: Cycle 8 complete (2026-02-16)
+> Last updated: Cycle 9 complete (2026-02-16)
 >
 > **SCOPE RESET**: User directive — paper trading is NOT the next step.
 > New P0 items target: universe policy, concentration control, execution realism, drawdown control, loser diagnostics.
@@ -100,6 +100,15 @@
 | ~~P2-8~~ | Monte Carlo trade shuffle (10K bootstraps) | C8-C | ⭐ **100% WIN** — zero ruin, P95 DD=22.7%, DD budget ~25% |
 | ~~INT~~ | Exec realism v002 (G2 bugfix rerun) | C8-B | ⭐ **4/5 REGIMES PASS** — G2 fixed, only P90 fails (WF=3/5) |
 | ~~INT~~ | Coin stability / edge persistence | C8-E | ⚠️ **WEAK PERSISTENCE** — 1 stable winner, 51% one-shot profit |
+
+---
+
+## Completed (Cycle 9 — P0 Validation)
+| # | Card | Owner | Result |
+|---|------|-------|--------|
+| ~~P0-A~~ | Universe/selection audit (data assembly) | P0-A | ✅ **MEDIUM RISK** — Exclusion is circular but specific. CV lift positive but modest ($+16.34). |
+| ~~P0-B~~ | Execution cost measurement (MEXC) | P0-B | ⚠️ **CANDLE PROXY INVALID** — Measures bar range not spread. Breakeven 6.5x v2. Real spread unknown. |
+| ~~P0-C~~ | Decision/ADR writer | P0-C | ✅ ADR-HF-033 written. GO maintained with caveats. |
 
 ---
 

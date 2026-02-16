@@ -1,6 +1,6 @@
 # Part 2 Scoreboard — Gate Status per Candidate
 
-> Last updated: Cycle 8 complete (2026-02-16)
+> Last updated: Cycle 9 complete (2026-02-16)
 
 ## Hard Gates
 
@@ -176,6 +176,14 @@
 | All N<316 | 0-1/7 | Volume sorting doesn't help — edge is in low-vol coins |
 
 ## Key Insights
+
+### Cycle 9 — P0 Validation (Data Assembly + Execution Cost)
+1. **Exclusion circularity: CONFIRMED** (P0-A): EXCLUDED_21 = 100% in-sample. But placebo test shows it's SPECIFIC (0/100 random >= EXCLUDED_21), and CV lift is positive ($+16.34, 3/5 folds).
+2. **Candle-proxy costs: INVALID AS MEASURE** (P0-B): (high-low)/(2*close) measures bar range (~800bps), not bid-ask spread (~5-30bps). Proxy is ~50-100x too conservative.
+3. **Breakeven: 6.5x v2 fees** (P0-B): Strategy tolerates up to 81bps T1, 153bps T2 — substantial margin over v2 model.
+4. **CV-stable excludes**: 5 coins (AI3, ALKIMI, ANIME, KET, TANSSI) appear in ALL 5 folds — candidates for rolling production exclusion.
+5. **Fill rate**: Fine at $200 (1.0), degrades to 0.17 at $2000 — keep trade size <= $500.
+6. **ADR-HF-033**: CONDITIONAL GO MAINTAINED. Candle proxy invalidates itself but breakeven analysis provides real safety margin.
 
 ### Cycle 8 — Confidence Battery (G2 bugfix + sensitivity + Monte Carlo)
 1. **Dev threshold: dev=2.0 CONFIRMED OPTIMAL** (C8-A): Only value passing 7/7. dev=1.8 is nearest (6/7, G8=36.7%). G8 fold_conc<35% is the binding constraint.

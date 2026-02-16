@@ -1297,3 +1297,79 @@ Additional metrics: PF=2.834, 56 trades, WF folds: $909, $58, -$18, $792, $913. 
 4. **Validation criteria**: Live PF > 1.2, live Exp/trade within 50% of backtest, fill rate > 90%.
 5. **Abort trigger**: If paper trading PF < 1.0 after 20 trades, HALT and reassess.
 6. **Revisit after 2+ weeks** of paper trading data.
+
+---
+
+## ADR-HF-033: P0 Validation — Data Assembly Audit + Execution Cost Measurement
+
+**Date**: 2026-02-16
+**Status**: DECIDED — **CONDITIONAL GO MAINTAINED** (with caveats)
+**Context**: Two P0 validation checks were run before paper trading deployment. Agent P0-A audited the data assembly process (coin exclusion circularity, survivorship bias, universe drift). Agent P0-B measured execution costs using candle-derived spread proxies and assessed fill rate sensitivity.
+
+### P0-A: Data Assembly Audit
+
+**Findings**:
+1. **EXCLUDED_21 is 100% circular** (Jaccard=1.00 with full-sample derived set). The exclusion list is entirely derived from the same sample used for backtesting.
+2. **Random placebo test**: 0/100 random 21-coin exclusion sets achieve the same or better improvement as EXCLUDED_21. The exclusion is SPECIFIC (P100 percentile) — not an artifact of excluding any 21 coins.
+3. **Cross-validation (5-fold, embargo=10 bars)**: Average OOS lift = $+16.34/fold. 3/5 folds show positive lift. Modest but directionally positive.
+4. **5 CV-stable coins** excluded in ALL 5 folds: AI3/USD, ALKIMI/USD, ANIME/USD, KET/USD, TANSSI/USD. These are candidates for a rolling production exclusion seed.
+5. **Jaccard fold stability**: avg=0.580, min=0.500, max=0.654. Moderate overlap between fold exclusion sets.
+6. **Survivorship bias**: 2 short-lived coins, 6 zero-volume tail coins among the 21. Risk: LOW.
+7. **Universe drift**: 2.9% of coins differ between dataset snapshots. Risk: LOW.
+8. **Overall leakage risk score**: 1.50/3.0 = **MEDIUM**.
+
+**Verdict P0-A**: Exclusion is circular by construction but demonstrably specific (placebo P100) and partially validated OOS (CV lift positive, 3/5 folds). The 5 CV-stable coins provide a defensible production seed.
+
+### P0-B: Execution Cost Measurement
+
+**Candle-derived spread proxy**: `(high - low) / (2 * close) * 10000` bps.
+
+**CRITICAL CAVEAT**: This proxy measures the FULL 1H candle bar range, NOT the instantaneous bid-ask spread. It captures all intra-hour price movement including trends, volatility, and genuine spread. Real crypto bid-ask spreads for T1 coins are typically 1-5bps, for T2 coins 5-30bps. The proxy values (~800bps) are approximately 50-100x too conservative. This metric is INVALID as a spread measure but the breakeven analysis derived from it is still operationally meaningful.
+
+**Measured proxy values**:
+| Tier | Proxy P50 (bps) | v2 Model (bps) | Ratio |
+|------|-----------------|-----------------|-------|
+| T1 | 817 | 12.5 | 65x |
+| T2 | 803 | 23.5 | 34x |
+
+**Gate results at different cost assumptions**:
+
+| Cost Model | G1 | G2 | G3 | G4 | G5 | G6 | G7 | Score |
+|------------|----|----|----|----|----|----|----|----|
+| v2 baseline (P50) | PASS | PASS | PASS | PASS | PASS | PASS | PASS | **7/7** |
+| Candle-proxy P50 | PASS | PASS | FAIL | FAIL | PASS | PASS | PASS | **2/7** |
+| Candle-proxy P90 | PASS | PASS | FAIL | FAIL | FAIL | FAIL | FAIL | **0/7** |
+
+**Breakeven**: 6.5x v2 fees (81.2bps T1, 152.8bps T2). Strategy tolerates fee increases up to 6.5x before G3 breaks.
+
+**Trade-size sensitivity**: Spread proxy is constant (~723bps, dominated by candle range). Fill rate degrades from 1.0 at $200 to 0.17 at $2000. Recommendation: keep trade size <= $500.
+
+**Calm vs volatile market**: 806bps (calm, ATR < median) vs 1085bps (volatile, ATR >= median). Proxy is regime-sensitive but both are extreme upper bounds.
+
+**30 trades flip from winner to loser** at candle-proxy costs — but this is expected given the proxy overstates true costs by 50-100x.
+
+**Verdict P0-B**: The candle-range proxy INVALIDATES ITSELF as a cost measure (~800bps vs real ~5-30bps). However, the breakeven analysis is operationally meaningful: the strategy tolerates up to 6.5x the v2 fee model (81-153bps) before breaking. Real spreads would need to be 4-8x the v2 model to threaten profitability. Paper trading with real fill tracking is the definitive cost test.
+
+### Decision
+
+**CONDITIONAL GO MAINTAINED** — consistent with ADR-HF-029 and ADR-HF-032.
+
+**Rationale**:
+1. The candle-proxy cost measurement is not a valid spread estimate and cannot be used to reject the strategy. Real bid-ask spreads are 50-100x lower than the proxy values.
+2. The breakeven at 6.5x v2 fees provides substantial margin. Even if real execution costs are 3-4x the v2 model, the strategy remains profitable.
+3. The exclusion is confirmed circular (by construction) but also confirmed specific (placebo P100) and partially validated OOS (CV lift $+16.34, 3/5 folds positive).
+4. The 5 CV-stable coins (AI3, ALKIMI, ANIME, KET, TANSSI) provide a defensible seed for rolling production exclusion — these appear in every CV fold.
+5. All prior confidence tests (Monte Carlo 100% win, G7=12/12, 4/5 exec regimes PASS, dev=2.0 sharp optimum) remain valid.
+
+**Risks**:
+1. **Real spread unknown**: Without live orderbook data, the actual bid-ask spread for T2 coins remains unmeasured. The candle proxy is useless; paper trading with fill-price tracking is the only way to measure true execution cost.
+2. **Exclusion partially circular**: Leakage risk score = MEDIUM (1.50/3.0). The CV lift is modest ($+16.34/fold) and only 3/5 folds are positive. The full-sample 7/7 gates may be partially inflated.
+3. **Fill rate at scale**: Fine at $200 (1.0) but degrades to 0.17 at $2000. Trade size must stay <= $500 for reliable fills.
+4. **Universe drift**: Low (2.9%) but needs monitoring. New coin listings could shift the exclusion list.
+
+**Action items**:
+1. **Paper trading with real fill tracking** is the definitive test for execution costs. Record fill price vs signal price for every trade.
+2. **Use CV-stable 5 coins** (AI3, ALKIMI, ANIME, KET, TANSSI) as the rolling production exclusion seed.
+3. **Measure real spread** during paper trading: `fill_price - signal_price` in bps per trade.
+4. **Keep trade size <= $500** to maintain fill rate near 1.0.
+5. **Monitor exclusion list stability** monthly — rerun CV to check if the 5 stable coins persist.

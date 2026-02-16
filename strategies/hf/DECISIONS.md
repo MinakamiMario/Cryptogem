@@ -1373,3 +1373,86 @@ Additional metrics: PF=2.834, 56 trades, WF folds: $909, $58, -$18, $792, $913. 
 3. **Measure real spread** during paper trading: `fill_price - signal_price` in bps per trade.
 4. **Keep trade size <= $500** to maintain fill rate near 1.0.
 5. **Monitor exclusion list stability** monthly — rerun CV to check if the 5 stable coins persist.
+
+## ADR-HF-034: P0 Measured Orderbook Cost Validation — 24-Backtest Rerun
+
+**Date**: 2026-02-16
+**Status**: DECIDED — **CONDITIONAL GO MAINTAINED** (maker execution confirmed)
+**Context**: ADR-HF-033 identified that the candle-proxy spread estimate was invalid (~800bps vs real ~5-30bps). This ADR resolves that uncertainty by measuring actual MEXC orderbook spreads and slippage from ~19,500 live snapshots, then rerunning the full 24-combination backtest matrix under measured costs.
+
+### Data Collection
+
+**Source**: 19,500 live MEXC orderbook snapshots (42 coins, top-20 levels, 10s intervals, ~2.5h window).
+**Pipeline**: `orderbook_collector.py` → `orderbook_analysis.py` → `run_part2_measured_cost_rerun.py`
+
+**Data validation (3 independent subagents)**:
+1. **Sanity (A)**: BTC spread median=0.05bps (P90=0.82), 0% crossed books, T1 spread < T2 spread. 3 non-blocking FAILs: T1 depth < T2 (tier ≠ depth ranking), T1 slippage non-monotone (survivorship bias from 20% depth shortfall at $2000), 39/42 coins (3 missing).
+2. **Slippage Walk (B)**: 9/9 manual book walks reproduced with 0.00 bps delta. Synthetic orderbook test: exact match (100.25bps). Depth shortfall correctly returns None.
+3. **Regime Decomposition (C)**: 12/12 component sums match (delta=0.0). Anti-double-counting verified: taker spread = half-spread, maker adverse = spread×0.3. `register_regime()` assertions catch invalid regimes.
+
+### Measured Cost Regimes
+
+| Regime | Execution | T1 bps | T2 bps | Components |
+|--------|-----------|--------|--------|------------|
+| maker_p50 | limit | 3.1 | 4.1 | adverse_selection only (fee=0, spread=0, slip=0) |
+| maker_p90 | limit | 29.2 | 11.4 | adverse_selection only |
+| taker_p50 | market | 31.9 | 29.9 | fee(10) + half_spread + slippage_200 |
+| taker_p90 | market | 214.2 | 100.2 | fee(10) + half_spread + slippage_200 |
+
+**Key insight**: Measured taker P50 costs (31.9 T1, 29.9 T2) are 2.5x higher than the v2 Kaiko analytical model (12.5 T1, 23.5 T2), primarily due to slippage being ~20x higher than Kaiko's estimate.
+
+### 24-Backtest Results (STRICT gates: 7 hard gates)
+
+| Regime | v5 $200 | v5 $500 | v5 $2000 | sl7 $200 | sl7 $500 | sl7 $2000 |
+|--------|---------|---------|----------|----------|----------|-----------|
+| maker_p50 | **7/7** PF=3.38 | **7/7** PF=3.38 | **7/7** PF=3.38 | **7/7** PF=3.21 | **7/7** PF=3.21 | **7/7** PF=3.21 |
+| maker_p90 | **7/7** PF=2.98 | **7/7** PF=2.98 | **7/7** PF=2.98 | **7/7** PF=2.86 | **7/7** PF=2.86 | **7/7** PF=2.86 |
+| taker_p50 | 6/7 PF=2.56 | 5/7 PF=2.51 | 5/7 PF=2.45 | **7/7** PF=2.47 | **7/7** PF=2.43 | 6/7 PF=2.37 |
+| taker_p90 | 2/7 PF=0.93 | 2/7 PF=0.67 | 2/7 PF=0.56 | 2/7 PF=0.94 | 2/7 PF=0.67 | 2/7 PF=0.57 |
+
+**Summary**: 14/24 combinations pass ALL STRICT gates.
+
+### Pattern Analysis
+
+1. **All 12 maker combinations PASS** (both configs, all sizes). Maker execution is the clear execution path: PF=2.86-3.38, DD=7.9-9.5%, 5/5 WF folds positive.
+2. **Taker P50 is marginal**: sl7 passes $200/$500, v5 fails on G8 (fold concentration 0.35 vs threshold 0.35). The edge is thin but positive.
+3. **Taker P90 is catastrophic**: PF<1.0, negative expectancy, DD=37-67%. The strategy cannot survive P90 taker costs.
+4. **Size insensitive for maker**: PF and DD identical across $200/$500/$2000 because maker costs (adverse_selection only) don't depend on trade size.
+5. **Size sensitive for taker**: Higher sizes → higher slippage → lower PF. Worst at $2000 where slippage is a larger share of total cost.
+6. **sl7 slightly more robust than v5**: sl7 passes 2 extra taker_p50 combinations (sl7 taker_p50 $200/$500 pass vs v5 taker_p50 $200 fails G8 by 0.003).
+7. **Fill model has NO impact on maker regimes**: 100% fill rate for all maker combinations (bar-structure fill model finds all limits fill within the candle range at these low cost levels).
+
+### Comparison to ADR-HF-033 (candle proxy)
+
+| Metric | ADR-HF-033 (candle proxy) | ADR-HF-034 (measured OB) |
+|--------|--------------------------|--------------------------|
+| T1 spread proxy | 817 bps (candle range) | 10.4 bps (actual spread) |
+| T2 spread proxy | 803 bps (candle range) | 13.7 bps (actual spread) |
+| Proxy validity | INVALID (50-100x too high) | **VALID (live orderbook)** |
+| Maker P50 gate score | N/A | **7/7** |
+| Taker P50 gate score | N/A | **5-7/7** (borderline) |
+| Breakeven | 6.5x v2 fees | Maker survives even P90 |
+
+### Decision
+
+**CONDITIONAL GO MAINTAINED** — execution path refined to **MAKER LIMIT ORDERS**.
+
+**Rationale**:
+1. **Maker execution is confirmed viable**: All 12 maker combinations (P50 + P90) pass 7/7 STRICT gates with PF=2.86-3.38 and DD≤9.5%. Even under P90 adverse conditions, maker execution is profitable.
+2. **Taker execution is risky**: P50 barely passes (sl7 only, not v5); P90 is catastrophic. Market orders should be avoided except for emergency exits.
+3. **The candle-proxy mystery is resolved**: Real spreads (10-14bps) are ~60-80x lower than candle-range proxy (800bps), confirming ADR-HF-033's suspicion that the proxy was invalid.
+4. **Anti-double-counting verified**: 12/12 component sums match exactly. `register_regime()` assertions prevent misconfigured regimes from entering the pipeline.
+5. **v2 Kaiko comparison**: Measured taker costs are 2.5x higher than analytical v2 model, primarily due to slippage. The v2 model was optimistic.
+
+**Risks**:
+1. **Short data window**: ~2.5h of snapshots (19,500). A 24h dataset would capture time-of-day effects and wider market conditions. Collector is running for 24h.
+2. **Adverse selection estimate**: Maker adverse_selection = spread×0.3 is a rule-of-thumb. Real adverse selection depends on signal predictability and queue position.
+3. **Fill probability at scale**: Bar-structure model shows 100% fill for maker regimes at these cost levels, but real queue dynamics may reduce fills.
+4. **G8 (fold concentration) is the binding constraint**: Several taker combinations fail G8 by tiny margins (0.35 vs 0.35 threshold). The gate is well-calibrated.
+
+**Action items**:
+1. **Execute with MAKER LIMIT orders** at P50 costs ($200-$500 size). This is the confirmed viable execution path.
+2. **Re-run when 24h dataset complete** (~363K snapshots) to capture time-of-day effects.
+3. **Paper trade with real fill tracking**: Measure actual fill rate, queue position, and adverse selection.
+4. **Monitor live spread vs P50/P90 thresholds**: If spreads drift above P90, halt trading.
+5. **Keep taker as emergency exit only**: Use market orders only for stop-loss execution, not for signal entry.

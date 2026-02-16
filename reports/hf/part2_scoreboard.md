@@ -1,6 +1,6 @@
 # Part 2 Scoreboard — Gate Status per Candidate
 
-> Last updated: Cycle 6 complete (2026-02-16)
+> Last updated: Cycle 7 complete (2026-02-16)
 
 ## Hard Gates
 
@@ -177,7 +177,16 @@
 
 ## Key Insights
 
-### Cycle 6 (NEW) — FINAL
+### Cycle 7 — P0 Sweep (STRICT gates, scope reset)
+1. **Universe policy: SOLVED** (C7-A): Only excl_neg21 (295) and excl_worst12 (304) pass 7/7. All other 12 variants fail. Volume cutoffs, pct sampling, top-N — all dead ends.
+2. **Concentration control: NOT NEEDED** (C7-D): Baseline fold_conc=34.2% already passes G8. Per-coin caps, PnL caps, max_pos tuning, strength filter — all degrade performance without benefit.
+3. **Exec realism: RESILIENT** (C7-B): P90 costs -17.3%, adverse 10bps -6.1%, hybrid maker +6.0%. Strategy holds under all regimes. **G2 gap discrepancy** (2.75d in B/D vs 1.5d in A/C/E/F) needs investigation.
+4. **DD killer: BASELINE OPTIMAL** (C7-C): sl5/tp8 is already best. Tighter stops INCREASE DD. Cooldown has zero effect. sl7/tp8 is only alternative passing all 7. 9/21 variants pass all gates.
+5. **Losers cluster: EXCLUDED_21 CONFIRMED** (C7-E): 0 new candidates. All 21 validated. Only 1 persistent (ALKIMI). T2 Q1 (low-vol) best, Q4 (high-vol) worst. Whitelist: 4 coins with <$27 loss.
+6. **Baseline 316 vs 295: CONFIRMED** (C7-F): 316=3/7 NO-GO (G4/G5/G6/G8 fail), 295=7/7 GO. 21 excluded coins contribute 13 FIXED STOP exits ($-1011).
+7. **OPEN ISSUE: G2 gap computation differs** between scripts — needs standardization before final GO.
+
+### Cycle 6
 1. **T1 concentration risk: MANAGEABLE**: XL1/USD is 48.3% of T1 P&L but only 15.2% of total. Excluding XL1/USD: still passes all gates ($2659, PF=2.49). Excluding top-3 T1: still passes ($2374, PF=2.35). T2-only: still passes ($2214, PF=2.61, WF=5/5). HHI=0.057 (DIVERSIFIED). No hedging/capping needed (C6-A1).
 2. **T2 fee sensitivity: MASSIVE MARGIN**: T2 fee can increase to 218bps (9.3x current 23.5bps) before G3 breaks, or 109bps (4.6x) before G4 stress breaks. ALL 7 gates pass even at 100bps T2 fee. If T2 gets 0% maker: +$816 (25% uplift). Strategy is extremely fee-resilient (C6-A2).
 3. **ALL P2 ITEMS RESOLVED**: 6 of 6 P2 items completed across Cycles 5-6. Research is COMPLETE.

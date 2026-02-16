@@ -460,3 +460,122 @@ All four Cycle 5 investigations were P2 nice-to-haves that refine the production
 **FINAL RECOMMENDATION**: Deploy paper trading with v5/295 (leader). Monitor sl7/295 as parallel alt. All risk dimensions cleared.
 
 ---
+
+## Cycle 7 — SCOPE RESET (User directive: paper trading is NOT next step)
+
+### Assignments
+| Agent | Task | Status |
+|-------|------|--------|
+| C7-A (Universe Sweep) | P0-1: Universe policy sweep (14 variants) | ✅ DONE |
+| C7-B (Exec Realism) | P0-3: Execution realism upgrade (5 regimes) | ✅ DONE |
+| C7-C (DD Killer) | P0-4: Drawdown killer (21 variants: SL/TP + cooldown + volfilter) | ✅ DONE |
+| C7-D (Concentration) | P0-2: Concentration control (17 variants: per-coin caps, PnL caps, max_pos, strength) | ✅ DONE |
+| C7-E (Losers Cluster) | P0-5: Losers cluster diagnostics (full 316-coin attribution) | ✅ DONE |
+| C7-F (Integrator) | Baseline 316 vs 295 with STRICT gates + gap analysis | ✅ DONE |
+
+### Agent Log Entries
+
+#### C7-A — Universe Policy Sweep ⭐ CONFIRMS 295 + 304
+- **Report**: `part2_universe_sweep_001.json` + `.md`
+- **Attempt**: 14 universe variants: T1-only, T1+T2 pct cutoffs (50/70/90%), volume floors (50K-500K), top-N by vol (50-150), full 316, excl_worst12 (304), excl_neg21 (295)
+- **Metrics**:
+  - excl_neg21 (295): PF=2.834, Exp/wk=$762, DD=8.6%, WF=4/5, FC=34%, **7/7 PASS**
+  - excl_worst12 (304): PF=2.518, Exp/wk=$559, DD=11.8%, WF=4/5, FC=34%, **7/7 PASS**
+  - All other 12 variants: 1-4/7 gates (failures on G1/G2/G4/G5/G6/G8)
+  - Volume floors: 0 trades at ≥100K floor, 3 trades at 50K — dead end
+  - T1+T2_90pct: 4/7, best non-exclusion variant
+- **Learnings**: Only 2 of 14 universe policies pass all 7 strict gates. Both are exclusion-based. Volume cutoff, percentage sampling, and top-N ranking ALL fail. The edge is structurally in the excluded-losers approach. Confirms Cycle 1-2 findings with STRICT thresholds.
+- **Next move**: → Universe policy is SOLVED. 295 is optimal, 304 is conservative backup.
+
+#### C7-B — Execution Realism Upgrade ⚠️ G2 DISCREPANCY
+- **Report**: `part2_exec_realism_001.json` + `.md`
+- **Attempt**: 5 execution regimes: baseline P50, market conservative P90, hybrid maker+taker (60/40 entry, 30/70 exit), adverse selection 5bps, adverse selection 10bps
+- **Metrics**:
+  - baseline P50: 6/7 gates (G2=2.75d FAIL — discrepancy vs other reports showing 1.5d)
+  - P90 conservative: 5/7 (G2 FAIL + G6 FAIL, WF=3/5)
+  - hybrid realistic: 6/7 (G2 FAIL only, Exp/wk=$808 = +6% vs baseline)
+  - adverse 5bps: 6/7 (G2 FAIL, -3.0% exp/wk)
+  - adverse 10bps: 6/7 (G2 FAIL, -6.1% exp/wk)
+- **Learnings**: Strategy degrades gracefully across execution models. P90 costs reduce edge by 17.3%. Adverse selection 10bps reduces by 6.1%. Hybrid maker/taker actually IMPROVES (+6%). **G2=2.75d discrepancy needs investigation** — C7-A/E/F report G2=1.5d for same 295 config. Likely gap calculation method difference. Ignoring G2: all regimes except P90 pass 6/7.
+- **Next move**: → Investigate G2 gap computation discrepancy. Strategy is execution-resilient.
+
+#### C7-C — Drawdown Killer ✅ BASELINE IS OPTIMAL
+- **Report**: `part2_dd_killer_001.json` + `.md`
+- **Attempt**: 21 variants across 4 experiments: SL/TP retune (8 combos), cooldown after loss (6 levels), volatility filter (5 thresholds), combined best + max DD kill combo
+- **Metrics**:
+  - Baseline sl5/tp8: **ALL gates PASS**, DD=8.6%, best overall
+  - sl7/tp8: ALL gates PASS, DD=9.8%, WF=5/5 (second best)
+  - sl3/tp6 (tight): DD increases to 16.4% (WORSE, not better!)
+  - All cooldown variants: IDENTICAL to baseline (cd4/cas8 → cd12/cas24 = same results)
+  - Vol filters: reduce trades, hurt fold_conc, NO DD improvement
+  - MAX_DD_KILL combo: sl3/tp6 + cd12/cas24 + atr<1.5 = 4/7 gates, DD=22.6% (WORSE)
+- **Learnings**: The baseline sl5/tp8 is ALREADY the drawdown-optimal config. Tighter stops INCREASE drawdown (counterintuitive but logical: more stop-outs = more losses accumulate). Cooldown makes zero difference (trades are already well-spaced in 1H data). Vol filter removes good trades too. 9/21 variants pass all gates — all of them are minor tweaks of baseline. No improvement found.
+- **Next move**: → DD killer investigation complete. No improvement over baseline.
+
+#### C7-D — Concentration Control ❌ NO VARIANT PASSES ALL GATES
+- **Report**: `part2_concentration_001.json` + `.md`
+- **Attempt**: 17 variants: per-coin caps (1/2/3), PnL share caps (10/15/20/25%), max_pos tuning (1/2/3/5), signal strength filter (0/0.5/1.0/1.5/2.0)
+- **Metrics**:
+  - Baseline (295, mp1): 6/7 gates (G2=2.75d FAIL — same discrepancy as C7-B)
+  - Cap 1/coin: 5/7 (G1+G2 FAIL, only 41 trades)
+  - Cap 2/coin: 6/7 (G2 FAIL)
+  - PnL cap variants: 4/7 (G2+G6+G8 all FAIL — cap destroys WF)
+  - max_pos=2: 6/7 (G2 FAIL, exp/wk -60%)
+  - Strength ≥1.5: 4/7 (only 20 trades)
+- **Learnings**: Baseline fold_conc=34.2% already passes G8 (<35%). Concentration controls ADD NOTHING — the few that reduce fold_conc do so at massive cost (lower trades, PnL, WF). G2=2.75d is the universal blocker in this report. PnL capping is particularly destructive: it ruins walk-forward by clipping profitable trades.
+- **Next move**: → Concentration control is NOT needed. Baseline already passes G8.
+
+#### C7-E — Losers Cluster Diagnostics ✅ EXCLUDED_21 CONFIRMED
+- **Report**: `part2_losers_cluster_001.json` + `.md`
+- **Attempt**: Full 316-coin P&L attribution, per-fold loser analysis, T2 volume quartile breakdown, exclusion candidate identification
+- **Metrics**:
+  - 47 coins with trades, 269 with none. 21 net-negative, 26 net-positive.
+  - Total loss: $-2097 (21 coins), total gain: $+2467 (26 coins), net: $+370
+  - T2 losers: 17 coins, $-1723 (82.2% of all losses)
+  - Only 1 persistent loser: ALKIMI/USD (negative in 3/5 folds)
+  - New exclusion candidates beyond EXCLUDED_21: **ZERO**
+  - T2 Q4 (highest volume T2): worst performer ($-490 aggregate)
+  - T2 Q1 (lowest volume T2): best performer ($+526 aggregate)
+  - 4 coins on whitelist (AI3, POLIS, CFG, WMTX — losses < $27)
+- **Learnings**: The EXCLUDED_21 is exactly correct and complete. No additional exclusion candidates exist. The 4 whitelist coins (AI3, POLIS, CFG, WMTX) have tiny losses and could theoretically be kept, but the existing exclusion is already optimal. Interestingly, low-volume T2 coins are the BEST performers, contradicting the intuition that higher-volume = better execution.
+- **Next move**: → Losers analysis complete. EXCLUDED_21 is validated and final.
+
+#### C7-F — Integrator Baseline (316 vs 295, STRICT) ✅ CONFIRMS
+- **Report**: `part2_baseline_316_001.json` + `.md`
+- **Attempt**: Side-by-side 316 vs 295 with STRICT gates, gap analysis, exit reason breakdown
+- **Metrics**:
+  - 316: 3/7 gates (G4/G5/G6/G8 FAIL), PF=1.14, P&L=$370, DD=53.1%
+  - 295: 7/7 gates (ALL PASS), PF=2.83, P&L=$3272, DD=8.6%
+  - Delta: 16 extra trades add -$2902 P&L, +44.5% DD
+  - 316 exit breakdown: 20 FIXED STOP ($-2149), 33 TIME MAX ($-142), 18 PROFIT TARGET ($+2659)
+  - 295 exit breakdown: 7 FIXED STOP ($-1138), 28 TIME MAX ($+12), 21 PROFIT TARGET ($+4398)
+- **Learnings**: The 21 excluded coins contribute 13 FIXED STOP exits ($-1011) and remove 3 PROFIT TARGETs — net catastrophic. Exclusion is structural and measurably justified. The 295-coin TIME MAX exits flip from -$142 to +$12 (net positive) because excluded coins had long-duration losing TIME MAX exits.
+- **Next move**: → Baseline confirmed. 295 is definitive.
+
+### Cycle 7 Synthesis
+
+**P0 SWEEP COMPLETE — NO NEW IMPROVEMENTS FOUND** ⭐
+
+All 5 P0 items investigated with STRICT gate thresholds:
+
+| P0 | Investigation | Verdict | Key Finding |
+|----|---------------|---------|-------------|
+| P0-1 | Universe policy sweep (C7-A) | CONFIRMS 295+304 | Only 2/14 variants pass 7/7. Exclusion is only viable approach. |
+| P0-2 | Concentration control (C7-D) | NO IMPROVEMENT | Baseline already passes G8 (34.2%). All controls hurt more than help. |
+| P0-3 | Exec realism upgrade (C7-B) | RESILIENT + G2 ISSUE | Strategy degrades gracefully (P90: -17%, adverse 10bps: -6%). G2 gap discrepancy needs investigation. |
+| P0-4 | DD killer (C7-C) | BASELINE OPTIMAL | sl5/tp8 is already best DD config. Tighter stops INCREASE DD. 9/21 pass all gates. |
+| P0-5 | Losers cluster (C7-E) | EXCLUDED_21 CONFIRMED | 0 new candidates. All 21 validated. Whitelist: 4 tiny-loss coins. |
+
+**CRITICAL ISSUE: G2 gap computation discrepancy**
+- C7-B and C7-D report G2=2.75d for the 295 baseline
+- C7-A, C7-E, C7-F report G2=1.5d for the same config
+- C7-C reports G2=1.5d
+- Likely cause: Different gap computation (entry-to-entry vs exit-to-entry vs intra-bar timing)
+- **Action needed**: Investigate and standardize G2 gap computation across all scripts
+
+**STATUS**: Research loop continues. Next cycle should:
+1. **P0-CRITICAL**: Investigate G2 gap discrepancy — standardize computation
+2. Explore further if any novel improvement path exists (new signal variants, ensemble, timeframe blending)
+3. Consider whether STRICT G2 threshold (2.5d) is appropriate given entry-to-entry measurement
+
+---

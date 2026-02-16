@@ -1,0 +1,1505 @@
+{
+  "run_header": {
+    "task": "P0-1_universe_policy_sweep",
+    "date": "2026-02-16 01:27",
+    "commit": "427d5e0",
+    "signal": "H20_VWAP_DEVIATION v5",
+    "params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 5,
+      "time_limit": 10
+    },
+    "cost_regime": "MEXC Market (costs_mexc_v2)",
+    "fees": {
+      "market": {
+        "tier1_bps": 12.5,
+        "tier2_bps": 23.5
+      },
+      "stress_2x": {
+        "tier1_bps": 25.0,
+        "tier2_bps": 47.0
+      }
+    },
+    "total_bars": 722,
+    "total_weeks": 4.3,
+    "variants_tested": 14,
+    "runtime_s": 31.3
+  },
+  "gate_thresholds": {
+    "G1": ">= 10 trades/week",
+    "G2": "<= 2.5 days max gap",
+    "G3": "> $0 exp/week (market)",
+    "G4": "> $0 exp/week (stress 2x)",
+    "G5": "<= 20% max DD",
+    "G6": ">= 4/5 WF folds positive",
+    "G8": "< 35% top-1 fold concentration"
+  },
+  "volume_info": {
+    "method": "median(close * volume) * 24 per coin",
+    "top10": [
+      {
+        "rank": 1,
+        "coin": "SOL/USD",
+        "daily_vol_usd": 30190233.0
+      },
+      {
+        "rank": 2,
+        "coin": "XRP/USD",
+        "daily_vol_usd": 23294576.0
+      },
+      {
+        "rank": 3,
+        "coin": "SUI/USD",
+        "daily_vol_usd": 4982396.0
+      },
+      {
+        "rank": 4,
+        "coin": "XDG/USD",
+        "daily_vol_usd": 4139080.0
+      },
+      {
+        "rank": 5,
+        "coin": "ADA/USD",
+        "daily_vol_usd": 2678043.0
+      },
+      {
+        "rank": 6,
+        "coin": "LINK/USD",
+        "daily_vol_usd": 2014642.0
+      },
+      {
+        "rank": 7,
+        "coin": "SNX/USD",
+        "daily_vol_usd": 1895038.0
+      },
+      {
+        "rank": 8,
+        "coin": "FARTCOIN/USD",
+        "daily_vol_usd": 1446921.0
+      },
+      {
+        "rank": 9,
+        "coin": "PUMP/USD",
+        "daily_vol_usd": 1377201.0
+      },
+      {
+        "rank": 10,
+        "coin": "ZRO/USD",
+        "daily_vol_usd": 1022569.0
+      }
+    ]
+  },
+  "sweep_results": [
+    {
+      "label": "T1_only",
+      "n_t1": 100,
+      "n_t2": 0,
+      "n_total": 100,
+      "baseline": {
+        "trades": 21,
+        "pnl": 608.43,
+        "pf": 1.875,
+        "wr": 66.7,
+        "dd": 24.2,
+        "exp_per_trade": 28.9731,
+        "trades_per_week": 4.89,
+        "exp_per_week": 141.5748
+      },
+      "stress": {
+        "trades": 21,
+        "pnl": 475.43,
+        "pf": 1.658,
+        "wr": 61.9,
+        "exp_per_week": 110.6264,
+        "dd": 25.9
+      },
+      "wf_folds_positive": 3,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 3,
+          "pnl": 199.84
+        },
+        {
+          "fold": 2,
+          "trades": 5,
+          "pnl": -224.38
+        },
+        {
+          "fold": 3,
+          "trades": 2,
+          "pnl": -97.46
+        },
+        {
+          "fold": 4,
+          "trades": 5,
+          "pnl": 123.37
+        },
+        {
+          "fold": 5,
+          "trades": 6,
+          "pnl": 644.84
+        }
+      ],
+      "fold_concentration": 0.666,
+      "max_gap_days": 4.42,
+      "gates": {
+        "G1": {
+          "value": 4.89,
+          "threshold": ">= 10",
+          "pass": false
+        },
+        "G2": {
+          "value": 4.42,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "value": 141.57,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "value": 110.63,
+          "threshold": "> $0 (stress 2x)",
+          "pass": true
+        },
+        "G5": {
+          "value": 24.2,
+          "threshold": "<= 20%",
+          "pass": false
+        },
+        "G6": {
+          "value": 3,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 0.666,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 2,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 21,
+        "t1_pnl": 608.43,
+        "t2_trades": 0,
+        "t2_pnl": 0
+      },
+      "runtime_s": 0.1
+    },
+    {
+      "label": "T1+T2_50pct",
+      "n_t1": 100,
+      "n_t2": 108,
+      "n_total": 208,
+      "baseline": {
+        "trades": 35,
+        "pnl": 419.02,
+        "pf": 1.343,
+        "wr": 48.6,
+        "dd": 31.8,
+        "exp_per_trade": 11.9719,
+        "trades_per_week": 8.14,
+        "exp_per_week": 97.4995
+      },
+      "stress": {
+        "trades": 35,
+        "pnl": 169.74,
+        "pf": 1.128,
+        "wr": 45.7,
+        "exp_per_week": 39.4959,
+        "dd": 37.5
+      },
+      "wf_folds_positive": 3,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 5,
+          "pnl": 182.73
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -50.07
+        },
+        {
+          "fold": 3,
+          "trades": 6,
+          "pnl": -274.29
+        },
+        {
+          "fold": 4,
+          "trades": 6,
+          "pnl": 14.21
+        },
+        {
+          "fold": 5,
+          "trades": 9,
+          "pnl": 625.89
+        }
+      ],
+      "fold_concentration": 0.761,
+      "max_gap_days": 2.54,
+      "gates": {
+        "G1": {
+          "value": 8.14,
+          "threshold": ">= 10",
+          "pass": false
+        },
+        "G2": {
+          "value": 2.54,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "value": 97.5,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "value": 39.5,
+          "threshold": "> $0 (stress 2x)",
+          "pass": true
+        },
+        "G5": {
+          "value": 31.8,
+          "threshold": "<= 20%",
+          "pass": false
+        },
+        "G6": {
+          "value": 3,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 0.761,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 2,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 21,
+        "t1_pnl": 608.43,
+        "t2_trades": 14,
+        "t2_pnl": -189.42
+      },
+      "runtime_s": 0.3
+    },
+    {
+      "label": "T1+T2_70pct",
+      "n_t1": 100,
+      "n_t2": 151,
+      "n_total": 251,
+      "baseline": {
+        "trades": 46,
+        "pnl": -107.87,
+        "pf": 0.933,
+        "wr": 39.1,
+        "dd": 42.4,
+        "exp_per_trade": -2.345,
+        "trades_per_week": 10.7,
+        "exp_per_week": -25.0998
+      },
+      "stress": {
+        "trades": 46,
+        "pnl": -385.06,
+        "pf": 0.78,
+        "wr": 37.0,
+        "exp_per_week": -89.5975,
+        "dd": 49.0
+      },
+      "wf_folds_positive": 2,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 7,
+          "pnl": 222.72
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -112.91
+        },
+        {
+          "fold": 3,
+          "trades": 8,
+          "pnl": -467.89
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": -159.59
+        },
+        {
+          "fold": 5,
+          "trades": 13,
+          "pnl": 391.59
+        }
+      ],
+      "fold_concentration": 0.637,
+      "max_gap_days": 1.54,
+      "gates": {
+        "G1": {
+          "value": 10.7,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "value": 1.54,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "value": -25.1,
+          "threshold": "> $0",
+          "pass": false
+        },
+        "G4": {
+          "value": -89.6,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 42.4,
+          "threshold": "<= 20%",
+          "pass": false
+        },
+        "G6": {
+          "value": 2,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 0.637,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 2,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 21,
+        "t1_pnl": 608.43,
+        "t2_trades": 25,
+        "t2_pnl": -716.3
+      },
+      "runtime_s": 0.3
+    },
+    {
+      "label": "T1+T2_90pct",
+      "n_t1": 100,
+      "n_t2": 194,
+      "n_total": 294,
+      "baseline": {
+        "trades": 64,
+        "pnl": 169.92,
+        "pf": 1.07,
+        "wr": 46.9,
+        "dd": 45.6,
+        "exp_per_trade": 2.655,
+        "trades_per_week": 14.89,
+        "exp_per_week": 39.5387
+      },
+      "stress": {
+        "trades": 64,
+        "pnl": -250.91,
+        "pf": 0.901,
+        "wr": 42.2,
+        "exp_per_week": -58.3831,
+        "dd": 54.5
+      },
+      "wf_folds_positive": 4,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 12,
+          "pnl": 261.05
+        },
+        {
+          "fold": 2,
+          "trades": 13,
+          "pnl": 84.78
+        },
+        {
+          "fold": 3,
+          "trades": 12,
+          "pnl": -489.24
+        },
+        {
+          "fold": 4,
+          "trades": 14,
+          "pnl": 79.63
+        },
+        {
+          "fold": 5,
+          "trades": 14,
+          "pnl": 398.11
+        }
+      ],
+      "fold_concentration": 0.483,
+      "max_gap_days": 1.0,
+      "gates": {
+        "G1": {
+          "value": 14.89,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "value": 1.0,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "value": 39.54,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "value": -58.38,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 45.6,
+          "threshold": "<= 20%",
+          "pass": false
+        },
+        "G6": {
+          "value": 4,
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "value": 0.483,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 4,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 21,
+        "t1_pnl": 608.43,
+        "t2_trades": 43,
+        "t2_pnl": -438.51
+      },
+      "runtime_s": 0.4
+    },
+    {
+      "label": "vol_floor_50K",
+      "n_t1": 40,
+      "n_t2": 48,
+      "n_total": 88,
+      "baseline": {
+        "trades": 3,
+        "pnl": -149.89,
+        "pf": 0.0,
+        "wr": 0.0,
+        "dd": 7.5,
+        "exp_per_trade": -49.9627,
+        "trades_per_week": 0.7,
+        "exp_per_week": -34.877
+      },
+      "stress": {
+        "trades": 3,
+        "pnl": -173.06,
+        "pf": 0.0,
+        "wr": 0.0,
+        "exp_per_week": -40.2689,
+        "dd": 8.7
+      },
+      "wf_folds_positive": 0,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 2,
+          "trades": 2,
+          "pnl": -84.55
+        },
+        {
+          "fold": 3,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 4,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 5,
+          "trades": 1,
+          "pnl": -65.71
+        }
+      ],
+      "fold_concentration": 1.0,
+      "max_gap_days": 14.46,
+      "gates": {
+        "G1": {
+          "value": 0.7,
+          "threshold": ">= 10",
+          "pass": false
+        },
+        "G2": {
+          "value": 14.46,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "value": -34.88,
+          "threshold": "> $0",
+          "pass": false
+        },
+        "G4": {
+          "value": -40.27,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 7.5,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "value": 0,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 1.0,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 1,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 1,
+        "t1_pnl": -73.16,
+        "t2_trades": 2,
+        "t2_pnl": -76.73
+      },
+      "runtime_s": 0.1
+    },
+    {
+      "label": "vol_floor_100K",
+      "n_t1": 32,
+      "n_t2": 29,
+      "n_total": 61,
+      "baseline": {
+        "trades": 0,
+        "pnl": 0.0,
+        "pf": 0.0,
+        "wr": 0.0,
+        "dd": 0.0,
+        "exp_per_trade": 0.0,
+        "trades_per_week": 0.0,
+        "exp_per_week": 0.0
+      },
+      "stress": {
+        "trades": 0,
+        "pnl": 0.0,
+        "pf": 0.0,
+        "wr": 0.0,
+        "exp_per_week": 0.0,
+        "dd": 0.0
+      },
+      "wf_folds_positive": 0,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 2,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 3,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 4,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 5,
+          "trades": 0,
+          "pnl": 0
+        }
+      ],
+      "fold_concentration": 1.0,
+      "max_gap_days": 30.08,
+      "gates": {
+        "G1": {
+          "value": 0.0,
+          "threshold": ">= 10",
+          "pass": false
+        },
+        "G2": {
+          "value": 30.08,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "value": 0.0,
+          "threshold": "> $0",
+          "pass": false
+        },
+        "G4": {
+          "value": 0.0,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 0.0,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "value": 0,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 1.0,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 1,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 0,
+        "t1_pnl": 0,
+        "t2_trades": 0,
+        "t2_pnl": 0
+      },
+      "runtime_s": 0.1
+    },
+    {
+      "label": "vol_floor_200K",
+      "n_t1": 27,
+      "n_t2": 18,
+      "n_total": 45,
+      "baseline": {
+        "trades": 0,
+        "pnl": 0.0,
+        "pf": 0.0,
+        "wr": 0.0,
+        "dd": 0.0,
+        "exp_per_trade": 0.0,
+        "trades_per_week": 0.0,
+        "exp_per_week": 0.0
+      },
+      "stress": {
+        "trades": 0,
+        "pnl": 0.0,
+        "pf": 0.0,
+        "wr": 0.0,
+        "exp_per_week": 0.0,
+        "dd": 0.0
+      },
+      "wf_folds_positive": 0,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 2,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 3,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 4,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 5,
+          "trades": 0,
+          "pnl": 0
+        }
+      ],
+      "fold_concentration": 1.0,
+      "max_gap_days": 30.08,
+      "gates": {
+        "G1": {
+          "value": 0.0,
+          "threshold": ">= 10",
+          "pass": false
+        },
+        "G2": {
+          "value": 30.08,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "value": 0.0,
+          "threshold": "> $0",
+          "pass": false
+        },
+        "G4": {
+          "value": 0.0,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 0.0,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "value": 0,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 1.0,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 1,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 0,
+        "t1_pnl": 0,
+        "t2_trades": 0,
+        "t2_pnl": 0
+      },
+      "runtime_s": 0.0
+    },
+    {
+      "label": "vol_floor_500K",
+      "n_t1": 12,
+      "n_t2": 6,
+      "n_total": 18,
+      "baseline": {
+        "trades": 0,
+        "pnl": 0.0,
+        "pf": 0.0,
+        "wr": 0.0,
+        "dd": 0.0,
+        "exp_per_trade": 0.0,
+        "trades_per_week": 0.0,
+        "exp_per_week": 0.0
+      },
+      "stress": {
+        "trades": 0,
+        "pnl": 0.0,
+        "pf": 0.0,
+        "wr": 0.0,
+        "exp_per_week": 0.0,
+        "dd": 0.0
+      },
+      "wf_folds_positive": 0,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 2,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 3,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 4,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 5,
+          "trades": 0,
+          "pnl": 0
+        }
+      ],
+      "fold_concentration": 1.0,
+      "max_gap_days": 30.08,
+      "gates": {
+        "G1": {
+          "value": 0.0,
+          "threshold": ">= 10",
+          "pass": false
+        },
+        "G2": {
+          "value": 30.08,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "value": 0.0,
+          "threshold": "> $0",
+          "pass": false
+        },
+        "G4": {
+          "value": 0.0,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 0.0,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "value": 0,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 1.0,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 1,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 0,
+        "t1_pnl": 0,
+        "t2_trades": 0,
+        "t2_pnl": 0
+      },
+      "runtime_s": 0.0
+    },
+    {
+      "label": "top50_by_vol",
+      "n_t1": 28,
+      "n_t2": 22,
+      "n_total": 50,
+      "baseline": {
+        "trades": 0,
+        "pnl": 0.0,
+        "pf": 0.0,
+        "wr": 0.0,
+        "dd": 0.0,
+        "exp_per_trade": 0.0,
+        "trades_per_week": 0.0,
+        "exp_per_week": 0.0
+      },
+      "stress": {
+        "trades": 0,
+        "pnl": 0.0,
+        "pf": 0.0,
+        "wr": 0.0,
+        "exp_per_week": 0.0,
+        "dd": 0.0
+      },
+      "wf_folds_positive": 0,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 2,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 3,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 4,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 5,
+          "trades": 0,
+          "pnl": 0
+        }
+      ],
+      "fold_concentration": 1.0,
+      "max_gap_days": 30.08,
+      "gates": {
+        "G1": {
+          "value": 0.0,
+          "threshold": ">= 10",
+          "pass": false
+        },
+        "G2": {
+          "value": 30.08,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "value": 0.0,
+          "threshold": "> $0",
+          "pass": false
+        },
+        "G4": {
+          "value": 0.0,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 0.0,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "value": 0,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 1.0,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 1,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 0,
+        "t1_pnl": 0,
+        "t2_trades": 0,
+        "t2_pnl": 0
+      },
+      "runtime_s": 0.0
+    },
+    {
+      "label": "top100_by_vol",
+      "n_t1": 44,
+      "n_t2": 56,
+      "n_total": 100,
+      "baseline": {
+        "trades": 3,
+        "pnl": -142.69,
+        "pf": 0.0,
+        "wr": 0.0,
+        "dd": 7.1,
+        "exp_per_trade": -47.5621,
+        "trades_per_week": 0.7,
+        "exp_per_week": -33.2013
+      },
+      "stress": {
+        "trades": 3,
+        "pnl": -165.87,
+        "pf": 0.0,
+        "wr": 0.0,
+        "exp_per_week": -38.5953,
+        "dd": 8.3
+      },
+      "wf_folds_positive": 0,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 2,
+          "trades": 2,
+          "pnl": -77.35
+        },
+        {
+          "fold": 3,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 4,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 5,
+          "trades": 1,
+          "pnl": -65.71
+        }
+      ],
+      "fold_concentration": 1.0,
+      "max_gap_days": 14.46,
+      "gates": {
+        "G1": {
+          "value": 0.7,
+          "threshold": ">= 10",
+          "pass": false
+        },
+        "G2": {
+          "value": 14.46,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "value": -33.2,
+          "threshold": "> $0",
+          "pass": false
+        },
+        "G4": {
+          "value": -38.6,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 7.1,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "value": 0,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 1.0,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 1,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 1,
+        "t1_pnl": -65.96,
+        "t2_trades": 2,
+        "t2_pnl": -76.73
+      },
+      "runtime_s": 0.1
+    },
+    {
+      "label": "top150_by_vol",
+      "n_t1": 60,
+      "n_t2": 90,
+      "n_total": 150,
+      "baseline": {
+        "trades": 12,
+        "pnl": -33.42,
+        "pf": 0.913,
+        "wr": 25.0,
+        "dd": 11.2,
+        "exp_per_trade": -2.7854,
+        "trades_per_week": 2.79,
+        "exp_per_week": -7.7774
+      },
+      "stress": {
+        "trades": 12,
+        "pnl": -141.2,
+        "pf": 0.689,
+        "wr": 25.0,
+        "exp_per_week": -32.8543,
+        "dd": 13.4
+      },
+      "wf_folds_positive": 2,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 2,
+          "pnl": -17.11
+        },
+        {
+          "fold": 2,
+          "trades": 5,
+          "pnl": 108.35
+        },
+        {
+          "fold": 3,
+          "trades": 3,
+          "pnl": -170.66
+        },
+        {
+          "fold": 4,
+          "trades": 0,
+          "pnl": 0
+        },
+        {
+          "fold": 5,
+          "trades": 2,
+          "pnl": 95.43
+        }
+      ],
+      "fold_concentration": 0.532,
+      "max_gap_days": 9.17,
+      "gates": {
+        "G1": {
+          "value": 2.79,
+          "threshold": ">= 10",
+          "pass": false
+        },
+        "G2": {
+          "value": 9.17,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "value": -7.78,
+          "threshold": "> $0",
+          "pass": false
+        },
+        "G4": {
+          "value": -32.85,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 11.2,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "value": 2,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 0.532,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 1,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 1,
+        "t1_pnl": -65.96,
+        "t2_trades": 11,
+        "t2_pnl": 32.54
+      },
+      "runtime_s": 0.2
+    },
+    {
+      "label": "full_316",
+      "n_t1": 100,
+      "n_t2": 216,
+      "n_total": 316,
+      "baseline": {
+        "trades": 72,
+        "pnl": 369.91,
+        "pf": 1.138,
+        "wr": 47.2,
+        "dd": 53.1,
+        "exp_per_trade": 5.1377,
+        "trades_per_week": 16.75,
+        "exp_per_week": 86.0735
+      },
+      "stress": {
+        "trades": 72,
+        "pnl": -140.69,
+        "pf": 0.949,
+        "wr": 43.1,
+        "exp_per_week": -32.7368,
+        "dd": 62.2
+      },
+      "wf_folds_positive": 3,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 13,
+          "pnl": 415.88
+        },
+        {
+          "fold": 2,
+          "trades": 16,
+          "pnl": -199.21
+        },
+        {
+          "fold": 3,
+          "trades": 13,
+          "pnl": -498.94
+        },
+        {
+          "fold": 4,
+          "trades": 15,
+          "pnl": 226.57
+        },
+        {
+          "fold": 5,
+          "trades": 16,
+          "pnl": 607.76
+        }
+      ],
+      "fold_concentration": 0.486,
+      "max_gap_days": 1.0,
+      "gates": {
+        "G1": {
+          "value": 16.75,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "value": 1.0,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "value": 86.07,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "value": -32.74,
+          "threshold": "> $0 (stress 2x)",
+          "pass": false
+        },
+        "G5": {
+          "value": 53.1,
+          "threshold": "<= 20%",
+          "pass": false
+        },
+        "G6": {
+          "value": 3,
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "value": 0.486,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_passed": 3,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 21,
+        "t1_pnl": 608.43,
+        "t2_trades": 51,
+        "t2_pnl": -238.52
+      },
+      "runtime_s": 0.4
+    },
+    {
+      "label": "excl_worst12_304",
+      "n_t1": 98,
+      "n_t2": 206,
+      "n_total": 304,
+      "baseline": {
+        "trades": 58,
+        "pnl": 2403.11,
+        "pf": 2.518,
+        "wr": 58.6,
+        "dd": 11.8,
+        "exp_per_trade": 41.433,
+        "trades_per_week": 13.5,
+        "exp_per_week": 559.173
+      },
+      "stress": {
+        "trades": 58,
+        "pnl": 1683.56,
+        "pf": 1.963,
+        "wr": 55.2,
+        "exp_per_week": 391.7423,
+        "dd": 20.2
+      },
+      "wf_folds_positive": 4,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 10,
+          "pnl": 731.9
+        },
+        {
+          "fold": 2,
+          "trades": 14,
+          "pnl": 26.97
+        },
+        {
+          "fold": 3,
+          "trades": 10,
+          "pnl": -47.67
+        },
+        {
+          "fold": 4,
+          "trades": 10,
+          "pnl": 668.43
+        },
+        {
+          "fold": 5,
+          "trades": 14,
+          "pnl": 722.64
+        }
+      ],
+      "fold_concentration": 0.34,
+      "max_gap_days": 1.42,
+      "gates": {
+        "G1": {
+          "value": 13.5,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "value": 1.42,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "value": 559.17,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "value": 391.74,
+          "threshold": "> $0 (stress 2x)",
+          "pass": true
+        },
+        "G5": {
+          "value": 11.8,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "value": 4,
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "value": 0.34,
+          "threshold": "< 35%",
+          "pass": true
+        }
+      },
+      "gates_passed": 7,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 19,
+        "t1_pnl": 897.7,
+        "t2_trades": 39,
+        "t2_pnl": 1505.41
+      },
+      "runtime_s": 0.3
+    },
+    {
+      "label": "excl_neg21_295",
+      "n_t1": 96,
+      "n_t2": 199,
+      "n_total": 295,
+      "baseline": {
+        "trades": 56,
+        "pnl": 3272.13,
+        "pf": 2.834,
+        "wr": 64.3,
+        "dd": 8.6,
+        "exp_per_trade": 58.4309,
+        "trades_per_week": 13.03,
+        "exp_per_week": 761.3822
+      },
+      "stress": {
+        "trades": 56,
+        "pnl": 2452.31,
+        "pf": 2.306,
+        "wr": 62.5,
+        "exp_per_week": 570.6216,
+        "dd": 13.1
+      },
+      "wf_folds_positive": 4,
+      "fold_details": [
+        {
+          "fold": 1,
+          "trades": 10,
+          "pnl": 909.08
+        },
+        {
+          "fold": 2,
+          "trades": 13,
+          "pnl": 57.53
+        },
+        {
+          "fold": 3,
+          "trades": 9,
+          "pnl": -17.57
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 792.44
+        },
+        {
+          "fold": 5,
+          "trades": 15,
+          "pnl": 913.43
+        }
+      ],
+      "fold_concentration": 0.342,
+      "max_gap_days": 1.42,
+      "gates": {
+        "G1": {
+          "value": 13.03,
+          "threshold": ">= 10",
+          "pass": true
+        },
+        "G2": {
+          "value": 1.42,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "value": 761.38,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "value": 570.62,
+          "threshold": "> $0 (stress 2x)",
+          "pass": true
+        },
+        "G5": {
+          "value": 8.6,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "value": 4,
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "value": 0.342,
+          "threshold": "< 35%",
+          "pass": true
+        }
+      },
+      "gates_passed": 7,
+      "gates_total": 7,
+      "tier_split": {
+        "t1_trades": 18,
+        "t1_pnl": 1058.06,
+        "t2_trades": 38,
+        "t2_pnl": 2214.08
+      },
+      "runtime_s": 0.3
+    }
+  ],
+  "summary": {
+    "all_pass_variants": [
+      "excl_worst12_304",
+      "excl_neg21_295"
+    ],
+    "all_pass_count": 2,
+    "best_variant": "excl_neg21_295",
+    "best_gates_passed": 7,
+    "best_exp_per_week": 761.3822
+  }
+}

@@ -1,26 +1,28 @@
 # Part 2 Backlog — Priority Queue
 
-> Last updated: Cycle 6 complete — ALL ITEMS RESOLVED (2026-02-16)
+> Last updated: Cycle 7 start (2026-02-16)
+>
+> **SCOPE RESET**: User directive — paper trading is NOT the next step.
+> New P0 items target: universe policy, concentration control, execution realism, drawdown control, loser diagnostics.
+> Previous Cycles 1-6 results remain valid as reference.
 
 ## P0 — Critical (blocks GO decision)
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| — | *All P0 items resolved* | — | ✅ |
-
-**ALL 8 GATES PASS** on v5 + excl_all_negative (295 coins).
-**ADR HF-032 written** — GO decision documented.
+| P0-6 | G2 gap computation discrepancy: standardize across all scripts (2.75d vs 1.5d for same config) | C8-? | ⏳ |
 
 ## P1 — Important (improves confidence)
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| — | *All P1 items resolved* | — | ✅ |
+| P1-7 | Novel improvement paths: signal variants, ensemble, or timeframe blending for further edge | C8-? | ⏳ |
+| P1-8 | Dev threshold sensitivity: test dev_thresh=1.5/1.8/2.2/2.5 on 295 coins | C8-? | ⏳ |
+| P1-9 | Fresh data validation: re-run on newest candle data if available (check for regime shift) | C8-? | ⏳ |
 
 ## P2 — Nice-to-have
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| — | *All P2 items resolved* | — | ✅ |
-
-**ALL 6 P2 items resolved. P2-5 (fee sensitivity) and P2-6 (T1 concentration) completed in Cycle 6.**
+| P2-7 | Hybrid maker strategy: limit-order entry for T2 coins to reduce taker costs | C8-? | ⏳ |
+| P2-8 | Monte Carlo trade shuffle: bootstrap confidence intervals on 295-coin P&L | C8-? | ⏳ |
 
 ## Completed (Cycle 1)
 | # | Card | Owner | Result |
@@ -74,7 +76,17 @@
 
 ---
 
-**🏁 ALL P0/P1/P2 ITEMS RESOLVED — RESEARCH COMPLETE**
+## Completed (Cycle 7 — SCOPE RESET)
+| # | Card | Owner | Result |
+|---|------|-------|--------|
+| ~~P0-1~~ | Universe policy sweep (14 variants, STRICT) | C7-A | ⭐ **CONFIRMS** — only excl_neg21 (295) + excl_worst12 (304) pass 7/7 |
+| ~~P0-2~~ | Concentration control (17 variants) | C7-D | ❌ **NO IMPROVEMENT** — baseline passes G8, all controls hurt |
+| ~~P0-3~~ | Execution realism (5 regimes) | C7-B | ⚠️ **RESILIENT** — degrades gracefully. G2 discrepancy found (2.75d vs 1.5d) |
+| ~~P0-4~~ | DD killer (21 variants) | C7-C | ✅ **BASELINE OPTIMAL** — tighter stops increase DD, cooldown has no effect |
+| ~~P0-5~~ | Losers cluster diagnostics (full 316 attribution) | C7-E | ✅ **EXCLUDED_21 CONFIRMED** — 0 new candidates, all 21 validated |
+| ~~INT~~ | Baseline 316 vs 295 (STRICT) | C7-F | ✅ **CONFIRMS** — 316=3/7 NO-GO, 295=7/7 GO |
 
-Final recommendation: Deploy paper trading with v5/295 (leader). Monitor sl7/295 as parallel alt.
-See `part2_scoreboard.md` for full gate tables and `part2_teamlog.md` for 14-dimension risk coverage.
+---
+
+**⚠️ LOOP CONTINUES** — G2 gap computation discrepancy blocks clean GO on STRICT gates.
+See new P0-6 above.

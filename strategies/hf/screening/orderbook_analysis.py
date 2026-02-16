@@ -1,19 +1,21 @@
 """
 Orderbook snapshot analysis -- computes distributions and builds measured cost regimes.
 
-Reads JSONL output from orderbook_collector.py and produces:
+Exchange-agnostic: reads JSONL from any exchange's orderbook collector and produces:
 - Percentile distributions of spread, slippage, depth (per tier)
 - Measured cost regimes compatible with COST_REGIMES in costs_mexc_v2.py
 - Time-of-day spread analysis
 - JSON + MD reports
 
 Usage:
+    # MEXC (backward-compatible, default)
     python -m strategies.hf.screening.orderbook_analysis \\
         --input data/orderbook_snapshots/mexc_orderbook_001.jsonl
 
-Output:
-    reports/hf/mexc_orderbook_costs_001.json
-    reports/hf/mexc_orderbook_costs_001.md
+    # Other exchanges
+    python -m strategies.hf.screening.orderbook_analysis \\
+        --exchange bybit --maker-fee-bps 10 --taker-fee-bps 10 \\
+        --input data/orderbook_snapshots/bybit_orderbook_001.jsonl
 """
 
 from __future__ import annotations
@@ -141,21 +143,32 @@ def compute_distributions(
 # Regime builder
 # ---------------------------------------------------------------------------
 
-def build_measured_regimes(distributions: dict) -> dict:
+def build_measured_regimes(
+    distributions: dict,
+    exchange=None,
+    fee_snapshot=None,
+) -> dict:
     """Build COST_REGIMES-compatible dicts from measured orderbook distributions.
 
     Produces regimes for both maker (limit) and taker (market) execution modes
     at P50, P90, and P95 percentiles.
 
+    Args:
+        distributions: output from compute_distributions()
+        exchange: ExchangeConfig instance, or None for MEXC legacy defaults
+                  (maker=0bps, taker=10bps, adverse_selection_mult=0.3)
+        fee_snapshot: FeeSnapshot instance, or None. If provided, overrides
+                      exchange config fees (for CLI --maker-fee-bps etc.)
+
     Maker regime logic:
-    - exchange_fee_bps = 0 (MEXC maker promo)
+    - exchange_fee_bps = maker fee from config
     - spread_bps = 0 (you ARE the bid/ask)
-    - slippage_bps = adverse selection proxy = spread_bps * 0.3
-      (30% of spread as adverse selection when your limit order gets filled)
+    - slippage_bps = 0
+    - adverse_selection_bps = spread * adverse_selection_mult
     - total = sum of above
 
     Taker regime logic:
-    - exchange_fee_bps = 10 (MEXC taker)
+    - exchange_fee_bps = taker fee from config
     - spread_bps = half-spread (measured spread / 2, you cross half)
     - slippage_bps = measured slippage_200_bps (book walk impact)
     - total = sum of above
@@ -163,6 +176,21 @@ def build_measured_regimes(distributions: dict) -> dict:
     Returns:
         dict of regime_name -> regime_dict, ready for register_regime()
     """
+    # Resolve fees: fee_snapshot > exchange config > MEXC legacy defaults
+    if fee_snapshot is not None:
+        maker_fee = fee_snapshot.maker_fee_bps
+        taker_fee = fee_snapshot.taker_fee_bps
+    elif exchange is not None:
+        maker_fee = exchange.maker_fee_bps
+        taker_fee = exchange.taker_fee_bps
+    else:
+        # Legacy MEXC defaults — backward compatible
+        maker_fee = 0.0
+        taker_fee = 10.0
+
+    adv_sel_mult = exchange.adverse_selection_mult if exchange is not None else 0.3
+    exchange_id = exchange.id if exchange is not None else "mexc"
+
     regimes = {}
 
     for pct_label, pct_key in [("p50", "p50"), ("p90", "p90"), ("p95", "p95")]:
@@ -179,12 +207,12 @@ def build_measured_regimes(distributions: dict) -> dict:
                 slip_200_pct = slip_200_dist.get(pct_key, 0.0)
 
                 if exec_mode == "maker_limit":
-                    # Maker: no fee, no spread (you're the liquidity),
+                    # Maker: pay maker fee, no spread (you're the liquidity),
                     # but adverse selection when filled
-                    fee = 0.0
+                    fee = maker_fee
                     spread = 0.0
                     slippage = 0.0
-                    adverse_selection = round(spread_pct * 0.3, 1)
+                    adverse_selection = round(spread_pct * adv_sel_mult, 1)
                     total = round(fee + spread + slippage + adverse_selection, 1)
 
                     tier_data[tier_key] = {
@@ -196,7 +224,7 @@ def build_measured_regimes(distributions: dict) -> dict:
                     }
                 else:
                     # Taker: cross the spread, pay fee, suffer book walk
-                    fee = 10.0
+                    fee = taker_fee
                     spread = round(spread_pct / 2.0, 1)  # half-spread per side
                     slippage = round(slip_200_pct, 1)
                     total = round(fee + spread + slippage, 1)
@@ -210,9 +238,10 @@ def build_measured_regimes(distributions: dict) -> dict:
 
             regime_name = f"measured_ob_{mode_label}_{pct_label}"
             regimes[regime_name] = {
-                "description": f"MEXC measured orderbook {mode_label} {pct_label.upper()}",
+                "description": f"{exchange_id.upper()} measured orderbook {mode_label} {pct_label.upper()}",
                 "execution_mode": exec_mode,
                 "percentile": pct_label,
+                "exchange": exchange_id,
                 **tier_data,
             }
 
@@ -271,25 +300,34 @@ def generate_report(
     output_dir: str,
     time_of_day: Optional[dict] = None,
     label: str = "001",
+    exchange_id: str = "mexc",
+    fee_snapshot_dict: Optional[dict] = None,
 ) -> Tuple[str, str]:
     """Generate JSON + MD reports.
+
+    Args:
+        exchange_id: prefix for output filenames (default: 'mexc')
+        fee_snapshot_dict: optional FeeSnapshot.to_dict() for report metadata
 
     Returns:
         (json_path, md_path)
     """
     os.makedirs(output_dir, exist_ok=True)
 
-    json_path = os.path.join(output_dir, f"mexc_orderbook_costs_{label}.json")
-    md_path = os.path.join(output_dir, f"mexc_orderbook_costs_{label}.md")
+    json_path = os.path.join(output_dir, f"{exchange_id}_orderbook_costs_{label}.json")
+    md_path = os.path.join(output_dir, f"{exchange_id}_orderbook_costs_{label}.md")
 
     report = {
         "meta": {
             "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-            "description": "MEXC orderbook cost analysis from live snapshots",
+            "description": f"{exchange_id.upper()} orderbook cost analysis from live snapshots",
+            "exchange_id": exchange_id,
         },
         "distributions": distributions,
         "regimes": regimes,
     }
+    if fee_snapshot_dict is not None:
+        report["meta"]["fee_snapshot"] = fee_snapshot_dict
     if time_of_day is not None:
         report["time_of_day"] = time_of_day
 
@@ -298,7 +336,7 @@ def generate_report(
     print(f"[analysis] JSON report: {json_path}")
 
     # Generate markdown report
-    md_lines = _generate_markdown(distributions, regimes, time_of_day)
+    md_lines = _generate_markdown(distributions, regimes, time_of_day, exchange_id=exchange_id)
     with open(md_path, "w") as f:
         f.write("\n".join(md_lines))
     print(f"[analysis] MD report: {md_path}")
@@ -310,10 +348,11 @@ def _generate_markdown(
     distributions: dict,
     regimes: dict,
     time_of_day: Optional[dict],
+    exchange_id: str = "mexc",
 ) -> List[str]:
     """Build markdown lines for the report."""
     lines = [
-        "# MEXC Orderbook Cost Analysis",
+        f"# {exchange_id.upper()} Orderbook Cost Analysis",
         "",
         f"Generated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}",
         "",
@@ -418,11 +457,11 @@ def _generate_markdown(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Analyze MEXC orderbook snapshots and build cost regimes"
+        description="Analyze orderbook snapshots and build cost regimes"
     )
     parser.add_argument(
-        "--input", type=str, default=str(_DEFAULT_INPUT),
-        help=f"Input JSONL path (default: {_DEFAULT_INPUT})"
+        "--input", type=str, default=None,
+        help="Input JSONL path (default: auto-detect from --exchange)"
     )
     parser.add_argument(
         "--output-dir", type=str, default=str(_DEFAULT_REPORT_DIR),
@@ -437,17 +476,50 @@ def main():
         help="Register measured regimes into costs_mexc_v2.COST_REGIMES at runtime"
     )
 
+    # Exchange-aware args (optional — omitting all = exact MEXC legacy behavior)
+    try:
+        from strategies.hf.screening.exchange_config import (
+            add_exchange_args, build_fee_snapshot, get_exchange,
+        )
+        add_exchange_args(parser)
+        _has_exchange_config = True
+    except ImportError:
+        _has_exchange_config = False
+
     args = parser.parse_args()
 
+    # Resolve exchange config and fee snapshot
+    exchange_cfg = None
+    fee_snap = None
+    exchange_id = "mexc"
+
+    if _has_exchange_config:
+        exchange_id = getattr(args, "exchange", "mexc")
+        exchange_cfg = get_exchange(exchange_id)
+        fee_snap = build_fee_snapshot(args)
+
+    # Resolve input path
+    if args.input is not None:
+        input_path = args.input
+    else:
+        input_path = str(
+            _PROJECT_ROOT / "data" / "orderbook_snapshots"
+            / f"{exchange_id}_orderbook_001.jsonl"
+        )
+
     # Load
-    snapshots = load_snapshots(args.input)
+    snapshots = load_snapshots(input_path)
     if not snapshots:
         print("[analysis] No snapshots loaded, exiting.")
         return
 
     # Compute
     distributions = compute_distributions(snapshots)
-    regimes = build_measured_regimes(distributions)
+    regimes = build_measured_regimes(
+        distributions,
+        exchange=exchange_cfg,
+        fee_snapshot=fee_snap,
+    )
     tod = time_of_day_analysis(snapshots)
 
     # Report
@@ -457,6 +529,8 @@ def main():
         output_dir=args.output_dir,
         time_of_day=tod,
         label=args.label,
+        exchange_id=exchange_id,
+        fee_snapshot_dict=fee_snap.to_dict() if fee_snap else None,
     )
 
     # Optionally register into live COST_REGIMES
@@ -467,6 +541,11 @@ def main():
             print(f"[analysis] Registered regime: {name}")
 
     # Summary
+    if fee_snap:
+        print(f"\n--- Fee Snapshot ---")
+        print(f"  Exchange: {fee_snap.exchange_id} | Maker: {fee_snap.maker_fee_bps}bps | Taker: {fee_snap.taker_fee_bps}bps")
+        print(f"  Region: {fee_snap.region} | Tier: {fee_snap.account_tier} | Source: {fee_snap.source}")
+
     print("\n--- Summary ---")
     for tier in ("tier1", "tier2"):
         d = distributions.get(tier, {})

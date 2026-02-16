@@ -1,0 +1,1864 @@
+{
+  "run_header": {
+    "task": "part2_t2_fee_sensitivity",
+    "agent": "C6-A2",
+    "date": "2026-02-16 01:12",
+    "commit": "80eebf8",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "baseline": "v5 (dev_thresh=2.0, tp_pct=8, sl_pct=5, time_limit=10)",
+    "universe": "T1(96)+T2(199) [excl_all_negative]",
+    "universe_total": 295,
+    "fees": {
+      "t1_fixed_bps": 12.5,
+      "t2_current_bps": 23.5,
+      "t2_levels_tested": [
+        0,
+        5,
+        10,
+        12.5,
+        15,
+        20,
+        23.5,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100
+      ]
+    },
+    "timeframe": "1h",
+    "total_bars": 721,
+    "total_weeks": 4.3,
+    "runtime_s": 37.4
+  },
+  "fee_ladder": [
+    {
+      "t2_fee_bps": 0,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 4087.9,
+        "pf": 3.406,
+        "wr": 69.6,
+        "dd": 7.9,
+        "expectancy": 72.9983,
+        "trades_per_week": 13.05,
+        "exp_per_week": 952.5209,
+        "fee_drag_pct": 1.7
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 3029.85
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 4087.9
+        },
+        "t2_pnl_share": 74.1
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 0.0,
+        "trades": 56,
+        "pnl": 4087.9,
+        "pf": 3.406,
+        "exp_per_week": 952.5209,
+        "dd": 7.9
+      },
+      "walk_forward": {
+        "folds_positive": 5,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 997.78,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": 151.65,
+            "positive": true
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": 51.83,
+            "positive": true
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 860.79,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 1010.81,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3289
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 952.5209,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 952.5209,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 7.9,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 5,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3289,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.4
+    },
+    {
+      "t2_fee_bps": 5,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 3902.38,
+        "pf": 3.278,
+        "wr": 67.9,
+        "dd": 8.0,
+        "expectancy": 69.6853,
+        "trades_per_week": 13.05,
+        "exp_per_week": 909.2922,
+        "fee_drag_pct": 4.0
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 2844.32
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 3902.38
+        },
+        "t2_pnl_share": 72.9
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 10.0,
+        "trades": 56,
+        "pnl": 3723.52,
+        "pf": 3.151,
+        "exp_per_week": 867.6174,
+        "dd": 8.2
+      },
+      "walk_forward": {
+        "folds_positive": 5,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 978.7,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": 131.33,
+            "positive": true
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": 36.9,
+            "positive": true
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 846.12,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 989.79,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3318
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 909.2922,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 867.6174,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 8.0,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 5,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3318,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 10,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 3723.52,
+        "pf": 3.151,
+        "wr": 66.1,
+        "dd": 8.2,
+        "expectancy": 66.4915,
+        "trades_per_week": 13.05,
+        "exp_per_week": 867.6174,
+        "fee_drag_pct": 6.3
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 2665.47
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 3723.52
+        },
+        "t2_pnl_share": 71.6
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 20.0,
+        "trades": 56,
+        "pnl": 3384.9,
+        "pf": 2.911,
+        "exp_per_week": 788.7142,
+        "dd": 8.5
+      },
+      "walk_forward": {
+        "folds_positive": 5,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 959.74,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": 111.17,
+            "positive": true
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": 22.06,
+            "positive": true
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 831.51,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 968.93,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3349
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 867.6174,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 788.7142,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 8.2,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 5,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3349,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 12.5,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 3636.53,
+        "pf": 3.088,
+        "wr": 64.3,
+        "dd": 8.3,
+        "expectancy": 64.938,
+        "trades_per_week": 13.05,
+        "exp_per_week": 847.3457,
+        "fee_drag_pct": 7.4
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 2578.47
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 3636.53
+        },
+        "t2_pnl_share": 70.9
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 25.0,
+        "trades": 56,
+        "pnl": 3224.68,
+        "pf": 2.802,
+        "exp_per_week": 751.3824,
+        "dd": 8.7
+      },
+      "walk_forward": {
+        "folds_positive": 5,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 950.3,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": 101.15,
+            "positive": true
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": 14.67,
+            "positive": true
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 824.24,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 958.56,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3365
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 847.3457,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 751.3824,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 8.3,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 5,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3365,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 15,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 3551.11,
+        "pf": 3.027,
+        "wr": 64.3,
+        "dd": 8.4,
+        "expectancy": 63.4126,
+        "trades_per_week": 13.05,
+        "exp_per_week": 827.4423,
+        "fee_drag_pct": 8.5
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 2493.05
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 3551.11
+        },
+        "t2_pnl_share": 70.2
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 30.0,
+        "trades": 56,
+        "pnl": 3070.25,
+        "pf": 2.699,
+        "exp_per_week": 715.3978,
+        "dd": 9.4
+      },
+      "walk_forward": {
+        "folds_positive": 5,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 940.88,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": 91.17,
+            "positive": true
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": 7.3,
+            "positive": true
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 816.98,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 948.23,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3381
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 827.4423,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 715.3978,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 8.4,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 5,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3381,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 20,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 3384.9,
+        "pf": 2.911,
+        "wr": 64.3,
+        "dd": 8.5,
+        "expectancy": 60.4446,
+        "trades_per_week": 13.05,
+        "exp_per_week": 788.7142,
+        "fee_drag_pct": 10.7
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 2326.84
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 3384.9
+        },
+        "t2_pnl_share": 68.7
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 40.0,
+        "trades": 56,
+        "pnl": 2777.92,
+        "pf": 2.511,
+        "exp_per_week": 647.2826,
+        "dd": 11.1
+      },
+      "walk_forward": {
+        "folds_positive": 4,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 922.14,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": 71.33,
+            "positive": true
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -7.36,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 802.52,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 927.7,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3406
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 788.7142,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 647.2826,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 8.5,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 4,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3406,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 23.5,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 3272.13,
+        "pf": 2.834,
+        "wr": 64.3,
+        "dd": 8.6,
+        "expectancy": 58.4309,
+        "trades_per_week": 13.05,
+        "exp_per_week": 762.4382,
+        "fee_drag_pct": 12.3
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 2214.08
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 3272.13
+        },
+        "t2_pnl_share": 67.7
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 47.0,
+        "trades": 56,
+        "pnl": 2585.74,
+        "pf": 2.392,
+        "exp_per_week": 602.5032,
+        "dd": 12.2
+      },
+      "walk_forward": {
+        "folds_positive": 4,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 909.08,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": 57.53,
+            "positive": true
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -17.57,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 792.44,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 913.43,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3418
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 762.4382,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 602.5032,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 8.6,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 4,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3418,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 30,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 3070.25,
+        "pf": 2.699,
+        "wr": 64.3,
+        "dd": 9.4,
+        "expectancy": 54.8259,
+        "trades_per_week": 13.05,
+        "exp_per_week": 715.3978,
+        "fee_drag_pct": 15.1
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 2012.19
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 3070.25
+        },
+        "t2_pnl_share": 65.5
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 60.0,
+        "trades": 56,
+        "pnl": 2254.16,
+        "pf": 2.19,
+        "exp_per_week": 525.2415,
+        "dd": 15.0
+      },
+      "walk_forward": {
+        "folds_positive": 4,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 884.98,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": 32.12,
+            "positive": true
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -36.43,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 773.82,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 887.13,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3441
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 715.3978,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 525.2415,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 9.4,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 4,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3441,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 40,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 2777.92,
+        "pf": 2.511,
+        "wr": 64.3,
+        "dd": 11.1,
+        "expectancy": 49.6057,
+        "trades_per_week": 13.05,
+        "exp_per_week": 647.2826,
+        "fee_drag_pct": 19.3
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 1719.87
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 2777.92
+        },
+        "t2_pnl_share": 61.9
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 80.0,
+        "trades": 56,
+        "pnl": 1802.48,
+        "pf": 1.925,
+        "exp_per_week": 419.9944,
+        "dd": 20.0
+      },
+      "walk_forward": {
+        "folds_positive": 3,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 848.26,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": -6.47,
+            "positive": false
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -65.15,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 745.39,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 847.19,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3475
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 647.2826,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 419.9944,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 11.1,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 3,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3475,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 50,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 2506.37,
+        "pf": 2.343,
+        "wr": 62.5,
+        "dd": 12.7,
+        "expectancy": 44.7566,
+        "trades_per_week": 13.05,
+        "exp_per_week": 584.009,
+        "fee_drag_pct": 23.4
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 1448.32
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 2506.37
+        },
+        "t2_pnl_share": 57.8
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 100.0,
+        "trades": 56,
+        "pnl": 1413.18,
+        "pf": 1.705,
+        "exp_per_week": 329.2843,
+        "dd": 24.8
+      },
+      "walk_forward": {
+        "folds_positive": 3,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 811.97,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": -44.44,
+            "positive": false
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -93.53,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 717.25,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 807.9,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3474
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 584.009,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 329.2843,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 12.7,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 3,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3474,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 60,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 2254.16,
+        "pf": 2.19,
+        "wr": 60.7,
+        "dd": 15.0,
+        "expectancy": 40.2529,
+        "trades_per_week": 13.05,
+        "exp_per_week": 525.2415,
+        "fee_drag_pct": 27.5
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 1196.11
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 2254.16
+        },
+        "t2_pnl_share": 53.1
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 120.0,
+        "trades": 56,
+        "pnl": 1077.85,
+        "pf": 1.524,
+        "exp_per_week": 251.1502,
+        "dd": 29.3
+      },
+      "walk_forward": {
+        "folds_positive": 3,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 776.11,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": -81.81,
+            "positive": false
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -121.56,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 689.38,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 769.22,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3473
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 525.2415,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 251.1502,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 15.0,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 3,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3473,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 70,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 2019.95,
+        "pf": 2.05,
+        "wr": 60.7,
+        "dd": 17.6,
+        "expectancy": 36.0705,
+        "trades_per_week": 13.05,
+        "exp_per_week": 470.6671,
+        "fee_drag_pct": 31.4
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 961.89
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 2019.95
+        },
+        "t2_pnl_share": 47.6
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 140.0,
+        "trades": 56,
+        "pnl": 789.19,
+        "pf": 1.376,
+        "exp_per_week": 183.8894,
+        "dd": 33.6
+      },
+      "walk_forward": {
+        "folds_positive": 3,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 740.67,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": -118.59,
+            "positive": false
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -149.26,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 661.79,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 731.16,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3471
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 470.6671,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 183.8894,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 17.6,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 3,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3471,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 80,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 1802.48,
+        "pf": 1.925,
+        "wr": 60.7,
+        "dd": 20.0,
+        "expectancy": 32.1871,
+        "trades_per_week": 13.05,
+        "exp_per_week": 419.9944,
+        "fee_drag_pct": 35.2
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 744.42
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 1802.48
+        },
+        "t2_pnl_share": 41.3
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 160.0,
+        "trades": 56,
+        "pnl": 540.85,
+        "pf": 1.253,
+        "exp_per_week": 126.0238,
+        "dd": 37.6
+      },
+      "walk_forward": {
+        "folds_positive": 3,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 705.64,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": -154.78,
+            "positive": false
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -176.63,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 634.47,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 693.71,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.347
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 419.9944,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 126.0238,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 20.0,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 3,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.347,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 90,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 1600.58,
+        "pf": 1.809,
+        "wr": 57.1,
+        "dd": 22.4,
+        "expectancy": 28.5818,
+        "trades_per_week": 13.05,
+        "exp_per_week": 372.9512,
+        "fee_drag_pct": 38.8
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 542.53
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 1600.58
+        },
+        "t2_pnl_share": 33.9
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 180.0,
+        "trades": 56,
+        "pnl": 327.33,
+        "pf": 1.151,
+        "exp_per_week": 76.2718,
+        "dd": 41.7
+      },
+      "walk_forward": {
+        "folds_positive": 3,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 671.04,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": -190.38,
+            "positive": false
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -203.67,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 607.42,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 656.86,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3467
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 372.9512,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 76.2718,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 22.4,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 3,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3467,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    },
+    {
+      "t2_fee_bps": 100,
+      "t1_fee_bps": 12.5,
+      "baseline": {
+        "trades": 56,
+        "pnl": 1413.18,
+        "pf": 1.705,
+        "wr": 55.4,
+        "dd": 24.8,
+        "expectancy": 25.2353,
+        "trades_per_week": 13.05,
+        "exp_per_week": 329.2843,
+        "fee_drag_pct": 42.4
+      },
+      "tier_breakdown": {
+        "tier1": {
+          "trades": 18,
+          "pnl": 1058.06
+        },
+        "tier2": {
+          "trades": 38,
+          "pnl": 355.12
+        },
+        "total": {
+          "trades": 56,
+          "pnl": 1413.18
+        },
+        "t2_pnl_share": 25.1
+      },
+      "max_gap": {
+        "bars": 66,
+        "days": 2.75
+      },
+      "stress_2x": {
+        "fee_bps": 200.0,
+        "trades": 56,
+        "pnl": 143.87,
+        "pf": 1.066,
+        "exp_per_week": 33.5222,
+        "dd": 45.9
+      },
+      "walk_forward": {
+        "folds_positive": 3,
+        "fold_details": [
+          {
+            "fold": 0,
+            "trades": 10,
+            "pnl": 636.84,
+            "positive": true
+          },
+          {
+            "fold": 1,
+            "trades": 13,
+            "pnl": -225.42,
+            "positive": false
+          },
+          {
+            "fold": 2,
+            "trades": 9,
+            "pnl": -230.38,
+            "positive": false
+          },
+          {
+            "fold": 3,
+            "trades": 9,
+            "pnl": 580.65,
+            "positive": true
+          },
+          {
+            "fold": 4,
+            "trades": 15,
+            "pnl": 620.6,
+            "positive": true
+          }
+        ],
+        "top1_fold_conc": 0.3465
+      },
+      "gates": {
+        "G1_trades_per_week": {
+          "value": 13.05,
+          "threshold": ">=0.5/wk",
+          "pass": true
+        },
+        "G2_max_gap_days": {
+          "value": 2.75,
+          "threshold": "<=21d",
+          "pass": true
+        },
+        "G3_exp_per_week": {
+          "value": 329.2843,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G4_stress_exp_per_week": {
+          "value": 33.5222,
+          "threshold": ">$0",
+          "pass": true
+        },
+        "G5_max_dd_pct": {
+          "value": 24.8,
+          "threshold": "<=50%",
+          "pass": true
+        },
+        "G6_wf_folds_positive": {
+          "value": 3,
+          "threshold": ">=3/5",
+          "pass": true
+        },
+        "G8_top1_fold_conc": {
+          "value": 0.3465,
+          "threshold": "<0.60",
+          "pass": true
+        }
+      },
+      "all_gates_pass": true,
+      "failed_gates": [],
+      "runtime_s": 0.3
+    }
+  ],
+  "gate_transitions": {
+    "G1_trades_per_week": {
+      "first_fail_bps": null,
+      "passes_at_current": true
+    },
+    "G2_max_gap_days": {
+      "first_fail_bps": null,
+      "passes_at_current": true
+    },
+    "G3_exp_per_week": {
+      "first_fail_bps": null,
+      "passes_at_current": true
+    },
+    "G4_stress_exp_per_week": {
+      "first_fail_bps": null,
+      "passes_at_current": true
+    },
+    "G5_max_dd_pct": {
+      "first_fail_bps": null,
+      "passes_at_current": true
+    },
+    "G6_wf_folds_positive": {
+      "first_fail_bps": null,
+      "passes_at_current": true
+    },
+    "G8_top1_fold_conc": {
+      "first_fail_bps": null,
+      "passes_at_current": true
+    }
+  },
+  "breakeven": {
+    "G3": {
+      "breakeven_bps": 218.2,
+      "margin_bps": 194.7,
+      "multiplier_vs_current": 9.29,
+      "iterations": 10,
+      "last_exp_per_week": -0.5801
+    },
+    "G4": {
+      "breakeven_bps": 108.9,
+      "margin_bps": 85.4,
+      "multiplier_vs_current": 4.63,
+      "iterations": 10,
+      "last_exp_per_week": 1.4271
+    }
+  },
+  "verdict_lines": [
+    "**G3 breakeven**: T2 can absorb up to 218.2 bps/side before combined exp/wk turns negative (margin: +194.7 bps, 9.29x current).",
+    "",
+    "**G4 breakeven**: T2 can absorb up to 108.9 bps/side before 2x stress exp/wk turns negative (margin: +85.4 bps, 4.63x current).",
+    "",
+    "The strategy has **strong fee resilience** -- T2 fees can more than double before breaking. This confirms T2 is a robust contributor.",
+    "",
+    "**Fee improvement potential**: If T2 achieved 0 bps (MEXC maker), P&L would increase by $816 (25%)."
+  ]
+}

@@ -1,6 +1,6 @@
 # Part 2 Backlog — Priority Queue
 
-> Last updated: Cycle 5 complete (2026-02-16)
+> Last updated: Cycle 6 complete — ALL ITEMS RESOLVED (2026-02-16)
 
 ## P0 — Critical (blocks GO decision)
 | # | Card | Owner | Status |
@@ -18,10 +18,9 @@
 ## P2 — Nice-to-have
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| P2-5 | T2-focused fee optimization analysis (if MEXC fee changes) | — | ⏳ (contingent) |
-| P2-6 | T1 concentration risk: XL1/USD=48.3% of T1 P&L — hedge/cap study | — | ⏳ |
+| — | *All P2 items resolved* | — | ✅ |
 
-**4 of 6 P2 items resolved in Cycle 5. Remaining 2 are low-priority / contingent.**
+**ALL 6 P2 items resolved. P2-5 (fee sensitivity) and P2-6 (T1 concentration) completed in Cycle 6.**
 
 ## Completed (Cycle 1)
 | # | Card | Owner | Result |
@@ -66,3 +65,16 @@
 | ~~P2-2~~ | sl=7 + excl_worst12 (304 coins) | C5-A2 | ⭐ **ALL 4 configs pass 7/7** — sl7/295 best by composite, sl7/304 viable but weakest |
 | ~~P2-3~~ | BTC regime correlation | C5-A3 | ✅ **REGIME-ROBUST** — profitable in all regimes, filtering NOT recommended |
 | ~~P2-4~~ | Max drawdown duration | C5-A4 | ⭐ **sl7/295 BEST** — 3.8d max underwater vs leader's 8.6d |
+
+## Completed (Cycle 6)
+| # | Card | Owner | Result |
+|---|------|-------|--------|
+| ~~P2-5~~ | T2 fee sensitivity ladder | C6-A2 | ⭐ **G3 breakeven 218bps (9.3x current)** — ALL 7 gates pass at every fee level 0-100bps |
+| ~~P2-6~~ | T1 concentration risk study | C6-A1 | ✅ **MANAGEABLE** — HHI diversified, strategy survives without XL1/USD or all T1 |
+
+---
+
+**🏁 ALL P0/P1/P2 ITEMS RESOLVED — RESEARCH COMPLETE**
+
+Final recommendation: Deploy paper trading with v5/295 (leader). Monitor sl7/295 as parallel alt.
+See `part2_scoreboard.md` for full gate tables and `part2_teamlog.md` for 14-dimension risk coverage.

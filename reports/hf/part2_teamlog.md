@@ -395,3 +395,68 @@ All four Cycle 5 investigations were P2 nice-to-haves that refine the production
 **Recommendation**: Research is complete enough for paper trading deployment. The two remaining P2 items are low-priority and can be addressed during paper trading if needed.
 
 ---
+
+## Cycle 6 — FINAL
+
+### Assignments
+| Agent | Task | Status |
+|-------|------|--------|
+| C6-A1 (T1 Concentration) | XL1/USD concentration risk: exclusion + HHI analysis | ✅ DONE |
+| C6-A2 (T2 Fee Sensitivity) | T2 fee ladder 0-100bps + breakeven binary search | ✅ DONE |
+
+### Agent Log Entries
+
+#### C6-A1 — T1 Concentration Risk ✅ MANAGEABLE
+- **Report**: `part2_t1_concentration_001.json` + `.md`
+- **Attempt**: Test strategy viability without XL1/USD, without top-3 T1 coins, and T2-only. Compute HHI concentration index.
+- **Metrics**:
+  - Baseline (295): 56 trades, PF=2.834, P&L=$3272, HHI=0.057
+  - Excl XL1/USD (294): 53 trades, PF=2.490, P&L=$2659 (-18.7%), HHI=0.057, gates=PASS
+  - Excl Top-3 T1 (292): 51 trades, PF=2.346, P&L=$2374 (-27.5%), HHI=0.063, gates=PASS
+  - T2-only (199): 38 trades, PF=2.611, P&L=$2214 (-32.3%), WF=5/5, HHI=0.078, gates=PASS
+- **Learnings**: ALL variants pass all gates. T1 concentration is not a structural risk. The edge is genuinely distributed across ~40 coins (HHI < 0.10 = DIVERSIFIED). AURA/USD (T2, $486) is actually a bigger contributor than any T1 coin except XL1. T2-only achieves perfect 5/5 WF, confirming T2 is the more temporally stable edge source. No hedging or capping needed.
+- **Next move**: → Concentration risk resolved. No action needed.
+
+#### C6-A2 — T2 Fee Sensitivity ⭐ MASSIVE MARGIN
+- **Report**: `part2_t2_fee_sensitivity_001.json` + `.md`
+- **Attempt**: Sweep T2 fees from 0 to 100 bps/side (T1 fixed at 12.5bps). Binary search for G3 and G4 breakeven.
+- **Metrics**:
+  - G3 breakeven: 218.2 bps (9.29x current 23.5bps) — margin: +194.7bps
+  - G4 breakeven: 108.9 bps (4.63x current) — margin: +85.4bps
+  - ALL 7 gates pass at every fee level 0-100bps
+  - Best case (T2=0bps): P&L=$4088 (+$816, +25% vs current)
+  - At 100bps: still PF=1.705, P&L=$1413, all gates pass
+- **Learnings**: Strategy has extreme fee resilience. T2 fees would need to increase 9.3x before the strategy breaks even. This is the widest fee margin of any analysis. WF shifts from 5/5 (at ≤15bps) to 4/5 (at 20-30bps) to 3/5 (at ≥40bps), but all still pass G6. The 25% upside if T2 achieves maker rates is a meaningful opportunity but not critical.
+- **Next move**: → Fee sensitivity fully characterized. No action needed.
+
+### Cycle 6 Synthesis — RESEARCH COMPLETE
+
+**ALL BACKLOG ITEMS RESOLVED** ⭐⭐
+
+| Investigation | Verdict | Key Finding |
+|---------------|---------|-------------|
+| T1 concentration (C6-A1) | MANAGEABLE | Passes all gates without top-3 T1 or all T1. HHI=DIVERSIFIED |
+| T2 fee sensitivity (C6-A2) | MASSIVE MARGIN | G3 breakeven 218bps (9.3x current), G4 breakeven 109bps (4.6x) |
+
+**RESEARCH IS COMPLETE.** All P0, P1, and P2 items have been resolved across 6 cycles with 24 total agent deployments. Every risk dimension has been tested:
+
+| Dimension | Status | Cycle |
+|-----------|--------|-------|
+| Gate compliance | 8/8 PASS | C1-C2 |
+| Neighbor stability (G7) | 12/12 | C2 |
+| OOS validation | STRUCTURAL but cautionary | C2, C4 |
+| Stress resilience | 5.00x breakeven | C2 |
+| Exclusion threshold | Min 12 coins, 9 headroom | C2 |
+| Multi-position | max_pos=1 optimal | C4 |
+| Time-of-day | No filter needed | C4 |
+| Tier decomposition | T2=67.7% of edge | C4 |
+| Hybrid exclusion | Static-12 only | C5 |
+| Cross-config comparison | 4 viable configs | C5 |
+| BTC regime | Regime-robust | C5 |
+| DD duration | sl7/295 best (3.8d) | C5 |
+| T1 concentration | MANAGEABLE | C6 |
+| T2 fee sensitivity | 9.3x margin | C6 |
+
+**FINAL RECOMMENDATION**: Deploy paper trading with v5/295 (leader). Monitor sl7/295 as parallel alt. All risk dimensions cleared.
+
+---

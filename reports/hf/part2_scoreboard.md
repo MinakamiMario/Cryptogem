@@ -1,6 +1,6 @@
 # Part 2 Scoreboard — Gate Status per Candidate
 
-> Last updated: Cycle 5 complete (2026-02-16)
+> Last updated: Cycle 6 complete (2026-02-16)
 
 ## Hard Gates
 
@@ -43,6 +43,8 @@
 > BTC regime: profitable in ALL regimes (BULL PF=5.65, BEAR PF=1.57, SIDEWAYS PF=4.08) — filtering NOT recommended (C5-A3)
 > DD duration: max 8.6d underwater (29% of observation), max consec losses=4 (C5-A4)
 > Hybrid exclusion: dynamic layer DEGRADES (6/7 vs static-12's 7/7) — use static exclusion only (C5-A1)
+> T1 concentration: MANAGEABLE — passes all gates without XL1/USD (-18.7%), without top-3 T1 (-27.5%), or T2-only (-32.3%). HHI=0.057 DIVERSIFIED (C6-A1)
+> T2 fee sensitivity: breakeven at 218bps (9.3x current) — ALL gates pass even at 100bps T2 fee (C6-A2)
 
 ### ⭐ sl=7 on 295 coins (excl_all_negative) — 7/7 gates PASS (ALTERNATIVE)
 | Gate | Value | Verdict |
@@ -175,7 +177,13 @@
 
 ## Key Insights
 
-### Cycle 5 (NEW)
+### Cycle 6 (NEW) — FINAL
+1. **T1 concentration risk: MANAGEABLE**: XL1/USD is 48.3% of T1 P&L but only 15.2% of total. Excluding XL1/USD: still passes all gates ($2659, PF=2.49). Excluding top-3 T1: still passes ($2374, PF=2.35). T2-only: still passes ($2214, PF=2.61, WF=5/5). HHI=0.057 (DIVERSIFIED). No hedging/capping needed (C6-A1).
+2. **T2 fee sensitivity: MASSIVE MARGIN**: T2 fee can increase to 218bps (9.3x current 23.5bps) before G3 breaks, or 109bps (4.6x) before G4 stress breaks. ALL 7 gates pass even at 100bps T2 fee. If T2 gets 0% maker: +$816 (25% uplift). Strategy is extremely fee-resilient (C6-A2).
+3. **ALL P2 ITEMS RESOLVED**: 6 of 6 P2 items completed across Cycles 5-6. Research is COMPLETE.
+4. **FINAL RECOMMENDATION**: Proceed to paper trading with v5/295 (leader) and monitor sl7/295 (robustness alt) in parallel. All risk dimensions have been tested: fees, concentration, regime, drawdown duration, exclusion stability, OOS validation.
+
+### Cycle 5
 1. **Hybrid exclusion DEGRADES**: Static 12 + dynamic rolling layer → 25 coins excluded, 6/7 gates (G8 FAIL at 35.3%). Static 12 alone passes 7/7. Dynamic layer is counterproductive — reduces trade count and concentrates folds. Production: use static-12 only (C5-A1).
 2. **sl7/304 passes 7/7 — 4th viable config**: All 4 combinations (sl5/sl7 × 295/304) pass all gates. But 304-coin configs are clearly weaker: sl7/304 PF=2.242 vs sl7/295 PF=2.715. The 9 extra coins dilute performance across all metrics (C5-A2).
 3. **BTC regime: signal is regime-robust**: Profitable in ALL three regimes (BULL PF=5.65, BEAR PF=1.57, SIDEWAYS PF=4.08). BEAR trades are not negative — they're just weaker. Filtering any regime causes gate regression (7/7→3-4/7). No regime filter recommended (C5-A3).

@@ -1456,3 +1456,110 @@ Additional metrics: PF=2.834, 56 trades, WF folds: $909, $58, -$18, $792, $913. 
 3. **Paper trade with real fill tracking**: Measure actual fill rate, queue position, and adverse selection.
 4. **Monitor live spread vs P50/P90 thresholds**: If spreads drift above P90, halt trading.
 5. **Keep taker as emergency exit only**: Use market orders only for stop-loss execution, not for signal entry.
+
+---
+
+## ADR-HF-035: Bybit SPOT Validation — NO-GO (Signal Does Not Transfer)
+
+**Date**: 2026-02-16
+**Status**: DECIDED — **NO-GO**
+**Context**: Multi-exchange expansion (ADR-HF-034 confirmed MEXC maker viability). First target: Bybit EU SPOT (maker 10bps, taker 10bps — lowest cost after MEXC). Full pipeline: universe → candles → OB → 24-combo → intersection diagnostic.
+
+### Fee Snapshot
+
+| Exchange | Maker bps | Taker bps | Region | Tier | Source |
+|----------|-----------|-----------|--------|------|--------|
+| MEXC | 0 | 10 | — | promo | Code conservative |
+| **Bybit** | **10** | **10** | **EU** | **regular** | **My Fee Rates, Spot** |
+
+### Infrastructure Delivered
+
+5 new files + 1 refactored (backward-compatible):
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `exchange_config.py` | ExchangeConfig + FeeSnapshot + CLI overrides | ✅ |
+| `universe_builder.py` | fetch_markets() universe + tiering | ✅ |
+| `candle_downloader.py` | 1H OHLCV via CCXT + HLC3 VWAP proxy | ✅ |
+| `orderbook_collector_generic.py` | Exchange-parametric OB collector | ✅ |
+| `run_multi_exchange_validation.py` | 24-combo runner per exchange | ✅ |
+| `orderbook_analysis.py` | Refactored: `exchange` param (default=None → MEXC) | ✅ |
+
+### Data Collection
+
+| Step | Result |
+|------|--------|
+| Universe | 454 coins (114 T1 + 340 T2), 0 excluded |
+| Candles | 454/454 OK, 0 failed, 324K bars, VWAP 100% |
+| Orderbook | 35,868 snapshots, 42 coins, 2.5h, 0 errors |
+| OB regimes | 6 regimes built (maker/taker × p50/p90/p95) |
+
+### Bybit Measured Costs (total_per_side_bps)
+
+| Regime | T1 bps | T2 bps | vs MEXC T1 | vs MEXC T2 |
+|--------|--------|--------|------------|------------|
+| maker_p50 | 11.9 | 15.0 | 3.8x hoger | 3.7x hoger |
+| maker_p90 | 14.6 | 22.0 | 0.5x (lager) | 1.9x hoger |
+| taker_p50 | 17.3 | 31.5 | 0.54x (lager) | 1.05x |
+| taker_p90 | 26.0 | 70.6 | 0.12x (veel lager) | 0.70x |
+
+**Patroon**: Bybit maker P50 is 3-4x duurder dan MEXC (adverse selection hoger), maar taker is juist goedkoper (lager spread). Dit verschil is NIET de hoofdoorzaak van falen — het signaal genereert gewoon te weinig trades.
+
+### 24-Combo Results
+
+**0/24 pass** — ALLE combinaties FALEN.
+
+| Config | Regime | Best PF | Trades | Exp/Wk | Failing Gates |
+|--------|--------|---------|--------|--------|---------------|
+| v5 | maker_p50 | 0.672 | 15 | -$4.67 | G1,G2,G3,G4,G6,G8 |
+| v5 | maker_p90 | 0.627 | 15 | -$5.47 | G1,G2,G3,G4,G6,G8 |
+| v5 | taker_p50 | 0.572 | 15 | -$6.51 | G1,G2,G3,G4,G6,G8 |
+| v5 | taker_p90 | 0.276 | 15 | -$143 | ALL 7 |
+| sl7 | maker_p50 | 0.530 | 15 | -$8.21 | ALL 7 |
+| sl7 | maker_p90 | 0.498 | 15 | -$8.96 | ALL 7 |
+| sl7 | taker_p50 | 0.458 | 15 | -$9.94 | ALL 7 |
+| sl7 | taker_p90 | 0.235 | 15 | -$173 | ALL 7 |
+
+**Primair falen**: G1 (3.5 trades/wk vs ≥10 vereist) + G3 (alle verliezend, PF<1.0).
+
+### Intersection Diagnostic (MEXC×Bybit overlap)
+
+**Doel**: Onderscheid "universe mismatch" van "exchange microstructure".
+**Methode**: Run Bybit data op ALLEEN de 166 coins die op beide exchanges bestaan.
+
+| Metric | Full Bybit | Intersection (166) | MEXC (295) |
+|--------|------------|-------------------|------------|
+| Coins | 454 | 166 | 295 |
+| Trades | 15 | **1** | ~150+ |
+| PF (best) | 0.672 | inf (1 trade) | 3.38 |
+| Gates pass | 0/24 | 0/24 | 14/24 |
+
+**Conclusie**: Met dezelfde coins als MEXC produceert Bybit data slechts 1 trade in 4.3 weken. Dit is **exchange microstructure**, NIET universe mismatch. Het H20 VWAP_DEVIATION signaal triggert niet op Bybit /USDT candle data.
+
+### Root Cause Analysis
+
+1. **Candle microstructure verschilt**: Bybit /USDT prijzen hebben andere VWAP deviatie patronen dan MEXC /USD. Het signaal was ontdekt en geoptimaliseerd op MEXC data — de thresholds (dev_thresh=2.0) triggeren nauwelijks op Bybit.
+2. **Quote currency effect**: MEXC noteert als /USD (intern mapped naar /USDT), Bybit als /USDT. Subtiele prijsverschillen, rounding, en fee-inclusie in candle data kunnen VWAP deviatie beïnvloeden.
+3. **Volume tiering verschil**: MEXC T1 = retail/meme-heavy (BONK, DOGS, PEPE), Bybit T1 = blue-chip (BTC, ETH, SOL). De VWAP edge was mogelijk afhankelijk van retail microstructure.
+4. **Periode effect**: Beide datasets dekken dezelfde 4.3 weken, maar marktcondities per exchange kunnen verschillen (arbitrage, market maker activiteit).
+
+### Decision
+
+**NO-GO** — H20 VWAP_DEVIATION is NIET overdraagbaar naar Bybit SPOT.
+
+**Rationale**:
+1. 0/24 pass (nul combinaties), PF<1.0 in ALLE 24 tests
+2. Intersection diagnostic bewijst dat het exchange microstructure is, niet universe
+3. Slechts 15 trades in 4.3 weken op 454 coins (vs MEXC ~150+ op 295 coins)
+4. Kosten zijn NIET de bottleneck — het signaal genereert gewoon geen triggers
+
+**Infrastructure waarde**: De multi-exchange pipeline (5 scripts) is VOLLEDIG functioneel en herbruikbaar voor:
+- OKX validation (ADR-HF-036, indien besloten)
+- Andere signalen op Bybit
+- Toekomstige exchanges
+
+**Action items**:
+1. ~~OKX run~~ — deprioritize (als Bybit met 10/10 bps al faalt, is OKX met 20/35 bps zinloos voor dit signaal)
+2. MEXC paper trading met fill tracking blijft P0 (ADR-HF-034)
+3. Als alternatief signaal ontwikkeld wordt, kan Bybit pipeline direct hergebruikt worden
+4. Onderzoek of signal recalibration (lagere dev_thresh) helpt op Bybit — maar dat is overfitting risico

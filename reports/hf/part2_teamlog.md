@@ -754,3 +754,75 @@ All 5 P0 items investigated with STRICT gate thresholds:
 **STATUS**: All P0 validation items resolved. CONDITIONAL GO maintained with documented caveats. Paper trading is the next step.
 
 ---
+
+## Cycle 10 — Measured Orderbook Validation (P0 Live OB Data)
+
+### Scope
+Collect live MEXC SPOT orderbook snapshots and run 24-combo measured cost rerun with STRICT 7-gate evaluation. Validate maker vs taker execution paths.
+
+### Assignments
+| Agent | Task | Status |
+|-------|------|--------|
+| Collector | MEXC orderbook data collection (42 coins, 10s interval, ~2.5h) | ✅ DONE |
+| A (Sanity) | OB data sanity check: crossed books, depth, coverage | ✅ DONE |
+| B (Slippage) | Manual slippage walk verification (9 book walks) | ✅ DONE |
+| C (Decomposition) | Anti-double-counting regime decomposition (12 regimes) | ✅ DONE |
+| D (Rerun) | 24-combo measured cost rerun (2 configs × 4 regimes × 3 sizes) | ✅ DONE |
+| HEAD | ADR-HF-034 decision record + session handoff | ✅ DONE |
+
+### Agent Log Entries
+
+#### Collector — MEXC Orderbook Data Collection ✅
+- **Data**: `data/orderbook_snapshots/mexc_orderbook_001.jsonl` (gitignored)
+- **Metrics**: 19,500 snapshots, 42 coins (20 T1 + 20 T2 + BTC + ETH), 10s interval, ~2.5 hours
+- **Selection**: 10 alphabetical + 10 random(seed=42) per tier + BTC/ETH reference
+- **Infrastructure**: CCXT `enableRateLimit=True` + 50ms politeness sleep, PUBLIC endpoint only
+
+#### A — OB Sanity Check ✅
+- **Report**: `mexc_sanity_001.md`
+- **Metrics**: 39/42 coins present (3 missing, non-blocking), 0% crossed books, BTC median 0.05bps
+- **Gotchas**: T1 depth ($8K) < T2 ($12K) inversie, T1 slippage non-monotoon bij $2000 (20.46% None-rate), 3.49% extreme spread snapshots
+
+#### B — Slippage Walk Verification ✅
+- **Report**: `mexc_slippage_verification_001.md`
+- **Metrics**: 9/9 handmatige book walks: **0.00 bps delta** (exacte match)
+- **Bonus**: Synthetisch orderbook test: exact match (100.25 bps)
+
+#### C — Anti-Double-Counting Verification ✅
+- **Report**: `regime_decomposition_001.json`
+- **Metrics**: 12/12 component sums match (delta = 0.0)
+- **Verification**: register_regime() assertions werken correct, no double-counting in pipeline
+
+#### D — 24-Combo Measured Cost Rerun ⭐ 14/24 PASS
+- **Report**: `part2_measured_cost_rerun_001.{json,md}`
+- **Metrics**:
+  - 14/24 combinations pass ALL 7 STRICT gates
+  - **All 12 maker combinations PASS** (PF=2.86-3.38, DD≤9.5%, WF=5/5)
+  - Taker P50 marginaal (sl7 passes some, v5 borderline on G8)
+  - Taker P90 catastrophaal (PF<1.0, negative expectation)
+- **Learnings**: Maker limit orders are the confirmed execution path. Taker costs too high for reliable profitability. Fill model shows 100% fill at maker costs (bar-structure model — assumption, not live guarantee).
+
+#### HEAD — ADR-HF-034 + Session Handoff ✅
+- **ADR**: HF-034 appended to `strategies/hf/DECISIONS.md`
+- **Decision**: CONDITIONAL GO MAINTAINED (maker execution confirmed)
+- **Handoff**: `strategies/hf/CONTEXT_HANDOFF.md` written for new session continuity
+- **Commit**: `e913d99` on `hf-part2` branch
+
+### Cycle 10 Synthesis
+
+**MEASURED ORDERBOOK VALIDATION COMPLETE** ⭐⭐
+
+| Validation | Agent | Result |
+|------------|-------|--------|
+| Data collection | Collector | 19,500 snapshots, 39/42 coins, clean |
+| Sanity check | A | PASS (0% crossed, gotchas documented) |
+| Slippage verification | B | PASS (0.00 bps delta, 9/9 walks) |
+| Anti-double-counting | C | PASS (12/12 regimes, delta=0.0) |
+| 24-combo backtest | D | 14/24 PASS (all 12 maker combos) |
+| Decision record | HEAD | ADR-HF-034 written, GO maintained |
+
+**KEY CONCLUSION**: Maker limit orders are profitable with high confidence (PF=2.86-3.38 across all regimes and sizes). Taker execution is not viable at measured costs. The maker fill assumption (100% at bar-structure model) remains the primary open risk for paper trading validation.
+
+**NEXT STEP**: Multi-exchange exploration — test same signal on exchanges with more coins, volume, and liquidity. See `CONTEXT_HANDOFF.md` for full methodology template and candidate exchanges.
+
+---

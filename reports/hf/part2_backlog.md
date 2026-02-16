@@ -1,6 +1,6 @@
 # Part 2 Backlog — Priority Queue
 
-> Last updated: Cycle 9 complete (2026-02-16)
+> Last updated: Cycle 10 complete (2026-02-16)
 >
 > **SCOPE RESET**: User directive — paper trading is NOT the next step.
 > New P0 items target: universe policy, concentration control, execution realism, drawdown control, loser diagnostics.
@@ -111,5 +111,17 @@
 | ~~P0-C~~ | Decision/ADR writer | P0-C | ✅ ADR-HF-033 written. GO maintained with caveats. |
 
 ---
+
+## Completed (Cycle 10 — Measured Orderbook Validation)
+| # | Card | Owner | Result |
+|---|------|-------|--------|
+| ~~P0-D1~~ | MEXC orderbook data collection (19.5K snapshots) | Collector | ✅ 42 coins, 10s interval, 0% crossed books, 39/42 coins present |
+| ~~P0-D2~~ | Data quality validation (3 subagents) | A/B/C | ✅ Sanity PASS, Slippage 0.00bps delta, Anti-double-count 12/12 |
+| ~~P0-D3~~ | 24-combo measured cost rerun (7 STRICT gates) | D | ⭐ **14/24 PASS — all 12 maker combos 7/7** |
+| ~~P0-D4~~ | ADR-HF-034 decision record | HEAD | ✅ CONDITIONAL GO MAINTAINED (maker execution) |
+
+---
+
+**✅ MEXC VALIDATION COMPLETE** — All P0 items resolved. Next: multi-exchange exploration.
 
 **✅ RESEARCH COMPLETE** — All critical and important items resolved. 2 nice-to-have items remain (P1-9, P2-7) for future work.

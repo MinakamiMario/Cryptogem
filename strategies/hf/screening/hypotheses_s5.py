@@ -340,6 +340,61 @@ def signal_h20_vwap_deviation(candles, bar, indicators, params):
     }
 
 
+# -------------------------------------------------------------------
+# H20Z VWAP_DEVIATION_ZSCORE (normalized variant for HLC3 proxy)
+# -------------------------------------------------------------------
+def signal_h20z_vwap_deviation_zscore(candles, bar, indicators, params):
+    """H20Z VWAP_DEVIATION_ZSCORE: Z-score normalized VWAP deviation.
+
+    Uses z-score of (vwap - close) / ATR over rolling 50-bar window.
+    Solves the HLC3 structural cap problem: HLC3 proxy max deviation
+    is ~1-2 ATR, but z-score normalizes against the coin's own history,
+    so extreme deviations (z >= 2.0) still trigger.
+
+    Params:
+        zscore_thresh: z-score threshold (default 2.0 = 2 sigma)
+        tp_pct, sl_pct, time_limit: same as H20
+    """
+    if bar < 1:
+        return None
+    n = indicators.get('n', 0)
+    if bar >= n:
+        return None
+
+    # Check VWAP availability
+    if not indicators.get('has_vwap', False):
+        return None
+
+    # Use precomputed z-score from indicators_extended
+    zscore_list = indicators.get('vwap_dev_zscore', [])
+    if bar >= len(zscore_list) or zscore_list[bar] is None:
+        return None
+
+    zscore = zscore_list[bar]
+    if zscore < params['zscore_thresh']:
+        return None
+
+    # Bounce confirmation: close > prev_close
+    close = candles[bar]['close']
+    prev_close = candles[bar - 1]['close']
+    if close <= prev_close:
+        return None
+
+    tp = close * (1 + params['tp_pct'] / 100)
+    sl = close * (1 - params['sl_pct'] / 100)
+    if sl <= 0 or sl >= close:
+        return None
+
+    strength = zscore / params['zscore_thresh']
+
+    return {
+        'stop_price': sl,
+        'target_price': tp,
+        'time_limit': params.get('time_limit', 10),
+        'strength': min(strength, 3.0),
+    }
+
+
 # ===================================================================
 # PARAMETER GRIDS (6 variants each)
 # ===================================================================
@@ -389,6 +444,15 @@ GRID_H20 = [
     {'dev_thresh': 2.0, 'tp_pct': 8, 'sl_pct': 5, 'time_limit': 10},
 ]
 
+GRID_H20Z = [
+    {'zscore_thresh': 1.5, 'tp_pct': 5, 'sl_pct': 3, 'time_limit': 10},
+    {'zscore_thresh': 1.5, 'tp_pct': 8, 'sl_pct': 5, 'time_limit': 10},
+    {'zscore_thresh': 2.0, 'tp_pct': 5, 'sl_pct': 3, 'time_limit': 10},
+    {'zscore_thresh': 2.0, 'tp_pct': 8, 'sl_pct': 5, 'time_limit': 10},
+    {'zscore_thresh': 2.5, 'tp_pct': 5, 'sl_pct': 3, 'time_limit': 10},
+    {'zscore_thresh': 2.5, 'tp_pct': 8, 'sl_pct': 5, 'time_limit': 10},
+]
+
 
 # ===================================================================
 # REGISTRATION
@@ -422,6 +486,13 @@ register_s5(HypothesisS5(
     id='H20', name='VWAP_DEVIATION', category='microstructure',
     signal_fn=signal_h20_vwap_deviation, param_grid=GRID_H20,
     description='VWAP mean reversion: price significantly below VWAP with bounce confirmation.',
+))
+
+register_s5(HypothesisS5(
+    id='H20Z', name='VWAP_DEVIATION_ZSCORE', category='microstructure',
+    signal_fn=signal_h20z_vwap_deviation_zscore, param_grid=GRID_H20Z,
+    description='Z-score normalized VWAP deviation: solves HLC3 structural cap by normalizing '
+                'against rolling 50-bar deviation history. Designed for exchanges without real VWAP.',
 ))
 
 

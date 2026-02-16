@@ -70,6 +70,37 @@ def extend_indicators(data: dict, coins: list, indicators: dict) -> None:
                 atr_ratio[bar] = 1.0  # neutral when insufficient history
         ind['atr_ratio'] = atr_ratio
 
+        # vwap_dev_zscore: z-score of (vwap - close) / atr over rolling window
+        # Works with HLC3 proxy (Bybit) by normalizing deviation against its own history
+        vwap_dev_zscore = [None] * n
+        vwap_dev_raw = [None] * n  # store raw deviations for z-score calc
+        if ind.get('has_vwap', False):
+            # First pass: compute raw deviations
+            for bar in range(n):
+                if (vwaps[bar] is not None and atr[bar] is not None
+                        and atr[bar] > 0 and closes[bar] > 0):
+                    vwap_dev_raw[bar] = (vwaps[bar] - closes[bar]) / atr[bar]
+
+            # Second pass: z-score over rolling window (50 bars)
+            zscore_lookback = 50
+            for bar in range(n):
+                if vwap_dev_raw[bar] is None:
+                    continue
+                # Collect recent valid deviations
+                window = []
+                for j in range(max(0, bar - zscore_lookback + 1), bar + 1):
+                    if vwap_dev_raw[j] is not None:
+                        window.append(vwap_dev_raw[j])
+                if len(window) < 20:  # need sufficient history
+                    continue
+                mean_dev = sum(window) / len(window)
+                var_dev = sum((x - mean_dev) ** 2 for x in window) / len(window)
+                std_dev = var_dev ** 0.5
+                if std_dev > 1e-10:
+                    vwap_dev_zscore[bar] = (vwap_dev_raw[bar] - mean_dev) / std_dev
+        ind['vwap_dev_zscore'] = vwap_dev_zscore
+        ind['vwap_dev_raw'] = vwap_dev_raw
+
 
 def get_feature_coverage(indicators: dict, coins: list) -> dict:
     """

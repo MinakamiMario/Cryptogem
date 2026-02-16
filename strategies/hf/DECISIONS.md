@@ -1562,4 +1562,115 @@ Additional metrics: PF=2.834, 56 trades, WF folds: $909, $58, -$18, $792, $913. 
 1. ~~OKX run~~ — deprioritize (als Bybit met 10/10 bps al faalt, is OKX met 20/35 bps zinloos voor dit signaal)
 2. MEXC paper trading met fill tracking blijft P0 (ADR-HF-034)
 3. Als alternatief signaal ontwikkeld wordt, kan Bybit pipeline direct hergebruikt worden
-4. Onderzoek of signal recalibration (lagere dev_thresh) helpt op Bybit — maar dat is overfitting risico
+4. ~~Onderzoek of signal recalibration (lagere dev_thresh) helpt op Bybit~~ — see ADR-HF-036
+
+
+## ADR-HF-036: Bybit Signal Exploration — Comprehensive NO-GO
+
+**Date**: 2026-02-16
+**Status**: DECIDED — NO-GO for Bybit with current signal families
+**Supersedes**: ADR-HF-035 action item #4
+
+### Context
+
+ADR-HF-035 identified that H20 VWAP_DEVIATION fails on Bybit (0/24 combos, 15 trades).
+Root cause: HLC3 proxy `(H+L+C)/3` structurally caps VWAP deviation at ~1-2 ATR, while
+the 2.0 ATR threshold requires divergences only real trade-weighted VWAP provides.
+
+This ADR covers the three-step investigation:
+1. Signal diagnostics (structural root cause confirmation)
+2. Z-score normalized VWAP variant (H20Z)
+3. Multi-signal bake-off (H16/H17/H18/H19)
+
+### Step 1: Signal Diagnostics
+
+Created `signal_diagnostics.py` to compare per-coin VWAP deviation distributions.
+
+**Key findings** (bybit_signal_diagnostics_001.md):
+- MEXC top-20 coins max deviations: 2.0–5.8 ATR (real VWAP), 26 triggers
+- Bybit same coins max deviations: 0.7–1.96 ATR (HLC3), **0 triggers**
+- Bybit full universe: 63 triggers on 454 coins from obscure tail events (MONPRO, IZI, USDD)
+- **Conclusion**: HLC3 deviation is structurally bounded by bar range. Threshold 2.0 ATR unreachable.
+
+### Step 2: H20Z — Z-Score Normalized VWAP Deviation
+
+**Design**: Replace raw `(vwap - close) / atr >= 2.0` with rolling z-score:
+- Compute `dev = (vwap - close) / atr` per bar
+- Z-score over 50-bar rolling window: `z = (dev - mean) / std`
+- Trigger when `z >= zscore_thresh` (tested 1.5, 2.0, 2.5)
+- Same bounce confirmation: `close > prev_close`
+
+**Z-score sanity check**:
+- 454/454 coins with z-score data
+- NaN=False, Inf=False, range=[-6.42, 6.66]
+- |z| p90=1.62, |z| p99=2.92
+- Warmup: median 44 bars
+- Triggers z>=2.0: 7,397 bars (vs 63 raw triggers — normalization works)
+
+**24-combo results** (part2_bybit_h20z_001.md):
+
+| Config | Best PF | Trades | Gates | Verdict |
+|--------|---------|--------|-------|---------|
+| zscore_v5 / maker_p50 | 1.045 | 105 | 3/7 | FAIL |
+| zscore_sl7 / maker_p50 | 1.026 | 104 | 3/7 | FAIL |
+
+- **0/24 pass** any gate combination
+- Best case: PF=1.045, DD=22.1%, WF=2/5 — fails G4 (stress), G5 (DD), G6 (WF), G8 (fold conc)
+- Z-score normalization successfully generates triggers, but the trades have no edge
+- **Root cause**: HLC3 deviations are noise (extreme bar shapes), not information (volume dislocation)
+
+### Step 3: Multi-Signal Bake-Off
+
+Tested 5 signals (4 non-VWAP + H20Z) across 2 configs each, 4 regimes, 3 sizes = 120 combinations total.
+
+| Signal | Name | Trades | Best PF | Best Gates | Pass |
+|--------|------|--------|---------|------------|------|
+| H18 | VOL_EXPANSION | 33 | **1.249** | 3/7 | 0/24 |
+| H20Z | VWAP_DEV_ZSCORE | 105 | 1.045 | 3/7 | 0/24 |
+| H17 | WICK_REJECTION | 184 | 0.994 | 2/7 | 0/24 |
+| H16 | DISPLACEMENT_BAR | 189 | 0.648 | 2/7 | 0/24 |
+| H19 | GAP_PROXY | 1 | 0.000 | 1/7 | 0/24 |
+
+**H18 VOL_EXPANSION** is the only signal with PF>1.0, but:
+- Only 33 trades (fails G1: >=10/wk)
+- DD=29% (fails G5: <=20%)
+- WF=3/5 (close to G6 but pass)
+- Gate score 3/7 is best-in-class but nowhere near passing threshold
+
+### Decision
+
+**BYBIT SPOT: COMPREHENSIVE NO-GO** for all tested signal families.
+
+The failure is not signal-specific — it's structural:
+1. **VWAP signals (H20, H20Z)**: HLC3 proxy provides no informational content about volume dislocation
+2. **Microstructure signals (H16-H19)**: Generate trades but no edge (PF<1.0 for most)
+3. **Best signal (H18)**: Marginal edge (PF=1.25) with too few trades (33) and excessive DD (29%)
+
+### Root Cause Taxonomy
+
+| Factor | MEXC | Bybit | Impact |
+|--------|------|-------|--------|
+| VWAP source | Real Kraken trade-weighted | HLC3 proxy | Destroys H20 signal entirely |
+| Fee structure | 0/10 bps (maker/taker) | 10/10 bps | +10 bps per side erodes thin edges |
+| OB depth | T2 deeper than T1 | Similar inversion | Slippage on larger sizes |
+| Market microstructure | Higher vol dispersion | Lower vol dispersion | Fewer extreme events to trade |
+
+### Implications
+
+1. **MEXC remains the only viable exchange** for this HF strategy family
+2. **Bybit pipeline** (infra, candles, OB) is proven — can be reused if a new signal family emerges
+3. **OKX deprioritized** — with 20/35 bps fees, even harder than Bybit
+4. **MEXC paper trading** remains P0 (ADR-HF-034)
+5. **Next signal research direction**: Consider signals that exploit exchange-specific data feeds (MEXC trade flow, order imbalance) rather than OHLCV-only patterns
+
+### Files Produced
+
+| File | Purpose |
+|------|---------|
+| `strategies/hf/screening/signal_diagnostics.py` | Per-coin VWAP deviation distribution analysis |
+| `strategies/hf/screening/run_bybit_signal_exploration.py` | Signal-parametric 24-combo runner |
+| `strategies/hf/screening/hypotheses_s5.py` | Added H20Z signal + grid |
+| `strategies/hf/screening/indicators_extended.py` | Added z-score precomputation |
+| `reports/hf/bybit_signal_diagnostics_001.{json,md}` | Step 1 diagnostic output |
+| `reports/hf/part2_bybit_h20z_001.{json,md}` | Step 2 z-score results |
+| `reports/hf/bybit_signal_bakeoff_001.{json,md}` | Step 3 bake-off scoreboard |

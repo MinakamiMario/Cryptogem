@@ -1,6 +1,6 @@
 # Part 2 Backlog — Priority Queue
 
-> Last updated: Cycle 10 complete (2026-02-16)
+> Last updated: **CLOSED** (2026-02-17)
 >
 > **SCOPE RESET**: User directive — paper trading is NOT the next step.
 > New P0 items target: universe policy, concentration control, execution realism, drawdown control, loser diagnostics.
@@ -14,12 +14,12 @@
 ## P1 — Important (improves confidence)
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| P1-9 | Fresh data validation: re-run on newest candle data if available (check for regime shift) | — | ⏳ |
+| P1-9 | Fresh data validation: re-run on newest candle data if available (check for regime shift) | — | WONTFIX (project closed) |
 
 ## P2 — Nice-to-have
 | # | Card | Owner | Status |
 |---|------|-------|--------|
-| P2-7 | Hybrid maker strategy: limit-order entry for T2 coins to reduce taker costs | — | ⏳ |
+| P2-7 | Hybrid maker strategy: limit-order entry for T2 coins to reduce taker costs | — | WONTFIX (project closed) |
 
 ## Completed (Cycle 1)
 | # | Card | Owner | Result |
@@ -125,3 +125,5 @@
 **✅ MEXC VALIDATION COMPLETE** — All P0 items resolved. Next: multi-exchange exploration.
 
 **✅ RESEARCH COMPLETE** — All critical and important items resolved. 2 nice-to-have items remain (P1-9, P2-7) for future work.
+
+**🔒 PROJECT CLOSED** (2026-02-17) — MEXC validated; Bybit portability disproven.

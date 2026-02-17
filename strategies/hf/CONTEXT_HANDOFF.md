@@ -1,3 +1,7 @@
+> **🔒 PROJECT CLOSED** (2026-02-17) — This document is frozen.
+> Closure: MEXC validated; Bybit real-VWAP definitive NO-GO; portability disproven.
+> Tag: `hf-part2-closed-v1`
+
 # HF Part 2 — Context Handoff voor Nieuwe Sessie
 
 ## Executive Summary
@@ -7,7 +11,7 @@
 - OB sampling set: 42 coins (20 T1 + 20 T2 + BTC + ETH) — cost regimes gemeten, toegepast op 295
 - Exchange: MEXC SPOT
 - Execution: MAKER LIMIT ORDERS (bevestigd via 19,500 live OB snapshots)
-- Status: CONDITIONAL GO (ADR-HF-034)
+- Status: CONDITIONAL GO (ADR-HF-034) | PROJECT CLOSED (2026-02-17)
 
 ## ⚠️ Fee Structuur — EXACTE WAARDEN
 
@@ -147,6 +151,9 @@ run_part2_measured_cost_rerun.py → 24 backtests → reports/hf/part2_measured_
 - Part 2 code mag NIET gemixed worden met trading_bot/ (4H DualConfirm)
 
 ## Multi-Exchange Exploratie — Volgende Stap
+
+> **CANCELLED** (ADR-HF-035/036/037): Bybit validation proved signal is NOT portable.
+> Remaining exchanges deprioritized. Infrastructure reusable if new signal family emerges.
 
 ### Doel
 Test H20 VWAP_DEVIATION op exchanges met:

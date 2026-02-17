@@ -68,11 +68,11 @@
 - **Result**: PF=1.25, +$143/wk (market), survives P95 stress (PF=1.07)
 - **Status**: CONDITIONAL GO (ADR-HF-029) -- needs paper trading validation
 
-## HF Part 2 — Measured Validation & Multi-Exchange
+## HF Part 2 — CLOSED (2026-02-17)
 
 ### Documentation
 - `strategies/hf/CONTEXT_HANDOFF.md` -- START HIER voor Part 2 context
-- `strategies/hf/DECISIONS.md` -- ADR-HF-030 t/m HF-034 (Part 2 beslissingen)
+- `strategies/hf/DECISIONS.md` -- ADR-HF-030 t/m HF-037 (Part 2 + Bybit validation)
 - `reports/hf/part2_scoreboard.md` -- Gate status leaderboard
 - `reports/hf/part2_backlog.md` -- Priority queue (Cycles 1-10 compleet)
 - `reports/hf/part2_teamlog.md` -- Cycle-by-cycle execution log
@@ -89,6 +89,16 @@
 - **Exchange**: MEXC SPOT (code: 0%/10bps, werkelijk: 0%/4-5bps — conservatief)
 - **Execution**: MAKER LIMIT — PF=2.86-3.38, DD≤9.5%, 14/24 combos pass 7/7 STRICT
 - **Status**: CONDITIONAL GO — needs paper trading validation
+
+### Bybit Status (ADR-HF-035/036/037) — NO-GO
+- 0/24 combos pass. Real VWAP (37.8M 1m candles, 166 coins) = 3 triggers in 721h
+- Root cause: low intra-hour volatility dispersion (92% coins never reach dev≥2.0)
+- Signal is NOT portable — calibrated on MEXC retail microstructure
+
+### Project Status: CLOSED
+- Reason: MEXC validated; Bybit portability disproven
+- Frozen tag: `hf-part2-closed-v1`
+- Canon ADRs: HF-034 (MEXC GO), HF-035/036/037 (Bybit NO-GO)
 
 ### Fee Decompositie
 - `exchange_fee_bps` = fee-only (naar exchange)
@@ -108,3 +118,4 @@
 - Mix Part 2 code with original HF screening or trading_bot/
 - Assume MEXC fee structure applies to other exchanges
 - Assume 10s sampling scales to >100 coins — use tiered sampling policy
+- Reopen Part 2 — project CLOSED (see HF_PART2_FINAL.md)

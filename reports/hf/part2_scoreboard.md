@@ -1,6 +1,8 @@
 # Part 2 Scoreboard — Gate Status per Candidate
 
-> Last updated: Cycle 9 complete (2026-02-16)
+> Last updated: **CLOSED** (2026-02-17). Final state: Cycle 10 + Bybit NO-GO.
+>
+> **STATUS: CLOSED** — MEXC validated; Bybit real-VWAP P0 definitive NO-GO; portability disproven.
 
 ## Hard Gates
 

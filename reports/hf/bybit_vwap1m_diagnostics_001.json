@@ -1,0 +1,1772 @@
+{
+  "task": "bybit_vwap1m_diagnostics",
+  "date": "2026-02-17 03:26",
+  "commit": "63fde0e",
+  "guardrails": {
+    "time_window": {
+      "start_ts": 1748736000000,
+      "end_ts": 1771268400000,
+      "start_dt": "2025-06-01 00:00 UTC",
+      "end_dt": "2026-02-16 19:00 UTC",
+      "total_bars": 721,
+      "total_hours": 6259.0
+    },
+    "vwap_definition": {
+      "formula": "VWAP_1H = sum(tp_1m * vol_1m) / sum(vol_1m)",
+      "typical_price": "tp_1m = (high_1m + low_1m + close_1m) / 3  [HLC3 of 1m bar]",
+      "aggregation": "60 x 1m bars per 1H bar",
+      "missing_minutes": "skip (hours with 0 volume fallback to HLC3 of 1H bar)",
+      "source": "Bybit SPOT via CCXT fetch_ohlcv(1m)"
+    },
+    "ob_file": "bybit_orderbook_costs_001.json",
+    "ob_file_hash": "6d443436f8f9fe71e5cd00e69e4a24b2",
+    "fee_snapshot": {
+      "exchange_id": "bybit",
+      "maker_fee_bps": 10.0,
+      "taker_fee_bps": 10.0
+    },
+    "coverage_gate": {
+      "threshold_pct": 90.0,
+      "coins_requested": 166,
+      "coins_included": 166,
+      "coins_excluded": 0,
+      "coins_full_721_bars": 166,
+      "excluded_coins": []
+    }
+  },
+  "vwap_diagnostics": {
+    "real_vwap": {
+      "coins_with_vwap": 166,
+      "bars_with_vwap": 115536,
+      "total_bars": 119686,
+      "deviations": {
+        "count": 115536,
+        "min": -3.4816,
+        "p25": -0.1928,
+        "median": 0.0161,
+        "p75": 0.217,
+        "p90": 0.424,
+        "p95": 0.5721,
+        "p99": 0.9209,
+        "max": 2.9236,
+        "above_2": 17,
+        "above_2_pct": 0.015
+      }
+    },
+    "hlc3_proxy": {
+      "coins_with_vwap": 166,
+      "bars_with_vwap": 115536,
+      "total_bars": 119686,
+      "deviations": {
+        "count": 115536,
+        "min": -2.7587,
+        "p25": -0.1442,
+        "median": 0.014,
+        "p75": 0.1653,
+        "p90": 0.3011,
+        "p95": 0.3955,
+        "p99": 0.6161,
+        "max": 2.4757,
+        "above_2": 2,
+        "above_2_pct": 0.002
+      }
+    }
+  },
+  "trigger_comparison": {
+    "real_vwap": {
+      "total_triggers": 3,
+      "coins_with_triggers": 2,
+      "top_coins": [
+        {
+          "coin": "SPELL/USD",
+          "triggers": 2
+        },
+        {
+          "coin": "FIDA/USD",
+          "triggers": 1
+        }
+      ]
+    },
+    "hlc3_proxy": {
+      "total_triggers": 1,
+      "coins_with_triggers": 1,
+      "top_coins": [
+        {
+          "coin": "DBR/USD",
+          "triggers": 1
+        }
+      ]
+    },
+    "per_coin_breakdown": {
+      "real_vwap_top20": [
+        {
+          "coin": "SPELL/USD",
+          "bars": 721,
+          "triggers": 2,
+          "bars_dev_above_2": 2,
+          "blocked_by_bounce": 0,
+          "max_dev": 2.5379
+        },
+        {
+          "coin": "FIDA/USD",
+          "bars": 721,
+          "triggers": 1,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 0,
+          "max_dev": 2.0994
+        },
+        {
+          "coin": "ZK/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.0408
+        },
+        {
+          "coin": "DEGEN/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.5843
+        },
+        {
+          "coin": "AVNT/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.0522
+        },
+        {
+          "coin": "MEME/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.2187
+        },
+        {
+          "coin": "PONKE/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.192
+        },
+        {
+          "coin": "JASMY/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.5598
+        },
+        {
+          "coin": "POL/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.3595
+        },
+        {
+          "coin": "BONK/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.4237
+        },
+        {
+          "coin": "CRV/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.1492
+        },
+        {
+          "coin": "ZEREBRO/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.1363
+        },
+        {
+          "coin": "ES/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.1885
+        },
+        {
+          "coin": "PLUME/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.2065
+        },
+        {
+          "coin": "CELO/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.4444
+        },
+        {
+          "coin": "RENDER/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.2864
+        },
+        {
+          "coin": "PYTH/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.1081
+        },
+        {
+          "coin": "ICX/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.4309
+        },
+        {
+          "coin": "IMX/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.758
+        },
+        {
+          "coin": "KAVA/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.6723
+        }
+      ],
+      "top20_by_max_dev": [
+        {
+          "coin": "BTT/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 3,
+          "blocked_by_bounce": 3,
+          "max_dev": 2.9236
+        },
+        {
+          "coin": "SPELL/USD",
+          "bars": 721,
+          "triggers": 2,
+          "bars_dev_above_2": 2,
+          "blocked_by_bounce": 0,
+          "max_dev": 2.5379
+        },
+        {
+          "coin": "NYM/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 1,
+          "max_dev": 2.2833
+        },
+        {
+          "coin": "PERP/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 1,
+          "max_dev": 2.171
+        },
+        {
+          "coin": "SCRT/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 1,
+          "max_dev": 2.1606
+        },
+        {
+          "coin": "ANIME/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 1,
+          "max_dev": 2.1452
+        },
+        {
+          "coin": "XTZ/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 1,
+          "max_dev": 2.1274
+        },
+        {
+          "coin": "FLR/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 1,
+          "max_dev": 2.1217
+        },
+        {
+          "coin": "FIDA/USD",
+          "bars": 721,
+          "triggers": 1,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 0,
+          "max_dev": 2.0994
+        },
+        {
+          "coin": "CAMP/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 1,
+          "max_dev": 2.0745
+        },
+        {
+          "coin": "CFG/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 2,
+          "blocked_by_bounce": 2,
+          "max_dev": 2.0687
+        },
+        {
+          "coin": "LMWR/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 1,
+          "max_dev": 2.0483
+        },
+        {
+          "coin": "DBR/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 1,
+          "blocked_by_bounce": 1,
+          "max_dev": 2.0156
+        },
+        {
+          "coin": "ARKM/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.9846
+        },
+        {
+          "coin": "FLOW/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.9447
+        },
+        {
+          "coin": "ALGO/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.9256
+        },
+        {
+          "coin": "MINA/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.9209
+        },
+        {
+          "coin": "WCT/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.8719
+        },
+        {
+          "coin": "AVAX/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.8692
+        },
+        {
+          "coin": "BMT/USD",
+          "bars": 721,
+          "triggers": 0,
+          "bars_dev_above_2": 0,
+          "blocked_by_bounce": 0,
+          "max_dev": 1.8455
+        }
+      ],
+      "total_coins_analyzed": 166,
+      "coins_zero_triggers": 164,
+      "coins_zero_dev_above_2": 153,
+      "coins_ever_above_2": 13,
+      "candidate_summary": {
+        "max_dev_gte_2_0": 13,
+        "max_dev_1_5_to_2_0": 36,
+        "max_dev_1_0_to_1_5": 113,
+        "max_dev_lt_1_0": 4
+      },
+      "candidates_ignoring_bounce": {
+        "total_dev_above_2_bars": 17,
+        "blocked_by_bounce": 14,
+        "would_trigger": 3
+      }
+    }
+  },
+  "per_coin_coverage": [
+    {
+      "coin": "ZK/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "DEGEN/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "AVNT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "MEME/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PONKE/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "JASMY/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "BONK/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "POL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "CRV/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ZEREBRO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ES/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PLUME/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "CELO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "RENDER/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PYTH/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ICX/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "IMX/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "KAVA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SPELL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 641,
+      "real_vwap_pct": 88.9
+    },
+    {
+      "coin": "COQ/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ENA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "BAT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 716,
+      "real_vwap_pct": 99.3
+    },
+    {
+      "coin": "PRCL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SHIB/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "FLR/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "TRX/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "FIL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PRIME/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ZBT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "DOGS/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ASTER/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "DYM/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "FLOKI/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "LINEA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "LMWR/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "GRT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ONDO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "DEEP/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "KAS/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "OM/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "VANRY/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "WLD/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "YB/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "BTT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 719,
+      "real_vwap_pct": 99.7
+    },
+    {
+      "coin": "XDC/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "EIGEN/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "DRIFT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ANIME/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ZRX/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "GALA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "WIF/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ZRO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "W/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "RUNE/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "2Z/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "MEW/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "OP/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SPX/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "S/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SOL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SWELL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SAROS/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "WOO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "NYM/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 704,
+      "real_vwap_pct": 97.6
+    },
+    {
+      "coin": "CFG/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "MORPHO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "BMT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SAHARA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "FHE/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "INIT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ALT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "AVAX/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "AIXBT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "BEAM/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "A/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "BDXN/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "JUP/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "CPOOL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "LUNA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "UNI/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "0G/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ALGO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ACH/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SNX/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "TOKEN/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ADA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PERP/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 713,
+      "real_vwap_pct": 98.9
+    },
+    {
+      "coin": "GMT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "BLUR/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ARB/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "FIDA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 719,
+      "real_vwap_pct": 99.7
+    },
+    {
+      "coin": "ZIG/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "TNSR/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SUI/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ANKR/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 711,
+      "real_vwap_pct": 98.6
+    },
+    {
+      "coin": "WAL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "VIRTUAL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "WEN/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "U/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "FLOW/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 718,
+      "real_vwap_pct": 99.6
+    },
+    {
+      "coin": "1INCH/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SXT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "AEVO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "APT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PARTI/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PNUT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SAND/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "GOAT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "DBR/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "GLMR/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "H/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "STX/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ENJ/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "TIA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "NOT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "IP/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "BOBA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PENGU/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SCRT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ICP/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "CAMP/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "CHZ/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "LDO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "MANA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "TOSHI/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "AERO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "FET/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SKY/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "KMNO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "APE/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "WCT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SC/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "XRP/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "TON/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PEPE/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "DOT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ARKM/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "HPOS10I/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 720,
+      "real_vwap_pct": 99.9
+    },
+    {
+      "coin": "SEI/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "POPCAT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "LINK/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "HFT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "JTO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ZORA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "MOG/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "DYDX/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "XPL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "BICO/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ATOM/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "XAN/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "CLOUD/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "WLFI/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "MNT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "HBAR/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SPK/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "XTZ/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "ATH/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "MINA/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "SUSHI/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "LRC/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 719,
+      "real_vwap_pct": 99.7
+    },
+    {
+      "coin": "XLM/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "NEAR/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "MERL/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 720,
+      "real_vwap_pct": 99.9
+    },
+    {
+      "coin": "ICNT/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "PUMP/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    },
+    {
+      "coin": "STRK/USD",
+      "bars": 721,
+      "target_bars": 721,
+      "coverage_pct": 100.0,
+      "real_vwap_bars": 721,
+      "real_vwap_pct": 100.0
+    }
+  ]
+}

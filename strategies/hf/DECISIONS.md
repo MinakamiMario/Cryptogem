@@ -1674,3 +1674,118 @@ The failure is not signal-specific — it's structural:
 | `reports/hf/bybit_signal_diagnostics_001.{json,md}` | Step 1 diagnostic output |
 | `reports/hf/part2_bybit_h20z_001.{json,md}` | Step 2 z-score results |
 | `reports/hf/bybit_signal_bakeoff_001.{json,md}` | Step 3 bake-off scoreboard |
+
+
+## ADR-HF-037: Bybit Real 1m VWAP Validation — Definitive NO-GO
+
+**Date**: 2026-02-17
+**Status**: DECIDED — **NO-GO** (confirms ADR-HF-035/036)
+**Supersedes**: ADR-HF-036 root cause hypothesis ("HLC3 proxy structurally caps VWAP deviation")
+
+### Context
+
+ADR-HF-036 hypothesized that HLC3 proxy `(H+L+C)/3` structurally caps VWAP deviation at ~1-2 ATR, preventing H20 triggers. This ADR tests that hypothesis by computing real volume-weighted VWAP from 1-minute candle aggregation across all 166 intersection coins (MEXC ∩ Bybit).
+
+### Methodology
+
+1. Downloaded 37.8M 1m candles for 166 coins (2025-06-01 → 2026-02-16, 721 hours)
+2. Computed real VWAP per 1H bar: `VWAP_1H = Σ(tp_1m × vol_1m) / Σ(vol_1m)`
+3. Ran H20 VWAP_DEVIATION raw (dev_thresh=2.0) on both real VWAP and HLC3 proxy
+4. Full 24-combo matrix (2 configs × 4 regimes × 3 sizes)
+5. VWAP integrity verified: 3 coins × 721 hours exact math match, zero floating-point drift
+
+### VWAP Deviation Distribution Comparison
+
+| Metric | Real VWAP | HLC3 Proxy |
+|--------|-----------|------------|
+| Coins | 166 | 166 |
+| Bars with data | 115,536 | 115,536 |
+| Median deviation | 0.0161 ATR | 0.0140 ATR |
+| P95 deviation | 0.5721 ATR | 0.3955 ATR |
+| Max deviation | **2.9236 ATR** | 2.4757 ATR |
+| Bars ≥ 2.0 ATR | **17 (0.015%)** | 2 (0.002%) |
+
+**Key**: Real VWAP expands the tail — P95 +45%, max +18%, bars≥2.0 goes from 2 to 17. But even with expansion, only 17 bars out of 115,536 cross the threshold (0.015%).
+
+### Trigger Comparison
+
+| Metric | Real VWAP | HLC3 Proxy |
+|--------|-----------|------------|
+| Total triggers | **3** | 1 |
+| Coins with triggers | 2 | 1 |
+| Bars with dev≥2.0 | 17 | 2 |
+| Blocked by bounce filter | 14 | 1 |
+| Would trigger (dev≥2.0 + bounce) | 3 | 1 |
+
+**Trigger-producing coins (real VWAP)**: SPELL/USD (2 triggers), FIDA/USD (1 trigger)
+
+### Candidate Summary (166 coins)
+
+| Max Dev Range | Count | % | Description |
+|---------------|-------|---|-------------|
+| ≥ 2.0 ATR | 13 | 7.8% | Ever exceeded threshold |
+| 1.5 – 2.0 ATR | 36 | 21.7% | Near threshold |
+| 1.0 – 1.5 ATR | 113 | 68.1% | Moderate |
+| < 1.0 ATR | 4 | 2.4% | Far from threshold |
+
+**153/166 coins** (92%) never had a single bar with dev≥2.0 in 721 hours.
+
+### Top-5 Coins by Max Deviation
+
+| Coin | Max Dev | Dev≥2.0 bars | Blocked by bounce | Triggers |
+|------|---------|--------------|-------------------|----------|
+| BTT/USD | 2.9236 | 3 | 3 | 0 |
+| SPELL/USD | 2.5379 | 2 | 0 | **2** |
+| NYM/USD | 2.2833 | 1 | 1 | 0 |
+| PERP/USD | 2.1710 | 1 | 1 | 0 |
+| SCRT/USD | 2.1606 | 1 | 1 | 0 |
+
+BTT/USD has the highest deviation (2.92 ATR) but all 3 bars blocked by bounce filter.
+
+### 24-Combo Results
+
+**0/24 pass.** All fail 6/7 gates (G1, G2, G3, G4, G6, G8). Only G5 (DD≤20%) passes.
+
+| Config | Regime | Trades | Best PF | Exp/Wk |
+|--------|--------|--------|---------|--------|
+| v5 | maker_p50 | 3 | 0.684 | -$0.45 |
+| v5 | taker_p90 | 3 | 0.000 | -$30.97 |
+| sl7 | (all identical to v5, same 3 trades) | 3 | — | — |
+
+v5 and sl7 produce identical results because the 3 trades don't hit the sl5→sl7 boundary.
+
+### Root Cause Analysis (Definitive)
+
+The ADR-HF-036 hypothesis was **partially wrong**:
+
+1. **HLC3 proxy is NOT the primary bottleneck.** Real VWAP expands deviation distribution (max 2.92 vs 2.48 ATR, 17 vs 2 bars above 2.0), but the expansion is marginal: from 1 trigger to 3 triggers.
+2. **The real bottleneck is Bybit's low intra-hour volatility dispersion.** 92% of coins never produce a single dev≥2.0 bar in 721 hours. The VWAP-to-close distance rarely exceeds 1 ATR regardless of computation method.
+3. **Bounce filter amplifies the problem.** Of the 17 bars with dev≥2.0, 14 (82%) are blocked by the bounce confirmation (close ≤ prev_close). The extreme deviations occur on down-bars, not on recoveries.
+4. **The H20 signal was calibrated on MEXC microstructure** where retail-heavy coins (BONK, DOGS, PEPE) produce frequent volume dislocations. Bybit's market microstructure does not exhibit these patterns.
+
+### Decision
+
+**DEFINITIVE NO-GO** — H20 VWAP_DEVIATION is not transferable to Bybit SPOT, even with real 1m VWAP.
+
+**Rationale**:
+1. Real VWAP produces only 3 triggers in 721 hours × 166 coins (vs MEXC ~150+ on 295 coins)
+2. 92% of coins never reach dev_thresh=2.0 regardless of VWAP method
+3. Bounce filter blocks 82% of the rare events that do exceed threshold
+4. Even the 3 surviving trades are losing (PF=0.684)
+
+**What was confirmed**:
+- Infrastructure works end-to-end (1m download, aggregation, VWAP patching, validation)
+- VWAP integrity is exact (zero floating-point drift, 15/15 spot checks pass)
+- HLC3 proxy understates tail deviations by ~45% at P95, but it's insufficient to rescue the signal
+
+### Files Produced
+
+| File | Purpose |
+|------|---------|
+| `strategies/hf/screening/vwap_1m_aggregator.py` | 1m download + aggregation + cache patching + progress heartbeat |
+| `strategies/hf/screening/run_bybit_vwap_validation.py` | 24-combo runner with guardrails + diagnostics |
+| `data/cache_parts_hf/1m/bybit/` | 166 coin 1m cache files (37.8M bars) |
+| `data/candle_cache_1h_bybit_real_vwap.json` | Patched 1H cache (166 real VWAP + 288 HLC3) |
+| `reports/hf/part2_bybit_h20_vwap1m_001.{json,md}` | Main 24-combo validation report |
+| `reports/hf/bybit_vwap1m_diagnostics_001.{json,md}` | VWAP diagnostics + per-coin breakdown |
+| `logs/vwap_1m_progress.json` | Download heartbeat for monitoring |

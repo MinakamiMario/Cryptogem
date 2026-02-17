@@ -143,11 +143,10 @@ ci-guard:
 
 # ─── HF strategy (development) ──────────────────────────────
 
-# HF strategy check (placeholder — expand when HF tests exist)
+# HF strategy check (alignment + no-leak tests)
 hf-check:
-	@echo "=== HF Check ==="
-	@echo "No HF tests yet — placeholder"
-	@echo "✅ HF check passed (no tests)"
+	@echo "=== HF Alignment Tests ==="
+	python3 strategies/hf/hf_alignment_tests.py
 
 # HF robustness (placeholder — expand when HF harness exists)
 hf-robustness:

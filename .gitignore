@@ -1,5 +1,8 @@
 # Data — te groot voor git; refereer naar MD5 hashes in docs/
 data/*.json
+data/manifest_hf_*.json
+data/cache_parts_hf/
+data/orderbook_snapshots/
 trading_bot/candle_cache*.json
 backtest_engine_v2.0/data/
 

@@ -1,0 +1,6418 @@
+{
+  "timestamp": "2026-02-15T12:52:38.095027",
+  "label": "4H variant research \u2014 data audit",
+  "data_file": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/data/candle_cache_tradeable.json",
+  "universe": "tradeable",
+  "summary": {
+    "total_symbols": 425,
+    "median_bars": 721,
+    "min_bars": 687,
+    "max_bars": 721,
+    "full_coverage_pct": 98.1,
+    "ohlcv_violations": 0,
+    "zero_volume_symbols": 0,
+    "volume_anomaly_symbols": 142
+  },
+  "cross_symbol_stats": {
+    "total_symbols": 425,
+    "median_bars": 721,
+    "min_bars": 687,
+    "max_bars": 721,
+    "full_coverage_pct": 98.1,
+    "bar_count_stdev": 3.4,
+    "volume_distribution": {
+      "total_nonzero_candles": 296156,
+      "volume_p10": 645.31,
+      "volume_p25": 5539.57,
+      "volume_median": 47825.37,
+      "volume_p75": 398740.07,
+      "volume_p90": 3169923.8,
+      "volume_p99": 6177395512.38,
+      "volume_max": 2222845473044.0
+    }
+  },
+  "flags": [
+    {
+      "symbol": "APR/USD",
+      "issue": "low_bar_count",
+      "bars": 687,
+      "threshold": 700
+    },
+    {
+      "symbol": "BLUAI/USD",
+      "issue": "low_bar_count",
+      "bars": 698,
+      "threshold": 700
+    },
+    {
+      "symbol": "KGEN/USD",
+      "issue": "low_bar_count",
+      "bars": 693,
+      "threshold": 700
+    },
+    {
+      "symbol": "SHX/USD",
+      "issue": "low_bar_count",
+      "bars": 693,
+      "threshold": 700
+    },
+    {
+      "symbol": "VFY/USD",
+      "issue": "low_bar_count",
+      "bars": 693,
+      "threshold": 700
+    },
+    {
+      "symbol": "YALA/USD",
+      "issue": "low_bar_count",
+      "bars": 699,
+      "threshold": 700
+    },
+    {
+      "symbol": "0G/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 21534.0,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 384,
+          "volume": 5359525.20147,
+          "median": 21534.0,
+          "multiple": 248.9
+        },
+        {
+          "index": 704,
+          "volume": 2242176.66841,
+          "median": 21534.0,
+          "multiple": 104.1
+        }
+      ]
+    },
+    {
+      "symbol": "1INCH/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 21947.16,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 610,
+          "volume": 2897461.18032822,
+          "median": 21947.16,
+          "multiple": 132.0
+        }
+      ]
+    },
+    {
+      "symbol": "2Z/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 35148.53,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 209,
+          "volume": 5266662.71816,
+          "median": 35148.53,
+          "multiple": 149.8
+        }
+      ]
+    },
+    {
+      "symbol": "ACT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 24825.19,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 383,
+          "volume": 2571093.41396,
+          "median": 24825.19,
+          "multiple": 103.6
+        }
+      ]
+    },
+    {
+      "symbol": "AI3/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 8538.09,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 249,
+          "volume": 980935.81681,
+          "median": 8538.09,
+          "multiple": 114.9
+        },
+        {
+          "index": 252,
+          "volume": 941365.26464,
+          "median": 8538.09,
+          "multiple": 110.3
+        },
+        {
+          "index": 444,
+          "volume": 936265.07319,
+          "median": 8538.09,
+          "multiple": 109.7
+        }
+      ]
+    },
+    {
+      "symbol": "AKE/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 6318180.68,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 190,
+          "volume": 803623954.55969,
+          "median": 6318180.68,
+          "multiple": 127.2
+        },
+        {
+          "index": 191,
+          "volume": 636819922.55588,
+          "median": 6318180.68,
+          "multiple": 100.8
+        },
+        {
+          "index": 200,
+          "volume": 819420170.46581,
+          "median": 6318180.68,
+          "multiple": 129.7
+        }
+      ]
+    },
+    {
+      "symbol": "ALCH/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 4024.67,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 56,
+          "volume": 410981.95202,
+          "median": 4024.67,
+          "multiple": 102.1
+        },
+        {
+          "index": 166,
+          "volume": 425141.78391,
+          "median": 4024.67,
+          "multiple": 105.6
+        },
+        {
+          "index": 693,
+          "volume": 478703.74641,
+          "median": 4024.67,
+          "multiple": 118.9
+        }
+      ]
+    },
+    {
+      "symbol": "ALCX/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 17,
+      "vol_median": 132.34,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 10,
+          "volume": 16039.57336483,
+          "median": 132.34,
+          "multiple": 121.2
+        },
+        {
+          "index": 111,
+          "volume": 20254.52925901,
+          "median": 132.34,
+          "multiple": 153.0
+        },
+        {
+          "index": 112,
+          "volume": 22680.0041979,
+          "median": 132.34,
+          "multiple": 171.4
+        }
+      ]
+    },
+    {
+      "symbol": "ALKIMI/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 34330.28,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 506,
+          "volume": 15322814.98668,
+          "median": 34330.28,
+          "multiple": 446.3
+        },
+        {
+          "index": 599,
+          "volume": 9530970.50535,
+          "median": 34330.28,
+          "multiple": 277.6
+        },
+        {
+          "index": 600,
+          "volume": 4119929.27058,
+          "median": 34330.28,
+          "multiple": 120.0
+        }
+      ]
+    },
+    {
+      "symbol": "ALTHEA/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 10413.2,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 56,
+          "volume": 1082922.77485,
+          "median": 10413.2,
+          "multiple": 104.0
+        },
+        {
+          "index": 58,
+          "volume": 1060675.89504,
+          "median": 10413.2,
+          "multiple": 101.9
+        }
+      ]
+    },
+    {
+      "symbol": "ANKR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 148775.19,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 147,
+          "volume": 15667499.69745748,
+          "median": 148775.19,
+          "multiple": 105.3
+        }
+      ]
+    },
+    {
+      "symbol": "ANON/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 1013.71,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 52,
+          "volume": 139829.16915,
+          "median": 1013.71,
+          "multiple": 137.9
+        },
+        {
+          "index": 53,
+          "volume": 120302.50701,
+          "median": 1013.71,
+          "multiple": 118.7
+        }
+      ]
+    },
+    {
+      "symbol": "API3/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 4237.11,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 325,
+          "volume": 435075.22707617,
+          "median": 4237.11,
+          "multiple": 102.7
+        },
+        {
+          "index": 368,
+          "volume": 464888.92116618,
+          "median": 4237.11,
+          "multiple": 109.7
+        }
+      ]
+    },
+    {
+      "symbol": "ARPA/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 5,
+      "vol_median": 58569.38,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 562,
+          "volume": 8340048.51729045,
+          "median": 58569.38,
+          "multiple": 142.4
+        },
+        {
+          "index": 563,
+          "volume": 6140100.85372481,
+          "median": 58569.38,
+          "multiple": 104.8
+        },
+        {
+          "index": 564,
+          "volume": 6892771.53968945,
+          "median": 58569.38,
+          "multiple": 117.7
+        }
+      ]
+    },
+    {
+      "symbol": "ASTR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 98657.87,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 357,
+          "volume": 11445617.82759017,
+          "median": 98657.87,
+          "multiple": 116.0
+        },
+        {
+          "index": 376,
+          "volume": 17991886.76132158,
+          "median": 98657.87,
+          "multiple": 182.4
+        }
+      ]
+    },
+    {
+      "symbol": "AUCTION/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 6,
+      "vol_median": 177.25,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 15,
+          "volume": 18101.34473,
+          "median": 177.25,
+          "multiple": 102.1
+        },
+        {
+          "index": 23,
+          "volume": 33343.64169,
+          "median": 177.25,
+          "multiple": 188.1
+        },
+        {
+          "index": 145,
+          "volume": 30275.41307,
+          "median": 177.25,
+          "multiple": 170.8
+        }
+      ]
+    },
+    {
+      "symbol": "AXS/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 3711.13,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 573,
+          "volume": 448573.01779397,
+          "median": 3711.13,
+          "multiple": 120.9
+        },
+        {
+          "index": 583,
+          "volume": 388380.6922365,
+          "median": 3711.13,
+          "multiple": 104.7
+        },
+        {
+          "index": 691,
+          "volume": 422730.48880337,
+          "median": 3711.13,
+          "multiple": 113.9
+        }
+      ]
+    },
+    {
+      "symbol": "BABY/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 147617.19,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 492,
+          "volume": 15481229.06995,
+          "median": 147617.19,
+          "multiple": 104.9
+        }
+      ]
+    },
+    {
+      "symbol": "BAL/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 8,
+      "vol_median": 268.86,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 644,
+          "volume": 230795.02466242,
+          "median": 268.86,
+          "multiple": 858.4
+        },
+        {
+          "index": 645,
+          "volume": 144513.5683099,
+          "median": 268.86,
+          "multiple": 537.5
+        },
+        {
+          "index": 646,
+          "volume": 59469.76264555,
+          "median": 268.86,
+          "multiple": 221.2
+        }
+      ]
+    },
+    {
+      "symbol": "BANANAS31/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 634356.16,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 184,
+          "volume": 106066727.23637,
+          "median": 634356.16,
+          "multiple": 167.2
+        }
+      ]
+    },
+    {
+      "symbol": "BAND/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 1845.44,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 263,
+          "volume": 197369.59415514,
+          "median": 1845.44,
+          "multiple": 106.9
+        }
+      ]
+    },
+    {
+      "symbol": "BDXN/USD",
+      "issue": "consecutive_zero_volume",
+      "max_consecutive_bars": 15,
+      "starts_at_index": 497,
+      "possible_delisting": false
+    },
+    {
+      "symbol": "BDXN/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 43584.28,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 543,
+          "volume": 9335932.74792,
+          "median": 43584.28,
+          "multiple": 214.2
+        }
+      ]
+    },
+    {
+      "symbol": "BERA/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 6203.33,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 702,
+          "volume": 1863700.13156,
+          "median": 6203.33,
+          "multiple": 300.4
+        }
+      ]
+    },
+    {
+      "symbol": "BIGTIME/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 12044.64,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 62,
+          "volume": 1224855.06574,
+          "median": 12044.64,
+          "multiple": 101.7
+        }
+      ]
+    },
+    {
+      "symbol": "BIO/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 45723.59,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 243,
+          "volume": 7771979.19274,
+          "median": 45723.59,
+          "multiple": 170.0
+        }
+      ]
+    },
+    {
+      "symbol": "BLUR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 13954.18,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 530,
+          "volume": 1417438.37668,
+          "median": 13954.18,
+          "multiple": 101.6
+        },
+        {
+          "index": 532,
+          "volume": 3668996.16444,
+          "median": 13954.18,
+          "multiple": 262.9
+        },
+        {
+          "index": 534,
+          "volume": 1578250.52368,
+          "median": 13954.18,
+          "multiple": 113.1
+        }
+      ]
+    },
+    {
+      "symbol": "BLZ/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 49454.97,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 435,
+          "volume": 5691583.40816589,
+          "median": 49454.97,
+          "multiple": 115.1
+        },
+        {
+          "index": 437,
+          "volume": 9790359.72964364,
+          "median": 49454.97,
+          "multiple": 198.0
+        }
+      ]
+    },
+    {
+      "symbol": "BMT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 30287.3,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 99,
+          "volume": 16905850.73029,
+          "median": 30287.3,
+          "multiple": 558.2
+        },
+        {
+          "index": 399,
+          "volume": 5352204.37662,
+          "median": 30287.3,
+          "multiple": 176.7
+        },
+        {
+          "index": 450,
+          "volume": 4330259.48599,
+          "median": 30287.3,
+          "multiple": 143.0
+        }
+      ]
+    },
+    {
+      "symbol": "BNT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 803.96,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 262,
+          "volume": 115941.42273338,
+          "median": 803.96,
+          "multiple": 144.2
+        },
+        {
+          "index": 322,
+          "volume": 87191.22104133,
+          "median": 803.96,
+          "multiple": 108.5
+        }
+      ]
+    },
+    {
+      "symbol": "BODEN/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 237345.17,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 55,
+          "volume": 52754956.49853,
+          "median": 237345.17,
+          "multiple": 222.3
+        }
+      ]
+    },
+    {
+      "symbol": "BOND/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 11,
+      "vol_median": 3172.08,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 435,
+          "volume": 547737.40062269,
+          "median": 3172.08,
+          "multiple": 172.7
+        },
+        {
+          "index": 436,
+          "volume": 906040.31784488,
+          "median": 3172.08,
+          "multiple": 285.6
+        },
+        {
+          "index": 437,
+          "volume": 325301.3713387,
+          "median": 3172.08,
+          "multiple": 102.6
+        }
+      ]
+    },
+    {
+      "symbol": "BSX/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 16580022.89,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 150,
+          "volume": 2047201613.7413278,
+          "median": 16580022.89,
+          "multiple": 123.5
+        },
+        {
+          "index": 254,
+          "volume": 2048925109.6071274,
+          "median": 16580022.89,
+          "multiple": 123.6
+        }
+      ]
+    },
+    {
+      "symbol": "BTR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 29904.86,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 607,
+          "volume": 3854024.47562,
+          "median": 29904.86,
+          "multiple": 128.9
+        },
+        {
+          "index": 608,
+          "volume": 4036046.08596,
+          "median": 29904.86,
+          "multiple": 135.0
+        },
+        {
+          "index": 658,
+          "volume": 3144193.92839,
+          "median": 29904.86,
+          "multiple": 105.1
+        }
+      ]
+    },
+    {
+      "symbol": "CARV/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 1550.44,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 94,
+          "volume": 216538.2379,
+          "median": 1550.44,
+          "multiple": 139.7
+        }
+      ]
+    },
+    {
+      "symbol": "CCD/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 1201265.14,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 70,
+          "volume": 363181499.45968,
+          "median": 1201265.14,
+          "multiple": 302.3
+        },
+        {
+          "index": 71,
+          "volume": 695982443.17027,
+          "median": 1201265.14,
+          "multiple": 579.4
+        },
+        {
+          "index": 72,
+          "volume": 315961460.93772,
+          "median": 1201265.14,
+          "multiple": 263.0
+        }
+      ]
+    },
+    {
+      "symbol": "CHEEMS/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 413688371.5,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 55,
+          "volume": 52380333958.89023,
+          "median": 413688371.5,
+          "multiple": 126.6
+        }
+      ]
+    },
+    {
+      "symbol": "CLV/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 6,
+      "vol_median": 100855.2,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 204,
+          "volume": 29053435.34617328,
+          "median": 100855.2,
+          "multiple": 288.1
+        },
+        {
+          "index": 206,
+          "volume": 11814069.81108009,
+          "median": 100855.2,
+          "multiple": 117.1
+        },
+        {
+          "index": 207,
+          "volume": 11960334.17769153,
+          "median": 100855.2,
+          "multiple": 118.6
+        }
+      ]
+    },
+    {
+      "symbol": "COMP/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 321.56,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 714,
+          "volume": 32173.79470366,
+          "median": 321.56,
+          "multiple": 100.1
+        }
+      ]
+    },
+    {
+      "symbol": "COQ/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 4934344842.33,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 41,
+          "volume": 615363668183.7482,
+          "median": 4934344842.33,
+          "multiple": 124.7
+        }
+      ]
+    },
+    {
+      "symbol": "COW/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 7,
+      "vol_median": 747.41,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 48,
+          "volume": 74951.35672,
+          "median": 747.41,
+          "multiple": 100.3
+        },
+        {
+          "index": 57,
+          "volume": 75354.64894,
+          "median": 747.41,
+          "multiple": 100.8
+        },
+        {
+          "index": 190,
+          "volume": 83440.80009,
+          "median": 747.41,
+          "multiple": 111.6
+        }
+      ]
+    },
+    {
+      "symbol": "CTC/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 892.31,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 235,
+          "volume": 141847.34899,
+          "median": 892.31,
+          "multiple": 159.0
+        },
+        {
+          "index": 237,
+          "volume": 133536.2657,
+          "median": 892.31,
+          "multiple": 149.7
+        },
+        {
+          "index": 710,
+          "volume": 229282.5612,
+          "median": 892.31,
+          "multiple": 257.0
+        }
+      ]
+    },
+    {
+      "symbol": "CTSI/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 19197.43,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 202,
+          "volume": 3556190.23988148,
+          "median": 19197.43,
+          "multiple": 185.2
+        },
+        {
+          "index": 206,
+          "volume": 3461227.15943329,
+          "median": 19197.43,
+          "multiple": 180.3
+        },
+        {
+          "index": 207,
+          "volume": 3884989.22396454,
+          "median": 19197.43,
+          "multiple": 202.4
+        }
+      ]
+    },
+    {
+      "symbol": "CVC/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 6,
+      "vol_median": 9395.16,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 147,
+          "volume": 1210389.46627993,
+          "median": 9395.16,
+          "multiple": 128.8
+        },
+        {
+          "index": 148,
+          "volume": 1193363.88431573,
+          "median": 9395.16,
+          "multiple": 127.0
+        },
+        {
+          "index": 291,
+          "volume": 1865794.4744925,
+          "median": 9395.16,
+          "multiple": 198.6
+        }
+      ]
+    },
+    {
+      "symbol": "CXT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 175389.17,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 400,
+          "volume": 19802223.18383,
+          "median": 175389.17,
+          "multiple": 112.9
+        }
+      ]
+    },
+    {
+      "symbol": "CYBER/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 252.49,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 659,
+          "volume": 34709.48308,
+          "median": 252.49,
+          "multiple": 137.5
+        }
+      ]
+    },
+    {
+      "symbol": "DBR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 5,
+      "vol_median": 20961.28,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 27,
+          "volume": 3365974.32596,
+          "median": 20961.28,
+          "multiple": 160.6
+        },
+        {
+          "index": 39,
+          "volume": 2303079.36311,
+          "median": 20961.28,
+          "multiple": 109.9
+        },
+        {
+          "index": 58,
+          "volume": 4932507.04742,
+          "median": 20961.28,
+          "multiple": 235.3
+        }
+      ]
+    },
+    {
+      "symbol": "DEGEN/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 148116.25,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 209,
+          "volume": 38818721.96409,
+          "median": 148116.25,
+          "multiple": 262.1
+        },
+        {
+          "index": 281,
+          "volume": 40834902.09948,
+          "median": 148116.25,
+          "multiple": 275.7
+        },
+        {
+          "index": 313,
+          "volume": 20710325.77768,
+          "median": 148116.25,
+          "multiple": 139.8
+        }
+      ]
+    },
+    {
+      "symbol": "DMC/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 8,
+      "vol_median": 1046935.18,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 218,
+          "volume": 135914772.0228,
+          "median": 1046935.18,
+          "multiple": 129.8
+        },
+        {
+          "index": 219,
+          "volume": 132083912.48889,
+          "median": 1046935.18,
+          "multiple": 126.2
+        },
+        {
+          "index": 220,
+          "volume": 140443895.59554,
+          "median": 1046935.18,
+          "multiple": 134.1
+        }
+      ]
+    },
+    {
+      "symbol": "DYM/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 7,
+      "vol_median": 9986.47,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 202,
+          "volume": 2399436.28042,
+          "median": 9986.47,
+          "multiple": 240.3
+        },
+        {
+          "index": 206,
+          "volume": 2580535.44956,
+          "median": 9986.47,
+          "multiple": 258.4
+        },
+        {
+          "index": 207,
+          "volume": 2097126.1797,
+          "median": 9986.47,
+          "multiple": 210.0
+        }
+      ]
+    },
+    {
+      "symbol": "EDGE/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 11325.91,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 467,
+          "volume": 1467761.02731,
+          "median": 11325.91,
+          "multiple": 129.6
+        }
+      ]
+    },
+    {
+      "symbol": "ELX/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 5,
+      "vol_median": 356308.38,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 420,
+          "volume": 54650119.06618,
+          "median": 356308.38,
+          "multiple": 153.4
+        },
+        {
+          "index": 421,
+          "volume": 44812503.04178,
+          "median": 356308.38,
+          "multiple": 125.8
+        },
+        {
+          "index": 426,
+          "volume": 56364388.24003,
+          "median": 356308.38,
+          "multiple": 158.2
+        }
+      ]
+    },
+    {
+      "symbol": "ES/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 11048.63,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 74,
+          "volume": 1442811.07725,
+          "median": 11048.63,
+          "multiple": 130.6
+        }
+      ]
+    },
+    {
+      "symbol": "ESX/USD",
+      "issue": "consecutive_zero_volume",
+      "max_consecutive_bars": 13,
+      "starts_at_index": 674,
+      "possible_delisting": false
+    },
+    {
+      "symbol": "ETHFI/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 7756.78,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 21,
+          "volume": 1525618.51958,
+          "median": 7756.78,
+          "multiple": 196.7
+        },
+        {
+          "index": 611,
+          "volume": 1125971.85521,
+          "median": 7756.78,
+          "multiple": 145.2
+        }
+      ]
+    },
+    {
+      "symbol": "FF/USD",
+      "issue": "consecutive_zero_volume",
+      "max_consecutive_bars": 15,
+      "starts_at_index": 442,
+      "possible_delisting": false
+    },
+    {
+      "symbol": "FIDA/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 9871.46,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 117,
+          "volume": 1039987.94540974,
+          "median": 9871.46,
+          "multiple": 105.4
+        }
+      ]
+    },
+    {
+      "symbol": "FIL/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 44960.46,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 125,
+          "volume": 6418351.80278217,
+          "median": 44960.46,
+          "multiple": 142.8
+        }
+      ]
+    },
+    {
+      "symbol": "FLOKI/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 146656983.26,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 15,
+          "volume": 18825525484.802456,
+          "median": 146656983.26,
+          "multiple": 128.4
+        }
+      ]
+    },
+    {
+      "symbol": "FLOW/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 52921.82,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 461,
+          "volume": 6441822.12747067,
+          "median": 52921.82,
+          "multiple": 121.7
+        }
+      ]
+    },
+    {
+      "symbol": "FLUX/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 19803.63,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 125,
+          "volume": 2817772.76243,
+          "median": 19803.63,
+          "multiple": 142.3
+        }
+      ]
+    },
+    {
+      "symbol": "FWOG/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 557600.49,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 191,
+          "volume": 60962532.0244,
+          "median": 557600.49,
+          "multiple": 109.3
+        }
+      ]
+    },
+    {
+      "symbol": "GHIBLI/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 7,
+      "vol_median": 1692712.3,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 276,
+          "volume": 216818569.3519,
+          "median": 1692712.3,
+          "multiple": 128.1
+        },
+        {
+          "index": 277,
+          "volume": 341776406.84519,
+          "median": 1692712.3,
+          "multiple": 201.9
+        },
+        {
+          "index": 281,
+          "volume": 204939947.82386,
+          "median": 1692712.3,
+          "multiple": 121.1
+        }
+      ]
+    },
+    {
+      "symbol": "GHST/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 14,
+      "vol_median": 3755.71,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 366,
+          "volume": 435335.93074505,
+          "median": 3755.71,
+          "multiple": 115.9
+        },
+        {
+          "index": 673,
+          "volume": 492573.23564676,
+          "median": 3755.71,
+          "multiple": 131.2
+        },
+        {
+          "index": 689,
+          "volume": 613133.96611934,
+          "median": 3755.71,
+          "multiple": 163.3
+        }
+      ]
+    },
+    {
+      "symbol": "GLMR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 25715.53,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 304,
+          "volume": 2940134.01845109,
+          "median": 25715.53,
+          "multiple": 114.3
+        },
+        {
+          "index": 646,
+          "volume": 3007295.74936071,
+          "median": 25715.53,
+          "multiple": 116.9
+        },
+        {
+          "index": 652,
+          "volume": 3140161.0589964,
+          "median": 25715.53,
+          "multiple": 122.1
+        }
+      ]
+    },
+    {
+      "symbol": "GMT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 87023.79,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 501,
+          "volume": 10124263.6363043,
+          "median": 87023.79,
+          "multiple": 116.3
+        },
+        {
+          "index": 502,
+          "volume": 17529029.86137319,
+          "median": 87023.79,
+          "multiple": 201.4
+        }
+      ]
+    },
+    {
+      "symbol": "GMX/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 110.47,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 284,
+          "volume": 15006.21290796,
+          "median": 110.47,
+          "multiple": 135.8
+        }
+      ]
+    },
+    {
+      "symbol": "GNO/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 5,
+      "vol_median": 4.15,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 118,
+          "volume": 487.65728557,
+          "median": 4.15,
+          "multiple": 117.6
+        },
+        {
+          "index": 336,
+          "volume": 1672.76359009,
+          "median": 4.15,
+          "multiple": 403.5
+        },
+        {
+          "index": 350,
+          "volume": 516.75811714,
+          "median": 4.15,
+          "multiple": 124.6
+        }
+      ]
+    },
+    {
+      "symbol": "GRT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 328367.02,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 335,
+          "volume": 35323629.86860921,
+          "median": 328367.02,
+          "multiple": 107.6
+        }
+      ]
+    },
+    {
+      "symbol": "HIPPO/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 2742750.32,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 120,
+          "volume": 384348506.02067,
+          "median": 2742750.32,
+          "multiple": 140.1
+        },
+        {
+          "index": 165,
+          "volume": 321819902.75015,
+          "median": 2742750.32,
+          "multiple": 117.3
+        }
+      ]
+    },
+    {
+      "symbol": "HPOS10I/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 14367.08,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 210,
+          "volume": 1899302.37257,
+          "median": 14367.08,
+          "multiple": 132.2
+        }
+      ]
+    },
+    {
+      "symbol": "KET/USD",
+      "issue": "consecutive_zero_volume",
+      "max_consecutive_bars": 12,
+      "starts_at_index": 518,
+      "possible_delisting": false
+    },
+    {
+      "symbol": "KET/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 24769.28,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 599,
+          "volume": 2954431.03355,
+          "median": 24769.28,
+          "multiple": 119.3
+        },
+        {
+          "index": 685,
+          "volume": 2501109.83265,
+          "median": 24769.28,
+          "multiple": 101.0
+        },
+        {
+          "index": 692,
+          "volume": 15372729.6527,
+          "median": 24769.28,
+          "multiple": 620.6
+        }
+      ]
+    },
+    {
+      "symbol": "KGEN/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 3539.19,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 375,
+          "volume": 371221.51793,
+          "median": 3539.19,
+          "multiple": 104.9
+        },
+        {
+          "index": 376,
+          "volume": 563407.62859,
+          "median": 3539.19,
+          "multiple": 159.2
+        }
+      ]
+    },
+    {
+      "symbol": "KMNO/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 17019.42,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 635,
+          "volume": 2062041.95485,
+          "median": 17019.42,
+          "multiple": 121.2
+        }
+      ]
+    },
+    {
+      "symbol": "KNC/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 1850.16,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 15,
+          "volume": 403311.07864787,
+          "median": 1850.16,
+          "multiple": 218.0
+        },
+        {
+          "index": 16,
+          "volume": 188264.51744539,
+          "median": 1850.16,
+          "multiple": 101.8
+        }
+      ]
+    },
+    {
+      "symbol": "LCAP/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 50,
+      "vol_median": 40.75,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 0,
+          "volume": 5038.53135,
+          "median": 40.75,
+          "multiple": 123.6
+        },
+        {
+          "index": 19,
+          "volume": 5113.39088,
+          "median": 40.75,
+          "multiple": 125.5
+        },
+        {
+          "index": 20,
+          "volume": 5005.42055,
+          "median": 40.75,
+          "multiple": 122.8
+        }
+      ]
+    },
+    {
+      "symbol": "LIT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 3766.29,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 491,
+          "volume": 971902.52231,
+          "median": 3766.29,
+          "multiple": 258.1
+        },
+        {
+          "index": 516,
+          "volume": 385132.65812,
+          "median": 3766.29,
+          "multiple": 102.3
+        }
+      ]
+    },
+    {
+      "symbol": "LMWR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 80115.58,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 501,
+          "volume": 8289059.5186,
+          "median": 80115.58,
+          "multiple": 103.5
+        }
+      ]
+    },
+    {
+      "symbol": "LRC/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 36721.11,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 336,
+          "volume": 6769362.93676212,
+          "median": 36721.11,
+          "multiple": 184.3
+        },
+        {
+          "index": 693,
+          "volume": 3817359.26685694,
+          "median": 36721.11,
+          "multiple": 104.0
+        }
+      ]
+    },
+    {
+      "symbol": "LSK/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 8125.93,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 147,
+          "volume": 1340242.77178225,
+          "median": 8125.93,
+          "multiple": 164.9
+        }
+      ]
+    },
+    {
+      "symbol": "MASK/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 2045.77,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 427,
+          "volume": 233093.10052678,
+          "median": 2045.77,
+          "multiple": 113.9
+        },
+        {
+          "index": 480,
+          "volume": 215491.81307627,
+          "median": 2045.77,
+          "multiple": 105.3
+        }
+      ]
+    },
+    {
+      "symbol": "ME/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 8,
+      "vol_median": 1263.86,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 555,
+          "volume": 140820.49371,
+          "median": 1263.86,
+          "multiple": 111.4
+        },
+        {
+          "index": 556,
+          "volume": 140879.47383,
+          "median": 1263.86,
+          "multiple": 111.5
+        },
+        {
+          "index": 559,
+          "volume": 131955.97765,
+          "median": 1263.86,
+          "multiple": 104.4
+        }
+      ]
+    },
+    {
+      "symbol": "MELANIA/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 76705.74,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 59,
+          "volume": 13299848.06315,
+          "median": 76705.74,
+          "multiple": 173.4
+        },
+        {
+          "index": 60,
+          "volume": 8632701.54542,
+          "median": 76705.74,
+          "multiple": 112.5
+        },
+        {
+          "index": 143,
+          "volume": 17463736.9388,
+          "median": 76705.74,
+          "multiple": 227.7
+        }
+      ]
+    },
+    {
+      "symbol": "MEME/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 564286.12,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 567,
+          "volume": 65272657.80767,
+          "median": 564286.12,
+          "multiple": 115.7
+        }
+      ]
+    },
+    {
+      "symbol": "MLN/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 690.2,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 14,
+          "volume": 72409.6158794,
+          "median": 690.2,
+          "multiple": 104.9
+        },
+        {
+          "index": 15,
+          "volume": 109416.27018226,
+          "median": 690.2,
+          "multiple": 158.5
+        },
+        {
+          "index": 16,
+          "volume": 111760.70942234,
+          "median": 690.2,
+          "multiple": 161.9
+        }
+      ]
+    },
+    {
+      "symbol": "MNGO/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 12,
+      "vol_median": 19591.66,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 368,
+          "volume": 3244312.83796232,
+          "median": 19591.66,
+          "multiple": 165.6
+        },
+        {
+          "index": 369,
+          "volume": 2596692.88109711,
+          "median": 19591.66,
+          "multiple": 132.5
+        },
+        {
+          "index": 370,
+          "volume": 5095297.11351555,
+          "median": 19591.66,
+          "multiple": 260.1
+        }
+      ]
+    },
+    {
+      "symbol": "MOODENG/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 157561.38,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 300,
+          "volume": 28911076.71402,
+          "median": 157561.38,
+          "multiple": 183.5
+        },
+        {
+          "index": 301,
+          "volume": 20083866.88585,
+          "median": 157561.38,
+          "multiple": 127.5
+        },
+        {
+          "index": 706,
+          "volume": 16736702.69572,
+          "median": 157561.38,
+          "multiple": 106.2
+        }
+      ]
+    },
+    {
+      "symbol": "MOON/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 5745.6,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 217,
+          "volume": 615339.91641,
+          "median": 5745.6,
+          "multiple": 107.1
+        },
+        {
+          "index": 653,
+          "volume": 2415942.8816,
+          "median": 5745.6,
+          "multiple": 420.5
+        },
+        {
+          "index": 654,
+          "volume": 671605.15714,
+          "median": 5745.6,
+          "multiple": 116.9
+        }
+      ]
+    },
+    {
+      "symbol": "MXC/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 687426.88,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 545,
+          "volume": 173998257.99938175,
+          "median": 687426.88,
+          "multiple": 253.1
+        },
+        {
+          "index": 546,
+          "volume": 179459736.03783625,
+          "median": 687426.88,
+          "multiple": 261.1
+        }
+      ]
+    },
+    {
+      "symbol": "NMR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 120.74,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 510,
+          "volume": 12354.78346091,
+          "median": 120.74,
+          "multiple": 102.3
+        }
+      ]
+    },
+    {
+      "symbol": "NYM/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 9385.43,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 355,
+          "volume": 2232758.90985558,
+          "median": 9385.43,
+          "multiple": 237.9
+        },
+        {
+          "index": 369,
+          "volume": 1792256.68208597,
+          "median": 9385.43,
+          "multiple": 191.0
+        },
+        {
+          "index": 390,
+          "volume": 1495268.9258543,
+          "median": 9385.43,
+          "multiple": 159.3
+        }
+      ]
+    },
+    {
+      "symbol": "ODOS/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 77748.8,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 132,
+          "volume": 8365097.69572,
+          "median": 77748.8,
+          "multiple": 107.6
+        },
+        {
+          "index": 601,
+          "volume": 20309654.30477,
+          "median": 77748.8,
+          "multiple": 261.2
+        },
+        {
+          "index": 676,
+          "volume": 8947556.59787,
+          "median": 77748.8,
+          "multiple": 115.1
+        }
+      ]
+    },
+    {
+      "symbol": "ORDER/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 3700.49,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 38,
+          "volume": 740956.96252,
+          "median": 3700.49,
+          "multiple": 200.2
+        },
+        {
+          "index": 662,
+          "volume": 518704.47516,
+          "median": 3700.49,
+          "multiple": 140.2
+        },
+        {
+          "index": 715,
+          "volume": 540576.38204,
+          "median": 3700.49,
+          "multiple": 146.1
+        }
+      ]
+    },
+    {
+      "symbol": "PONKE/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 61300.28,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 574,
+          "volume": 10584529.68219,
+          "median": 61300.28,
+          "multiple": 172.7
+        },
+        {
+          "index": 615,
+          "volume": 10477175.2962,
+          "median": 61300.28,
+          "multiple": 170.9
+        }
+      ]
+    },
+    {
+      "symbol": "PRCL/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 23579.13,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 479,
+          "volume": 3392727.99994,
+          "median": 23579.13,
+          "multiple": 143.9
+        },
+        {
+          "index": 484,
+          "volume": 4292024.71931,
+          "median": 23579.13,
+          "multiple": 182.0
+        },
+        {
+          "index": 485,
+          "volume": 2434472.73368,
+          "median": 23579.13,
+          "multiple": 103.2
+        }
+      ]
+    },
+    {
+      "symbol": "PROMPT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 26885.87,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 119,
+          "volume": 6055408.49368,
+          "median": 26885.87,
+          "multiple": 225.2
+        }
+      ]
+    },
+    {
+      "symbol": "PUFFER/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 7337.72,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 18,
+          "volume": 1223779.34545,
+          "median": 7337.72,
+          "multiple": 166.8
+        },
+        {
+          "index": 64,
+          "volume": 2203207.19103,
+          "median": 7337.72,
+          "multiple": 300.3
+        },
+        {
+          "index": 65,
+          "volume": 1240378.41868,
+          "median": 7337.72,
+          "multiple": 169.0
+        }
+      ]
+    },
+    {
+      "symbol": "RAD/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 8,
+      "vol_median": 555.59,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 334,
+          "volume": 107280.80034622,
+          "median": 555.59,
+          "multiple": 193.1
+        },
+        {
+          "index": 450,
+          "volume": 194086.4187698,
+          "median": 555.59,
+          "multiple": 349.3
+        },
+        {
+          "index": 451,
+          "volume": 72987.9737836,
+          "median": 555.59,
+          "multiple": 131.4
+        }
+      ]
+    },
+    {
+      "symbol": "REKT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 8266968377.14,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 186,
+          "volume": 1058149291658.4342,
+          "median": 8266968377.14,
+          "multiple": 128.0
+        }
+      ]
+    },
+    {
+      "symbol": "REN/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 150347.21,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 104,
+          "volume": 23868893.05537784,
+          "median": 150347.21,
+          "multiple": 158.8
+        },
+        {
+          "index": 460,
+          "volume": 17731340.76071859,
+          "median": 150347.21,
+          "multiple": 117.9
+        }
+      ]
+    },
+    {
+      "symbol": "RETARDIO/USD",
+      "issue": "consecutive_zero_volume",
+      "max_consecutive_bars": 13,
+      "starts_at_index": 402,
+      "possible_delisting": false
+    },
+    {
+      "symbol": "RETARDIO/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 123488.0,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 308,
+          "volume": 13054931.48764,
+          "median": 123488.0,
+          "multiple": 105.7
+        }
+      ]
+    },
+    {
+      "symbol": "RHEA/USD",
+      "issue": "consecutive_zero_volume",
+      "max_consecutive_bars": 10,
+      "starts_at_index": 695,
+      "possible_delisting": false
+    },
+    {
+      "symbol": "RHEA/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 15347.37,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 646,
+          "volume": 3317992.73058,
+          "median": 15347.37,
+          "multiple": 216.2
+        }
+      ]
+    },
+    {
+      "symbol": "RPL/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 343.97,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 442,
+          "volume": 113041.07769783,
+          "median": 343.97,
+          "multiple": 328.6
+        }
+      ]
+    },
+    {
+      "symbol": "RSR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 1149575.45,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 635,
+          "volume": 167090005.88164,
+          "median": 1149575.45,
+          "multiple": 145.3
+        }
+      ]
+    },
+    {
+      "symbol": "RUJI/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 1296.63,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 170,
+          "volume": 296138.17905,
+          "median": 1296.63,
+          "multiple": 228.4
+        }
+      ]
+    },
+    {
+      "symbol": "SAMO/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 388968.07,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 76,
+          "volume": 45400310.08179623,
+          "median": 388968.07,
+          "multiple": 116.7
+        },
+        {
+          "index": 487,
+          "volume": 71673697.81872998,
+          "median": 388968.07,
+          "multiple": 184.3
+        },
+        {
+          "index": 490,
+          "volume": 39667390.81912025,
+          "median": 388968.07,
+          "multiple": 102.0
+        }
+      ]
+    },
+    {
+      "symbol": "SLAY/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 10,
+      "vol_median": 68969.12,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 132,
+          "volume": 7208109.98566,
+          "median": 68969.12,
+          "multiple": 104.5
+        },
+        {
+          "index": 699,
+          "volume": 14550142.73816,
+          "median": 68969.12,
+          "multiple": 211.0
+        },
+        {
+          "index": 700,
+          "volume": 19268348.00753,
+          "median": 68969.12,
+          "multiple": 279.4
+        }
+      ]
+    },
+    {
+      "symbol": "SNX/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 34620.16,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 653,
+          "volume": 3636790.3259524,
+          "median": 34620.16,
+          "multiple": 105.0
+        },
+        {
+          "index": 665,
+          "volume": 4411483.49926024,
+          "median": 34620.16,
+          "multiple": 127.4
+        },
+        {
+          "index": 698,
+          "volume": 3754462.24001508,
+          "median": 34620.16,
+          "multiple": 108.4
+        }
+      ]
+    },
+    {
+      "symbol": "SPICE/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 68915728.34,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 358,
+          "volume": 7558379153.76758,
+          "median": 68915728.34,
+          "multiple": 109.7
+        },
+        {
+          "index": 688,
+          "volume": 8226985715.32807,
+          "median": 68915728.34,
+          "multiple": 119.4
+        }
+      ]
+    },
+    {
+      "symbol": "SRM/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 6,
+      "vol_median": 137139.48,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 424,
+          "volume": 15708685.65215113,
+          "median": 137139.48,
+          "multiple": 114.5
+        },
+        {
+          "index": 425,
+          "volume": 18766731.11934335,
+          "median": 137139.48,
+          "multiple": 136.8
+        },
+        {
+          "index": 426,
+          "volume": 18471982.61602851,
+          "median": 137139.48,
+          "multiple": 134.7
+        }
+      ]
+    },
+    {
+      "symbol": "STG/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 5,
+      "vol_median": 1791.31,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 583,
+          "volume": 194105.48495846,
+          "median": 1791.31,
+          "multiple": 108.4
+        },
+        {
+          "index": 697,
+          "volume": 208698.96199195,
+          "median": 1791.31,
+          "multiple": 116.5
+        },
+        {
+          "index": 698,
+          "volume": 183908.31203842,
+          "median": 1791.31,
+          "multiple": 102.7
+        }
+      ]
+    },
+    {
+      "symbol": "STORJ/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 8624.69,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 22,
+          "volume": 906286.08958048,
+          "median": 8624.69,
+          "multiple": 105.1
+        },
+        {
+          "index": 125,
+          "volume": 1363074.34033494,
+          "median": 8624.69,
+          "multiple": 158.0
+        },
+        {
+          "index": 286,
+          "volume": 1167735.20821558,
+          "median": 8624.69,
+          "multiple": 135.4
+        }
+      ]
+    },
+    {
+      "symbol": "STRD/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 7221.78,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 335,
+          "volume": 1815994.70632,
+          "median": 7221.78,
+          "multiple": 251.5
+        }
+      ]
+    },
+    {
+      "symbol": "SUKU/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 5,
+      "vol_median": 15853.8,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 437,
+          "volume": 1750773.36079,
+          "median": 15853.8,
+          "multiple": 110.4
+        },
+        {
+          "index": 438,
+          "volume": 1971475.35137,
+          "median": 15853.8,
+          "multiple": 124.4
+        },
+        {
+          "index": 439,
+          "volume": 2708685.7998,
+          "median": 15853.8,
+          "multiple": 170.9
+        }
+      ]
+    },
+    {
+      "symbol": "T/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 8,
+      "vol_median": 52911.58,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 95,
+          "volume": 7525360.32047474,
+          "median": 52911.58,
+          "multiple": 142.2
+        },
+        {
+          "index": 490,
+          "volume": 8885082.43674342,
+          "median": 52911.58,
+          "multiple": 167.9
+        },
+        {
+          "index": 491,
+          "volume": 6316130.85378047,
+          "median": 52911.58,
+          "multiple": 119.4
+        }
+      ]
+    },
+    {
+      "symbol": "TANSSI/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 15,
+      "vol_median": 42760.44,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 245,
+          "volume": 10027316.44785,
+          "median": 42760.44,
+          "multiple": 234.5
+        },
+        {
+          "index": 246,
+          "volume": 5676253.66945,
+          "median": 42760.44,
+          "multiple": 132.7
+        },
+        {
+          "index": 339,
+          "volume": 6163529.75501,
+          "median": 42760.44,
+          "multiple": 144.1
+        }
+      ]
+    },
+    {
+      "symbol": "TLM/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 83600.22,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 450,
+          "volume": 8425693.38186179,
+          "median": 83600.22,
+          "multiple": 100.8
+        },
+        {
+          "index": 455,
+          "volume": 13087252.10006037,
+          "median": 83600.22,
+          "multiple": 156.5
+        },
+        {
+          "index": 570,
+          "volume": 10668733.21565649,
+          "median": 83600.22,
+          "multiple": 127.6
+        }
+      ]
+    },
+    {
+      "symbol": "TNSR/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 90985.22,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 202,
+          "volume": 10793478.02805,
+          "median": 90985.22,
+          "multiple": 118.6
+        }
+      ]
+    },
+    {
+      "symbol": "TOKEN/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 15,
+      "vol_median": 106941.3,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 356,
+          "volume": 14654749.97316,
+          "median": 106941.3,
+          "multiple": 137.0
+        },
+        {
+          "index": 429,
+          "volume": 13799699.54664,
+          "median": 106941.3,
+          "multiple": 129.0
+        },
+        {
+          "index": 430,
+          "volume": 19191531.03073,
+          "median": 106941.3,
+          "multiple": 179.5
+        }
+      ]
+    },
+    {
+      "symbol": "TREE/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 5538.2,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 709,
+          "volume": 612365.75747,
+          "median": 5538.2,
+          "multiple": 110.6
+        },
+        {
+          "index": 711,
+          "volume": 699455.14476,
+          "median": 5538.2,
+          "multiple": 126.3
+        }
+      ]
+    },
+    {
+      "symbol": "TRUMP/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 6292.42,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 112,
+          "volume": 865225.49106,
+          "median": 6292.42,
+          "multiple": 137.5
+        }
+      ]
+    },
+    {
+      "symbol": "UNFI/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 4,
+      "vol_median": 2978.12,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 325,
+          "volume": 346039.83398746,
+          "median": 2978.12,
+          "multiple": 116.2
+        },
+        {
+          "index": 328,
+          "volume": 314619.5105201,
+          "median": 2978.12,
+          "multiple": 105.6
+        },
+        {
+          "index": 427,
+          "volume": 408334.85577455,
+          "median": 2978.12,
+          "multiple": 137.1
+        }
+      ]
+    },
+    {
+      "symbol": "VELODROME/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 10,
+      "vol_median": 10028.83,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 83,
+          "volume": 1987666.03716,
+          "median": 10028.83,
+          "multiple": 198.2
+        },
+        {
+          "index": 85,
+          "volume": 1404932.17788,
+          "median": 10028.83,
+          "multiple": 140.1
+        },
+        {
+          "index": 144,
+          "volume": 1335254.54691,
+          "median": 10028.83,
+          "multiple": 133.1
+        }
+      ]
+    },
+    {
+      "symbol": "VVV/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 168.1,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 276,
+          "volume": 37088.19464,
+          "median": 168.1,
+          "multiple": 220.6
+        },
+        {
+          "index": 712,
+          "volume": 25182.79599,
+          "median": 168.1,
+          "multiple": 149.8
+        }
+      ]
+    },
+    {
+      "symbol": "WAL/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 10,
+      "vol_median": 8852.66,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 303,
+          "volume": 1070254.90259,
+          "median": 8852.66,
+          "multiple": 120.9
+        },
+        {
+          "index": 442,
+          "volume": 2319030.44624,
+          "median": 8852.66,
+          "multiple": 262.0
+        },
+        {
+          "index": 499,
+          "volume": 1493817.46969,
+          "median": 8852.66,
+          "multiple": 168.7
+        }
+      ]
+    },
+    {
+      "symbol": "WELL/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 71260.19,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 216,
+          "volume": 12236420.12907,
+          "median": 71260.19,
+          "multiple": 171.7
+        }
+      ]
+    },
+    {
+      "symbol": "WEN/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 6,
+      "vol_median": 32021102.2,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 351,
+          "volume": 5253260349.774499,
+          "median": 32021102.2,
+          "multiple": 164.1
+        },
+        {
+          "index": 352,
+          "volume": 8753224890.316559,
+          "median": 32021102.2,
+          "multiple": 273.4
+        },
+        {
+          "index": 405,
+          "volume": 3803104007.30533,
+          "median": 32021102.2,
+          "multiple": 118.8
+        }
+      ]
+    },
+    {
+      "symbol": "WLD/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 36745.15,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 618,
+          "volume": 8628662.37678,
+          "median": 36745.15,
+          "multiple": 234.8
+        }
+      ]
+    },
+    {
+      "symbol": "XAUT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 3,
+      "vol_median": 9.4,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 594,
+          "volume": 1361.27848497,
+          "median": 9.4,
+          "multiple": 144.9
+        },
+        {
+          "index": 622,
+          "volume": 1181.63088134,
+          "median": 9.4,
+          "multiple": 125.8
+        },
+        {
+          "index": 629,
+          "volume": 1720.32518266,
+          "median": 9.4,
+          "multiple": 183.1
+        }
+      ]
+    },
+    {
+      "symbol": "XION/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 8,
+      "vol_median": 932.38,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 199,
+          "volume": 97759.26924,
+          "median": 932.38,
+          "multiple": 104.8
+        },
+        {
+          "index": 237,
+          "volume": 146359.76499,
+          "median": 932.38,
+          "multiple": 157.0
+        },
+        {
+          "index": 239,
+          "volume": 95765.70094,
+          "median": 932.38,
+          "multiple": 102.7
+        }
+      ]
+    },
+    {
+      "symbol": "XL1/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 1639312.49,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 13,
+          "volume": 181808009.33894,
+          "median": 1639312.49,
+          "multiple": 110.9
+        },
+        {
+          "index": 16,
+          "volume": 205806741.63668,
+          "median": 1639312.49,
+          "multiple": 125.5
+        }
+      ]
+    },
+    {
+      "symbol": "XNY/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 871542.21,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 287,
+          "volume": 105790625.57654,
+          "median": 871542.21,
+          "multiple": 121.4
+        }
+      ]
+    },
+    {
+      "symbol": "XYO/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 226767.02,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 230,
+          "volume": 28958092.02169,
+          "median": 226767.02,
+          "multiple": 127.7
+        }
+      ]
+    },
+    {
+      "symbol": "YB/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 11958.7,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 140,
+          "volume": 1434964.71175,
+          "median": 11958.7,
+          "multiple": 120.0
+        }
+      ]
+    },
+    {
+      "symbol": "YFI/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 0.93,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 184,
+          "volume": 109.13497719,
+          "median": 0.93,
+          "multiple": 117.6
+        }
+      ]
+    },
+    {
+      "symbol": "YGG/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 4636.15,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 693,
+          "volume": 3774491.29914614,
+          "median": 4636.15,
+          "multiple": 814.1
+        }
+      ]
+    },
+    {
+      "symbol": "ZBT/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 11610.97,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 410,
+          "volume": 1525699.74169,
+          "median": 11610.97,
+          "multiple": 131.4
+        },
+        {
+          "index": 411,
+          "volume": 1472819.81383,
+          "median": 11610.97,
+          "multiple": 126.8
+        }
+      ]
+    },
+    {
+      "symbol": "ZETA/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 3443.09,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 50,
+          "volume": 405999.37635,
+          "median": 3443.09,
+          "multiple": 117.9
+        },
+        {
+          "index": 377,
+          "volume": 456129.79662,
+          "median": 3443.09,
+          "multiple": 132.5
+        }
+      ]
+    },
+    {
+      "symbol": "ZEUS/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 5,
+      "vol_median": 108235.65,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 665,
+          "volume": 21352594.72651,
+          "median": 108235.65,
+          "multiple": 197.3
+        },
+        {
+          "index": 666,
+          "volume": 13400152.52457,
+          "median": 108235.65,
+          "multiple": 123.8
+        },
+        {
+          "index": 668,
+          "volume": 12036829.60764,
+          "median": 108235.65,
+          "multiple": 111.2
+        }
+      ]
+    },
+    {
+      "symbol": "ZEX/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 6,
+      "vol_median": 2808.2,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 22,
+          "volume": 361253.03343,
+          "median": 2808.2,
+          "multiple": 128.6
+        },
+        {
+          "index": 27,
+          "volume": 354146.3865,
+          "median": 2808.2,
+          "multiple": 126.1
+        },
+        {
+          "index": 28,
+          "volume": 449300.18131,
+          "median": 2808.2,
+          "multiple": 160.0
+        }
+      ]
+    },
+    {
+      "symbol": "ZIG/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 33903.37,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 97,
+          "volume": 5458421.99912,
+          "median": 33903.37,
+          "multiple": 161.0
+        }
+      ]
+    },
+    {
+      "symbol": "ZRO/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 2,
+      "vol_median": 11927.79,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 696,
+          "volume": 1378965.35769,
+          "median": 11927.79,
+          "multiple": 115.6
+        },
+        {
+          "index": 697,
+          "volume": 2021504.95546,
+          "median": 11927.79,
+          "multiple": 169.5
+        }
+      ]
+    },
+    {
+      "symbol": "ZRX/USD",
+      "issue": "extreme_volume_spike",
+      "spike_count": 1,
+      "vol_median": 18546.32,
+      "threshold_mult": 100.0,
+      "examples": [
+        {
+          "index": 439,
+          "volume": 2266713.14767248,
+          "median": 18546.32,
+          "multiple": 122.2
+        }
+      ]
+    }
+  ],
+  "per_symbol_issues": {
+    "0G/USD": [
+      {
+        "symbol": "0G/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 21534.0,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 384,
+            "volume": 5359525.20147,
+            "median": 21534.0,
+            "multiple": 248.9
+          },
+          {
+            "index": 704,
+            "volume": 2242176.66841,
+            "median": 21534.0,
+            "multiple": 104.1
+          }
+        ]
+      }
+    ],
+    "1INCH/USD": [
+      {
+        "symbol": "1INCH/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 21947.16,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 610,
+            "volume": 2897461.18032822,
+            "median": 21947.16,
+            "multiple": 132.0
+          }
+        ]
+      }
+    ],
+    "2Z/USD": [
+      {
+        "symbol": "2Z/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 35148.53,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 209,
+            "volume": 5266662.71816,
+            "median": 35148.53,
+            "multiple": 149.8
+          }
+        ]
+      }
+    ],
+    "ACT/USD": [
+      {
+        "symbol": "ACT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 24825.19,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 383,
+            "volume": 2571093.41396,
+            "median": 24825.19,
+            "multiple": 103.6
+          }
+        ]
+      }
+    ],
+    "AI3/USD": [
+      {
+        "symbol": "AI3/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 8538.09,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 249,
+            "volume": 980935.81681,
+            "median": 8538.09,
+            "multiple": 114.9
+          },
+          {
+            "index": 252,
+            "volume": 941365.26464,
+            "median": 8538.09,
+            "multiple": 110.3
+          },
+          {
+            "index": 444,
+            "volume": 936265.07319,
+            "median": 8538.09,
+            "multiple": 109.7
+          }
+        ]
+      }
+    ],
+    "AKE/USD": [
+      {
+        "symbol": "AKE/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 6318180.68,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 190,
+            "volume": 803623954.55969,
+            "median": 6318180.68,
+            "multiple": 127.2
+          },
+          {
+            "index": 191,
+            "volume": 636819922.55588,
+            "median": 6318180.68,
+            "multiple": 100.8
+          },
+          {
+            "index": 200,
+            "volume": 819420170.46581,
+            "median": 6318180.68,
+            "multiple": 129.7
+          }
+        ]
+      }
+    ],
+    "ALCH/USD": [
+      {
+        "symbol": "ALCH/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 4024.67,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 56,
+            "volume": 410981.95202,
+            "median": 4024.67,
+            "multiple": 102.1
+          },
+          {
+            "index": 166,
+            "volume": 425141.78391,
+            "median": 4024.67,
+            "multiple": 105.6
+          },
+          {
+            "index": 693,
+            "volume": 478703.74641,
+            "median": 4024.67,
+            "multiple": 118.9
+          }
+        ]
+      }
+    ],
+    "ALCX/USD": [
+      {
+        "symbol": "ALCX/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 17,
+        "vol_median": 132.34,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 10,
+            "volume": 16039.57336483,
+            "median": 132.34,
+            "multiple": 121.2
+          },
+          {
+            "index": 111,
+            "volume": 20254.52925901,
+            "median": 132.34,
+            "multiple": 153.0
+          },
+          {
+            "index": 112,
+            "volume": 22680.0041979,
+            "median": 132.34,
+            "multiple": 171.4
+          }
+        ]
+      }
+    ],
+    "ALKIMI/USD": [
+      {
+        "symbol": "ALKIMI/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 34330.28,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 506,
+            "volume": 15322814.98668,
+            "median": 34330.28,
+            "multiple": 446.3
+          },
+          {
+            "index": 599,
+            "volume": 9530970.50535,
+            "median": 34330.28,
+            "multiple": 277.6
+          },
+          {
+            "index": 600,
+            "volume": 4119929.27058,
+            "median": 34330.28,
+            "multiple": 120.0
+          }
+        ]
+      }
+    ],
+    "ALTHEA/USD": [
+      {
+        "symbol": "ALTHEA/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 10413.2,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 56,
+            "volume": 1082922.77485,
+            "median": 10413.2,
+            "multiple": 104.0
+          },
+          {
+            "index": 58,
+            "volume": 1060675.89504,
+            "median": 10413.2,
+            "multiple": 101.9
+          }
+        ]
+      }
+    ],
+    "ANKR/USD": [
+      {
+        "symbol": "ANKR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 148775.19,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 147,
+            "volume": 15667499.69745748,
+            "median": 148775.19,
+            "multiple": 105.3
+          }
+        ]
+      }
+    ],
+    "ANON/USD": [
+      {
+        "symbol": "ANON/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 1013.71,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 52,
+            "volume": 139829.16915,
+            "median": 1013.71,
+            "multiple": 137.9
+          },
+          {
+            "index": 53,
+            "volume": 120302.50701,
+            "median": 1013.71,
+            "multiple": 118.7
+          }
+        ]
+      }
+    ],
+    "API3/USD": [
+      {
+        "symbol": "API3/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 4237.11,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 325,
+            "volume": 435075.22707617,
+            "median": 4237.11,
+            "multiple": 102.7
+          },
+          {
+            "index": 368,
+            "volume": 464888.92116618,
+            "median": 4237.11,
+            "multiple": 109.7
+          }
+        ]
+      }
+    ],
+    "ARPA/USD": [
+      {
+        "symbol": "ARPA/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 5,
+        "vol_median": 58569.38,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 562,
+            "volume": 8340048.51729045,
+            "median": 58569.38,
+            "multiple": 142.4
+          },
+          {
+            "index": 563,
+            "volume": 6140100.85372481,
+            "median": 58569.38,
+            "multiple": 104.8
+          },
+          {
+            "index": 564,
+            "volume": 6892771.53968945,
+            "median": 58569.38,
+            "multiple": 117.7
+          }
+        ]
+      }
+    ],
+    "ASTR/USD": [
+      {
+        "symbol": "ASTR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 98657.87,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 357,
+            "volume": 11445617.82759017,
+            "median": 98657.87,
+            "multiple": 116.0
+          },
+          {
+            "index": 376,
+            "volume": 17991886.76132158,
+            "median": 98657.87,
+            "multiple": 182.4
+          }
+        ]
+      }
+    ],
+    "AUCTION/USD": [
+      {
+        "symbol": "AUCTION/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 6,
+        "vol_median": 177.25,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 15,
+            "volume": 18101.34473,
+            "median": 177.25,
+            "multiple": 102.1
+          },
+          {
+            "index": 23,
+            "volume": 33343.64169,
+            "median": 177.25,
+            "multiple": 188.1
+          },
+          {
+            "index": 145,
+            "volume": 30275.41307,
+            "median": 177.25,
+            "multiple": 170.8
+          }
+        ]
+      }
+    ],
+    "AXS/USD": [
+      {
+        "symbol": "AXS/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 3711.13,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 573,
+            "volume": 448573.01779397,
+            "median": 3711.13,
+            "multiple": 120.9
+          },
+          {
+            "index": 583,
+            "volume": 388380.6922365,
+            "median": 3711.13,
+            "multiple": 104.7
+          },
+          {
+            "index": 691,
+            "volume": 422730.48880337,
+            "median": 3711.13,
+            "multiple": 113.9
+          }
+        ]
+      }
+    ],
+    "BABY/USD": [
+      {
+        "symbol": "BABY/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 147617.19,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 492,
+            "volume": 15481229.06995,
+            "median": 147617.19,
+            "multiple": 104.9
+          }
+        ]
+      }
+    ],
+    "BAL/USD": [
+      {
+        "symbol": "BAL/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 8,
+        "vol_median": 268.86,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 644,
+            "volume": 230795.02466242,
+            "median": 268.86,
+            "multiple": 858.4
+          },
+          {
+            "index": 645,
+            "volume": 144513.5683099,
+            "median": 268.86,
+            "multiple": 537.5
+          },
+          {
+            "index": 646,
+            "volume": 59469.76264555,
+            "median": 268.86,
+            "multiple": 221.2
+          }
+        ]
+      }
+    ],
+    "BANANAS31/USD": [
+      {
+        "symbol": "BANANAS31/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 634356.16,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 184,
+            "volume": 106066727.23637,
+            "median": 634356.16,
+            "multiple": 167.2
+          }
+        ]
+      }
+    ],
+    "BAND/USD": [
+      {
+        "symbol": "BAND/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 1845.44,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 263,
+            "volume": 197369.59415514,
+            "median": 1845.44,
+            "multiple": 106.9
+          }
+        ]
+      }
+    ],
+    "BDXN/USD": [
+      {
+        "symbol": "BDXN/USD",
+        "issue": "consecutive_zero_volume",
+        "max_consecutive_bars": 15,
+        "starts_at_index": 497,
+        "possible_delisting": false
+      },
+      {
+        "symbol": "BDXN/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 43584.28,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 543,
+            "volume": 9335932.74792,
+            "median": 43584.28,
+            "multiple": 214.2
+          }
+        ]
+      }
+    ],
+    "BERA/USD": [
+      {
+        "symbol": "BERA/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 6203.33,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 702,
+            "volume": 1863700.13156,
+            "median": 6203.33,
+            "multiple": 300.4
+          }
+        ]
+      }
+    ],
+    "BIGTIME/USD": [
+      {
+        "symbol": "BIGTIME/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 12044.64,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 62,
+            "volume": 1224855.06574,
+            "median": 12044.64,
+            "multiple": 101.7
+          }
+        ]
+      }
+    ],
+    "BIO/USD": [
+      {
+        "symbol": "BIO/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 45723.59,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 243,
+            "volume": 7771979.19274,
+            "median": 45723.59,
+            "multiple": 170.0
+          }
+        ]
+      }
+    ],
+    "BLUR/USD": [
+      {
+        "symbol": "BLUR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 13954.18,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 530,
+            "volume": 1417438.37668,
+            "median": 13954.18,
+            "multiple": 101.6
+          },
+          {
+            "index": 532,
+            "volume": 3668996.16444,
+            "median": 13954.18,
+            "multiple": 262.9
+          },
+          {
+            "index": 534,
+            "volume": 1578250.52368,
+            "median": 13954.18,
+            "multiple": 113.1
+          }
+        ]
+      }
+    ],
+    "BLZ/USD": [
+      {
+        "symbol": "BLZ/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 49454.97,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 435,
+            "volume": 5691583.40816589,
+            "median": 49454.97,
+            "multiple": 115.1
+          },
+          {
+            "index": 437,
+            "volume": 9790359.72964364,
+            "median": 49454.97,
+            "multiple": 198.0
+          }
+        ]
+      }
+    ],
+    "BMT/USD": [
+      {
+        "symbol": "BMT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 30287.3,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 99,
+            "volume": 16905850.73029,
+            "median": 30287.3,
+            "multiple": 558.2
+          },
+          {
+            "index": 399,
+            "volume": 5352204.37662,
+            "median": 30287.3,
+            "multiple": 176.7
+          },
+          {
+            "index": 450,
+            "volume": 4330259.48599,
+            "median": 30287.3,
+            "multiple": 143.0
+          }
+        ]
+      }
+    ],
+    "BNT/USD": [
+      {
+        "symbol": "BNT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 803.96,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 262,
+            "volume": 115941.42273338,
+            "median": 803.96,
+            "multiple": 144.2
+          },
+          {
+            "index": 322,
+            "volume": 87191.22104133,
+            "median": 803.96,
+            "multiple": 108.5
+          }
+        ]
+      }
+    ],
+    "BODEN/USD": [
+      {
+        "symbol": "BODEN/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 237345.17,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 55,
+            "volume": 52754956.49853,
+            "median": 237345.17,
+            "multiple": 222.3
+          }
+        ]
+      }
+    ],
+    "BOND/USD": [
+      {
+        "symbol": "BOND/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 11,
+        "vol_median": 3172.08,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 435,
+            "volume": 547737.40062269,
+            "median": 3172.08,
+            "multiple": 172.7
+          },
+          {
+            "index": 436,
+            "volume": 906040.31784488,
+            "median": 3172.08,
+            "multiple": 285.6
+          },
+          {
+            "index": 437,
+            "volume": 325301.3713387,
+            "median": 3172.08,
+            "multiple": 102.6
+          }
+        ]
+      }
+    ],
+    "BSX/USD": [
+      {
+        "symbol": "BSX/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 16580022.89,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 150,
+            "volume": 2047201613.7413278,
+            "median": 16580022.89,
+            "multiple": 123.5
+          },
+          {
+            "index": 254,
+            "volume": 2048925109.6071274,
+            "median": 16580022.89,
+            "multiple": 123.6
+          }
+        ]
+      }
+    ],
+    "BTR/USD": [
+      {
+        "symbol": "BTR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 29904.86,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 607,
+            "volume": 3854024.47562,
+            "median": 29904.86,
+            "multiple": 128.9
+          },
+          {
+            "index": 608,
+            "volume": 4036046.08596,
+            "median": 29904.86,
+            "multiple": 135.0
+          },
+          {
+            "index": 658,
+            "volume": 3144193.92839,
+            "median": 29904.86,
+            "multiple": 105.1
+          }
+        ]
+      }
+    ],
+    "CARV/USD": [
+      {
+        "symbol": "CARV/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 1550.44,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 94,
+            "volume": 216538.2379,
+            "median": 1550.44,
+            "multiple": 139.7
+          }
+        ]
+      }
+    ],
+    "CCD/USD": [
+      {
+        "symbol": "CCD/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 1201265.14,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 70,
+            "volume": 363181499.45968,
+            "median": 1201265.14,
+            "multiple": 302.3
+          },
+          {
+            "index": 71,
+            "volume": 695982443.17027,
+            "median": 1201265.14,
+            "multiple": 579.4
+          },
+          {
+            "index": 72,
+            "volume": 315961460.93772,
+            "median": 1201265.14,
+            "multiple": 263.0
+          }
+        ]
+      }
+    ],
+    "CHEEMS/USD": [
+      {
+        "symbol": "CHEEMS/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 413688371.5,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 55,
+            "volume": 52380333958.89023,
+            "median": 413688371.5,
+            "multiple": 126.6
+          }
+        ]
+      }
+    ],
+    "CLV/USD": [
+      {
+        "symbol": "CLV/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 6,
+        "vol_median": 100855.2,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 204,
+            "volume": 29053435.34617328,
+            "median": 100855.2,
+            "multiple": 288.1
+          },
+          {
+            "index": 206,
+            "volume": 11814069.81108009,
+            "median": 100855.2,
+            "multiple": 117.1
+          },
+          {
+            "index": 207,
+            "volume": 11960334.17769153,
+            "median": 100855.2,
+            "multiple": 118.6
+          }
+        ]
+      }
+    ],
+    "COMP/USD": [
+      {
+        "symbol": "COMP/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 321.56,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 714,
+            "volume": 32173.79470366,
+            "median": 321.56,
+            "multiple": 100.1
+          }
+        ]
+      }
+    ],
+    "COQ/USD": [
+      {
+        "symbol": "COQ/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 4934344842.33,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 41,
+            "volume": 615363668183.7482,
+            "median": 4934344842.33,
+            "multiple": 124.7
+          }
+        ]
+      }
+    ],
+    "COW/USD": [
+      {
+        "symbol": "COW/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 7,
+        "vol_median": 747.41,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 48,
+            "volume": 74951.35672,
+            "median": 747.41,
+            "multiple": 100.3
+          },
+          {
+            "index": 57,
+            "volume": 75354.64894,
+            "median": 747.41,
+            "multiple": 100.8
+          },
+          {
+            "index": 190,
+            "volume": 83440.80009,
+            "median": 747.41,
+            "multiple": 111.6
+          }
+        ]
+      }
+    ],
+    "CTC/USD": [
+      {
+        "symbol": "CTC/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 892.31,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 235,
+            "volume": 141847.34899,
+            "median": 892.31,
+            "multiple": 159.0
+          },
+          {
+            "index": 237,
+            "volume": 133536.2657,
+            "median": 892.31,
+            "multiple": 149.7
+          },
+          {
+            "index": 710,
+            "volume": 229282.5612,
+            "median": 892.31,
+            "multiple": 257.0
+          }
+        ]
+      }
+    ],
+    "CTSI/USD": [
+      {
+        "symbol": "CTSI/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 19197.43,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 202,
+            "volume": 3556190.23988148,
+            "median": 19197.43,
+            "multiple": 185.2
+          },
+          {
+            "index": 206,
+            "volume": 3461227.15943329,
+            "median": 19197.43,
+            "multiple": 180.3
+          },
+          {
+            "index": 207,
+            "volume": 3884989.22396454,
+            "median": 19197.43,
+            "multiple": 202.4
+          }
+        ]
+      }
+    ],
+    "CVC/USD": [
+      {
+        "symbol": "CVC/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 6,
+        "vol_median": 9395.16,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 147,
+            "volume": 1210389.46627993,
+            "median": 9395.16,
+            "multiple": 128.8
+          },
+          {
+            "index": 148,
+            "volume": 1193363.88431573,
+            "median": 9395.16,
+            "multiple": 127.0
+          },
+          {
+            "index": 291,
+            "volume": 1865794.4744925,
+            "median": 9395.16,
+            "multiple": 198.6
+          }
+        ]
+      }
+    ],
+    "CXT/USD": [
+      {
+        "symbol": "CXT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 175389.17,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 400,
+            "volume": 19802223.18383,
+            "median": 175389.17,
+            "multiple": 112.9
+          }
+        ]
+      }
+    ],
+    "CYBER/USD": [
+      {
+        "symbol": "CYBER/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 252.49,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 659,
+            "volume": 34709.48308,
+            "median": 252.49,
+            "multiple": 137.5
+          }
+        ]
+      }
+    ],
+    "DBR/USD": [
+      {
+        "symbol": "DBR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 5,
+        "vol_median": 20961.28,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 27,
+            "volume": 3365974.32596,
+            "median": 20961.28,
+            "multiple": 160.6
+          },
+          {
+            "index": 39,
+            "volume": 2303079.36311,
+            "median": 20961.28,
+            "multiple": 109.9
+          },
+          {
+            "index": 58,
+            "volume": 4932507.04742,
+            "median": 20961.28,
+            "multiple": 235.3
+          }
+        ]
+      }
+    ],
+    "DEGEN/USD": [
+      {
+        "symbol": "DEGEN/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 148116.25,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 209,
+            "volume": 38818721.96409,
+            "median": 148116.25,
+            "multiple": 262.1
+          },
+          {
+            "index": 281,
+            "volume": 40834902.09948,
+            "median": 148116.25,
+            "multiple": 275.7
+          },
+          {
+            "index": 313,
+            "volume": 20710325.77768,
+            "median": 148116.25,
+            "multiple": 139.8
+          }
+        ]
+      }
+    ],
+    "DMC/USD": [
+      {
+        "symbol": "DMC/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 8,
+        "vol_median": 1046935.18,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 218,
+            "volume": 135914772.0228,
+            "median": 1046935.18,
+            "multiple": 129.8
+          },
+          {
+            "index": 219,
+            "volume": 132083912.48889,
+            "median": 1046935.18,
+            "multiple": 126.2
+          },
+          {
+            "index": 220,
+            "volume": 140443895.59554,
+            "median": 1046935.18,
+            "multiple": 134.1
+          }
+        ]
+      }
+    ],
+    "DYM/USD": [
+      {
+        "symbol": "DYM/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 7,
+        "vol_median": 9986.47,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 202,
+            "volume": 2399436.28042,
+            "median": 9986.47,
+            "multiple": 240.3
+          },
+          {
+            "index": 206,
+            "volume": 2580535.44956,
+            "median": 9986.47,
+            "multiple": 258.4
+          },
+          {
+            "index": 207,
+            "volume": 2097126.1797,
+            "median": 9986.47,
+            "multiple": 210.0
+          }
+        ]
+      }
+    ],
+    "EDGE/USD": [
+      {
+        "symbol": "EDGE/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 11325.91,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 467,
+            "volume": 1467761.02731,
+            "median": 11325.91,
+            "multiple": 129.6
+          }
+        ]
+      }
+    ],
+    "ELX/USD": [
+      {
+        "symbol": "ELX/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 5,
+        "vol_median": 356308.38,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 420,
+            "volume": 54650119.06618,
+            "median": 356308.38,
+            "multiple": 153.4
+          },
+          {
+            "index": 421,
+            "volume": 44812503.04178,
+            "median": 356308.38,
+            "multiple": 125.8
+          },
+          {
+            "index": 426,
+            "volume": 56364388.24003,
+            "median": 356308.38,
+            "multiple": 158.2
+          }
+        ]
+      }
+    ],
+    "ES/USD": [
+      {
+        "symbol": "ES/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 11048.63,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 74,
+            "volume": 1442811.07725,
+            "median": 11048.63,
+            "multiple": 130.6
+          }
+        ]
+      }
+    ],
+    "ESX/USD": [
+      {
+        "symbol": "ESX/USD",
+        "issue": "consecutive_zero_volume",
+        "max_consecutive_bars": 13,
+        "starts_at_index": 674,
+        "possible_delisting": false
+      }
+    ],
+    "ETHFI/USD": [
+      {
+        "symbol": "ETHFI/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 7756.78,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 21,
+            "volume": 1525618.51958,
+            "median": 7756.78,
+            "multiple": 196.7
+          },
+          {
+            "index": 611,
+            "volume": 1125971.85521,
+            "median": 7756.78,
+            "multiple": 145.2
+          }
+        ]
+      }
+    ],
+    "FF/USD": [
+      {
+        "symbol": "FF/USD",
+        "issue": "consecutive_zero_volume",
+        "max_consecutive_bars": 15,
+        "starts_at_index": 442,
+        "possible_delisting": false
+      }
+    ],
+    "FIDA/USD": [
+      {
+        "symbol": "FIDA/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 9871.46,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 117,
+            "volume": 1039987.94540974,
+            "median": 9871.46,
+            "multiple": 105.4
+          }
+        ]
+      }
+    ],
+    "FIL/USD": [
+      {
+        "symbol": "FIL/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 44960.46,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 125,
+            "volume": 6418351.80278217,
+            "median": 44960.46,
+            "multiple": 142.8
+          }
+        ]
+      }
+    ],
+    "FLOKI/USD": [
+      {
+        "symbol": "FLOKI/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 146656983.26,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 15,
+            "volume": 18825525484.802456,
+            "median": 146656983.26,
+            "multiple": 128.4
+          }
+        ]
+      }
+    ],
+    "FLOW/USD": [
+      {
+        "symbol": "FLOW/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 52921.82,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 461,
+            "volume": 6441822.12747067,
+            "median": 52921.82,
+            "multiple": 121.7
+          }
+        ]
+      }
+    ],
+    "FLUX/USD": [
+      {
+        "symbol": "FLUX/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 19803.63,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 125,
+            "volume": 2817772.76243,
+            "median": 19803.63,
+            "multiple": 142.3
+          }
+        ]
+      }
+    ],
+    "FWOG/USD": [
+      {
+        "symbol": "FWOG/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 557600.49,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 191,
+            "volume": 60962532.0244,
+            "median": 557600.49,
+            "multiple": 109.3
+          }
+        ]
+      }
+    ],
+    "GHIBLI/USD": [
+      {
+        "symbol": "GHIBLI/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 7,
+        "vol_median": 1692712.3,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 276,
+            "volume": 216818569.3519,
+            "median": 1692712.3,
+            "multiple": 128.1
+          },
+          {
+            "index": 277,
+            "volume": 341776406.84519,
+            "median": 1692712.3,
+            "multiple": 201.9
+          },
+          {
+            "index": 281,
+            "volume": 204939947.82386,
+            "median": 1692712.3,
+            "multiple": 121.1
+          }
+        ]
+      }
+    ],
+    "GHST/USD": [
+      {
+        "symbol": "GHST/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 14,
+        "vol_median": 3755.71,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 366,
+            "volume": 435335.93074505,
+            "median": 3755.71,
+            "multiple": 115.9
+          },
+          {
+            "index": 673,
+            "volume": 492573.23564676,
+            "median": 3755.71,
+            "multiple": 131.2
+          },
+          {
+            "index": 689,
+            "volume": 613133.96611934,
+            "median": 3755.71,
+            "multiple": 163.3
+          }
+        ]
+      }
+    ],
+    "GLMR/USD": [
+      {
+        "symbol": "GLMR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 25715.53,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 304,
+            "volume": 2940134.01845109,
+            "median": 25715.53,
+            "multiple": 114.3
+          },
+          {
+            "index": 646,
+            "volume": 3007295.74936071,
+            "median": 25715.53,
+            "multiple": 116.9
+          },
+          {
+            "index": 652,
+            "volume": 3140161.0589964,
+            "median": 25715.53,
+            "multiple": 122.1
+          }
+        ]
+      }
+    ],
+    "GMT/USD": [
+      {
+        "symbol": "GMT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 87023.79,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 501,
+            "volume": 10124263.6363043,
+            "median": 87023.79,
+            "multiple": 116.3
+          },
+          {
+            "index": 502,
+            "volume": 17529029.86137319,
+            "median": 87023.79,
+            "multiple": 201.4
+          }
+        ]
+      }
+    ],
+    "GMX/USD": [
+      {
+        "symbol": "GMX/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 110.47,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 284,
+            "volume": 15006.21290796,
+            "median": 110.47,
+            "multiple": 135.8
+          }
+        ]
+      }
+    ],
+    "GNO/USD": [
+      {
+        "symbol": "GNO/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 5,
+        "vol_median": 4.15,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 118,
+            "volume": 487.65728557,
+            "median": 4.15,
+            "multiple": 117.6
+          },
+          {
+            "index": 336,
+            "volume": 1672.76359009,
+            "median": 4.15,
+            "multiple": 403.5
+          },
+          {
+            "index": 350,
+            "volume": 516.75811714,
+            "median": 4.15,
+            "multiple": 124.6
+          }
+        ]
+      }
+    ],
+    "GRT/USD": [
+      {
+        "symbol": "GRT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 328367.02,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 335,
+            "volume": 35323629.86860921,
+            "median": 328367.02,
+            "multiple": 107.6
+          }
+        ]
+      }
+    ],
+    "HIPPO/USD": [
+      {
+        "symbol": "HIPPO/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 2742750.32,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 120,
+            "volume": 384348506.02067,
+            "median": 2742750.32,
+            "multiple": 140.1
+          },
+          {
+            "index": 165,
+            "volume": 321819902.75015,
+            "median": 2742750.32,
+            "multiple": 117.3
+          }
+        ]
+      }
+    ],
+    "HPOS10I/USD": [
+      {
+        "symbol": "HPOS10I/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 14367.08,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 210,
+            "volume": 1899302.37257,
+            "median": 14367.08,
+            "multiple": 132.2
+          }
+        ]
+      }
+    ],
+    "KET/USD": [
+      {
+        "symbol": "KET/USD",
+        "issue": "consecutive_zero_volume",
+        "max_consecutive_bars": 12,
+        "starts_at_index": 518,
+        "possible_delisting": false
+      },
+      {
+        "symbol": "KET/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 24769.28,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 599,
+            "volume": 2954431.03355,
+            "median": 24769.28,
+            "multiple": 119.3
+          },
+          {
+            "index": 685,
+            "volume": 2501109.83265,
+            "median": 24769.28,
+            "multiple": 101.0
+          },
+          {
+            "index": 692,
+            "volume": 15372729.6527,
+            "median": 24769.28,
+            "multiple": 620.6
+          }
+        ]
+      }
+    ],
+    "KGEN/USD": [
+      {
+        "symbol": "KGEN/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 3539.19,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 375,
+            "volume": 371221.51793,
+            "median": 3539.19,
+            "multiple": 104.9
+          },
+          {
+            "index": 376,
+            "volume": 563407.62859,
+            "median": 3539.19,
+            "multiple": 159.2
+          }
+        ]
+      }
+    ],
+    "KMNO/USD": [
+      {
+        "symbol": "KMNO/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 17019.42,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 635,
+            "volume": 2062041.95485,
+            "median": 17019.42,
+            "multiple": 121.2
+          }
+        ]
+      }
+    ],
+    "KNC/USD": [
+      {
+        "symbol": "KNC/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 1850.16,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 15,
+            "volume": 403311.07864787,
+            "median": 1850.16,
+            "multiple": 218.0
+          },
+          {
+            "index": 16,
+            "volume": 188264.51744539,
+            "median": 1850.16,
+            "multiple": 101.8
+          }
+        ]
+      }
+    ],
+    "LCAP/USD": [
+      {
+        "symbol": "LCAP/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 50,
+        "vol_median": 40.75,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 0,
+            "volume": 5038.53135,
+            "median": 40.75,
+            "multiple": 123.6
+          },
+          {
+            "index": 19,
+            "volume": 5113.39088,
+            "median": 40.75,
+            "multiple": 125.5
+          },
+          {
+            "index": 20,
+            "volume": 5005.42055,
+            "median": 40.75,
+            "multiple": 122.8
+          }
+        ]
+      }
+    ],
+    "LIT/USD": [
+      {
+        "symbol": "LIT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 3766.29,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 491,
+            "volume": 971902.52231,
+            "median": 3766.29,
+            "multiple": 258.1
+          },
+          {
+            "index": 516,
+            "volume": 385132.65812,
+            "median": 3766.29,
+            "multiple": 102.3
+          }
+        ]
+      }
+    ],
+    "LMWR/USD": [
+      {
+        "symbol": "LMWR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 80115.58,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 501,
+            "volume": 8289059.5186,
+            "median": 80115.58,
+            "multiple": 103.5
+          }
+        ]
+      }
+    ],
+    "LRC/USD": [
+      {
+        "symbol": "LRC/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 36721.11,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 336,
+            "volume": 6769362.93676212,
+            "median": 36721.11,
+            "multiple": 184.3
+          },
+          {
+            "index": 693,
+            "volume": 3817359.26685694,
+            "median": 36721.11,
+            "multiple": 104.0
+          }
+        ]
+      }
+    ],
+    "LSK/USD": [
+      {
+        "symbol": "LSK/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 8125.93,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 147,
+            "volume": 1340242.77178225,
+            "median": 8125.93,
+            "multiple": 164.9
+          }
+        ]
+      }
+    ],
+    "MASK/USD": [
+      {
+        "symbol": "MASK/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 2045.77,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 427,
+            "volume": 233093.10052678,
+            "median": 2045.77,
+            "multiple": 113.9
+          },
+          {
+            "index": 480,
+            "volume": 215491.81307627,
+            "median": 2045.77,
+            "multiple": 105.3
+          }
+        ]
+      }
+    ],
+    "ME/USD": [
+      {
+        "symbol": "ME/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 8,
+        "vol_median": 1263.86,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 555,
+            "volume": 140820.49371,
+            "median": 1263.86,
+            "multiple": 111.4
+          },
+          {
+            "index": 556,
+            "volume": 140879.47383,
+            "median": 1263.86,
+            "multiple": 111.5
+          },
+          {
+            "index": 559,
+            "volume": 131955.97765,
+            "median": 1263.86,
+            "multiple": 104.4
+          }
+        ]
+      }
+    ],
+    "MELANIA/USD": [
+      {
+        "symbol": "MELANIA/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 76705.74,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 59,
+            "volume": 13299848.06315,
+            "median": 76705.74,
+            "multiple": 173.4
+          },
+          {
+            "index": 60,
+            "volume": 8632701.54542,
+            "median": 76705.74,
+            "multiple": 112.5
+          },
+          {
+            "index": 143,
+            "volume": 17463736.9388,
+            "median": 76705.74,
+            "multiple": 227.7
+          }
+        ]
+      }
+    ],
+    "MEME/USD": [
+      {
+        "symbol": "MEME/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 564286.12,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 567,
+            "volume": 65272657.80767,
+            "median": 564286.12,
+            "multiple": 115.7
+          }
+        ]
+      }
+    ],
+    "MLN/USD": [
+      {
+        "symbol": "MLN/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 690.2,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 14,
+            "volume": 72409.6158794,
+            "median": 690.2,
+            "multiple": 104.9
+          },
+          {
+            "index": 15,
+            "volume": 109416.27018226,
+            "median": 690.2,
+            "multiple": 158.5
+          },
+          {
+            "index": 16,
+            "volume": 111760.70942234,
+            "median": 690.2,
+            "multiple": 161.9
+          }
+        ]
+      }
+    ],
+    "MNGO/USD": [
+      {
+        "symbol": "MNGO/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 12,
+        "vol_median": 19591.66,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 368,
+            "volume": 3244312.83796232,
+            "median": 19591.66,
+            "multiple": 165.6
+          },
+          {
+            "index": 369,
+            "volume": 2596692.88109711,
+            "median": 19591.66,
+            "multiple": 132.5
+          },
+          {
+            "index": 370,
+            "volume": 5095297.11351555,
+            "median": 19591.66,
+            "multiple": 260.1
+          }
+        ]
+      }
+    ],
+    "MOODENG/USD": [
+      {
+        "symbol": "MOODENG/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 157561.38,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 300,
+            "volume": 28911076.71402,
+            "median": 157561.38,
+            "multiple": 183.5
+          },
+          {
+            "index": 301,
+            "volume": 20083866.88585,
+            "median": 157561.38,
+            "multiple": 127.5
+          },
+          {
+            "index": 706,
+            "volume": 16736702.69572,
+            "median": 157561.38,
+            "multiple": 106.2
+          }
+        ]
+      }
+    ],
+    "MOON/USD": [
+      {
+        "symbol": "MOON/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 5745.6,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 217,
+            "volume": 615339.91641,
+            "median": 5745.6,
+            "multiple": 107.1
+          },
+          {
+            "index": 653,
+            "volume": 2415942.8816,
+            "median": 5745.6,
+            "multiple": 420.5
+          },
+          {
+            "index": 654,
+            "volume": 671605.15714,
+            "median": 5745.6,
+            "multiple": 116.9
+          }
+        ]
+      }
+    ],
+    "MXC/USD": [
+      {
+        "symbol": "MXC/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 687426.88,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 545,
+            "volume": 173998257.99938175,
+            "median": 687426.88,
+            "multiple": 253.1
+          },
+          {
+            "index": 546,
+            "volume": 179459736.03783625,
+            "median": 687426.88,
+            "multiple": 261.1
+          }
+        ]
+      }
+    ],
+    "NMR/USD": [
+      {
+        "symbol": "NMR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 120.74,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 510,
+            "volume": 12354.78346091,
+            "median": 120.74,
+            "multiple": 102.3
+          }
+        ]
+      }
+    ],
+    "NYM/USD": [
+      {
+        "symbol": "NYM/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 9385.43,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 355,
+            "volume": 2232758.90985558,
+            "median": 9385.43,
+            "multiple": 237.9
+          },
+          {
+            "index": 369,
+            "volume": 1792256.68208597,
+            "median": 9385.43,
+            "multiple": 191.0
+          },
+          {
+            "index": 390,
+            "volume": 1495268.9258543,
+            "median": 9385.43,
+            "multiple": 159.3
+          }
+        ]
+      }
+    ],
+    "ODOS/USD": [
+      {
+        "symbol": "ODOS/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 77748.8,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 132,
+            "volume": 8365097.69572,
+            "median": 77748.8,
+            "multiple": 107.6
+          },
+          {
+            "index": 601,
+            "volume": 20309654.30477,
+            "median": 77748.8,
+            "multiple": 261.2
+          },
+          {
+            "index": 676,
+            "volume": 8947556.59787,
+            "median": 77748.8,
+            "multiple": 115.1
+          }
+        ]
+      }
+    ],
+    "ORDER/USD": [
+      {
+        "symbol": "ORDER/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 3700.49,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 38,
+            "volume": 740956.96252,
+            "median": 3700.49,
+            "multiple": 200.2
+          },
+          {
+            "index": 662,
+            "volume": 518704.47516,
+            "median": 3700.49,
+            "multiple": 140.2
+          },
+          {
+            "index": 715,
+            "volume": 540576.38204,
+            "median": 3700.49,
+            "multiple": 146.1
+          }
+        ]
+      }
+    ],
+    "PONKE/USD": [
+      {
+        "symbol": "PONKE/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 61300.28,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 574,
+            "volume": 10584529.68219,
+            "median": 61300.28,
+            "multiple": 172.7
+          },
+          {
+            "index": 615,
+            "volume": 10477175.2962,
+            "median": 61300.28,
+            "multiple": 170.9
+          }
+        ]
+      }
+    ],
+    "PRCL/USD": [
+      {
+        "symbol": "PRCL/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 23579.13,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 479,
+            "volume": 3392727.99994,
+            "median": 23579.13,
+            "multiple": 143.9
+          },
+          {
+            "index": 484,
+            "volume": 4292024.71931,
+            "median": 23579.13,
+            "multiple": 182.0
+          },
+          {
+            "index": 485,
+            "volume": 2434472.73368,
+            "median": 23579.13,
+            "multiple": 103.2
+          }
+        ]
+      }
+    ],
+    "PROMPT/USD": [
+      {
+        "symbol": "PROMPT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 26885.87,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 119,
+            "volume": 6055408.49368,
+            "median": 26885.87,
+            "multiple": 225.2
+          }
+        ]
+      }
+    ],
+    "PUFFER/USD": [
+      {
+        "symbol": "PUFFER/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 7337.72,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 18,
+            "volume": 1223779.34545,
+            "median": 7337.72,
+            "multiple": 166.8
+          },
+          {
+            "index": 64,
+            "volume": 2203207.19103,
+            "median": 7337.72,
+            "multiple": 300.3
+          },
+          {
+            "index": 65,
+            "volume": 1240378.41868,
+            "median": 7337.72,
+            "multiple": 169.0
+          }
+        ]
+      }
+    ],
+    "RAD/USD": [
+      {
+        "symbol": "RAD/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 8,
+        "vol_median": 555.59,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 334,
+            "volume": 107280.80034622,
+            "median": 555.59,
+            "multiple": 193.1
+          },
+          {
+            "index": 450,
+            "volume": 194086.4187698,
+            "median": 555.59,
+            "multiple": 349.3
+          },
+          {
+            "index": 451,
+            "volume": 72987.9737836,
+            "median": 555.59,
+            "multiple": 131.4
+          }
+        ]
+      }
+    ],
+    "REKT/USD": [
+      {
+        "symbol": "REKT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 8266968377.14,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 186,
+            "volume": 1058149291658.4342,
+            "median": 8266968377.14,
+            "multiple": 128.0
+          }
+        ]
+      }
+    ],
+    "REN/USD": [
+      {
+        "symbol": "REN/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 150347.21,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 104,
+            "volume": 23868893.05537784,
+            "median": 150347.21,
+            "multiple": 158.8
+          },
+          {
+            "index": 460,
+            "volume": 17731340.76071859,
+            "median": 150347.21,
+            "multiple": 117.9
+          }
+        ]
+      }
+    ],
+    "RETARDIO/USD": [
+      {
+        "symbol": "RETARDIO/USD",
+        "issue": "consecutive_zero_volume",
+        "max_consecutive_bars": 13,
+        "starts_at_index": 402,
+        "possible_delisting": false
+      },
+      {
+        "symbol": "RETARDIO/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 123488.0,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 308,
+            "volume": 13054931.48764,
+            "median": 123488.0,
+            "multiple": 105.7
+          }
+        ]
+      }
+    ],
+    "RHEA/USD": [
+      {
+        "symbol": "RHEA/USD",
+        "issue": "consecutive_zero_volume",
+        "max_consecutive_bars": 10,
+        "starts_at_index": 695,
+        "possible_delisting": false
+      },
+      {
+        "symbol": "RHEA/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 15347.37,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 646,
+            "volume": 3317992.73058,
+            "median": 15347.37,
+            "multiple": 216.2
+          }
+        ]
+      }
+    ],
+    "RPL/USD": [
+      {
+        "symbol": "RPL/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 343.97,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 442,
+            "volume": 113041.07769783,
+            "median": 343.97,
+            "multiple": 328.6
+          }
+        ]
+      }
+    ],
+    "RSR/USD": [
+      {
+        "symbol": "RSR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 1149575.45,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 635,
+            "volume": 167090005.88164,
+            "median": 1149575.45,
+            "multiple": 145.3
+          }
+        ]
+      }
+    ],
+    "RUJI/USD": [
+      {
+        "symbol": "RUJI/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 1296.63,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 170,
+            "volume": 296138.17905,
+            "median": 1296.63,
+            "multiple": 228.4
+          }
+        ]
+      }
+    ],
+    "SAMO/USD": [
+      {
+        "symbol": "SAMO/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 388968.07,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 76,
+            "volume": 45400310.08179623,
+            "median": 388968.07,
+            "multiple": 116.7
+          },
+          {
+            "index": 487,
+            "volume": 71673697.81872998,
+            "median": 388968.07,
+            "multiple": 184.3
+          },
+          {
+            "index": 490,
+            "volume": 39667390.81912025,
+            "median": 388968.07,
+            "multiple": 102.0
+          }
+        ]
+      }
+    ],
+    "SLAY/USD": [
+      {
+        "symbol": "SLAY/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 10,
+        "vol_median": 68969.12,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 132,
+            "volume": 7208109.98566,
+            "median": 68969.12,
+            "multiple": 104.5
+          },
+          {
+            "index": 699,
+            "volume": 14550142.73816,
+            "median": 68969.12,
+            "multiple": 211.0
+          },
+          {
+            "index": 700,
+            "volume": 19268348.00753,
+            "median": 68969.12,
+            "multiple": 279.4
+          }
+        ]
+      }
+    ],
+    "SNX/USD": [
+      {
+        "symbol": "SNX/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 34620.16,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 653,
+            "volume": 3636790.3259524,
+            "median": 34620.16,
+            "multiple": 105.0
+          },
+          {
+            "index": 665,
+            "volume": 4411483.49926024,
+            "median": 34620.16,
+            "multiple": 127.4
+          },
+          {
+            "index": 698,
+            "volume": 3754462.24001508,
+            "median": 34620.16,
+            "multiple": 108.4
+          }
+        ]
+      }
+    ],
+    "SPICE/USD": [
+      {
+        "symbol": "SPICE/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 68915728.34,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 358,
+            "volume": 7558379153.76758,
+            "median": 68915728.34,
+            "multiple": 109.7
+          },
+          {
+            "index": 688,
+            "volume": 8226985715.32807,
+            "median": 68915728.34,
+            "multiple": 119.4
+          }
+        ]
+      }
+    ],
+    "SRM/USD": [
+      {
+        "symbol": "SRM/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 6,
+        "vol_median": 137139.48,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 424,
+            "volume": 15708685.65215113,
+            "median": 137139.48,
+            "multiple": 114.5
+          },
+          {
+            "index": 425,
+            "volume": 18766731.11934335,
+            "median": 137139.48,
+            "multiple": 136.8
+          },
+          {
+            "index": 426,
+            "volume": 18471982.61602851,
+            "median": 137139.48,
+            "multiple": 134.7
+          }
+        ]
+      }
+    ],
+    "STG/USD": [
+      {
+        "symbol": "STG/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 5,
+        "vol_median": 1791.31,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 583,
+            "volume": 194105.48495846,
+            "median": 1791.31,
+            "multiple": 108.4
+          },
+          {
+            "index": 697,
+            "volume": 208698.96199195,
+            "median": 1791.31,
+            "multiple": 116.5
+          },
+          {
+            "index": 698,
+            "volume": 183908.31203842,
+            "median": 1791.31,
+            "multiple": 102.7
+          }
+        ]
+      }
+    ],
+    "STORJ/USD": [
+      {
+        "symbol": "STORJ/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 8624.69,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 22,
+            "volume": 906286.08958048,
+            "median": 8624.69,
+            "multiple": 105.1
+          },
+          {
+            "index": 125,
+            "volume": 1363074.34033494,
+            "median": 8624.69,
+            "multiple": 158.0
+          },
+          {
+            "index": 286,
+            "volume": 1167735.20821558,
+            "median": 8624.69,
+            "multiple": 135.4
+          }
+        ]
+      }
+    ],
+    "STRD/USD": [
+      {
+        "symbol": "STRD/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 7221.78,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 335,
+            "volume": 1815994.70632,
+            "median": 7221.78,
+            "multiple": 251.5
+          }
+        ]
+      }
+    ],
+    "SUKU/USD": [
+      {
+        "symbol": "SUKU/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 5,
+        "vol_median": 15853.8,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 437,
+            "volume": 1750773.36079,
+            "median": 15853.8,
+            "multiple": 110.4
+          },
+          {
+            "index": 438,
+            "volume": 1971475.35137,
+            "median": 15853.8,
+            "multiple": 124.4
+          },
+          {
+            "index": 439,
+            "volume": 2708685.7998,
+            "median": 15853.8,
+            "multiple": 170.9
+          }
+        ]
+      }
+    ],
+    "T/USD": [
+      {
+        "symbol": "T/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 8,
+        "vol_median": 52911.58,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 95,
+            "volume": 7525360.32047474,
+            "median": 52911.58,
+            "multiple": 142.2
+          },
+          {
+            "index": 490,
+            "volume": 8885082.43674342,
+            "median": 52911.58,
+            "multiple": 167.9
+          },
+          {
+            "index": 491,
+            "volume": 6316130.85378047,
+            "median": 52911.58,
+            "multiple": 119.4
+          }
+        ]
+      }
+    ],
+    "TANSSI/USD": [
+      {
+        "symbol": "TANSSI/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 15,
+        "vol_median": 42760.44,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 245,
+            "volume": 10027316.44785,
+            "median": 42760.44,
+            "multiple": 234.5
+          },
+          {
+            "index": 246,
+            "volume": 5676253.66945,
+            "median": 42760.44,
+            "multiple": 132.7
+          },
+          {
+            "index": 339,
+            "volume": 6163529.75501,
+            "median": 42760.44,
+            "multiple": 144.1
+          }
+        ]
+      }
+    ],
+    "TLM/USD": [
+      {
+        "symbol": "TLM/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 83600.22,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 450,
+            "volume": 8425693.38186179,
+            "median": 83600.22,
+            "multiple": 100.8
+          },
+          {
+            "index": 455,
+            "volume": 13087252.10006037,
+            "median": 83600.22,
+            "multiple": 156.5
+          },
+          {
+            "index": 570,
+            "volume": 10668733.21565649,
+            "median": 83600.22,
+            "multiple": 127.6
+          }
+        ]
+      }
+    ],
+    "TNSR/USD": [
+      {
+        "symbol": "TNSR/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 90985.22,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 202,
+            "volume": 10793478.02805,
+            "median": 90985.22,
+            "multiple": 118.6
+          }
+        ]
+      }
+    ],
+    "TOKEN/USD": [
+      {
+        "symbol": "TOKEN/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 15,
+        "vol_median": 106941.3,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 356,
+            "volume": 14654749.97316,
+            "median": 106941.3,
+            "multiple": 137.0
+          },
+          {
+            "index": 429,
+            "volume": 13799699.54664,
+            "median": 106941.3,
+            "multiple": 129.0
+          },
+          {
+            "index": 430,
+            "volume": 19191531.03073,
+            "median": 106941.3,
+            "multiple": 179.5
+          }
+        ]
+      }
+    ],
+    "TREE/USD": [
+      {
+        "symbol": "TREE/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 5538.2,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 709,
+            "volume": 612365.75747,
+            "median": 5538.2,
+            "multiple": 110.6
+          },
+          {
+            "index": 711,
+            "volume": 699455.14476,
+            "median": 5538.2,
+            "multiple": 126.3
+          }
+        ]
+      }
+    ],
+    "TRUMP/USD": [
+      {
+        "symbol": "TRUMP/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 6292.42,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 112,
+            "volume": 865225.49106,
+            "median": 6292.42,
+            "multiple": 137.5
+          }
+        ]
+      }
+    ],
+    "UNFI/USD": [
+      {
+        "symbol": "UNFI/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 4,
+        "vol_median": 2978.12,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 325,
+            "volume": 346039.83398746,
+            "median": 2978.12,
+            "multiple": 116.2
+          },
+          {
+            "index": 328,
+            "volume": 314619.5105201,
+            "median": 2978.12,
+            "multiple": 105.6
+          },
+          {
+            "index": 427,
+            "volume": 408334.85577455,
+            "median": 2978.12,
+            "multiple": 137.1
+          }
+        ]
+      }
+    ],
+    "VELODROME/USD": [
+      {
+        "symbol": "VELODROME/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 10,
+        "vol_median": 10028.83,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 83,
+            "volume": 1987666.03716,
+            "median": 10028.83,
+            "multiple": 198.2
+          },
+          {
+            "index": 85,
+            "volume": 1404932.17788,
+            "median": 10028.83,
+            "multiple": 140.1
+          },
+          {
+            "index": 144,
+            "volume": 1335254.54691,
+            "median": 10028.83,
+            "multiple": 133.1
+          }
+        ]
+      }
+    ],
+    "VVV/USD": [
+      {
+        "symbol": "VVV/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 168.1,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 276,
+            "volume": 37088.19464,
+            "median": 168.1,
+            "multiple": 220.6
+          },
+          {
+            "index": 712,
+            "volume": 25182.79599,
+            "median": 168.1,
+            "multiple": 149.8
+          }
+        ]
+      }
+    ],
+    "WAL/USD": [
+      {
+        "symbol": "WAL/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 10,
+        "vol_median": 8852.66,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 303,
+            "volume": 1070254.90259,
+            "median": 8852.66,
+            "multiple": 120.9
+          },
+          {
+            "index": 442,
+            "volume": 2319030.44624,
+            "median": 8852.66,
+            "multiple": 262.0
+          },
+          {
+            "index": 499,
+            "volume": 1493817.46969,
+            "median": 8852.66,
+            "multiple": 168.7
+          }
+        ]
+      }
+    ],
+    "WELL/USD": [
+      {
+        "symbol": "WELL/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 71260.19,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 216,
+            "volume": 12236420.12907,
+            "median": 71260.19,
+            "multiple": 171.7
+          }
+        ]
+      }
+    ],
+    "WEN/USD": [
+      {
+        "symbol": "WEN/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 6,
+        "vol_median": 32021102.2,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 351,
+            "volume": 5253260349.774499,
+            "median": 32021102.2,
+            "multiple": 164.1
+          },
+          {
+            "index": 352,
+            "volume": 8753224890.316559,
+            "median": 32021102.2,
+            "multiple": 273.4
+          },
+          {
+            "index": 405,
+            "volume": 3803104007.30533,
+            "median": 32021102.2,
+            "multiple": 118.8
+          }
+        ]
+      }
+    ],
+    "WLD/USD": [
+      {
+        "symbol": "WLD/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 36745.15,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 618,
+            "volume": 8628662.37678,
+            "median": 36745.15,
+            "multiple": 234.8
+          }
+        ]
+      }
+    ],
+    "XAUT/USD": [
+      {
+        "symbol": "XAUT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 3,
+        "vol_median": 9.4,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 594,
+            "volume": 1361.27848497,
+            "median": 9.4,
+            "multiple": 144.9
+          },
+          {
+            "index": 622,
+            "volume": 1181.63088134,
+            "median": 9.4,
+            "multiple": 125.8
+          },
+          {
+            "index": 629,
+            "volume": 1720.32518266,
+            "median": 9.4,
+            "multiple": 183.1
+          }
+        ]
+      }
+    ],
+    "XION/USD": [
+      {
+        "symbol": "XION/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 8,
+        "vol_median": 932.38,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 199,
+            "volume": 97759.26924,
+            "median": 932.38,
+            "multiple": 104.8
+          },
+          {
+            "index": 237,
+            "volume": 146359.76499,
+            "median": 932.38,
+            "multiple": 157.0
+          },
+          {
+            "index": 239,
+            "volume": 95765.70094,
+            "median": 932.38,
+            "multiple": 102.7
+          }
+        ]
+      }
+    ],
+    "XL1/USD": [
+      {
+        "symbol": "XL1/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 1639312.49,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 13,
+            "volume": 181808009.33894,
+            "median": 1639312.49,
+            "multiple": 110.9
+          },
+          {
+            "index": 16,
+            "volume": 205806741.63668,
+            "median": 1639312.49,
+            "multiple": 125.5
+          }
+        ]
+      }
+    ],
+    "XNY/USD": [
+      {
+        "symbol": "XNY/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 871542.21,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 287,
+            "volume": 105790625.57654,
+            "median": 871542.21,
+            "multiple": 121.4
+          }
+        ]
+      }
+    ],
+    "XYO/USD": [
+      {
+        "symbol": "XYO/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 226767.02,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 230,
+            "volume": 28958092.02169,
+            "median": 226767.02,
+            "multiple": 127.7
+          }
+        ]
+      }
+    ],
+    "YB/USD": [
+      {
+        "symbol": "YB/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 11958.7,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 140,
+            "volume": 1434964.71175,
+            "median": 11958.7,
+            "multiple": 120.0
+          }
+        ]
+      }
+    ],
+    "YFI/USD": [
+      {
+        "symbol": "YFI/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 0.93,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 184,
+            "volume": 109.13497719,
+            "median": 0.93,
+            "multiple": 117.6
+          }
+        ]
+      }
+    ],
+    "YGG/USD": [
+      {
+        "symbol": "YGG/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 4636.15,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 693,
+            "volume": 3774491.29914614,
+            "median": 4636.15,
+            "multiple": 814.1
+          }
+        ]
+      }
+    ],
+    "ZBT/USD": [
+      {
+        "symbol": "ZBT/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 11610.97,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 410,
+            "volume": 1525699.74169,
+            "median": 11610.97,
+            "multiple": 131.4
+          },
+          {
+            "index": 411,
+            "volume": 1472819.81383,
+            "median": 11610.97,
+            "multiple": 126.8
+          }
+        ]
+      }
+    ],
+    "ZETA/USD": [
+      {
+        "symbol": "ZETA/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 3443.09,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 50,
+            "volume": 405999.37635,
+            "median": 3443.09,
+            "multiple": 117.9
+          },
+          {
+            "index": 377,
+            "volume": 456129.79662,
+            "median": 3443.09,
+            "multiple": 132.5
+          }
+        ]
+      }
+    ],
+    "ZEUS/USD": [
+      {
+        "symbol": "ZEUS/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 5,
+        "vol_median": 108235.65,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 665,
+            "volume": 21352594.72651,
+            "median": 108235.65,
+            "multiple": 197.3
+          },
+          {
+            "index": 666,
+            "volume": 13400152.52457,
+            "median": 108235.65,
+            "multiple": 123.8
+          },
+          {
+            "index": 668,
+            "volume": 12036829.60764,
+            "median": 108235.65,
+            "multiple": 111.2
+          }
+        ]
+      }
+    ],
+    "ZEX/USD": [
+      {
+        "symbol": "ZEX/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 6,
+        "vol_median": 2808.2,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 22,
+            "volume": 361253.03343,
+            "median": 2808.2,
+            "multiple": 128.6
+          },
+          {
+            "index": 27,
+            "volume": 354146.3865,
+            "median": 2808.2,
+            "multiple": 126.1
+          },
+          {
+            "index": 28,
+            "volume": 449300.18131,
+            "median": 2808.2,
+            "multiple": 160.0
+          }
+        ]
+      }
+    ],
+    "ZIG/USD": [
+      {
+        "symbol": "ZIG/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 33903.37,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 97,
+            "volume": 5458421.99912,
+            "median": 33903.37,
+            "multiple": 161.0
+          }
+        ]
+      }
+    ],
+    "ZRO/USD": [
+      {
+        "symbol": "ZRO/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 2,
+        "vol_median": 11927.79,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 696,
+            "volume": 1378965.35769,
+            "median": 11927.79,
+            "multiple": 115.6
+          },
+          {
+            "index": 697,
+            "volume": 2021504.95546,
+            "median": 11927.79,
+            "multiple": 169.5
+          }
+        ]
+      }
+    ],
+    "ZRX/USD": [
+      {
+        "symbol": "ZRX/USD",
+        "issue": "extreme_volume_spike",
+        "spike_count": 1,
+        "vol_median": 18546.32,
+        "threshold_mult": 100.0,
+        "examples": [
+          {
+            "index": 439,
+            "volume": 2266713.14767248,
+            "median": 18546.32,
+            "multiple": 122.2
+          }
+        ]
+      }
+    ]
+  }
+}

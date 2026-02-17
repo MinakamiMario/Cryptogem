@@ -1,0 +1,843 @@
+{
+  "meta": {
+    "generated_at": "2026-02-16 13:42 UTC",
+    "description": "MEXC orderbook cost analysis from live snapshots"
+  },
+  "distributions": {
+    "all": {
+      "count": 19500,
+      "spread_bps": {
+        "p10": 3.09,
+        "p25": 6.31,
+        "p50": 12.8,
+        "p75": 31.97,
+        "p90": 64.66,
+        "p95": 140.22,
+        "p99": 463.71,
+        "mean": 36.1,
+        "count": 19500,
+        "min": 0.0,
+        "max": 704.13
+      },
+      "slippage_200_bps": {
+        "p10": 1.86,
+        "p25": 5.99,
+        "p50": 13.87,
+        "p75": 59.24,
+        "p90": 143.1,
+        "p95": 231.16,
+        "p99": 793.61,
+        "mean": 54.99,
+        "count": 19499,
+        "min": 0.0,
+        "max": 1143.12
+      },
+      "slippage_500_bps": {
+        "p10": 1.89,
+        "p25": 7.36,
+        "p50": 15.35,
+        "p75": 76.72,
+        "p90": 202.06,
+        "p95": 316.29,
+        "p99": 1187.46,
+        "mean": 78.84,
+        "count": 19217,
+        "min": 0.0,
+        "max": 4332.93
+      },
+      "slippage_2000_bps": {
+        "p10": 3.11,
+        "p25": 9.84,
+        "p50": 17.81,
+        "p75": 40.13,
+        "p90": 190.44,
+        "p95": 243.82,
+        "p99": 481.55,
+        "mean": 59.04,
+        "count": 16433,
+        "min": 0.0,
+        "max": 2349.46
+      },
+      "bid_depth_usd": {
+        "p10": 970.51,
+        "p25": 3301.1,
+        "p50": 9768.72,
+        "p75": 23362.34,
+        "p90": 142219.47,
+        "p95": 581690.67,
+        "p99": 994491.29,
+        "mean": 71628.61,
+        "count": 19500,
+        "min": 17.76,
+        "max": 3282504.47
+      },
+      "ask_depth_usd": {
+        "p10": 1177.31,
+        "p25": 3172.82,
+        "p50": 9543.8,
+        "p75": 24016.18,
+        "p90": 116139.44,
+        "p95": 595418.01,
+        "p99": 1057248.8,
+        "mean": 67169.72,
+        "count": 19500,
+        "min": 197.85,
+        "max": 1496125.17
+      }
+    },
+    "tier1": {
+      "count": 10000,
+      "spread_bps": {
+        "p10": 1.51,
+        "p25": 3.98,
+        "p50": 10.39,
+        "p75": 48.43,
+        "p90": 97.24,
+        "p95": 140.22,
+        "p99": 229.3,
+        "mean": 33.82,
+        "count": 10000,
+        "min": 0.0,
+        "max": 704.13
+      },
+      "slippage_200_bps": {
+        "p10": 1.51,
+        "p25": 4.1,
+        "p50": 16.68,
+        "p75": 95.27,
+        "p90": 155.57,
+        "p95": 323.29,
+        "p99": 853.65,
+        "mean": 78.24,
+        "count": 10000,
+        "min": 0.0,
+        "max": 1143.12
+      },
+      "slippage_500_bps": {
+        "p10": 1.51,
+        "p25": 4.13,
+        "p50": 18.89,
+        "p75": 131.82,
+        "p90": 311.19,
+        "p95": 507.11,
+        "p99": 1212.94,
+        "mean": 121.5,
+        "count": 9901,
+        "min": 0.0,
+        "max": 4332.93
+      },
+      "slippage_2000_bps": {
+        "p10": 0.52,
+        "p25": 4.08,
+        "p50": 14.69,
+        "p75": 115.07,
+        "p90": 209.79,
+        "p95": 236.72,
+        "p99": 367.46,
+        "mean": 66.8,
+        "count": 7945,
+        "min": 0.0,
+        "max": 2349.46
+      },
+      "bid_depth_usd": {
+        "p10": 706.76,
+        "p25": 2764.9,
+        "p50": 8090.6,
+        "p75": 87059.27,
+        "p90": 535592.92,
+        "p95": 850587.58,
+        "p99": 1064440.41,
+        "mean": 114987.08,
+        "count": 10000,
+        "min": 17.76,
+        "max": 3282504.47
+      },
+      "ask_depth_usd": {
+        "p10": 711.35,
+        "p25": 2971.57,
+        "p50": 7050.53,
+        "p75": 58750.96,
+        "p90": 570464.19,
+        "p95": 762406.46,
+        "p99": 1131643.7,
+        "mean": 109111.08,
+        "count": 10000,
+        "min": 340.55,
+        "max": 1496125.17
+      }
+    },
+    "tier2": {
+      "count": 9500,
+      "spread_bps": {
+        "p10": 3.77,
+        "p25": 7.51,
+        "p50": 13.75,
+        "p75": 21.88,
+        "p90": 38.02,
+        "p95": 412.27,
+        "p99": 484.36,
+        "mean": 38.49,
+        "count": 9500,
+        "min": 1.02,
+        "max": 494.7
+      },
+      "slippage_200_bps": {
+        "p10": 3.92,
+        "p25": 6.85,
+        "p50": 13.0,
+        "p75": 24.27,
+        "p90": 71.2,
+        "p95": 215.73,
+        "p99": 251.8,
+        "mean": 30.52,
+        "count": 9499,
+        "min": 0.78,
+        "max": 256.98
+      },
+      "slippage_500_bps": {
+        "p10": 5.42,
+        "p25": 8.72,
+        "p50": 14.51,
+        "p75": 27.03,
+        "p90": 77.36,
+        "p95": 216.0,
+        "p99": 252.08,
+        "mean": 33.51,
+        "count": 9316,
+        "min": 0.78,
+        "max": 335.4
+      },
+      "slippage_2000_bps": {
+        "p10": 8.63,
+        "p25": 12.29,
+        "p50": 19.78,
+        "p75": 34.86,
+        "p90": 122.03,
+        "p95": 301.75,
+        "p99": 497.78,
+        "mean": 51.78,
+        "count": 8488,
+        "min": 1.2,
+        "max": 1798.05
+      },
+      "bid_depth_usd": {
+        "p10": 1339.5,
+        "p25": 4118.96,
+        "p50": 12665.59,
+        "p75": 20948.77,
+        "p90": 104271.65,
+        "p95": 137354.67,
+        "p99": 174797.69,
+        "mean": 25988.12,
+        "count": 9500,
+        "min": 125.17,
+        "max": 200410.94
+      },
+      "ask_depth_usd": {
+        "p10": 1850.62,
+        "p25": 3523.02,
+        "p50": 12652.36,
+        "p75": 20407.23,
+        "p90": 73075.31,
+        "p95": 111337.59,
+        "p99": 145921.72,
+        "mean": 23020.92,
+        "count": 9500,
+        "min": 197.85,
+        "max": 183752.04
+      }
+    }
+  },
+  "regimes": {
+    "measured_ob_maker_p50": {
+      "description": "MEXC measured orderbook maker P50",
+      "execution_mode": "maker_limit",
+      "percentile": "p50",
+      "tier1": {
+        "exchange_fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "adverse_selection_bps": 3.1,
+        "total_per_side_bps": 3.1
+      },
+      "tier2": {
+        "exchange_fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "adverse_selection_bps": 4.1,
+        "total_per_side_bps": 4.1
+      }
+    },
+    "measured_ob_taker_p50": {
+      "description": "MEXC measured orderbook taker P50",
+      "execution_mode": "taker_market",
+      "percentile": "p50",
+      "tier1": {
+        "exchange_fee_bps": 10.0,
+        "spread_bps": 5.2,
+        "slippage_bps": 16.7,
+        "total_per_side_bps": 31.9
+      },
+      "tier2": {
+        "exchange_fee_bps": 10.0,
+        "spread_bps": 6.9,
+        "slippage_bps": 13.0,
+        "total_per_side_bps": 29.9
+      }
+    },
+    "measured_ob_maker_p90": {
+      "description": "MEXC measured orderbook maker P90",
+      "execution_mode": "maker_limit",
+      "percentile": "p90",
+      "tier1": {
+        "exchange_fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "adverse_selection_bps": 29.2,
+        "total_per_side_bps": 29.2
+      },
+      "tier2": {
+        "exchange_fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "adverse_selection_bps": 11.4,
+        "total_per_side_bps": 11.4
+      }
+    },
+    "measured_ob_taker_p90": {
+      "description": "MEXC measured orderbook taker P90",
+      "execution_mode": "taker_market",
+      "percentile": "p90",
+      "tier1": {
+        "exchange_fee_bps": 10.0,
+        "spread_bps": 48.6,
+        "slippage_bps": 155.6,
+        "total_per_side_bps": 214.2
+      },
+      "tier2": {
+        "exchange_fee_bps": 10.0,
+        "spread_bps": 19.0,
+        "slippage_bps": 71.2,
+        "total_per_side_bps": 100.2
+      }
+    },
+    "measured_ob_maker_p95": {
+      "description": "MEXC measured orderbook maker P95",
+      "execution_mode": "maker_limit",
+      "percentile": "p95",
+      "tier1": {
+        "exchange_fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "adverse_selection_bps": 42.1,
+        "total_per_side_bps": 42.1
+      },
+      "tier2": {
+        "exchange_fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "adverse_selection_bps": 123.7,
+        "total_per_side_bps": 123.7
+      }
+    },
+    "measured_ob_taker_p95": {
+      "description": "MEXC measured orderbook taker P95",
+      "execution_mode": "taker_market",
+      "percentile": "p95",
+      "tier1": {
+        "exchange_fee_bps": 10.0,
+        "spread_bps": 70.1,
+        "slippage_bps": 323.3,
+        "total_per_side_bps": 403.4
+      },
+      "tier2": {
+        "exchange_fee_bps": 10.0,
+        "spread_bps": 206.1,
+        "slippage_bps": 215.7,
+        "total_per_side_bps": 431.8
+      }
+    }
+  },
+  "time_of_day": {
+    "0": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "1": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "2": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "3": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "4": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "5": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "6": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "7": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "8": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "9": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "10": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "11": {
+      "all": {
+        "count": 2450,
+        "p50": 13.01,
+        "p90": 64.66,
+        "mean": 36.54
+      },
+      "tier1": {
+        "count": 1258,
+        "p50": 10.18,
+        "p90": 94.02,
+        "mean": 33.38
+      },
+      "tier2": {
+        "count": 1192,
+        "p50": 14.18,
+        "p90": 36.8,
+        "mean": 39.88
+      }
+    },
+    "12": {
+      "all": {
+        "count": 10011,
+        "p50": 12.78,
+        "p90": 66.42,
+        "mean": 36.64
+      },
+      "tier1": {
+        "count": 5140,
+        "p50": 10.67,
+        "p90": 97.56,
+        "mean": 35.22
+      },
+      "tier2": {
+        "count": 4871,
+        "p50": 13.61,
+        "p90": 37.06,
+        "mean": 38.14
+      }
+    },
+    "13": {
+      "all": {
+        "count": 7039,
+        "p50": 12.71,
+        "p90": 64.52,
+        "mean": 35.17
+      },
+      "tier1": {
+        "count": 3602,
+        "p50": 10.33,
+        "p90": 97.24,
+        "mean": 31.97
+      },
+      "tier2": {
+        "count": 3437,
+        "p50": 13.75,
+        "p90": 40.67,
+        "mean": 38.52
+      }
+    },
+    "14": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "15": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "16": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "17": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "18": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "19": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "20": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "21": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "22": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    },
+    "23": {
+      "all": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier1": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      },
+      "tier2": {
+        "count": 0,
+        "p50": null,
+        "p90": null,
+        "mean": null
+      }
+    }
+  }
+}

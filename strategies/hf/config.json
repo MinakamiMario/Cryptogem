@@ -1,7 +1,32 @@
 {
   "name": "HF",
-  "status": "development",
-  "description": "High Frequency strategy — research phase",
-  "base_timeframe": "TBD",
-  "notes": "Imports shared engine from trading_bot/ via sys.path"
+  "status": "champion-candidate",
+  "description": "H2 Momentum Burst — champion from 1280-config grid sweep",
+  "base_timeframe": "4H",
+  "champion_h2": {
+    "cfg": {
+      "exit_type": "tp_sl",
+      "max_pos": 1,
+      "rsi_max": 45,
+      "sl_pct": 8,
+      "time_max_bars": 15,
+      "tp_pct": 12,
+      "vol_confirm": true,
+      "vol_spike_mult": 3.0
+    },
+    "score": 9.528,
+    "trades": 31,
+    "wr": 67.7,
+    "pnl": 4113.5,
+    "pf": 2.73,
+    "dd": 24.7,
+    "friction_2x20bps_pnl": 2608.27,
+    "friction_1candle_pnl": 1827.13,
+    "sweep_date": "2026-02-15",
+    "universe": "tradeable",
+    "grid_size": 1280,
+    "gate_passed": 796,
+    "friction_passed": 780
+  },
+  "notes": "RSI insensitive at vs3.0 (rsi 45-60 identical). Champion differs from GRID_BEST only on vol_spike_mult (3.0 vs 2.5) and sl_pct (8 vs 10). Needs Phase 3 validation (WF, MC, window sweep)."
 }

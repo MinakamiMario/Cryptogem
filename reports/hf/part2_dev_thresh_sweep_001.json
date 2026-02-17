@@ -1,0 +1,956 @@
+{
+  "run_header": {
+    "task": "part2_dev_thresh_sensitivity_sweep",
+    "agent": "C8-A",
+    "date": "2026-02-16 01:41",
+    "commit": "1787377",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "sweep_param": "dev_thresh",
+    "sweep_values": [
+      1.5,
+      1.8,
+      2.0,
+      2.2,
+      2.5,
+      3.0
+    ],
+    "fixed_params": {
+      "tp_pct": 8,
+      "sl_pct": 5,
+      "time_limit": 10
+    },
+    "cost_regime": "MEXC Market (costs_mexc_v2)",
+    "fees": {
+      "baseline": {
+        "tier1_bps": 12.5,
+        "tier2_bps": 23.5
+      },
+      "stress_2x": {
+        "tier1_bps": 25.0,
+        "tier2_bps": 47.0
+      }
+    },
+    "universe": {
+      "label": "295-coin (excl 21)",
+      "tier1": 96,
+      "tier2": 199,
+      "total": 295,
+      "excluded": 21,
+      "excluded_coins": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "CFG/USD",
+        "DBR/USD",
+        "ESX/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "PNUT/USD",
+        "POLIS/USD",
+        "RARI/USD",
+        "SUKU/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD",
+        "WMTX/USD"
+      ]
+    },
+    "total_bars": 721,
+    "total_weeks": 4.3,
+    "runtime_s": 29.5
+  },
+  "gate_thresholds": {
+    "G1": "trades/week >= 10",
+    "G2": "max_gap <= 2.5d",
+    "G3": "exp/week > $0 (baseline)",
+    "G4": "exp/week > $0 (stress 2x)",
+    "G5": "DD <= 20%",
+    "G6": "WF >= 4/5",
+    "G8": "fold_conc < 35%"
+  },
+  "results": [
+    {
+      "dev_thresh": 1.5,
+      "label": "dev=1.5",
+      "params": {
+        "dev_thresh": 1.5,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 90,
+        "pnl": 1849.94,
+        "pf": 1.6,
+        "wr": 53.33,
+        "dd": 39.37,
+        "expectancy": 20.5549,
+        "trades_per_week": 20.97,
+        "exp_per_week": 431.055,
+        "fee_drag_pct": 15.97
+      },
+      "stress_metrics": {
+        "trades": 90,
+        "pnl": 881.42,
+        "pf": 1.28,
+        "wr": 50.0,
+        "dd": 46.66,
+        "exp_per_week": 205.3789
+      },
+      "tier_trade_split": {
+        "tier1_trades": 38,
+        "tier2_trades": 52
+      },
+      "wf_folds_positive": 3,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 16,
+          "pnl": 704.23,
+          "positive": true,
+          "top_coin": "NYM/USD",
+          "top_coin_pnl": 175.09
+        },
+        {
+          "fold": 1,
+          "trades": 19,
+          "pnl": -237.93,
+          "positive": false,
+          "top_coin": "NOBODY/USD",
+          "top_coin_pnl": 160.45
+        },
+        {
+          "fold": 2,
+          "trades": 19,
+          "pnl": -43.66,
+          "positive": false,
+          "top_coin": "AURA/USD",
+          "top_coin_pnl": 145.24
+        },
+        {
+          "fold": 3,
+          "trades": 18,
+          "pnl": 1166.4,
+          "positive": true,
+          "top_coin": "ELX/USD",
+          "top_coin_pnl": 334.49
+        },
+        {
+          "fold": 4,
+          "trades": 18,
+          "pnl": 276.36,
+          "positive": true,
+          "top_coin": "INIT/USD",
+          "top_coin_pnl": 153.78
+        }
+      ],
+      "top1_fold_conc": 0.5433,
+      "max_gap_days": 0.67,
+      "gates": {
+        "G1": {
+          "name": "Throughput",
+          "value": 20.97,
+          "threshold": ">= 10/wk",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max Gap",
+          "value": 0.67,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "name": "Edge (baseline)",
+          "value": 431.06,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Edge (stress 2x)",
+          "value": 205.38,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max Drawdown",
+          "value": 39.4,
+          "threshold": "<= 20%",
+          "pass": false
+        },
+        "G6": {
+          "name": "Walk-Forward",
+          "value": "3/5",
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "name": "Fold Concentration",
+          "value": 54.3,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_pass": 4,
+      "gates_total": 7,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 15,
+          "pnl": -1888.7,
+          "wr": 0.0
+        },
+        "TIME MAX": {
+          "count": 51,
+          "pnl": -409.99,
+          "wr": 47.1
+        },
+        "END": {
+          "count": 1,
+          "pnl": 50.92,
+          "wr": 100.0
+        },
+        "PROFIT TARGET": {
+          "count": 23,
+          "pnl": 4097.72,
+          "wr": 100.0
+        }
+      }
+    },
+    {
+      "dev_thresh": 1.8,
+      "label": "dev=1.8",
+      "params": {
+        "dev_thresh": 1.8,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 68,
+        "pnl": 3484.48,
+        "pf": 2.547,
+        "wr": 61.76,
+        "dd": 14.09,
+        "expectancy": 51.2424,
+        "trades_per_week": 15.84,
+        "exp_per_week": 811.918,
+        "fee_drag_pct": 12.61
+      },
+      "stress_metrics": {
+        "trades": 68,
+        "pnl": 2516.49,
+        "pf": 2.074,
+        "wr": 58.82,
+        "dd": 19.45,
+        "exp_per_week": 586.367
+      },
+      "tier_trade_split": {
+        "tier1_trades": 26,
+        "tier2_trades": 42
+      },
+      "wf_folds_positive": 4,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 11,
+          "pnl": 1150.59,
+          "positive": true,
+          "top_coin": "NYM/USD",
+          "top_coin_pnl": 190.45
+        },
+        {
+          "fold": 1,
+          "trades": 17,
+          "pnl": -169.83,
+          "positive": false,
+          "top_coin": "GOMINING/USD",
+          "top_coin_pnl": 154.08
+        },
+        {
+          "fold": 2,
+          "trades": 12,
+          "pnl": 190.85,
+          "positive": true,
+          "top_coin": "AURA/USD",
+          "top_coin_pnl": 152.17
+        },
+        {
+          "fold": 3,
+          "trades": 11,
+          "pnl": 945.48,
+          "positive": true,
+          "top_coin": "TOKEN/USD",
+          "top_coin_pnl": 186.68
+        },
+        {
+          "fold": 4,
+          "trades": 17,
+          "pnl": 846.56,
+          "positive": true,
+          "top_coin": "XL1/USD",
+          "top_coin_pnl": 331.0
+        }
+      ],
+      "top1_fold_conc": 0.3672,
+      "max_gap_days": 1.25,
+      "gates": {
+        "G1": {
+          "name": "Throughput",
+          "value": 15.84,
+          "threshold": ">= 10/wk",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max Gap",
+          "value": 1.25,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "name": "Edge (baseline)",
+          "value": 811.92,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Edge (stress 2x)",
+          "value": 586.37,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max Drawdown",
+          "value": 14.1,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "Walk-Forward",
+          "value": "4/5",
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "name": "Fold Concentration",
+          "value": 36.7,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_pass": 6,
+      "gates_total": 7,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 7,
+          "pnl": -1134.02,
+          "wr": 0.0
+        },
+        "TIME MAX": {
+          "count": 37,
+          "pnl": -407.37,
+          "wr": 48.6
+        },
+        "PROFIT TARGET": {
+          "count": 24,
+          "pnl": 5025.87,
+          "wr": 100.0
+        }
+      }
+    },
+    {
+      "dev_thresh": 2.0,
+      "label": "dev=2.0",
+      "params": {
+        "dev_thresh": 2.0,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 56,
+        "pnl": 3272.13,
+        "pf": 2.834,
+        "wr": 64.29,
+        "dd": 8.63,
+        "expectancy": 58.4309,
+        "trades_per_week": 13.05,
+        "exp_per_week": 762.4382,
+        "fee_drag_pct": 12.27
+      },
+      "stress_metrics": {
+        "trades": 56,
+        "pnl": 2452.31,
+        "pf": 2.306,
+        "wr": 62.5,
+        "dd": 13.12,
+        "exp_per_week": 571.413
+      },
+      "tier_trade_split": {
+        "tier1_trades": 18,
+        "tier2_trades": 38
+      },
+      "wf_folds_positive": 4,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 10,
+          "pnl": 909.08,
+          "positive": true,
+          "top_coin": "NYM/USD",
+          "top_coin_pnl": 190.45
+        },
+        {
+          "fold": 1,
+          "trades": 13,
+          "pnl": 57.53,
+          "positive": true,
+          "top_coin": "GOMINING/USD",
+          "top_coin_pnl": 161.72
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -17.57,
+          "positive": false,
+          "top_coin": "AURA/USD",
+          "top_coin_pnl": 153.7
+        },
+        {
+          "fold": 3,
+          "trades": 9,
+          "pnl": 792.44,
+          "positive": true,
+          "top_coin": "CVC/USD",
+          "top_coin_pnl": 173.64
+        },
+        {
+          "fold": 4,
+          "trades": 15,
+          "pnl": 913.43,
+          "positive": true,
+          "top_coin": "XL1/USD",
+          "top_coin_pnl": 331.15
+        }
+      ],
+      "top1_fold_conc": 0.3418,
+      "max_gap_days": 1.42,
+      "gates": {
+        "G1": {
+          "name": "Throughput",
+          "value": 13.05,
+          "threshold": ">= 10/wk",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max Gap",
+          "value": 1.42,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "name": "Edge (baseline)",
+          "value": 762.44,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Edge (stress 2x)",
+          "value": 571.41,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max Drawdown",
+          "value": 8.6,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "Walk-Forward",
+          "value": "4/5",
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "name": "Fold Concentration",
+          "value": 34.2,
+          "threshold": "< 35%",
+          "pass": true
+        }
+      },
+      "gates_pass": 7,
+      "gates_total": 7,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 7,
+          "pnl": -1137.58,
+          "wr": 0.0
+        },
+        "TIME MAX": {
+          "count": 28,
+          "pnl": 12.03,
+          "wr": 53.6
+        },
+        "PROFIT TARGET": {
+          "count": 21,
+          "pnl": 4397.68,
+          "wr": 100.0
+        }
+      }
+    },
+    {
+      "dev_thresh": 2.2,
+      "label": "dev=2.2",
+      "params": {
+        "dev_thresh": 2.2,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 48,
+        "pnl": 2118.21,
+        "pf": 2.654,
+        "wr": 60.42,
+        "dd": 9.75,
+        "expectancy": 44.1293,
+        "trades_per_week": 11.18,
+        "exp_per_week": 493.5628,
+        "fee_drag_pct": 12.83
+      },
+      "stress_metrics": {
+        "trades": 48,
+        "pnl": 1545.68,
+        "pf": 2.112,
+        "wr": 58.33,
+        "dd": 13.51,
+        "exp_per_week": 360.1574
+      },
+      "tier_trade_split": {
+        "tier1_trades": 16,
+        "tier2_trades": 32
+      },
+      "wf_folds_positive": 3,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 8,
+          "pnl": 376.63,
+          "positive": true,
+          "top_coin": "NYM/USD",
+          "top_coin_pnl": 164.13
+        },
+        {
+          "fold": 1,
+          "trades": 10,
+          "pnl": -90.18,
+          "positive": false,
+          "top_coin": "GOMINING/USD",
+          "top_coin_pnl": 150.81
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -17.57,
+          "positive": false,
+          "top_coin": "AURA/USD",
+          "top_coin_pnl": 153.7
+        },
+        {
+          "fold": 3,
+          "trades": 7,
+          "pnl": 579.54,
+          "positive": true,
+          "top_coin": "XL1/USD",
+          "top_coin_pnl": 166.78
+        },
+        {
+          "fold": 4,
+          "trades": 14,
+          "pnl": 1044.4,
+          "positive": true,
+          "top_coin": "XL1/USD",
+          "top_coin_pnl": 331.15
+        }
+      ],
+      "top1_fold_conc": 0.5221,
+      "max_gap_days": 2.04,
+      "gates": {
+        "G1": {
+          "name": "Throughput",
+          "value": 11.18,
+          "threshold": ">= 10/wk",
+          "pass": true
+        },
+        "G2": {
+          "name": "Max Gap",
+          "value": 2.04,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "name": "Edge (baseline)",
+          "value": 493.56,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Edge (stress 2x)",
+          "value": 360.16,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max Drawdown",
+          "value": 9.8,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "Walk-Forward",
+          "value": "3/5",
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "name": "Fold Concentration",
+          "value": 52.2,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_pass": 5,
+      "gates_total": 7,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 6,
+          "pnl": -779.52,
+          "wr": 0.0
+        },
+        "TIME MAX": {
+          "count": 26,
+          "pnl": 2.76,
+          "wr": 50.0
+        },
+        "PROFIT TARGET": {
+          "count": 16,
+          "pnl": 2894.97,
+          "wr": 100.0
+        }
+      }
+    },
+    {
+      "dev_thresh": 2.5,
+      "label": "dev=2.5",
+      "params": {
+        "dev_thresh": 2.5,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 35,
+        "pnl": 1174.43,
+        "pf": 2.306,
+        "wr": 54.29,
+        "dd": 11.75,
+        "expectancy": 33.555,
+        "trades_per_week": 8.16,
+        "exp_per_week": 273.6525,
+        "fee_drag_pct": 15.66
+      },
+      "stress_metrics": {
+        "trades": 35,
+        "pnl": 808.5,
+        "pf": 1.788,
+        "wr": 51.43,
+        "dd": 15.47,
+        "exp_per_week": 188.3876
+      },
+      "tier_trade_split": {
+        "tier1_trades": 10,
+        "tier2_trades": 25
+      },
+      "wf_folds_positive": 3,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 9,
+          "pnl": 747.2,
+          "positive": true,
+          "top_coin": "SIGMA/USD",
+          "top_coin_pnl": 337.31
+        },
+        {
+          "fold": 1,
+          "trades": 6,
+          "pnl": -119.85,
+          "positive": false,
+          "top_coin": "SIGMA/USD",
+          "top_coin_pnl": -134.06
+        },
+        {
+          "fold": 2,
+          "trades": 7,
+          "pnl": -51.19,
+          "positive": false,
+          "top_coin": "AUDIO/USD",
+          "top_coin_pnl": 145.55
+        },
+        {
+          "fold": 3,
+          "trades": 4,
+          "pnl": 291.14,
+          "positive": true,
+          "top_coin": "ELX/USD",
+          "top_coin_pnl": 154.8
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 374.01,
+          "positive": true,
+          "top_coin": "XL1/USD",
+          "top_coin_pnl": 322.12
+        }
+      ],
+      "top1_fold_conc": 0.529,
+      "max_gap_days": 2.04,
+      "gates": {
+        "G1": {
+          "name": "Throughput",
+          "value": 8.16,
+          "threshold": ">= 10/wk",
+          "pass": false
+        },
+        "G2": {
+          "name": "Max Gap",
+          "value": 2.04,
+          "threshold": "<= 2.5d",
+          "pass": true
+        },
+        "G3": {
+          "name": "Edge (baseline)",
+          "value": 273.65,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Edge (stress 2x)",
+          "value": 188.39,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max Drawdown",
+          "value": 11.8,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "Walk-Forward",
+          "value": "3/5",
+          "threshold": ">= 4/5",
+          "pass": false
+        },
+        "G8": {
+          "name": "Fold Concentration",
+          "value": 52.9,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_pass": 4,
+      "gates_total": 7,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 4,
+          "pnl": -515.66,
+          "wr": 0.0
+        },
+        "END": {
+          "count": 1,
+          "pnl": -10.56,
+          "wr": 0.0
+        },
+        "TIME MAX": {
+          "count": 20,
+          "pnl": 9.68,
+          "wr": 45.0
+        },
+        "PROFIT TARGET": {
+          "count": 10,
+          "pnl": 1690.96,
+          "wr": 100.0
+        }
+      }
+    },
+    {
+      "dev_thresh": 3.0,
+      "label": "dev=3.0",
+      "params": {
+        "dev_thresh": 3.0,
+        "tp_pct": 8,
+        "sl_pct": 5,
+        "time_limit": 10
+      },
+      "baseline_metrics": {
+        "trades": 20,
+        "pnl": 1136.71,
+        "pf": 4.446,
+        "wr": 70.0,
+        "dd": 6.99,
+        "expectancy": 56.8354,
+        "trades_per_week": 4.66,
+        "exp_per_week": 264.864,
+        "fee_drag_pct": 12.8
+      },
+      "stress_metrics": {
+        "trades": 20,
+        "pnl": 920.79,
+        "pf": 3.355,
+        "wr": 65.0,
+        "dd": 8.24,
+        "exp_per_week": 214.552
+      },
+      "tier_trade_split": {
+        "tier1_trades": 5,
+        "tier2_trades": 15
+      },
+      "wf_folds_positive": 4,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 5,
+          "pnl": 651.95,
+          "positive": true,
+          "top_coin": "SIGMA/USD",
+          "top_coin_pnl": 335.97
+        },
+        {
+          "fold": 1,
+          "trades": 4,
+          "pnl": -90.89,
+          "positive": false,
+          "top_coin": "SIGMA/USD",
+          "top_coin_pnl": -134.06
+        },
+        {
+          "fold": 2,
+          "trades": 2,
+          "pnl": 45.35,
+          "positive": true,
+          "top_coin": "AUDIO/USD",
+          "top_coin_pnl": 150.22
+        },
+        {
+          "fold": 3,
+          "trades": 4,
+          "pnl": 291.14,
+          "positive": true,
+          "top_coin": "ELX/USD",
+          "top_coin_pnl": 154.8
+        },
+        {
+          "fold": 4,
+          "trades": 5,
+          "pnl": 177.48,
+          "positive": true,
+          "top_coin": "XL1/USD",
+          "top_coin_pnl": 154.8
+        }
+      ],
+      "top1_fold_conc": 0.5592,
+      "max_gap_days": 3.92,
+      "gates": {
+        "G1": {
+          "name": "Throughput",
+          "value": 4.66,
+          "threshold": ">= 10/wk",
+          "pass": false
+        },
+        "G2": {
+          "name": "Max Gap",
+          "value": 3.92,
+          "threshold": "<= 2.5d",
+          "pass": false
+        },
+        "G3": {
+          "name": "Edge (baseline)",
+          "value": 264.86,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G4": {
+          "name": "Edge (stress 2x)",
+          "value": 214.55,
+          "threshold": "> $0",
+          "pass": true
+        },
+        "G5": {
+          "name": "Max Drawdown",
+          "value": 7.0,
+          "threshold": "<= 20%",
+          "pass": true
+        },
+        "G6": {
+          "name": "Walk-Forward",
+          "value": "4/5",
+          "threshold": ">= 4/5",
+          "pass": true
+        },
+        "G8": {
+          "name": "Fold Concentration",
+          "value": 55.9,
+          "threshold": "< 35%",
+          "pass": false
+        }
+      },
+      "gates_pass": 4,
+      "gates_total": 7,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 2,
+          "pnl": -250.61,
+          "wr": 0.0
+        },
+        "END": {
+          "count": 1,
+          "pnl": -10.5,
+          "wr": 0.0
+        },
+        "TIME MAX": {
+          "count": 10,
+          "pnl": 249.48,
+          "wr": 70.0
+        },
+        "PROFIT TARGET": {
+          "count": 7,
+          "pnl": 1148.34,
+          "wr": 100.0
+        }
+      }
+    }
+  ],
+  "sensitivity_analysis": {
+    "optimal_dev_thresh": 2.0,
+    "monotonic_trades": true,
+    "monotonic_edge": false,
+    "observations": [
+      "dev=1.5 vs 2.0: +34 trades, $-331.38 exp/wk, -3 gates (4/7)",
+      "dev=1.8 vs 2.0: +12 trades, $+49.48 exp/wk, -1 gates (6/7)",
+      "dev=2.0 (baseline): 56 trades, 7/7 gates",
+      "dev=2.2 vs 2.0: -8 trades, $-268.88 exp/wk, -2 gates (5/7)",
+      "dev=2.5 vs 2.0: -21 trades, $-488.79 exp/wk, -3 gates (4/7)",
+      "dev=3.0 vs 2.0: -36 trades, $-497.57 exp/wk, -3 gates (4/7)"
+    ],
+    "max_gates_pass": 7,
+    "best_candidates": [
+      2.0
+    ]
+  }
+}

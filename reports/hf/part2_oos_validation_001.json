@@ -1,0 +1,901 @@
+{
+  "run_header": {
+    "task": "part2_oos_validation",
+    "agent": "C2-A3",
+    "date": "2026-02-16",
+    "commit": "ad313f6",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 5,
+      "time_limit": 10
+    },
+    "cost_regime": "MEXC Market",
+    "fees_bps": {
+      "tier1": 12.5,
+      "tier2": 23.5
+    },
+    "universe": "T1(100)+T2(216)",
+    "timeframe": "1h",
+    "total_bars": 722,
+    "runtime_s": 30.9,
+    "full_sample_excluded_coins": [
+      "AI3/USD",
+      "ALKIMI/USD",
+      "ANIME/USD",
+      "CFG/USD",
+      "DBR/USD",
+      "ESX/USD",
+      "GST/USD",
+      "HOUSE/USD",
+      "KET/USD",
+      "LMWR/USD",
+      "MXC/USD",
+      "ODOS/USD",
+      "PERP/USD",
+      "PNUT/USD",
+      "POLIS/USD",
+      "RARI/USD",
+      "SUKU/USD",
+      "TANSSI/USD",
+      "TITCOIN/USD",
+      "TOSHI/USD",
+      "WMTX/USD"
+    ]
+  },
+  "method1_split_half": {
+    "method": "split_half_temporal",
+    "total_bars": 722,
+    "mid_bar": 386,
+    "first_half": {
+      "bar_range": [
+        50,
+        386
+      ],
+      "n_bars": 336,
+      "metrics": {
+        "trades": 35,
+        "pnl": -141.04,
+        "pf": 0.906,
+        "wr": 42.9,
+        "trades_per_week": 17.5,
+        "exp_per_week": -70.5186,
+        "max_dd_pct": 27.2,
+        "max_gap_days": 1.42,
+        "expectancy": -4.0296
+      },
+      "negative_coins_found": 12,
+      "negative_coins": [
+        "AI3/USD",
+        "ANIME/USD",
+        "DBR/USD",
+        "ELX/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "LMWR/USD",
+        "PNUT/USD",
+        "RARI/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD"
+      ],
+      "coin_pnl": {
+        "ANIME/USD": -162.27,
+        "DBR/USD": -144.67,
+        "HOUSE/USD": -128.54,
+        "TANSSI/USD": -116.88,
+        "TITCOIN/USD": -115.35,
+        "ELX/USD": -112.99,
+        "KET/USD": -109.69,
+        "LMWR/USD": -109.6,
+        "TOSHI/USD": -68.75,
+        "PNUT/USD": -46.2,
+        "RARI/USD": -32.04,
+        "AI3/USD": -12.22,
+        "BTT/USD": 1.44,
+        "SIGMA/USD": 2.57,
+        "BANANAS31/USD": 7.64,
+        "BLZ/USD": 9.15,
+        "SUKU/USD": 9.6,
+        "AURA/USD": 15.63,
+        "XYO/USD": 20.54,
+        "SBR/USD": 41.56,
+        "REKT/USD": 49.1,
+        "GOMINING/USD": 121.39,
+        "NYM/USD": 123.78,
+        "TOKEN/USD": 145.58,
+        "AUDIO/USD": 148.38,
+        "GHIBLI/USD": 158.04,
+        "NOBODY/USD": 163.77
+      }
+    },
+    "second_half_full": {
+      "bar_range": [
+        386,
+        722
+      ],
+      "n_bars": 336,
+      "n_coins": 316,
+      "metrics": {
+        "trades": 37,
+        "pnl": 516.61,
+        "pf": 1.419,
+        "wr": 51.4,
+        "trades_per_week": 18.5,
+        "exp_per_week": 258.3044,
+        "max_dd_pct": 34.3,
+        "max_gap_days": 0.92,
+        "expectancy": 13.9624
+      },
+      "stress_metrics": {
+        "pnl": 231.59,
+        "pf": 1.173,
+        "exp_per_week": 115.7945
+      }
+    },
+    "second_half_excluded": {
+      "bar_range": [
+        386,
+        722
+      ],
+      "n_bars": 336,
+      "n_coins": 304,
+      "n_excluded": 12,
+      "metrics": {
+        "trades": 33,
+        "pnl": 627.13,
+        "pf": 1.638,
+        "wr": 54.5,
+        "trades_per_week": 16.5,
+        "exp_per_week": 313.5653,
+        "max_dd_pct": 29.7,
+        "max_gap_days": 0.92,
+        "expectancy": 19.004
+      },
+      "stress_metrics": {
+        "pnl": 347.92,
+        "pf": 1.318,
+        "exp_per_week": 173.9587
+      }
+    },
+    "excluded_coins_fate_on_h2": {
+      "still_negative": 3,
+      "turned_positive": 1,
+      "no_trades": 8,
+      "combined_pnl": -192.52
+    },
+    "comparison": {
+      "pnl_delta": 110.52,
+      "pf_delta": 0.219,
+      "dd_delta": -4.6,
+      "exclusion_helps": true
+    }
+  },
+  "method2_fold_leakage_free": {
+    "method": "fold_leakage_free",
+    "n_folds": 5,
+    "fold_results": [
+      {
+        "fold": 0,
+        "test_bar_range": [
+          50,
+          182
+        ],
+        "train_negative_coins": 23,
+        "train_negative_coins_list": [
+          "AI3/USD",
+          "ALKIMI/USD",
+          "ANIME/USD",
+          "CFG/USD",
+          "DBR/USD",
+          "ESX/USD",
+          "GST/USD",
+          "KET/USD",
+          "LMWR/USD",
+          "MXC/USD",
+          "NYM/USD",
+          "ODOS/USD",
+          "PERP/USD",
+          "POLIS/USD",
+          "RARI/USD",
+          "REKT/USD",
+          "SIGMA/USD",
+          "SUKU/USD",
+          "TANSSI/USD",
+          "TITCOIN/USD",
+          "TOSHI/USD",
+          "WMTX/USD",
+          "XYO/USD"
+        ],
+        "full": {
+          "trades": 13,
+          "pnl": 415.88,
+          "pf": 2.019
+        },
+        "excluded": {
+          "trades": 9,
+          "pnl": 522.8,
+          "pf": 4.484,
+          "n_coins": 293
+        },
+        "pnl_delta": 106.92,
+        "exclusion_helped": true
+      },
+      {
+        "fold": 1,
+        "test_bar_range": [
+          184,
+          316
+        ],
+        "train_negative_coins": 18,
+        "train_negative_coins_list": [
+          "AI3/USD",
+          "ALKIMI/USD",
+          "ANIME/USD",
+          "CFG/USD",
+          "ESX/USD",
+          "GOMINING/USD",
+          "GST/USD",
+          "HOUSE/USD",
+          "KET/USD",
+          "LMWR/USD",
+          "MXC/USD",
+          "ODOS/USD",
+          "PERP/USD",
+          "PNUT/USD",
+          "POLIS/USD",
+          "SUKU/USD",
+          "TANSSI/USD",
+          "WMTX/USD"
+        ],
+        "full": {
+          "trades": 16,
+          "pnl": -199.21,
+          "pf": 0.678
+        },
+        "excluded": {
+          "trades": 15,
+          "pnl": -340.7,
+          "pf": 0.443,
+          "n_coins": 298
+        },
+        "pnl_delta": -141.49,
+        "exclusion_helped": false
+      },
+      {
+        "fold": 2,
+        "test_bar_range": [
+          318,
+          450
+        ],
+        "train_negative_coins": 17,
+        "train_negative_coins_list": [
+          "AI3/USD",
+          "ALKIMI/USD",
+          "ANIME/USD",
+          "CFG/USD",
+          "DBR/USD",
+          "ESX/USD",
+          "GST/USD",
+          "HOUSE/USD",
+          "KET/USD",
+          "MXC/USD",
+          "PERP/USD",
+          "PNUT/USD",
+          "RARI/USD",
+          "TANSSI/USD",
+          "TITCOIN/USD",
+          "TOSHI/USD",
+          "WMTX/USD"
+        ],
+        "full": {
+          "trades": 13,
+          "pnl": -498.94,
+          "pf": 0.342
+        },
+        "excluded": {
+          "trades": 11,
+          "pnl": -238.43,
+          "pf": 0.545,
+          "n_coins": 299
+        },
+        "pnl_delta": 260.51,
+        "exclusion_helped": true
+      },
+      {
+        "fold": 3,
+        "test_bar_range": [
+          452,
+          584
+        ],
+        "train_negative_coins": 18,
+        "train_negative_coins_list": [
+          "AI3/USD",
+          "ALKIMI/USD",
+          "ANIME/USD",
+          "DBR/USD",
+          "ELX/USD",
+          "ESX/USD",
+          "HOUSE/USD",
+          "KET/USD",
+          "LMWR/USD",
+          "ODOS/USD",
+          "PNUT/USD",
+          "POLIS/USD",
+          "RARI/USD",
+          "SUKU/USD",
+          "TANSSI/USD",
+          "TITCOIN/USD",
+          "TOSHI/USD",
+          "WMTX/USD"
+        ],
+        "full": {
+          "trades": 15,
+          "pnl": 226.57,
+          "pf": 1.379
+        },
+        "excluded": {
+          "trades": 11,
+          "pnl": 265.88,
+          "pf": 1.622,
+          "n_coins": 298
+        },
+        "pnl_delta": 39.31,
+        "exclusion_helped": true
+      },
+      {
+        "fold": 4,
+        "test_bar_range": [
+          586,
+          722
+        ],
+        "train_negative_coins": 20,
+        "train_negative_coins_list": [
+          "AI3/USD",
+          "ALKIMI/USD",
+          "ANIME/USD",
+          "CFG/USD",
+          "DBR/USD",
+          "GST/USD",
+          "HOUSE/USD",
+          "KET/USD",
+          "KOBAN/USD",
+          "LMWR/USD",
+          "MXC/USD",
+          "ODOS/USD",
+          "PERP/USD",
+          "PNUT/USD",
+          "POLIS/USD",
+          "RARI/USD",
+          "SUKU/USD",
+          "TANSSI/USD",
+          "TITCOIN/USD",
+          "TOSHI/USD"
+        ],
+        "full": {
+          "trades": 16,
+          "pnl": 607.76,
+          "pf": 3.298
+        },
+        "excluded": {
+          "trades": 14,
+          "pnl": 384.62,
+          "pf": 2.32,
+          "n_coins": 296
+        },
+        "pnl_delta": -223.14,
+        "exclusion_helped": false
+      }
+    ],
+    "aggregate": {
+      "folds_exclusion_helped": 3,
+      "folds_positive_full": 3,
+      "folds_positive_excl": 3,
+      "coins_negative_in_all_training_sets": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "KET/USD",
+        "TANSSI/USD"
+      ],
+      "n_coins_neg_all_training": 5,
+      "union_excluded_coins": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "CFG/USD",
+        "DBR/USD",
+        "ELX/USD",
+        "ESX/USD",
+        "GOMINING/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "KOBAN/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "NYM/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "PNUT/USD",
+        "POLIS/USD",
+        "RARI/USD",
+        "REKT/USD",
+        "SIGMA/USD",
+        "SUKU/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD",
+        "WMTX/USD",
+        "XYO/USD"
+      ],
+      "n_union_excluded": 28,
+      "combined_excl_metrics": {
+        "trades": 60,
+        "pnl": 594.18,
+        "pf": 1.296,
+        "wr": 48.3,
+        "trades_per_week": 15.0,
+        "exp_per_week": 148.5455,
+        "max_dd_pct": 40.5,
+        "max_gap_days": 1.29,
+        "expectancy": 9.903
+      },
+      "stress_metrics": {
+        "pnl": 1647.55,
+        "pf": 2.224,
+        "exp_per_week": 383.3631
+      },
+      "fold_concentration": {
+        "top1_fold_conc_pct": 44.6,
+        "fold_pnls": {
+          "0": 522.8,
+          "1": -340.7,
+          "2": -238.43,
+          "3": 265.88,
+          "4": 384.62
+        }
+      },
+      "gate_evaluation": {
+        "gates": {
+          "G1": {
+            "name": "Trades/week",
+            "value": 15.0,
+            "threshold": ">= 10",
+            "pass": true
+          },
+          "G2": {
+            "name": "Max gap (days)",
+            "value": 1.29,
+            "threshold": "<= 2.5",
+            "pass": true
+          },
+          "G3": {
+            "name": "Exp/week (market)",
+            "value": 148.55,
+            "threshold": "> $0",
+            "pass": true
+          },
+          "G4": {
+            "name": "Exp/week (P95 stress)",
+            "value": 383.36,
+            "threshold": "> $0",
+            "pass": true
+          },
+          "G5": {
+            "name": "Max DD%",
+            "value": 40.5,
+            "threshold": "<= 20%",
+            "pass": false
+          },
+          "G6": {
+            "name": "WF folds positive",
+            "value": "3/5",
+            "threshold": ">= 4/5",
+            "pass": false
+          },
+          "G8": {
+            "name": "Top-1 fold conc.",
+            "value": "44.6%",
+            "threshold": "< 35%",
+            "pass": false
+          }
+        },
+        "pass_count": 4,
+        "total_count": 7,
+        "score": "4/7",
+        "all_pass": false
+      }
+    }
+  },
+  "method3_stability": {
+    "method": "stability_3period",
+    "periods": [
+      {
+        "start": 50,
+        "end": 274,
+        "n_bars": 224
+      },
+      {
+        "start": 274,
+        "end": 498,
+        "n_bars": 224
+      },
+      {
+        "start": 498,
+        "end": 722,
+        "n_bars": 224
+      }
+    ],
+    "full_sample_excluded_coins": [
+      "AI3/USD",
+      "ALKIMI/USD",
+      "ANIME/USD",
+      "CFG/USD",
+      "DBR/USD",
+      "ESX/USD",
+      "GST/USD",
+      "HOUSE/USD",
+      "KET/USD",
+      "LMWR/USD",
+      "MXC/USD",
+      "ODOS/USD",
+      "PERP/USD",
+      "PNUT/USD",
+      "POLIS/USD",
+      "RARI/USD",
+      "SUKU/USD",
+      "TANSSI/USD",
+      "TITCOIN/USD",
+      "TOSHI/USD",
+      "WMTX/USD"
+    ],
+    "coin_period_detail": {
+      "AI3/USD": {
+        "statuses": [
+          "no_trade",
+          "negative",
+          "negative"
+        ],
+        "pnls": [
+          0,
+          -10.77,
+          -17.71
+        ],
+        "n_negative_periods": 2
+      },
+      "ALKIMI/USD": {
+        "statuses": [
+          "no_trade",
+          "negative",
+          "negative"
+        ],
+        "pnls": [
+          0,
+          -71.74,
+          -43.61
+        ],
+        "n_negative_periods": 2
+      },
+      "ANIME/USD": {
+        "statuses": [
+          "negative",
+          "negative",
+          "no_trade"
+        ],
+        "pnls": [
+          -46.34,
+          -102.17,
+          0
+        ],
+        "n_negative_periods": 2
+      },
+      "CFG/USD": {
+        "statuses": [
+          "no_trade",
+          "no_trade",
+          "negative"
+        ],
+        "pnls": [
+          0,
+          0,
+          -19.68
+        ],
+        "n_negative_periods": 1
+      },
+      "DBR/USD": {
+        "statuses": [
+          "negative",
+          "negative",
+          "no_trade"
+        ],
+        "pnls": [
+          -23.04,
+          -107.2,
+          0
+        ],
+        "n_negative_periods": 2
+      },
+      "ESX/USD": {
+        "statuses": [
+          "no_trade",
+          "no_trade",
+          "negative"
+        ],
+        "pnls": [
+          0,
+          0,
+          -131.45
+        ],
+        "n_negative_periods": 1
+      },
+      "GST/USD": {
+        "statuses": [
+          "no_trade",
+          "negative",
+          "no_trade"
+        ],
+        "pnls": [
+          0,
+          -96.59,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "HOUSE/USD": {
+        "statuses": [
+          "negative",
+          "no_trade",
+          "no_trade"
+        ],
+        "pnls": [
+          -128.54,
+          0,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "KET/USD": {
+        "statuses": [
+          "negative",
+          "negative",
+          "negative"
+        ],
+        "pnls": [
+          -109.69,
+          -77.84,
+          -125.53
+        ],
+        "n_negative_periods": 3
+      },
+      "LMWR/USD": {
+        "statuses": [
+          "no_trade",
+          "negative",
+          "no_trade"
+        ],
+        "pnls": [
+          0,
+          -96.6,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "MXC/USD": {
+        "statuses": [
+          "no_trade",
+          "negative",
+          "no_trade"
+        ],
+        "pnls": [
+          0,
+          -101.93,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "ODOS/USD": {
+        "statuses": [
+          "no_trade",
+          "negative",
+          "no_trade"
+        ],
+        "pnls": [
+          0,
+          -91.32,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "PERP/USD": {
+        "statuses": [
+          "no_trade",
+          "negative",
+          "no_trade"
+        ],
+        "pnls": [
+          0,
+          -82.34,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "PNUT/USD": {
+        "statuses": [
+          "negative",
+          "no_trade",
+          "no_trade"
+        ],
+        "pnls": [
+          -46.2,
+          0,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "POLIS/USD": {
+        "statuses": [
+          "no_trade",
+          "negative",
+          "no_trade"
+        ],
+        "pnls": [
+          0,
+          -22.15,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "RARI/USD": {
+        "statuses": [
+          "negative",
+          "no_trade",
+          "no_trade"
+        ],
+        "pnls": [
+          -32.04,
+          0,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "SUKU/USD": {
+        "statuses": [
+          "positive",
+          "negative",
+          "no_trade"
+        ],
+        "pnls": [
+          9.6,
+          -86.34,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "TANSSI/USD": {
+        "statuses": [
+          "no_trade",
+          "negative",
+          "negative"
+        ],
+        "pnls": [
+          0,
+          -103.02,
+          -123.58
+        ],
+        "n_negative_periods": 2
+      },
+      "TITCOIN/USD": {
+        "statuses": [
+          "negative",
+          "no_trade",
+          "no_trade"
+        ],
+        "pnls": [
+          -115.35,
+          0,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "TOSHI/USD": {
+        "statuses": [
+          "negative",
+          "no_trade",
+          "no_trade"
+        ],
+        "pnls": [
+          -68.75,
+          0,
+          0
+        ],
+        "n_negative_periods": 1
+      },
+      "WMTX/USD": {
+        "statuses": [
+          "no_trade",
+          "no_trade",
+          "negative"
+        ],
+        "pnls": [
+          0,
+          0,
+          -1.45
+        ],
+        "n_negative_periods": 1
+      }
+    },
+    "consistency": {
+      "neg_all_3": [
+        "KET/USD"
+      ],
+      "neg_2_of_3": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "DBR/USD",
+        "TANSSI/USD"
+      ],
+      "neg_1_of_3": [
+        "CFG/USD",
+        "ESX/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "PNUT/USD",
+        "POLIS/USD",
+        "RARI/USD",
+        "SUKU/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD",
+        "WMTX/USD"
+      ],
+      "neg_0_of_3": [],
+      "never_profitable": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "CFG/USD",
+        "DBR/USD",
+        "ESX/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "PNUT/USD",
+        "POLIS/USD",
+        "RARI/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD",
+        "WMTX/USD"
+      ]
+    },
+    "counts": {
+      "neg_all_3": 1,
+      "neg_2_of_3": 5,
+      "neg_1_of_3": 15,
+      "neg_0_of_3": 0,
+      "never_profitable": 20
+    },
+    "stability_score_pct": 28.6
+  },
+  "overall_verdict": {
+    "verdict": "STRUCTURAL_FEATURE",
+    "detail": "excl_all_negative is predominantly a STRUCTURAL feature, not pure forward-looking bias. The exclusion helps OOS.",
+    "evidence_for_structural": 2,
+    "evidence_against": 1,
+    "method1_helps": true,
+    "method2_folds_helped": "3/5",
+    "method3_stable_coins": "6/21",
+    "method3_never_profitable": "20/21",
+    "leakage_free_gate_score": "4/7"
+  }
+}

@@ -1,0 +1,1689 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15 14:01",
+    "universe": "tradeable",
+    "data_file": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/data/candle_cache_tradeable.json",
+    "n_coins": 425,
+    "n_bars": 721,
+    "tier_source": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/reports/hf/universe_tiering_001.json",
+    "tier_counts": {
+      "1": 100,
+      "2": 216,
+      "3": 109
+    },
+    "fee_model": {
+      "tier1_fee": 0.0031,
+      "tier2_fee": 0.0056,
+      "tier3_fee": 0.0101,
+      "combined_fee": 0.0056
+    },
+    "gate_thresholds": {
+      "min_trades": 20,
+      "wf_folds": 5,
+      "wf_embargo": 2,
+      "wf_pass_min": 4,
+      "rolling_window_bars": 180,
+      "rolling_positive_min": 0.7,
+      "concentration_top1_max": 0.4,
+      "concentration_top3_max": 0.7
+    },
+    "total_time_s": 367.68,
+    "label": "4H variant research",
+    "configs_validated": [
+      "Champion_H2",
+      "GRID_BEST"
+    ]
+  },
+  "results": [
+    {
+      "config_name": "Champion_H2",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_confirm": true,
+        "vol_spike_mult": 3.0
+      },
+      "tier_results": {
+        "1": {
+          "tier_id": "1",
+          "tier_label": "Tier 1 (Liquid)",
+          "n_coins": 100,
+          "tier_fee": 0.0031,
+          "tier_fee_bps": 31.0,
+          "gates": {
+            "G1": {
+              "gate": "G1",
+              "name": "trade_sufficiency",
+              "total_trades": 17,
+              "min_required": 20,
+              "pnl": 3.88,
+              "wr": 47.1,
+              "result": "INSUFFICIENT_SAMPLE"
+            },
+            "G2": {
+              "gate": "G2",
+              "name": "walk_forward",
+              "n_folds": 5,
+              "embargo": 2,
+              "folds": [
+                {
+                  "fold": 1,
+                  "test_start": 50,
+                  "test_end": 184,
+                  "purge_start": 50,
+                  "purge_end": 186,
+                  "trades": 6,
+                  "pnl": -525.2,
+                  "pf": 0.3,
+                  "wr": 16.7,
+                  "dd": 33.8,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 2,
+                  "test_start": 184,
+                  "test_end": 318,
+                  "purge_start": 182,
+                  "purge_end": 320,
+                  "trades": 3,
+                  "pnl": 524.86,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "dd": 5.2,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 3,
+                  "test_start": 318,
+                  "test_end": 452,
+                  "purge_start": 316,
+                  "purge_end": 454,
+                  "trades": 1,
+                  "pnl": -79.82,
+                  "pf": 0.0,
+                  "wr": 0.0,
+                  "dd": 4.8,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 4,
+                  "test_start": 452,
+                  "test_end": 586,
+                  "purge_start": 450,
+                  "purge_end": 588,
+                  "trades": 1,
+                  "pnl": -40.18,
+                  "pf": 0.0,
+                  "wr": 0.0,
+                  "dd": 5.7,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 5,
+                  "test_start": 586,
+                  "test_end": 721,
+                  "purge_start": 584,
+                  "purge_end": 721,
+                  "trades": 6,
+                  "pnl": 108.26,
+                  "pf": 1.23,
+                  "wr": 50.0,
+                  "dd": 24.3,
+                  "positive": true,
+                  "pf_above_1": true
+                }
+              ],
+              "positive_folds": 2,
+              "pf_above1_folds": 2,
+              "result": "FAIL",
+              "soft_pass": false
+            },
+            "G3": {
+              "gate": "G3",
+              "name": "rolling_windows",
+              "window_bars": 180,
+              "n_windows": 4,
+              "positive_windows": 3,
+              "positive_ratio": 0.75,
+              "windows": [
+                {
+                  "start_bar": 50,
+                  "end_bar": 230,
+                  "trades": 8,
+                  "pnl": -327.84,
+                  "pf": 0.56,
+                  "wr": 37.5,
+                  "positive": false
+                },
+                {
+                  "start_bar": 230,
+                  "end_bar": 410,
+                  "trades": 1,
+                  "pnl": 226.86,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 410,
+                  "end_bar": 590,
+                  "trades": 2,
+                  "pnl": 42.06,
+                  "pf": 2.0,
+                  "wr": 50.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 590,
+                  "end_bar": 721,
+                  "trades": 6,
+                  "pnl": 108.26,
+                  "pf": 1.23,
+                  "wr": 50.0,
+                  "positive": true
+                }
+              ],
+              "result": "PASS"
+            },
+            "G4": {
+              "gate": "G4",
+              "name": "friction_stress",
+              "tier_fee": 0.0031,
+              "fee_15x": 0.00465,
+              "fee_20x": 0.0062,
+              "fee_15x_bps": 46.5,
+              "fee_20x_bps": 62.0,
+              "regime_15x": {
+                "trades": 17,
+                "pnl": -99.65,
+                "pf": 0.92,
+                "wr": 47.1,
+                "dd": 37.4,
+                "pass": false
+              },
+              "regime_20x": {
+                "trades": 17,
+                "pnl": -198.12,
+                "pf": 0.85,
+                "wr": 47.1,
+                "dd": 40.0,
+                "pass": false
+              },
+              "result": "FAIL"
+            },
+            "G5": {
+              "gate": "G5",
+              "name": "concentration",
+              "total_positive_pnl": 1094.81,
+              "n_coins_traded": 15,
+              "top1_coin": "CHEEMS/USD",
+              "top1_share": 0.3203,
+              "top1_pct": 32.0,
+              "top1_gate": "< 40%",
+              "top1_pass": true,
+              "top3_coins": [
+                "CHEEMS/USD",
+                "BTT/USD",
+                "U/USD"
+              ],
+              "top3_share": 0.7139,
+              "top3_pct": 71.4,
+              "top3_gate": "< 70%",
+              "top3_pass": false,
+              "result": "FAIL"
+            }
+          },
+          "verdict": {
+            "verdict": "INSUFFICIENT_SAMPLE",
+            "reason": "Only 17 trades (need >= 20)",
+            "label": "4H variant research",
+            "failed_gates": [
+              "G1"
+            ]
+          },
+          "elapsed_s": 24.92
+        },
+        "2": {
+          "tier_id": "2",
+          "tier_label": "Tier 2 (Mid)",
+          "n_coins": 216,
+          "tier_fee": 0.0056,
+          "tier_fee_bps": 56.0,
+          "gates": {
+            "G1": {
+              "gate": "G1",
+              "name": "trade_sufficiency",
+              "total_trades": 23,
+              "min_required": 20,
+              "pnl": 1221.69,
+              "wr": 65.2,
+              "result": "PASS"
+            },
+            "G2": {
+              "gate": "G2",
+              "name": "walk_forward",
+              "n_folds": 5,
+              "embargo": 2,
+              "folds": [
+                {
+                  "fold": 1,
+                  "test_start": 50,
+                  "test_end": 184,
+                  "purge_start": 50,
+                  "purge_end": 186,
+                  "trades": 5,
+                  "pnl": -195.46,
+                  "pf": 0.65,
+                  "wr": 40.0,
+                  "dd": 17.3,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 2,
+                  "test_start": 184,
+                  "test_end": 318,
+                  "purge_start": 182,
+                  "purge_end": 320,
+                  "trades": 4,
+                  "pnl": 419.72,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "dd": 10.3,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 3,
+                  "test_start": 318,
+                  "test_end": 452,
+                  "purge_start": 316,
+                  "purge_end": 454,
+                  "trades": 3,
+                  "pnl": 143.79,
+                  "pf": 1.79,
+                  "wr": 66.7,
+                  "dd": 9.5,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 4,
+                  "test_start": 452,
+                  "test_end": 586,
+                  "purge_start": 450,
+                  "purge_end": 588,
+                  "trades": 5,
+                  "pnl": 296.05,
+                  "pf": 1.77,
+                  "wr": 60.0,
+                  "dd": 15.6,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 5,
+                  "test_start": 586,
+                  "test_end": 721,
+                  "purge_start": 584,
+                  "purge_end": 721,
+                  "trades": 6,
+                  "pnl": 329.2,
+                  "pf": 1.92,
+                  "wr": 66.7,
+                  "dd": 19.1,
+                  "positive": true,
+                  "pf_above_1": true
+                }
+              ],
+              "positive_folds": 4,
+              "pf_above1_folds": 4,
+              "result": "PASS",
+              "soft_pass": true
+            },
+            "G3": {
+              "gate": "G3",
+              "name": "rolling_windows",
+              "window_bars": 180,
+              "n_windows": 4,
+              "positive_windows": 3,
+              "positive_ratio": 0.75,
+              "windows": [
+                {
+                  "start_bar": 50,
+                  "end_bar": 230,
+                  "trades": 7,
+                  "pnl": -145.14,
+                  "pf": 0.74,
+                  "wr": 57.1,
+                  "positive": false
+                },
+                {
+                  "start_bar": 230,
+                  "end_bar": 410,
+                  "trades": 4,
+                  "pnl": 344.69,
+                  "pf": 2.57,
+                  "wr": 75.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 410,
+                  "end_bar": 590,
+                  "trades": 6,
+                  "pnl": 544.32,
+                  "pf": 2.28,
+                  "wr": 66.7,
+                  "positive": true
+                },
+                {
+                  "start_bar": 590,
+                  "end_bar": 721,
+                  "trades": 6,
+                  "pnl": 329.2,
+                  "pf": 1.92,
+                  "wr": 66.7,
+                  "positive": true
+                }
+              ],
+              "result": "PASS"
+            },
+            "G4": {
+              "gate": "G4",
+              "name": "friction_stress",
+              "tier_fee": 0.0056,
+              "fee_15x": 0.0084,
+              "fee_20x": 0.0112,
+              "fee_15x_bps": 84.0,
+              "fee_20x_bps": 112.0,
+              "regime_15x": {
+                "trades": 23,
+                "pnl": 832.35,
+                "pf": 1.49,
+                "wr": 65.2,
+                "dd": 23.3,
+                "pass": true
+              },
+              "regime_20x": {
+                "trades": 23,
+                "pnl": 488.25,
+                "pf": 1.28,
+                "wr": 60.9,
+                "dd": 25.3,
+                "pass": true
+              },
+              "result": "PASS"
+            },
+            "G5": {
+              "gate": "G5",
+              "name": "concentration",
+              "total_positive_pnl": 2759.8,
+              "n_coins_traded": 21,
+              "top1_coin": "MF/USD",
+              "top1_share": 0.1922,
+              "top1_pct": 19.2,
+              "top1_gate": "< 40%",
+              "top1_pass": true,
+              "top3_coins": [
+                "MF/USD",
+                "DYM/USD",
+                "ZEUS/USD"
+              ],
+              "top3_share": 0.3996,
+              "top3_pct": 40.0,
+              "top3_gate": "< 70%",
+              "top3_pass": true,
+              "result": "PASS"
+            }
+          },
+          "verdict": {
+            "verdict": "GO",
+            "reason": "All 5 hard gates passed",
+            "label": "4H variant research",
+            "failed_gates": []
+          },
+          "elapsed_s": 59.82
+        },
+        "3": {
+          "tier_id": "3",
+          "tier_label": "Tier 3 (Illiquid)",
+          "n_coins": 109,
+          "tier_fee": 0.0101,
+          "tier_fee_bps": 101.0,
+          "gates": {
+            "G1": {
+              "gate": "G1",
+              "name": "trade_sufficiency",
+              "total_trades": 16,
+              "min_required": 20,
+              "pnl": 120.76,
+              "wr": 50.0,
+              "result": "INSUFFICIENT_SAMPLE"
+            },
+            "G2": {
+              "gate": "G2",
+              "name": "walk_forward",
+              "n_folds": 5,
+              "embargo": 2,
+              "folds": [
+                {
+                  "fold": 1,
+                  "test_start": 50,
+                  "test_end": 184,
+                  "purge_start": 50,
+                  "purge_end": 186,
+                  "trades": 4,
+                  "pnl": -42.19,
+                  "pf": 0.9,
+                  "wr": 50.0,
+                  "dd": 12.1,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 2,
+                  "test_start": 184,
+                  "test_end": 318,
+                  "purge_start": 182,
+                  "purge_end": 320,
+                  "trades": 4,
+                  "pnl": 395.54,
+                  "pf": 27.16,
+                  "wr": 50.0,
+                  "dd": 8.1,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 3,
+                  "test_start": 318,
+                  "test_end": 452,
+                  "purge_start": 316,
+                  "purge_end": 454,
+                  "trades": 2,
+                  "pnl": -57.99,
+                  "pf": 0.42,
+                  "wr": 50.0,
+                  "dd": 8.3,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 4,
+                  "test_start": 452,
+                  "test_end": 586,
+                  "purge_start": 450,
+                  "purge_end": 588,
+                  "trades": 2,
+                  "pnl": -202.94,
+                  "pf": 0.0,
+                  "wr": 0.0,
+                  "dd": 11.5,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 5,
+                  "test_start": 586,
+                  "test_end": 721,
+                  "purge_start": 584,
+                  "purge_end": 721,
+                  "trades": 4,
+                  "pnl": 73.1,
+                  "pf": 1.36,
+                  "wr": 75.0,
+                  "dd": 15.6,
+                  "positive": true,
+                  "pf_above_1": true
+                }
+              ],
+              "positive_folds": 2,
+              "pf_above1_folds": 2,
+              "result": "FAIL",
+              "soft_pass": false
+            },
+            "G3": {
+              "gate": "G3",
+              "name": "rolling_windows",
+              "window_bars": 180,
+              "n_windows": 4,
+              "positive_windows": 2,
+              "positive_ratio": 0.5,
+              "windows": [
+                {
+                  "start_bar": 50,
+                  "end_bar": 230,
+                  "trades": 6,
+                  "pnl": -56.99,
+                  "pf": 0.87,
+                  "wr": 33.3,
+                  "positive": false
+                },
+                {
+                  "start_bar": 230,
+                  "end_bar": 410,
+                  "trades": 3,
+                  "pnl": 464.77,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 410,
+                  "end_bar": 590,
+                  "trades": 3,
+                  "pnl": -291.13,
+                  "pf": 0.0,
+                  "wr": 0.0,
+                  "positive": false
+                },
+                {
+                  "start_bar": 590,
+                  "end_bar": 721,
+                  "trades": 4,
+                  "pnl": 73.1,
+                  "pf": 1.36,
+                  "wr": 75.0,
+                  "positive": true
+                }
+              ],
+              "result": "FAIL"
+            },
+            "G4": {
+              "gate": "G4",
+              "name": "friction_stress",
+              "tier_fee": 0.0101,
+              "fee_15x": 0.01515,
+              "fee_20x": 0.0202,
+              "fee_15x_bps": 151.5,
+              "fee_20x_bps": 202.0,
+              "regime_15x": {
+                "trades": 16,
+                "pnl": -200.07,
+                "pf": 0.82,
+                "wr": 50.0,
+                "dd": 30.2,
+                "pass": false
+              },
+              "regime_20x": {
+                "trades": 16,
+                "pnl": -474.96,
+                "pf": 0.59,
+                "wr": 50.0,
+                "dd": 36.5,
+                "pass": false
+              },
+              "result": "FAIL"
+            },
+            "G5": {
+              "gate": "G5",
+              "name": "concentration",
+              "total_positive_pnl": 1125.3,
+              "n_coins_traded": 14,
+              "top1_coin": "COW/USD",
+              "top1_share": 0.187,
+              "top1_pct": 18.7,
+              "top1_gate": "< 40%",
+              "top1_pass": true,
+              "top3_coins": [
+                "COW/USD",
+                "RPL/USD",
+                "SOON/USD"
+              ],
+              "top3_share": 0.5341,
+              "top3_pct": 53.4,
+              "top3_gate": "< 70%",
+              "top3_pass": true,
+              "result": "PASS"
+            }
+          },
+          "verdict": {
+            "verdict": "INSUFFICIENT_SAMPLE",
+            "reason": "Only 16 trades (need >= 20)",
+            "label": "4H variant research",
+            "failed_gates": [
+              "G1"
+            ]
+          },
+          "elapsed_s": 29.16
+        },
+        "1+2": {
+          "tier_id": "1+2",
+          "tier_label": "Tier 1+2 (Live)",
+          "n_coins": 316,
+          "tier_fee": 0.0056,
+          "tier_fee_bps": 56.0,
+          "gates": {
+            "G1": {
+              "gate": "G1",
+              "name": "trade_sufficiency",
+              "total_trades": 30,
+              "min_required": 20,
+              "pnl": 1628.63,
+              "wr": 63.3,
+              "result": "PASS"
+            },
+            "G2": {
+              "gate": "G2",
+              "name": "walk_forward",
+              "n_folds": 5,
+              "embargo": 2,
+              "folds": [
+                {
+                  "fold": 1,
+                  "test_start": 50,
+                  "test_end": 184,
+                  "purge_start": 50,
+                  "purge_end": 186,
+                  "trades": 7,
+                  "pnl": -415.61,
+                  "pf": 0.49,
+                  "wr": 28.6,
+                  "dd": 28.5,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 2,
+                  "test_start": 184,
+                  "test_end": 318,
+                  "purge_start": 182,
+                  "purge_end": 320,
+                  "trades": 4,
+                  "pnl": 419.72,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "dd": 10.3,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 3,
+                  "test_start": 318,
+                  "test_end": 452,
+                  "purge_start": 316,
+                  "purge_end": 454,
+                  "trades": 4,
+                  "pnl": 47.69,
+                  "pf": 1.17,
+                  "wr": 50.0,
+                  "dd": 9.5,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 4,
+                  "test_start": 452,
+                  "test_end": 586,
+                  "purge_start": 450,
+                  "purge_end": 588,
+                  "trades": 6,
+                  "pnl": 544.32,
+                  "pf": 2.28,
+                  "wr": 66.7,
+                  "dd": 15.6,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 5,
+                  "test_start": 586,
+                  "test_end": 721,
+                  "purge_start": 584,
+                  "purge_end": 721,
+                  "trades": 9,
+                  "pnl": 600.57,
+                  "pf": 2.09,
+                  "wr": 66.7,
+                  "dd": 19.1,
+                  "positive": true,
+                  "pf_above_1": true
+                }
+              ],
+              "positive_folds": 4,
+              "pf_above1_folds": 4,
+              "result": "PASS",
+              "soft_pass": true
+            },
+            "G3": {
+              "gate": "G3",
+              "name": "rolling_windows",
+              "window_bars": 180,
+              "n_windows": 4,
+              "positive_windows": 3,
+              "positive_ratio": 0.75,
+              "windows": [
+                {
+                  "start_bar": 50,
+                  "end_bar": 230,
+                  "trades": 9,
+                  "pnl": -371.43,
+                  "pf": 0.54,
+                  "wr": 44.4,
+                  "positive": false
+                },
+                {
+                  "start_bar": 230,
+                  "end_bar": 410,
+                  "trades": 4,
+                  "pnl": 344.69,
+                  "pf": 2.57,
+                  "wr": 75.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 410,
+                  "end_bar": 590,
+                  "trades": 8,
+                  "pnl": 923.3,
+                  "pf": 2.89,
+                  "wr": 75.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 590,
+                  "end_bar": 721,
+                  "trades": 9,
+                  "pnl": 600.57,
+                  "pf": 2.09,
+                  "wr": 66.7,
+                  "positive": true
+                }
+              ],
+              "result": "PASS"
+            },
+            "G4": {
+              "gate": "G4",
+              "name": "friction_stress",
+              "tier_fee": 0.0056,
+              "fee_15x": 0.0084,
+              "fee_20x": 0.0112,
+              "fee_15x_bps": 84.0,
+              "fee_20x_bps": 112.0,
+              "regime_15x": {
+                "trades": 30,
+                "pnl": 1067.24,
+                "pf": 1.49,
+                "wr": 63.3,
+                "dd": 34.9,
+                "pass": true
+              },
+              "regime_20x": {
+                "trades": 30,
+                "pnl": 590.24,
+                "pf": 1.27,
+                "wr": 60.0,
+                "dd": 37.1,
+                "pass": true
+              },
+              "result": "PASS"
+            },
+            "G5": {
+              "gate": "G5",
+              "name": "concentration",
+              "total_positive_pnl": 3853.07,
+              "n_coins_traded": 29,
+              "top1_coin": "MF/USD",
+              "top1_share": 0.1322,
+              "top1_pct": 13.2,
+              "top1_gate": "< 40%",
+              "top1_pass": true,
+              "top3_coins": [
+                "MF/USD",
+                "U/USD",
+                "CHEEMS/USD"
+              ],
+              "top3_share": 0.3071,
+              "top3_pct": 30.7,
+              "top3_gate": "< 70%",
+              "top3_pass": true,
+              "result": "PASS"
+            }
+          },
+          "verdict": {
+            "verdict": "GO",
+            "reason": "All 5 hard gates passed",
+            "label": "4H variant research",
+            "failed_gates": []
+          },
+          "elapsed_s": 76.08
+        }
+      },
+      "elapsed_s": 190.03
+    },
+    {
+      "config_name": "GRID_BEST",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 10,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_confirm": true,
+        "vol_spike_mult": 2.5
+      },
+      "tier_results": {
+        "1": {
+          "tier_id": "1",
+          "tier_label": "Tier 1 (Liquid)",
+          "n_coins": 100,
+          "tier_fee": 0.0031,
+          "tier_fee_bps": 31.0,
+          "gates": {
+            "G1": {
+              "gate": "G1",
+              "name": "trade_sufficiency",
+              "total_trades": 18,
+              "min_required": 20,
+              "pnl": 242.8,
+              "wr": 55.6,
+              "result": "INSUFFICIENT_SAMPLE"
+            },
+            "G2": {
+              "gate": "G2",
+              "name": "walk_forward",
+              "n_folds": 5,
+              "embargo": 2,
+              "folds": [
+                {
+                  "fold": 1,
+                  "test_start": 50,
+                  "test_end": 184,
+                  "purge_start": 50,
+                  "purge_end": 186,
+                  "trades": 5,
+                  "pnl": -119.38,
+                  "pf": 0.78,
+                  "wr": 40.0,
+                  "dd": 20.1,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 2,
+                  "test_start": 184,
+                  "test_end": 318,
+                  "purge_start": 182,
+                  "purge_end": 320,
+                  "trades": 3,
+                  "pnl": 524.86,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "dd": 5.2,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 3,
+                  "test_start": 318,
+                  "test_end": 452,
+                  "purge_start": 316,
+                  "purge_end": 454,
+                  "trades": 1,
+                  "pnl": -79.82,
+                  "pf": 0.0,
+                  "wr": 0.0,
+                  "dd": 4.8,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 4,
+                  "test_start": 452,
+                  "test_end": 586,
+                  "purge_start": 450,
+                  "purge_end": 588,
+                  "trades": 2,
+                  "pnl": -247.7,
+                  "pf": 0.0,
+                  "wr": 0.0,
+                  "dd": 15.6,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 5,
+                  "test_start": 586,
+                  "test_end": 721,
+                  "purge_start": 584,
+                  "purge_end": 721,
+                  "trades": 7,
+                  "pnl": 69.58,
+                  "pf": 1.12,
+                  "wr": 57.1,
+                  "dd": 30.6,
+                  "positive": true,
+                  "pf_above_1": true
+                }
+              ],
+              "positive_folds": 2,
+              "pf_above1_folds": 2,
+              "result": "FAIL",
+              "soft_pass": false
+            },
+            "G3": {
+              "gate": "G3",
+              "name": "rolling_windows",
+              "window_bars": 180,
+              "n_windows": 4,
+              "positive_windows": 3,
+              "positive_ratio": 0.75,
+              "windows": [
+                {
+                  "start_bar": 50,
+                  "end_bar": 230,
+                  "trades": 7,
+                  "pnl": 132.29,
+                  "pf": 1.24,
+                  "wr": 57.1,
+                  "positive": true
+                },
+                {
+                  "start_bar": 230,
+                  "end_bar": 410,
+                  "trades": 1,
+                  "pnl": 226.86,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 410,
+                  "end_bar": 590,
+                  "trades": 3,
+                  "pnl": -174.18,
+                  "pf": 0.33,
+                  "wr": 33.3,
+                  "positive": false
+                },
+                {
+                  "start_bar": 590,
+                  "end_bar": 721,
+                  "trades": 7,
+                  "pnl": 69.58,
+                  "pf": 1.12,
+                  "wr": 57.1,
+                  "positive": true
+                }
+              ],
+              "result": "PASS"
+            },
+            "G4": {
+              "gate": "G4",
+              "name": "friction_stress",
+              "tier_fee": 0.0031,
+              "fee_15x": 0.00465,
+              "fee_20x": 0.0062,
+              "fee_15x_bps": 46.5,
+              "fee_20x_bps": 62.0,
+              "regime_15x": {
+                "trades": 18,
+                "pnl": 120.63,
+                "pf": 1.08,
+                "wr": 55.6,
+                "dd": 38.0,
+                "pass": true
+              },
+              "regime_20x": {
+                "trades": 18,
+                "pnl": 4.77,
+                "pf": 1.0,
+                "wr": 55.6,
+                "dd": 39.2,
+                "pass": true
+              },
+              "result": "PASS"
+            },
+            "G5": {
+              "gate": "G5",
+              "name": "concentration",
+              "total_positive_pnl": 1504.99,
+              "n_coins_traded": 15,
+              "top1_coin": "CHEEMS/USD",
+              "top1_share": 0.4123,
+              "top1_pct": 41.2,
+              "top1_gate": "< 40%",
+              "top1_pass": false,
+              "top3_coins": [
+                "CHEEMS/USD",
+                "U/USD",
+                "BTT/USD"
+              ],
+              "top3_share": 0.7148,
+              "top3_pct": 71.5,
+              "top3_gate": "< 70%",
+              "top3_pass": false,
+              "result": "FAIL"
+            }
+          },
+          "verdict": {
+            "verdict": "INSUFFICIENT_SAMPLE",
+            "reason": "Only 18 trades (need >= 20)",
+            "label": "4H variant research",
+            "failed_gates": [
+              "G1"
+            ]
+          },
+          "elapsed_s": 23.18
+        },
+        "2": {
+          "tier_id": "2",
+          "tier_label": "Tier 2 (Mid)",
+          "n_coins": 216,
+          "tier_fee": 0.0056,
+          "tier_fee_bps": 56.0,
+          "gates": {
+            "G1": {
+              "gate": "G1",
+              "name": "trade_sufficiency",
+              "total_trades": 22,
+              "min_required": 20,
+              "pnl": 1329.19,
+              "wr": 68.2,
+              "result": "PASS"
+            },
+            "G2": {
+              "gate": "G2",
+              "name": "walk_forward",
+              "n_folds": 5,
+              "embargo": 2,
+              "folds": [
+                {
+                  "fold": 1,
+                  "test_start": 50,
+                  "test_end": 184,
+                  "purge_start": 50,
+                  "purge_end": 186,
+                  "trades": 4,
+                  "pnl": -101.22,
+                  "pf": 0.79,
+                  "wr": 50.0,
+                  "dd": 12.4,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 2,
+                  "test_start": 184,
+                  "test_end": 318,
+                  "purge_start": 182,
+                  "purge_end": 320,
+                  "trades": 4,
+                  "pnl": 419.72,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "dd": 10.3,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 3,
+                  "test_start": 318,
+                  "test_end": 452,
+                  "purge_start": 316,
+                  "purge_end": 454,
+                  "trades": 3,
+                  "pnl": 217.45,
+                  "pf": 2.83,
+                  "wr": 66.7,
+                  "dd": 8.0,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 4,
+                  "test_start": 452,
+                  "test_end": 586,
+                  "purge_start": 450,
+                  "purge_end": 588,
+                  "trades": 5,
+                  "pnl": -5.01,
+                  "pf": 0.99,
+                  "wr": 40.0,
+                  "dd": 22.2,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 5,
+                  "test_start": 586,
+                  "test_end": 721,
+                  "purge_start": 584,
+                  "purge_end": 721,
+                  "trades": 6,
+                  "pnl": 545.2,
+                  "pf": 3.38,
+                  "wr": 83.3,
+                  "dd": 13.0,
+                  "positive": true,
+                  "pf_above_1": true
+                }
+              ],
+              "positive_folds": 3,
+              "pf_above1_folds": 3,
+              "result": "FAIL",
+              "soft_pass": true
+            },
+            "G3": {
+              "gate": "G3",
+              "name": "rolling_windows",
+              "window_bars": 180,
+              "n_windows": 4,
+              "positive_windows": 3,
+              "positive_ratio": 0.75,
+              "windows": [
+                {
+                  "start_bar": 50,
+                  "end_bar": 230,
+                  "trades": 6,
+                  "pnl": -48.28,
+                  "pf": 0.9,
+                  "wr": 66.7,
+                  "positive": false
+                },
+                {
+                  "start_bar": 230,
+                  "end_bar": 410,
+                  "trades": 4,
+                  "pnl": 425.25,
+                  "pf": 3.95,
+                  "wr": 75.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 410,
+                  "end_bar": 590,
+                  "trades": 6,
+                  "pnl": 210.71,
+                  "pf": 1.46,
+                  "wr": 50.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 590,
+                  "end_bar": 721,
+                  "trades": 6,
+                  "pnl": 545.2,
+                  "pf": 3.38,
+                  "wr": 83.3,
+                  "positive": true
+                }
+              ],
+              "result": "PASS"
+            },
+            "G4": {
+              "gate": "G4",
+              "name": "friction_stress",
+              "tier_fee": 0.0056,
+              "fee_15x": 0.0084,
+              "fee_20x": 0.0112,
+              "fee_15x_bps": 84.0,
+              "fee_20x_bps": 112.0,
+              "regime_15x": {
+                "trades": 22,
+                "pnl": 943.77,
+                "pf": 1.64,
+                "wr": 68.2,
+                "dd": 23.6,
+                "pass": true
+              },
+              "regime_20x": {
+                "trades": 22,
+                "pnl": 601.16,
+                "pf": 1.4,
+                "wr": 63.6,
+                "dd": 26.0,
+                "pass": true
+              },
+              "result": "PASS"
+            },
+            "G5": {
+              "gate": "G5",
+              "name": "concentration",
+              "total_positive_pnl": 2554.7,
+              "n_coins_traded": 20,
+              "top1_coin": "MF/USD",
+              "top1_share": 0.2109,
+              "top1_pct": 21.1,
+              "top1_gate": "< 40%",
+              "top1_pass": true,
+              "top3_coins": [
+                "MF/USD",
+                "ZEUS/USD",
+                "ES/USD"
+              ],
+              "top3_share": 0.4258,
+              "top3_pct": 42.6,
+              "top3_gate": "< 70%",
+              "top3_pass": true,
+              "result": "PASS"
+            }
+          },
+          "verdict": {
+            "verdict": "SOFT-GO",
+            "reason": "WF 3/5 folds (soft pass at 3/5), all other gates pass",
+            "label": "4H variant research",
+            "failed_gates": [
+              "G2 (soft)"
+            ]
+          },
+          "elapsed_s": 51.52
+        },
+        "3": {
+          "tier_id": "3",
+          "tier_label": "Tier 3 (Illiquid)",
+          "n_coins": 109,
+          "tier_fee": 0.0101,
+          "tier_fee_bps": 101.0,
+          "gates": {
+            "G1": {
+              "gate": "G1",
+              "name": "trade_sufficiency",
+              "total_trades": 17,
+              "min_required": 20,
+              "pnl": 197.61,
+              "wr": 52.9,
+              "result": "INSUFFICIENT_SAMPLE"
+            },
+            "G2": {
+              "gate": "G2",
+              "name": "walk_forward",
+              "n_folds": 5,
+              "embargo": 2,
+              "folds": [
+                {
+                  "fold": 1,
+                  "test_start": 50,
+                  "test_end": 184,
+                  "purge_start": 50,
+                  "purge_end": 186,
+                  "trades": 4,
+                  "pnl": -69.35,
+                  "pf": 0.85,
+                  "wr": 50.0,
+                  "dd": 12.7,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 2,
+                  "test_start": 184,
+                  "test_end": 318,
+                  "purge_start": 182,
+                  "purge_end": 320,
+                  "trades": 4,
+                  "pnl": 395.54,
+                  "pf": 27.16,
+                  "wr": 50.0,
+                  "dd": 8.1,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 3,
+                  "test_start": 318,
+                  "test_end": 452,
+                  "purge_start": 316,
+                  "purge_end": 454,
+                  "trades": 3,
+                  "pnl": 133.47,
+                  "pf": 2.21,
+                  "wr": 66.7,
+                  "dd": 8.3,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 4,
+                  "test_start": 452,
+                  "test_end": 586,
+                  "purge_start": 450,
+                  "purge_end": 588,
+                  "trades": 2,
+                  "pnl": -242.44,
+                  "pf": 0.0,
+                  "wr": 0.0,
+                  "dd": 13.4,
+                  "positive": false,
+                  "pf_above_1": false
+                },
+                {
+                  "fold": 5,
+                  "test_start": 586,
+                  "test_end": 721,
+                  "purge_start": 584,
+                  "purge_end": 721,
+                  "trades": 4,
+                  "pnl": 27.52,
+                  "pf": 1.11,
+                  "wr": 75.0,
+                  "dd": 17.4,
+                  "positive": true,
+                  "pf_above_1": true
+                }
+              ],
+              "positive_folds": 3,
+              "pf_above1_folds": 3,
+              "result": "FAIL",
+              "soft_pass": true
+            },
+            "G3": {
+              "gate": "G3",
+              "name": "rolling_windows",
+              "window_bars": 180,
+              "n_windows": 4,
+              "positive_windows": 2,
+              "positive_ratio": 0.5,
+              "windows": [
+                {
+                  "start_bar": 50,
+                  "end_bar": 230,
+                  "trades": 6,
+                  "pnl": -83.95,
+                  "pf": 0.82,
+                  "wr": 33.3,
+                  "positive": false
+                },
+                {
+                  "start_bar": 230,
+                  "end_bar": 410,
+                  "trades": 4,
+                  "pnl": 707.77,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 410,
+                  "end_bar": 590,
+                  "trades": 3,
+                  "pnl": -328.7,
+                  "pf": 0.0,
+                  "wr": 0.0,
+                  "positive": false
+                },
+                {
+                  "start_bar": 590,
+                  "end_bar": 721,
+                  "trades": 4,
+                  "pnl": 27.52,
+                  "pf": 1.11,
+                  "wr": 75.0,
+                  "positive": true
+                }
+              ],
+              "result": "FAIL"
+            },
+            "G4": {
+              "gate": "G4",
+              "name": "friction_stress",
+              "tier_fee": 0.0101,
+              "fee_15x": 0.01515,
+              "fee_20x": 0.0202,
+              "fee_15x_bps": 151.5,
+              "fee_20x_bps": 202.0,
+              "regime_15x": {
+                "trades": 17,
+                "pnl": -153.65,
+                "pf": 0.88,
+                "wr": 52.9,
+                "dd": 33.2,
+                "pass": false
+              },
+              "regime_20x": {
+                "trades": 17,
+                "pnl": -451.56,
+                "pf": 0.65,
+                "wr": 52.9,
+                "dd": 36.7,
+                "pass": false
+              },
+              "result": "FAIL"
+            },
+            "G5": {
+              "gate": "G5",
+              "name": "concentration",
+              "total_positive_pnl": 1359.02,
+              "n_coins_traded": 15,
+              "top1_coin": "ME/USD",
+              "top1_share": 0.1678,
+              "top1_pct": 16.8,
+              "top1_gate": "< 40%",
+              "top1_pass": true,
+              "top3_coins": [
+                "ME/USD",
+                "COW/USD",
+                "INJ/USD"
+              ],
+              "top3_share": 0.4656,
+              "top3_pct": 46.6,
+              "top3_gate": "< 70%",
+              "top3_pass": true,
+              "result": "PASS"
+            }
+          },
+          "verdict": {
+            "verdict": "INSUFFICIENT_SAMPLE",
+            "reason": "Only 17 trades (need >= 20)",
+            "label": "4H variant research",
+            "failed_gates": [
+              "G1"
+            ]
+          },
+          "elapsed_s": 26.49
+        },
+        "1+2": {
+          "tier_id": "1+2",
+          "tier_label": "Tier 1+2 (Live)",
+          "n_coins": 316,
+          "tier_fee": 0.0056,
+          "tier_fee_bps": 56.0,
+          "gates": {
+            "G1": {
+              "gate": "G1",
+              "name": "trade_sufficiency",
+              "total_trades": 29,
+              "min_required": 20,
+              "pnl": 1913.59,
+              "wr": 65.5,
+              "result": "PASS"
+            },
+            "G2": {
+              "gate": "G2",
+              "name": "walk_forward",
+              "n_folds": 5,
+              "embargo": 2,
+              "folds": [
+                {
+                  "fold": 1,
+                  "test_start": 50,
+                  "test_end": 184,
+                  "purge_start": 50,
+                  "purge_end": 186,
+                  "trades": 6,
+                  "pnl": 31.78,
+                  "pf": 1.05,
+                  "wr": 50.0,
+                  "dd": 12.8,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 2,
+                  "test_start": 184,
+                  "test_end": 318,
+                  "purge_start": 182,
+                  "purge_end": 320,
+                  "trades": 4,
+                  "pnl": 419.72,
+                  "pf": 99.0,
+                  "wr": 100.0,
+                  "dd": 10.3,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 3,
+                  "test_start": 318,
+                  "test_end": 452,
+                  "purge_start": 316,
+                  "purge_end": 454,
+                  "trades": 4,
+                  "pnl": 118.05,
+                  "pf": 1.54,
+                  "wr": 50.0,
+                  "dd": 8.0,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 4,
+                  "test_start": 452,
+                  "test_end": 586,
+                  "purge_start": 450,
+                  "purge_end": 588,
+                  "trades": 6,
+                  "pnl": 210.71,
+                  "pf": 1.46,
+                  "wr": 50.0,
+                  "dd": 17.5,
+                  "positive": true,
+                  "pf_above_1": true
+                },
+                {
+                  "fold": 5,
+                  "test_start": 586,
+                  "test_end": 721,
+                  "purge_start": 584,
+                  "purge_end": 721,
+                  "trades": 9,
+                  "pnl": 433.63,
+                  "pf": 1.64,
+                  "wr": 66.7,
+                  "dd": 15.5,
+                  "positive": true,
+                  "pf_above_1": true
+                }
+              ],
+              "positive_folds": 5,
+              "pf_above1_folds": 5,
+              "result": "PASS",
+              "soft_pass": true
+            },
+            "G3": {
+              "gate": "G3",
+              "name": "rolling_windows",
+              "window_bars": 180,
+              "n_windows": 4,
+              "positive_windows": 4,
+              "positive_ratio": 1.0,
+              "windows": [
+                {
+                  "start_bar": 50,
+                  "end_bar": 230,
+                  "trades": 8,
+                  "pnl": 88.44,
+                  "pf": 1.15,
+                  "wr": 62.5,
+                  "positive": true
+                },
+                {
+                  "start_bar": 230,
+                  "end_bar": 410,
+                  "trades": 4,
+                  "pnl": 425.25,
+                  "pf": 3.95,
+                  "wr": 75.0,
+                  "positive": true
+                },
+                {
+                  "start_bar": 410,
+                  "end_bar": 590,
+                  "trades": 8,
+                  "pnl": 539.99,
+                  "pf": 2.03,
+                  "wr": 62.5,
+                  "positive": true
+                },
+                {
+                  "start_bar": 590,
+                  "end_bar": 721,
+                  "trades": 9,
+                  "pnl": 433.63,
+                  "pf": 1.64,
+                  "wr": 66.7,
+                  "positive": true
+                }
+              ],
+              "result": "PASS"
+            },
+            "G4": {
+              "gate": "G4",
+              "name": "friction_stress",
+              "tier_fee": 0.0056,
+              "fee_15x": 0.0084,
+              "fee_20x": 0.0112,
+              "fee_15x_bps": 84.0,
+              "fee_20x_bps": 112.0,
+              "regime_15x": {
+                "trades": 29,
+                "pnl": 1327.53,
+                "pf": 1.54,
+                "wr": 65.5,
+                "dd": 22.3,
+                "pass": true
+              },
+              "regime_20x": {
+                "trades": 29,
+                "pnl": 826.65,
+                "pf": 1.35,
+                "wr": 62.1,
+                "dd": 26.3,
+                "pass": true
+              },
+              "result": "PASS"
+            },
+            "G5": {
+              "gate": "G5",
+              "name": "concentration",
+              "total_positive_pnl": 4426.2,
+              "n_coins_traded": 27,
+              "top1_coin": "MF/USD",
+              "top1_share": 0.142,
+              "top1_pct": 14.2,
+              "top1_gate": "< 40%",
+              "top1_pass": true,
+              "top3_coins": [
+                "MF/USD",
+                "CHEEMS/USD",
+                "U/USD"
+              ],
+              "top3_share": 0.3536,
+              "top3_pct": 35.4,
+              "top3_gate": "< 70%",
+              "top3_pass": true,
+              "result": "PASS"
+            }
+          },
+          "verdict": {
+            "verdict": "GO",
+            "reason": "All 5 hard gates passed",
+            "label": "4H variant research",
+            "failed_gates": []
+          },
+          "elapsed_s": 76.43
+        }
+      },
+      "elapsed_s": 177.65
+    }
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "meta": {
+    "timestamp": "2026-02-15 13:30",
+    "universe": "tradeable",
+    "data_file": "/Users/oussama/.claude-worktrees/Cryptogem/optimistic-elion/data/candle_cache_tradeable.json",
+    "n_coins": 425,
+    "n_bars": 721,
+    "n_trials": 50,
+    "seed": 42,
+    "delay_fees": [
+      0.0026,
+      0.0102,
+      0.0152
+    ],
+    "delay_weights": [
+      0.5,
+      0.35,
+      0.15
+    ],
+    "delay_labels": [
+      "0-candle (on-time)",
+      "1-candle delay",
+      "2-candle delay"
+    ],
+    "survival_thresholds": {
+      "fragile_below": 0.7,
+      "moderate_below": 0.9
+    },
+    "total_time_s": 26.06,
+    "label": "4H variant research"
+  },
+  "results": {
+    "Champion_H2": {
+      "name": "Champion_H2",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 8,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_confirm": true,
+        "vol_spike_mult": 3.0
+      },
+      "deterministic": {
+        "config": "Champion_H2",
+        "levels": [
+          {
+            "delay_candles": 0,
+            "label": "0-candle (on-time)",
+            "fee": 0.0026,
+            "fee_bps": 26.0,
+            "pnl": 4113.5,
+            "pf": 2.73,
+            "dd": 24.7,
+            "trades": 31,
+            "wr": 67.7,
+            "profitable": true,
+            "elapsed_s": 0.34,
+            "pnl_delta": 0.0,
+            "pnl_delta_pct": 0.0
+          },
+          {
+            "delay_candles": 1,
+            "label": "1-candle delay",
+            "fee": 0.0102,
+            "fee_bps": 102.0,
+            "pnl": 1827.13,
+            "pf": 1.81,
+            "dd": 28.2,
+            "trades": 31,
+            "wr": 64.5,
+            "profitable": true,
+            "elapsed_s": 0.19,
+            "pnl_delta": -2286.37,
+            "pnl_delta_pct": -55.6
+          },
+          {
+            "delay_candles": 2,
+            "label": "2-candle delay",
+            "fee": 0.0152,
+            "fee_bps": 152.0,
+            "pnl": 801.22,
+            "pf": 1.36,
+            "dd": 30.5,
+            "trades": 31,
+            "wr": 64.5,
+            "profitable": true,
+            "elapsed_s": 0.2,
+            "pnl_delta": -3312.28,
+            "pnl_delta_pct": -80.5
+          }
+        ],
+        "baseline_pnl": 4113.5,
+        "worst_delay": {
+          "label": "2-candle delay",
+          "delay_candles": 2,
+          "pnl": 801.22,
+          "pnl_delta": -3312.28,
+          "pnl_delta_pct": -80.5
+        }
+      },
+      "monte_carlo": {
+        "config": "Champion_H2",
+        "n_trials": 50,
+        "seed": 42,
+        "delay_fees": [
+          0.0026,
+          0.0102,
+          0.0152
+        ],
+        "delay_weights": [
+          0.5,
+          0.35,
+          0.15
+        ],
+        "elapsed_s": 12.03,
+        "distribution": {
+          "pnl": {
+            "mean": 2888.24,
+            "median": 2970.32,
+            "stdev": 1266.52,
+            "p5": 801.22,
+            "p25": 1827.13,
+            "p75": 4113.5,
+            "p95": 4113.5,
+            "min": 801.22,
+            "max": 4113.5
+          },
+          "pf": {
+            "mean": 2.23,
+            "median": 2.27,
+            "min": 1.36,
+            "max": 2.73
+          },
+          "dd": {
+            "mean": 26.6,
+            "median": 26.4,
+            "max": 30.5,
+            "p95": 30.5
+          }
+        },
+        "survival_rate": 1.0,
+        "survival_pct": 100.0,
+        "n_profitable": 50,
+        "n_unprofitable": 0,
+        "fee_sample_counts": {
+          "0.0102": 21,
+          "0.0026": 25,
+          "0.0152": 4
+        },
+        "verdict": "ROBUST"
+      },
+      "elapsed_s": 12.76
+    },
+    "GRID_BEST": {
+      "name": "GRID_BEST",
+      "cfg": {
+        "exit_type": "tp_sl",
+        "max_pos": 1,
+        "rsi_max": 45,
+        "sl_pct": 10,
+        "time_max_bars": 15,
+        "tp_pct": 12,
+        "vol_confirm": true,
+        "vol_spike_mult": 2.5
+      },
+      "deterministic": {
+        "config": "GRID_BEST",
+        "levels": [
+          {
+            "delay_candles": 0,
+            "label": "0-candle (on-time)",
+            "fee": 0.0026,
+            "fee_bps": 26.0,
+            "pnl": 4718.27,
+            "pf": 2.61,
+            "dd": 16.4,
+            "trades": 32,
+            "wr": 68.8,
+            "profitable": true,
+            "elapsed_s": 0.33,
+            "pnl_delta": 0.0,
+            "pnl_delta_pct": 0.0
+          },
+          {
+            "delay_candles": 1,
+            "label": "1-candle delay",
+            "fee": 0.0102,
+            "fee_bps": 102.0,
+            "pnl": 2144.16,
+            "pf": 1.8,
+            "dd": 19.8,
+            "trades": 32,
+            "wr": 65.6,
+            "profitable": true,
+            "elapsed_s": 0.22,
+            "pnl_delta": -2574.11,
+            "pnl_delta_pct": -54.6
+          },
+          {
+            "delay_candles": 2,
+            "label": "2-candle delay",
+            "fee": 0.0152,
+            "fee_bps": 152.0,
+            "pnl": 1003.62,
+            "pf": 1.39,
+            "dd": 23.8,
+            "trades": 32,
+            "wr": 65.6,
+            "profitable": true,
+            "elapsed_s": 0.2,
+            "pnl_delta": -3714.65,
+            "pnl_delta_pct": -78.7
+          }
+        ],
+        "baseline_pnl": 4718.27,
+        "worst_delay": {
+          "label": "2-candle delay",
+          "delay_candles": 2,
+          "pnl": 1003.62,
+          "pnl_delta": -3714.65,
+          "pnl_delta_pct": -78.7
+        }
+      },
+      "monte_carlo": {
+        "config": "GRID_BEST",
+        "n_trials": 50,
+        "seed": 42,
+        "delay_fees": [
+          0.0026,
+          0.0102,
+          0.0152
+        ],
+        "delay_weights": [
+          0.5,
+          0.35,
+          0.15
+        ],
+        "elapsed_s": 12.55,
+        "distribution": {
+          "pnl": {
+            "mean": 3203.11,
+            "median": 3431.22,
+            "stdev": 1581.73,
+            "p5": 1003.62,
+            "p25": 2144.16,
+            "p75": 4718.27,
+            "p95": 4718.27,
+            "min": 1003.62,
+            "max": 4718.27
+          },
+          "pf": {
+            "mean": 2.12,
+            "median": 2.21,
+            "min": 1.39,
+            "max": 2.61
+          },
+          "dd": {
+            "mean": 18.9,
+            "median": 18.1,
+            "max": 23.8,
+            "p95": 23.8
+          }
+        },
+        "survival_rate": 1.0,
+        "survival_pct": 100.0,
+        "n_profitable": 50,
+        "n_unprofitable": 0,
+        "fee_sample_counts": {
+          "0.0026": 25,
+          "0.0152": 10,
+          "0.0102": 15
+        },
+        "verdict": "ROBUST"
+      },
+      "elapsed_s": 13.3
+    }
+  }
+}

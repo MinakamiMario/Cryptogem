@@ -28,3 +28,13 @@
   - `warn_unused_params()` logs at Scout grid start (shows skipped params)
   - Tests must pass before any config search code change
   - New params require updating tests 2, 7, and 9
+
+## ADR-004: HF Research ADRs in Separate File
+- **Date**: 2026-02-15
+- **Context**: HF (1H screening) research produced 29 architecture decision records. These are domain-specific and separate from the core trading_bot/ ADRs.
+- **Decision**: All HF ADRs live in `strategies/hf/DECISIONS.md` (ADR-HF-001 through ADR-HF-029). Root-level `docs/DECISIONS.md` contains only trading_bot/ ADRs.
+- **Key HF findings**:
+  - 25 hypothesis families tested, 150+ configs -- all negative at Kraken fees
+  - H20 VWAP_DEVIATION is the only positive-expectancy signal (MEXC fees only)
+  - 1H crypto at Kraken fees is structurally unprofitable (fee structure bottleneck)
+  - See ADR-HF-029 for CONDITIONAL GO decision

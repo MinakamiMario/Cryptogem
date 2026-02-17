@@ -1,0 +1,2014 @@
+{
+  "run_header": {
+    "task": "P0-5_losers_cluster_diagnostics",
+    "agent": "C7-E",
+    "date": "2026-02-16",
+    "commit": "427d5e0",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "params": {
+      "dev_thresh": 2.0,
+      "tp_pct": 8,
+      "sl_pct": 5,
+      "time_limit": 10
+    },
+    "cost_regime": "MEXC Market",
+    "fees_bps": {
+      "tier1": 12.5,
+      "tier2": 23.5
+    },
+    "stress_fees_bps": {
+      "tier1": 25.0,
+      "tier2": 47.0
+    },
+    "universe": "T1(100)+T2(216)",
+    "timeframe": "1h",
+    "total_bars": 722,
+    "total_weeks": 4.3,
+    "runtime_s": 30.2
+  },
+  "step1_per_coin_attribution": {
+    "total_coins_in_universe": 316,
+    "coins_with_trades": 47,
+    "coins_no_trades": 269,
+    "coins_net_negative": 21,
+    "coins_net_positive": 26,
+    "coins_breakeven": 0,
+    "full_attribution": [
+      {
+        "coin": "KET/USD",
+        "tier": "T2",
+        "pnl": -301.24,
+        "trades": 3,
+        "wins": 0,
+        "losses": 3,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -100.41,
+        "total_fees_est": 25.94,
+        "daily_volume_usd": 2413317.0
+      },
+      {
+        "coin": "TANSSI/USD",
+        "tier": "T2",
+        "pnl": -218.51,
+        "trades": 2,
+        "wins": 0,
+        "losses": 2,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -109.26,
+        "total_fees_est": 18.82,
+        "daily_volume_usd": 6796003.0
+      },
+      {
+        "coin": "ANIME/USD",
+        "tier": "T2",
+        "pnl": -162.27,
+        "trades": 2,
+        "wins": 0,
+        "losses": 2,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -81.13,
+        "total_fees_est": 19.78,
+        "daily_volume_usd": 1474946.0
+      },
+      {
+        "coin": "DBR/USD",
+        "tier": "T2",
+        "pnl": -144.67,
+        "trades": 2,
+        "wins": 0,
+        "losses": 2,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -72.34,
+        "total_fees_est": 21.49,
+        "daily_volume_usd": 438139.0
+      },
+      {
+        "coin": "HOUSE/USD",
+        "tier": "T2",
+        "pnl": -128.54,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -128.54,
+        "total_fees_est": 11.07,
+        "daily_volume_usd": 2967062.0
+      },
+      {
+        "coin": "ALKIMI/USD",
+        "tier": "T2",
+        "pnl": -117.25,
+        "trades": 4,
+        "wins": 1,
+        "losses": 3,
+        "wr_pct": 25.0,
+        "avg_pnl_per_trade": -29.31,
+        "total_fees_est": 34.65,
+        "daily_volume_usd": 1845190.0
+      },
+      {
+        "coin": "TITCOIN/USD",
+        "tier": "T1",
+        "pnl": -115.35,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -115.35,
+        "total_fees_est": 5.5,
+        "daily_volume_usd": 26079792.0
+      },
+      {
+        "coin": "LMWR/USD",
+        "tier": "T2",
+        "pnl": -109.6,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -109.6,
+        "total_fees_est": 9.44,
+        "daily_volume_usd": 1786634.0
+      },
+      {
+        "coin": "ESX/USD",
+        "tier": "T2",
+        "pnl": -108.1,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -108.1,
+        "total_fees_est": 9.31,
+        "daily_volume_usd": 822189.0
+      },
+      {
+        "coin": "ODOS/USD",
+        "tier": "T2",
+        "pnl": -103.61,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -103.61,
+        "total_fees_est": 8.92,
+        "daily_volume_usd": 2628469.0
+      },
+      {
+        "coin": "MXC/USD",
+        "tier": "T1",
+        "pnl": -97.42,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -97.42,
+        "total_fees_est": 4.64,
+        "daily_volume_usd": 29051722.0
+      },
+      {
+        "coin": "PERP/USD",
+        "tier": "T2",
+        "pnl": -93.42,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -93.42,
+        "total_fees_est": 8.04,
+        "daily_volume_usd": 947275.0
+      },
+      {
+        "coin": "GST/USD",
+        "tier": "T1",
+        "pnl": -92.31,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -92.31,
+        "total_fees_est": 4.4,
+        "daily_volume_usd": 3031881.0
+      },
+      {
+        "coin": "SUKU/USD",
+        "tier": "T2",
+        "pnl": -88.35,
+        "trades": 2,
+        "wins": 1,
+        "losses": 1,
+        "wr_pct": 50.0,
+        "avg_pnl_per_trade": -44.18,
+        "total_fees_est": 17.83,
+        "daily_volume_usd": 489141.0
+      },
+      {
+        "coin": "TOSHI/USD",
+        "tier": "T1",
+        "pnl": -68.75,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -68.75,
+        "total_fees_est": 5.21,
+        "daily_volume_usd": 487632728.0
+      },
+      {
+        "coin": "PNUT/USD",
+        "tier": "T2",
+        "pnl": -46.2,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -46.2,
+        "total_fees_est": 10.46,
+        "daily_volume_usd": 2561871.0
+      },
+      {
+        "coin": "RARI/USD",
+        "tier": "T2",
+        "pnl": -32.04,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -32.04,
+        "total_fees_est": 10.78,
+        "daily_volume_usd": 344726.0
+      },
+      {
+        "coin": "AI3/USD",
+        "tier": "T2",
+        "pnl": -26.78,
+        "trades": 2,
+        "wins": 0,
+        "losses": 2,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -13.39,
+        "total_fees_est": 18.06,
+        "daily_volume_usd": 106728.0
+      },
+      {
+        "coin": "POLIS/USD",
+        "tier": "T2",
+        "pnl": -25.13,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -25.13,
+        "total_fees_est": 8.16,
+        "daily_volume_usd": 126692.0
+      },
+      {
+        "coin": "CFG/USD",
+        "tier": "T2",
+        "pnl": -16.18,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -16.18,
+        "total_fees_est": 8.96,
+        "daily_volume_usd": 268554.0
+      },
+      {
+        "coin": "WMTX/USD",
+        "tier": "T2",
+        "pnl": -1.19,
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr_pct": 0.0,
+        "avg_pnl_per_trade": -1.19,
+        "total_fees_est": 9.31,
+        "daily_volume_usd": 413706.0
+      },
+      {
+        "coin": "SIGMA/USD",
+        "tier": "T2",
+        "pnl": 2.57,
+        "trades": 3,
+        "wins": 1,
+        "losses": 2,
+        "wr_pct": 33.3,
+        "avg_pnl_per_trade": 0.86,
+        "total_fees_est": 31.13,
+        "daily_volume_usd": 1165629.0
+      },
+      {
+        "coin": "MEME/USD",
+        "tier": "T1",
+        "pnl": 7.17,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 7.17,
+        "total_fees_est": 5.6,
+        "daily_volume_usd": 16221031.0
+      },
+      {
+        "coin": "BANANAS31/USD",
+        "tier": "T1",
+        "pnl": 7.64,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 7.64,
+        "total_fees_est": 4.88,
+        "daily_volume_usd": 10576749.0
+      },
+      {
+        "coin": "BTT/USD",
+        "tier": "T1",
+        "pnl": 8.24,
+        "trades": 2,
+        "wins": 2,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 4.12,
+        "total_fees_est": 10.36,
+        "daily_volume_usd": 24531423471.0
+      },
+      {
+        "coin": "BLZ/USD",
+        "tier": "T2",
+        "pnl": 9.15,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 9.15,
+        "total_fees_est": 9.07,
+        "daily_volume_usd": 878155.0
+      },
+      {
+        "coin": "XYO/USD",
+        "tier": "T2",
+        "pnl": 10.12,
+        "trades": 3,
+        "wins": 1,
+        "losses": 2,
+        "wr_pct": 33.3,
+        "avg_pnl_per_trade": 3.37,
+        "total_fees_est": 28.36,
+        "daily_volume_usd": 3810659.0
+      },
+      {
+        "coin": "ELX/USD",
+        "tier": "T1",
+        "pnl": 16.12,
+        "trades": 2,
+        "wins": 1,
+        "losses": 1,
+        "wr_pct": 50.0,
+        "avg_pnl_per_trade": 8.06,
+        "total_fees_est": 9.56,
+        "daily_volume_usd": 8166168.0
+      },
+      {
+        "coin": "OGN/USD",
+        "tier": "T2",
+        "pnl": 22.87,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 22.87,
+        "total_fees_est": 8.44,
+        "daily_volume_usd": 268904.0
+      },
+      {
+        "coin": "DOGS/USD",
+        "tier": "T1",
+        "pnl": 33.53,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 33.53,
+        "total_fees_est": 4.49,
+        "daily_volume_usd": 90165563.0
+      },
+      {
+        "coin": "SBR/USD",
+        "tier": "T1",
+        "pnl": 41.56,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 41.56,
+        "total_fees_est": 4.78,
+        "daily_volume_usd": 4702556.0
+      },
+      {
+        "coin": "ALT/USD",
+        "tier": "T2",
+        "pnl": 44.58,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 44.58,
+        "total_fees_est": 9.1,
+        "daily_volume_usd": 106531.0
+      },
+      {
+        "coin": "BODEN/USD",
+        "tier": "T2",
+        "pnl": 47.53,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 47.53,
+        "total_fees_est": 8.4,
+        "daily_volume_usd": 3787930.0
+      },
+      {
+        "coin": "REKT/USD",
+        "tier": "T1",
+        "pnl": 49.1,
+        "trades": 2,
+        "wins": 1,
+        "losses": 1,
+        "wr_pct": 50.0,
+        "avg_pnl_per_trade": 24.55,
+        "total_fees_est": 10.04,
+        "daily_volume_usd": 140788093644.0
+      },
+      {
+        "coin": "KOBAN/USD",
+        "tier": "T1",
+        "pnl": 84.58,
+        "trades": 2,
+        "wins": 1,
+        "losses": 1,
+        "wr_pct": 50.0,
+        "avg_pnl_per_trade": 42.29,
+        "total_fees_est": 10.95,
+        "daily_volume_usd": 180484925.0
+      },
+      {
+        "coin": "XAN/USD",
+        "tier": "T1",
+        "pnl": 108.01,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 108.01,
+        "total_fees_est": 5.31,
+        "daily_volume_usd": 1858204.0
+      },
+      {
+        "coin": "BILLY/USD",
+        "tier": "T2",
+        "pnl": 114.9,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 114.9,
+        "total_fees_est": 7.19,
+        "daily_volume_usd": 2863589.0
+      },
+      {
+        "coin": "GOMINING/USD",
+        "tier": "T2",
+        "pnl": 121.39,
+        "trades": 2,
+        "wins": 1,
+        "losses": 1,
+        "wr_pct": 50.0,
+        "avg_pnl_per_trade": 60.7,
+        "total_fees_est": 19.36,
+        "daily_volume_usd": 191131.0
+      },
+      {
+        "coin": "NYM/USD",
+        "tier": "T2",
+        "pnl": 123.78,
+        "trades": 2,
+        "wins": 1,
+        "losses": 1,
+        "wr_pct": 50.0,
+        "avg_pnl_per_trade": 61.89,
+        "total_fees_est": 20.96,
+        "daily_volume_usd": 160532.0
+      },
+      {
+        "coin": "CVC/USD",
+        "tier": "T2",
+        "pnl": 132.81,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 132.81,
+        "total_fees_est": 8.31,
+        "daily_volume_usd": 200509.0
+      },
+      {
+        "coin": "SPICE/USD",
+        "tier": "T2",
+        "pnl": 135.43,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 135.43,
+        "total_fees_est": 8.47,
+        "daily_volume_usd": 4127279213.0
+      },
+      {
+        "coin": "TOKEN/USD",
+        "tier": "T2",
+        "pnl": 145.58,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 145.58,
+        "total_fees_est": 9.11,
+        "daily_volume_usd": 1700100.0
+      },
+      {
+        "coin": "AUDIO/USD",
+        "tier": "T2",
+        "pnl": 148.38,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 148.38,
+        "total_fees_est": 9.28,
+        "daily_volume_usd": 113269.0
+      },
+      {
+        "coin": "GHIBLI/USD",
+        "tier": "T1",
+        "pnl": 158.04,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 158.04,
+        "total_fees_est": 5.1,
+        "daily_volume_usd": 63176232.0
+      },
+      {
+        "coin": "NOBODY/USD",
+        "tier": "T2",
+        "pnl": 164.95,
+        "trades": 2,
+        "wins": 2,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 82.48,
+        "total_fees_est": 18.52,
+        "daily_volume_usd": 1370525.0
+      },
+      {
+        "coin": "AURA/USD",
+        "tier": "T2",
+        "pnl": 260.49,
+        "trades": 3,
+        "wins": 3,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 86.83,
+        "total_fees_est": 25.91,
+        "daily_volume_usd": 360322.0
+      },
+      {
+        "coin": "XL1/USD",
+        "tier": "T1",
+        "pnl": 468.3,
+        "trades": 3,
+        "wins": 3,
+        "losses": 0,
+        "wr_pct": 100.0,
+        "avg_pnl_per_trade": 156.1,
+        "total_fees_est": 15.13,
+        "daily_volume_usd": 13088231.0
+      }
+    ]
+  },
+  "step2_loser_analysis": {
+    "total_losers": 21,
+    "total_loss": -2096.91,
+    "total_winners": 26,
+    "total_gain": 2466.82,
+    "net_pnl": 369.91,
+    "loser_tier_breakdown": {
+      "T1": {
+        "count": 4,
+        "loss": -373.83
+      },
+      "T2": {
+        "count": 17,
+        "loss": -1723.08
+      }
+    },
+    "winner_tier_breakdown": {
+      "T1": {
+        "count": 11,
+        "gain": 982.29
+      },
+      "T2": {
+        "count": 15,
+        "gain": 1484.53
+      }
+    },
+    "volume_profiles": {
+      "losers": {
+        "label": "losers",
+        "count": 21,
+        "median": 1786634.0,
+        "p25": 438139.0,
+        "p75": 2967062.0,
+        "mean": 27248894.0
+      },
+      "winners": {
+        "label": "winners",
+        "count": 26,
+        "median": 3787930.0,
+        "p25": 360322.0,
+        "p75": 16221031.0,
+        "mean": 6532777453.0
+      }
+    },
+    "loser_t2_pct": 81.0,
+    "loser_t2_loss_pct": 82.2
+  },
+  "step3_fold_analysis": {
+    "fold_summaries": [
+      {
+        "fold": 0,
+        "trades": 13,
+        "pnl": 415.88,
+        "positive": true
+      },
+      {
+        "fold": 1,
+        "trades": 16,
+        "pnl": -199.21,
+        "positive": false
+      },
+      {
+        "fold": 2,
+        "trades": 13,
+        "pnl": -498.94,
+        "positive": false
+      },
+      {
+        "fold": 3,
+        "trades": 15,
+        "pnl": 226.57,
+        "positive": true
+      },
+      {
+        "fold": 4,
+        "trades": 16,
+        "pnl": 607.76,
+        "positive": true
+      }
+    ],
+    "persistent_losers": {
+      "count": 1,
+      "coins": {
+        "ALKIMI/USD": {
+          "coin": "ALKIMI/USD",
+          "negative_folds": 3,
+          "total_folds_traded": 3,
+          "fold_pnls": {
+            "2": -76.02,
+            "3": -34.28,
+            "4": -1.62
+          }
+        }
+      }
+    },
+    "fold_specific_losers": {
+      "count": 27,
+      "coins": {
+        "KET/USD": {
+          "coin": "KET/USD",
+          "negative_folds": 2,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "0": -109.69,
+            "3": -223.83
+          }
+        },
+        "ANIME/USD": {
+          "coin": "ANIME/USD",
+          "negative_folds": 2,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "0": -46.34,
+            "2": -108.27
+          }
+        },
+        "XYO/USD": {
+          "coin": "XYO/USD",
+          "negative_folds": 2,
+          "total_folds_traded": 3,
+          "fold_pnls": {
+            "0": 29.17,
+            "1": -8.16,
+            "4": -11.61
+          }
+        },
+        "TANSSI/USD": {
+          "coin": "TANSSI/USD",
+          "negative_folds": 2,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "2": -109.16,
+            "4": -113.25
+          }
+        },
+        "AI3/USD": {
+          "coin": "AI3/USD",
+          "negative_folds": 2,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "2": -11.41,
+            "4": -16.23
+          }
+        },
+        "ELX/USD": {
+          "coin": "ELX/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "0": -112.99,
+            "3": 138.99
+          }
+        },
+        "HOUSE/USD": {
+          "coin": "HOUSE/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "0": -128.54
+          }
+        },
+        "PNUT/USD": {
+          "coin": "PNUT/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "0": -10.46
+          }
+        },
+        "TITCOIN/USD": {
+          "coin": "TITCOIN/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "1": -104.88
+          }
+        },
+        "TOSHI/USD": {
+          "coin": "TOSHI/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "1": -62.5
+          }
+        },
+        "REKT/USD": {
+          "coin": "REKT/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "0": 154.8,
+            "1": -96.1
+          }
+        },
+        "DBR/USD": {
+          "coin": "DBR/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "1": -136.82
+          }
+        },
+        "SIGMA/USD": {
+          "coin": "SIGMA/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "0": 153.04,
+            "1": -142.3
+          }
+        },
+        "RARI/USD": {
+          "coin": "RARI/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "1": -30.3
+          }
+        },
+        "NYM/USD": {
+          "coin": "NYM/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "0": 164.53,
+            "1": -38.54
+          }
+        },
+        "KOBAN/USD": {
+          "coin": "KOBAN/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "2": -105.29,
+            "4": 190.0
+          }
+        },
+        "GOMINING/USD": {
+          "coin": "GOMINING/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "1": 149.66,
+            "2": -34.42
+          }
+        },
+        "LMWR/USD": {
+          "coin": "LMWR/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "2": -102.36
+          }
+        },
+        "ODOS/USD": {
+          "coin": "ODOS/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "2": -96.77
+          }
+        },
+        "SUKU/USD": {
+          "coin": "SUKU/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 2,
+          "fold_pnls": {
+            "0": 9.6,
+            "2": -91.49
+          }
+        },
+        "POLIS/USD": {
+          "coin": "POLIS/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "2": -23.47
+          }
+        },
+        "MXC/USD": {
+          "coin": "MXC/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "3": -104.88
+          }
+        },
+        "GST/USD": {
+          "coin": "GST/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "3": -99.38
+          }
+        },
+        "PERP/USD": {
+          "coin": "PERP/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "3": -109.17
+          }
+        },
+        "CFG/USD": {
+          "coin": "CFG/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "3": -18.91
+          }
+        },
+        "WMTX/USD": {
+          "coin": "WMTX/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "4": -1.32
+          }
+        },
+        "ESX/USD": {
+          "coin": "ESX/USD",
+          "negative_folds": 1,
+          "total_folds_traded": 1,
+          "fold_pnls": {
+            "4": -120.46
+          }
+        }
+      }
+    },
+    "fold_negative_coins": {
+      "0": [
+        "ANIME/USD",
+        "ELX/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "PNUT/USD"
+      ],
+      "1": [
+        "DBR/USD",
+        "NYM/USD",
+        "RARI/USD",
+        "REKT/USD",
+        "SIGMA/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD",
+        "XYO/USD"
+      ],
+      "2": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "GOMINING/USD",
+        "KOBAN/USD",
+        "LMWR/USD",
+        "ODOS/USD",
+        "POLIS/USD",
+        "SUKU/USD",
+        "TANSSI/USD"
+      ],
+      "3": [
+        "ALKIMI/USD",
+        "CFG/USD",
+        "GST/USD",
+        "KET/USD",
+        "MXC/USD",
+        "PERP/USD"
+      ],
+      "4": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ESX/USD",
+        "TANSSI/USD",
+        "WMTX/USD",
+        "XYO/USD"
+      ]
+    }
+  },
+  "step4_volume_quartiles": {
+    "Q1": {
+      "n_coins": 54,
+      "trades": 12,
+      "pnl": 525.72,
+      "wr_pct": 50.0,
+      "pf": 4.608,
+      "vol_median": 189617.0,
+      "vol_range": "$34609-$331776",
+      "neg_coins": 3,
+      "pos_coins": 6,
+      "no_trade_coins": 45
+    },
+    "Q2": {
+      "n_coins": 54,
+      "trades": 11,
+      "pnl": -104.71,
+      "wr_pct": 45.5,
+      "pf": 0.727,
+      "vol_median": 526889.0,
+      "vol_range": "$333310-$897197",
+      "neg_coins": 5,
+      "pos_coins": 2,
+      "no_trade_coins": 47
+    },
+    "Q3": {
+      "n_coins": 54,
+      "trades": 14,
+      "pnl": -169.42,
+      "wr_pct": 35.7,
+      "pf": 0.735,
+      "vol_median": 1275687.0,
+      "vol_range": "$903909-$1864095",
+      "neg_coins": 4,
+      "pos_coins": 3,
+      "no_trade_coins": 47
+    },
+    "Q4": {
+      "n_coins": 54,
+      "trades": 14,
+      "pnl": -490.11,
+      "wr_pct": 28.6,
+      "pf": 0.4,
+      "vol_median": 3153729.0,
+      "vol_range": "$1867193-$4127279213",
+      "neg_coins": 5,
+      "pos_coins": 4,
+      "no_trade_coins": 45
+    }
+  },
+  "step4_volume_quartiles_coins": {
+    "Q1": [
+      "APR/USD",
+      "EDGE/USD",
+      "ES/USD",
+      "OMG/USD",
+      "VELODROME/USD",
+      "RAY/USD",
+      "BOBA/USD",
+      "ALT/USD",
+      "AI3/USD",
+      "PRIME/USD",
+      "AUDIO/USD",
+      "ZBT/USD",
+      "STORJ/USD",
+      "POLIS/USD",
+      "MORPHO/USD",
+      "BICO/USD",
+      "YB/USD",
+      "JUNO/USD",
+      "RUNE/USD",
+      "NOS/USD",
+      "NYM/USD",
+      "AVAX/USD",
+      "SUSHI/USD",
+      "NANO/USD",
+      "VFY/USD",
+      "ATOM/USD",
+      "PARTI/USD",
+      "GOMINING/USD",
+      "CTSI/USD",
+      "CLOUD/USD",
+      "CVC/USD",
+      "MNT/USD",
+      "KERNEL/USD",
+      "JTO/USD",
+      "HPOS10I/USD",
+      "ICNT/USD",
+      "OCEAN/USD",
+      "APT/USD",
+      "UNI/USD",
+      "TRAC/USD",
+      "OXT/USD",
+      "DYM/USD",
+      "WOO/USD",
+      "ALTHEA/USD",
+      "ACT/USD",
+      "CFG/USD",
+      "OGN/USD",
+      "IP/USD",
+      "OSMO/USD",
+      "TON/USD",
+      "AEVO/USD",
+      "MIRA/USD",
+      "ICX/USD",
+      "DRIFT/USD"
+    ],
+    "Q2": [
+      "ARKM/USD",
+      "RARI/USD",
+      "FIDA/USD",
+      "LINK/USD",
+      "DRV/USD",
+      "BIGTIME/USD",
+      "AURA/USD",
+      "LDO/USD",
+      "FLUX/USD",
+      "KAVA/USD",
+      "ZRX/USD",
+      "SUPER/USD",
+      "KMNO/USD",
+      "USUAL/USD",
+      "PLAY/USD",
+      "WCT/USD",
+      "WMTX/USD",
+      "PRCL/USD",
+      "DBR/USD",
+      "BMT/USD",
+      "SOL/USD",
+      "SUKU/USD",
+      "BLUR/USD",
+      "NEAR/USD",
+      "FIL/USD",
+      "ICP/USD",
+      "IMX/USD",
+      "RENDER/USD",
+      "AKT/USD",
+      "GOAT/USD",
+      "STX/USD",
+      "1INCH/USD",
+      "ZIG/USD",
+      "XTZ/USD",
+      "A/USD",
+      "NIL/USD",
+      "2Z/USD",
+      "DOT/USD",
+      "AERO/USD",
+      "MELANIA/USD",
+      "WELL/USD",
+      "SYRUP/USD",
+      "EIGEN/USD",
+      "CHEX/USD",
+      "APE/USD",
+      "AVNT/USD",
+      "PHA/USD",
+      "CELO/USD",
+      "MNGO/USD",
+      "SAGA/USD",
+      "PROMPT/USD",
+      "ESX/USD",
+      "BLZ/USD",
+      "DYDX/USD"
+    ],
+    "Q3": [
+      "FIS/USD",
+      "ENJ/USD",
+      "KTA/USD",
+      "LRC/USD",
+      "OM/USD",
+      "PERP/USD",
+      "SAPIEN/USD",
+      "MERL/USD",
+      "INIT/USD",
+      "AIXBT/USD",
+      "WAL/USD",
+      "VIRTUAL/USD",
+      "BDXN/USD",
+      "LCX/USD",
+      "SPK/USD",
+      "GLMR/USD",
+      "ZRO/USD",
+      "ARC/USD",
+      "ALPHA/USD",
+      "VSN/USD",
+      "0G/USD",
+      "SIGMA/USD",
+      "MINA/USD",
+      "TIA/USD",
+      "BIO/USD",
+      "WLD/USD",
+      "REN/USD",
+      "RETARDIO/USD",
+      "POND/USD",
+      "PEAQ/USD",
+      "SXT/USD",
+      "CRO/USD",
+      "REZ/USD",
+      "NOBODY/USD",
+      "OP/USD",
+      "CLV/USD",
+      "ANIME/USD",
+      "FLOW/USD",
+      "BAT/USD",
+      "GMT/USD",
+      "ASTER/USD",
+      "JUP/USD",
+      "UFD/USD",
+      "VANRY/USD",
+      "Q/USD",
+      "TOKEN/USD",
+      "SYN/USD",
+      "SCRT/USD",
+      "SAROS/USD",
+      "LMWR/USD",
+      "TNSR/USD",
+      "MF/USD",
+      "ALKIMI/USD",
+      "VINE/USD"
+    ],
+    "Q4": [
+      "BABY/USD",
+      "HFT/USD",
+      "ARB/USD",
+      "DEEP/USD",
+      "ASTR/USD",
+      "BTR/USD",
+      "IDEX/USD",
+      "CAMP/USD",
+      "KET/USD",
+      "ANKR/USD",
+      "PNUT/USD",
+      "YALA/USD",
+      "TRU/USD",
+      "ODOS/USD",
+      "SAHARA/USD",
+      "POPCAT/USD",
+      "S/USD",
+      "PUPS/USD",
+      "COTI/USD",
+      "BILLY/USD",
+      "ONDO/USD",
+      "HOUSE/USD",
+      "TLM/USD",
+      "BLUAI/USD",
+      "LOFI/USD",
+      "T/USD",
+      "PYTH/USD",
+      "MANA/USD",
+      "DEGEN/USD",
+      "SKY/USD",
+      "SAND/USD",
+      "MOODENG/USD",
+      "CELR/USD",
+      "SAMO/USD",
+      "FHE/USD",
+      "BODEN/USD",
+      "CHZ/USD",
+      "XYO/USD",
+      "RARE/USD",
+      "ARPA/USD",
+      "XMN/USD",
+      "PONKE/USD",
+      "SRM/USD",
+      "W/USD",
+      "ZEUS/USD",
+      "TANSSI/USD",
+      "SLAY/USD",
+      "SNX/USD",
+      "CXT/USD",
+      "BERT/USD",
+      "ATLAS/USD",
+      "SHX/USD",
+      "WEN/USD",
+      "SPICE/USD"
+    ]
+  },
+  "step5_exclusion_candidates": {
+    "candidate_blacklist": [
+      {
+        "coin": "KET/USD",
+        "tier": "T2",
+        "pnl": -301.24,
+        "trades": 3,
+        "daily_volume_usd": 2413317.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "large loss ($-301)"
+      },
+      {
+        "coin": "TANSSI/USD",
+        "tier": "T2",
+        "pnl": -218.51,
+        "trades": 2,
+        "daily_volume_usd": 6796003.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "large loss ($-219)"
+      },
+      {
+        "coin": "ANIME/USD",
+        "tier": "T2",
+        "pnl": -162.27,
+        "trades": 2,
+        "daily_volume_usd": 1474946.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "large loss ($-162)"
+      },
+      {
+        "coin": "DBR/USD",
+        "tier": "T2",
+        "pnl": -144.67,
+        "trades": 2,
+        "daily_volume_usd": 438139.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "large loss ($-145)"
+      },
+      {
+        "coin": "HOUSE/USD",
+        "tier": "T2",
+        "pnl": -128.54,
+        "trades": 1,
+        "daily_volume_usd": 2967062.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-129)"
+      },
+      {
+        "coin": "ALKIMI/USD",
+        "tier": "T2",
+        "pnl": -117.25,
+        "trades": 4,
+        "daily_volume_usd": 1845190.0,
+        "in_excluded_21": true,
+        "is_persistent": true,
+        "reason": "persistent (3/5 folds negative) + large loss ($-117)"
+      },
+      {
+        "coin": "TITCOIN/USD",
+        "tier": "T1",
+        "pnl": -115.35,
+        "trades": 1,
+        "daily_volume_usd": 26079792.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-115)"
+      },
+      {
+        "coin": "LMWR/USD",
+        "tier": "T2",
+        "pnl": -109.6,
+        "trades": 1,
+        "daily_volume_usd": 1786634.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-110)"
+      },
+      {
+        "coin": "ESX/USD",
+        "tier": "T2",
+        "pnl": -108.1,
+        "trades": 1,
+        "daily_volume_usd": 822189.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-108)"
+      },
+      {
+        "coin": "ODOS/USD",
+        "tier": "T2",
+        "pnl": -103.61,
+        "trades": 1,
+        "daily_volume_usd": 2628469.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-104)"
+      },
+      {
+        "coin": "MXC/USD",
+        "tier": "T1",
+        "pnl": -97.42,
+        "trades": 1,
+        "daily_volume_usd": 29051722.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50)"
+      },
+      {
+        "coin": "PERP/USD",
+        "tier": "T2",
+        "pnl": -93.42,
+        "trades": 1,
+        "daily_volume_usd": 947275.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50)"
+      },
+      {
+        "coin": "GST/USD",
+        "tier": "T1",
+        "pnl": -92.31,
+        "trades": 1,
+        "daily_volume_usd": 3031881.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50)"
+      },
+      {
+        "coin": "TOSHI/USD",
+        "tier": "T1",
+        "pnl": -68.75,
+        "trades": 1,
+        "daily_volume_usd": 487632728.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50)"
+      }
+    ],
+    "new_candidates_not_in_21": [],
+    "confirmed_from_21": [
+      {
+        "coin": "KET/USD",
+        "tier": "T2",
+        "pnl": -301.24,
+        "trades": 3,
+        "daily_volume_usd": 2413317.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "large loss ($-301)"
+      },
+      {
+        "coin": "TANSSI/USD",
+        "tier": "T2",
+        "pnl": -218.51,
+        "trades": 2,
+        "daily_volume_usd": 6796003.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "large loss ($-219)"
+      },
+      {
+        "coin": "ANIME/USD",
+        "tier": "T2",
+        "pnl": -162.27,
+        "trades": 2,
+        "daily_volume_usd": 1474946.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "large loss ($-162)"
+      },
+      {
+        "coin": "DBR/USD",
+        "tier": "T2",
+        "pnl": -144.67,
+        "trades": 2,
+        "daily_volume_usd": 438139.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "large loss ($-145)"
+      },
+      {
+        "coin": "HOUSE/USD",
+        "tier": "T2",
+        "pnl": -128.54,
+        "trades": 1,
+        "daily_volume_usd": 2967062.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-129)"
+      },
+      {
+        "coin": "ALKIMI/USD",
+        "tier": "T2",
+        "pnl": -117.25,
+        "trades": 4,
+        "daily_volume_usd": 1845190.0,
+        "in_excluded_21": true,
+        "is_persistent": true,
+        "reason": "persistent (3/5 folds negative) + large loss ($-117)"
+      },
+      {
+        "coin": "TITCOIN/USD",
+        "tier": "T1",
+        "pnl": -115.35,
+        "trades": 1,
+        "daily_volume_usd": 26079792.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-115)"
+      },
+      {
+        "coin": "LMWR/USD",
+        "tier": "T2",
+        "pnl": -109.6,
+        "trades": 1,
+        "daily_volume_usd": 1786634.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-110)"
+      },
+      {
+        "coin": "ESX/USD",
+        "tier": "T2",
+        "pnl": -108.1,
+        "trades": 1,
+        "daily_volume_usd": 822189.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-108)"
+      },
+      {
+        "coin": "ODOS/USD",
+        "tier": "T2",
+        "pnl": -103.61,
+        "trades": 1,
+        "daily_volume_usd": 2628469.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50) + large loss ($-104)"
+      },
+      {
+        "coin": "MXC/USD",
+        "tier": "T1",
+        "pnl": -97.42,
+        "trades": 1,
+        "daily_volume_usd": 29051722.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50)"
+      },
+      {
+        "coin": "PERP/USD",
+        "tier": "T2",
+        "pnl": -93.42,
+        "trades": 1,
+        "daily_volume_usd": 947275.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50)"
+      },
+      {
+        "coin": "GST/USD",
+        "tier": "T1",
+        "pnl": -92.31,
+        "trades": 1,
+        "daily_volume_usd": 3031881.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50)"
+      },
+      {
+        "coin": "TOSHI/USD",
+        "tier": "T1",
+        "pnl": -68.75,
+        "trades": 1,
+        "daily_volume_usd": 487632728.0,
+        "in_excluded_21": true,
+        "is_persistent": false,
+        "reason": "single-trade loser (P&L < -$50)"
+      }
+    ],
+    "candidate_whitelist": [
+      {
+        "coin": "AI3/USD",
+        "tier": "T2",
+        "pnl": -26.78,
+        "trades": 2,
+        "daily_volume_usd": 106728.0,
+        "reason": "small loss + high volume + not persistent"
+      },
+      {
+        "coin": "POLIS/USD",
+        "tier": "T2",
+        "pnl": -25.13,
+        "trades": 1,
+        "daily_volume_usd": 126692.0,
+        "reason": "small loss + high volume + not persistent"
+      },
+      {
+        "coin": "CFG/USD",
+        "tier": "T2",
+        "pnl": -16.18,
+        "trades": 1,
+        "daily_volume_usd": 268554.0,
+        "reason": "small loss + high volume + not persistent"
+      },
+      {
+        "coin": "WMTX/USD",
+        "tier": "T2",
+        "pnl": -1.19,
+        "trades": 1,
+        "daily_volume_usd": 413706.0,
+        "reason": "small loss + high volume + not persistent"
+      }
+    ],
+    "new_exclusion_set": [
+      "AI3/USD",
+      "ALKIMI/USD",
+      "ANIME/USD",
+      "CFG/USD",
+      "DBR/USD",
+      "ESX/USD",
+      "GST/USD",
+      "HOUSE/USD",
+      "KET/USD",
+      "LMWR/USD",
+      "MXC/USD",
+      "ODOS/USD",
+      "PERP/USD",
+      "PNUT/USD",
+      "POLIS/USD",
+      "RARI/USD",
+      "SUKU/USD",
+      "TANSSI/USD",
+      "TITCOIN/USD",
+      "TOSHI/USD",
+      "WMTX/USD"
+    ],
+    "new_exclusion_count": 21
+  },
+  "step6_gate_evaluations": [
+    {
+      "label": "full_316",
+      "n_coins": 316,
+      "n_t1": 100,
+      "n_t2": 216,
+      "n_coins_with_trades": 47,
+      "metrics": {
+        "trades": 72,
+        "pnl": 369.91,
+        "pf": 1.138,
+        "wr": 47.2,
+        "trades_per_week": 16.75,
+        "exp_per_week": 86.0735,
+        "max_dd_pct": 53.1,
+        "max_gap_days": 1.42,
+        "expectancy": 5.1377
+      },
+      "stress_metrics": {
+        "trades": 72,
+        "pnl": -140.69,
+        "pf": 0.949,
+        "exp_per_week": -32.7368
+      },
+      "wf_folds_positive": 3,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 13,
+          "pnl": 415.88,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 16,
+          "pnl": -199.21,
+          "positive": false
+        },
+        {
+          "fold": 2,
+          "trades": 13,
+          "pnl": -498.94,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 15,
+          "pnl": 226.57,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 16,
+          "pnl": 607.76,
+          "positive": true
+        }
+      ],
+      "fold_concentration": {
+        "top1_fold_conc_pct": 48.6,
+        "fold_pnls": {
+          "0": 415.88,
+          "1": -199.21,
+          "2": -498.94,
+          "3": 226.57,
+          "4": 607.76
+        }
+      },
+      "gate_evaluation": {
+        "gates": {
+          "G1": {
+            "name": "Trades/week",
+            "value": 16.75,
+            "threshold": ">= 10",
+            "pass": true
+          },
+          "G2": {
+            "name": "Max gap (days)",
+            "value": 1.42,
+            "threshold": "<= 2.5",
+            "pass": true
+          },
+          "G3": {
+            "name": "Exp/week (market)",
+            "value": 86.07,
+            "threshold": "> $0",
+            "pass": true
+          },
+          "G4": {
+            "name": "Exp/week (P95 stress)",
+            "value": -32.74,
+            "threshold": "> $0",
+            "pass": false
+          },
+          "G5": {
+            "name": "Max DD%",
+            "value": 53.1,
+            "threshold": "<= 20%",
+            "pass": false
+          },
+          "G6": {
+            "name": "WF folds positive",
+            "value": "3/5",
+            "threshold": ">= 4/5",
+            "pass": false
+          },
+          "G8": {
+            "name": "Top-1 fold conc.",
+            "value": "48.6%",
+            "threshold": "< 35%",
+            "pass": false
+          }
+        },
+        "pass_count": 3,
+        "total_count": 7,
+        "score": "3/7",
+        "all_pass": false
+      },
+      "runtime_s": 0.3,
+      "excluded_coins": []
+    },
+    {
+      "label": "excl_21_current",
+      "n_coins": 295,
+      "n_t1": 96,
+      "n_t2": 199,
+      "n_coins_with_trades": 41,
+      "metrics": {
+        "trades": 56,
+        "pnl": 3272.13,
+        "pf": 2.834,
+        "wr": 64.3,
+        "trades_per_week": 13.03,
+        "exp_per_week": 761.3822,
+        "max_dd_pct": 8.6,
+        "max_gap_days": 1.5,
+        "expectancy": 58.4309
+      },
+      "stress_metrics": {
+        "trades": 56,
+        "pnl": 2452.31,
+        "pf": 2.306,
+        "exp_per_week": 570.6216
+      },
+      "wf_folds_positive": 4,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 10,
+          "pnl": 909.08,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 13,
+          "pnl": 57.53,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -17.57,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 9,
+          "pnl": 792.44,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 15,
+          "pnl": 913.43,
+          "positive": true
+        }
+      ],
+      "fold_concentration": {
+        "top1_fold_conc_pct": 34.2,
+        "fold_pnls": {
+          "0": 909.08,
+          "1": 57.53,
+          "2": -17.57,
+          "3": 792.44,
+          "4": 913.43
+        }
+      },
+      "gate_evaluation": {
+        "gates": {
+          "G1": {
+            "name": "Trades/week",
+            "value": 13.03,
+            "threshold": ">= 10",
+            "pass": true
+          },
+          "G2": {
+            "name": "Max gap (days)",
+            "value": 1.5,
+            "threshold": "<= 2.5",
+            "pass": true
+          },
+          "G3": {
+            "name": "Exp/week (market)",
+            "value": 761.38,
+            "threshold": "> $0",
+            "pass": true
+          },
+          "G4": {
+            "name": "Exp/week (P95 stress)",
+            "value": 570.62,
+            "threshold": "> $0",
+            "pass": true
+          },
+          "G5": {
+            "name": "Max DD%",
+            "value": 8.6,
+            "threshold": "<= 20%",
+            "pass": true
+          },
+          "G6": {
+            "name": "WF folds positive",
+            "value": "4/5",
+            "threshold": ">= 4/5",
+            "pass": true
+          },
+          "G8": {
+            "name": "Top-1 fold conc.",
+            "value": "34.2%",
+            "threshold": "< 35%",
+            "pass": true
+          }
+        },
+        "pass_count": 7,
+        "total_count": 7,
+        "score": "7/7",
+        "all_pass": true
+      },
+      "runtime_s": 0.3,
+      "excluded_coins": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "CFG/USD",
+        "DBR/USD",
+        "ESX/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "PNUT/USD",
+        "POLIS/USD",
+        "RARI/USD",
+        "SUKU/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD",
+        "WMTX/USD"
+      ]
+    },
+    {
+      "label": "excl_new_candidates",
+      "n_coins": 295,
+      "n_t1": 96,
+      "n_t2": 199,
+      "n_coins_with_trades": 41,
+      "metrics": {
+        "trades": 56,
+        "pnl": 3272.13,
+        "pf": 2.834,
+        "wr": 64.3,
+        "trades_per_week": 13.03,
+        "exp_per_week": 761.3822,
+        "max_dd_pct": 8.6,
+        "max_gap_days": 1.5,
+        "expectancy": 58.4309
+      },
+      "stress_metrics": {
+        "trades": 56,
+        "pnl": 2452.31,
+        "pf": 2.306,
+        "exp_per_week": 570.6216
+      },
+      "wf_folds_positive": 4,
+      "wf_fold_details": [
+        {
+          "fold": 0,
+          "trades": 10,
+          "pnl": 909.08,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 13,
+          "pnl": 57.53,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -17.57,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 9,
+          "pnl": 792.44,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 15,
+          "pnl": 913.43,
+          "positive": true
+        }
+      ],
+      "fold_concentration": {
+        "top1_fold_conc_pct": 34.2,
+        "fold_pnls": {
+          "0": 909.08,
+          "1": 57.53,
+          "2": -17.57,
+          "3": 792.44,
+          "4": 913.43
+        }
+      },
+      "gate_evaluation": {
+        "gates": {
+          "G1": {
+            "name": "Trades/week",
+            "value": 13.03,
+            "threshold": ">= 10",
+            "pass": true
+          },
+          "G2": {
+            "name": "Max gap (days)",
+            "value": 1.5,
+            "threshold": "<= 2.5",
+            "pass": true
+          },
+          "G3": {
+            "name": "Exp/week (market)",
+            "value": 761.38,
+            "threshold": "> $0",
+            "pass": true
+          },
+          "G4": {
+            "name": "Exp/week (P95 stress)",
+            "value": 570.62,
+            "threshold": "> $0",
+            "pass": true
+          },
+          "G5": {
+            "name": "Max DD%",
+            "value": 8.6,
+            "threshold": "<= 20%",
+            "pass": true
+          },
+          "G6": {
+            "name": "WF folds positive",
+            "value": "4/5",
+            "threshold": ">= 4/5",
+            "pass": true
+          },
+          "G8": {
+            "name": "Top-1 fold conc.",
+            "value": "34.2%",
+            "threshold": "< 35%",
+            "pass": true
+          }
+        },
+        "pass_count": 7,
+        "total_count": 7,
+        "score": "7/7",
+        "all_pass": true
+      },
+      "runtime_s": 0.3,
+      "excluded_coins": [
+        "AI3/USD",
+        "ALKIMI/USD",
+        "ANIME/USD",
+        "CFG/USD",
+        "DBR/USD",
+        "ESX/USD",
+        "GST/USD",
+        "HOUSE/USD",
+        "KET/USD",
+        "LMWR/USD",
+        "MXC/USD",
+        "ODOS/USD",
+        "PERP/USD",
+        "PNUT/USD",
+        "POLIS/USD",
+        "RARI/USD",
+        "SUKU/USD",
+        "TANSSI/USD",
+        "TITCOIN/USD",
+        "TOSHI/USD",
+        "WMTX/USD"
+      ]
+    }
+  ],
+  "verdict": {
+    "loser_t2_pct": 81.0,
+    "loser_t2_loss_pct": 82.2,
+    "q1_pnl": 525.72,
+    "q4_pnl": -490.11,
+    "persistent_loser_count": 1,
+    "is_t2_low_volume_pattern": false,
+    "verdict_text": "PARTIAL: T2 dominates losses but not clearly low-volume concentrated",
+    "new_candidates_count": 0
+  }
+}

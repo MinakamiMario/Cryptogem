@@ -1,0 +1,608 @@
+{
+  "run_header": {
+    "task": "part2_tier_decomp",
+    "status": "DONE",
+    "date": "2026-02-16 00:45",
+    "commit": "16cf97f",
+    "hypothesis": "H20_VWAP_DEVIATION",
+    "baseline": "v5 (dev_thresh=2.0, tp_pct=8, sl_pct=5, time_limit=10)",
+    "universe": "T1(96)+T2(199) [excl_all_negative]",
+    "universe_total": 295,
+    "fees": {
+      "tier1_bps": 12.5,
+      "tier2_bps": 23.5
+    },
+    "timeframe": "1h",
+    "total_bars": 721,
+    "total_weeks": 4.3,
+    "runtime_s": 27.8
+  },
+  "tier1": {
+    "label": "T1",
+    "coins": 96,
+    "fee_bps": 12.5,
+    "baseline": {
+      "trades": 18,
+      "pnl": 1058.06,
+      "pf": 3.578,
+      "wr": 77.78,
+      "dd": 11.1,
+      "expectancy": 58.7808,
+      "trades_per_week": 4.19,
+      "exp_per_week": 246.5371,
+      "fee_drag_pct": 6.61
+    },
+    "max_gap": {
+      "bars": 116,
+      "days": 4.83
+    },
+    "walk_forward": {
+      "folds_positive": 3,
+      "folds_total": 5,
+      "fold_details": [
+        {
+          "fold": 0,
+          "trades": 3,
+          "pnl": 199.84,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 4,
+          "pnl": -130.91,
+          "positive": false
+        },
+        {
+          "fold": 2,
+          "trades": 2,
+          "pnl": -97.46,
+          "positive": false
+        },
+        {
+          "fold": 3,
+          "trades": 3,
+          "pnl": 364.89,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 6,
+          "pnl": 644.84,
+          "positive": true
+        }
+      ],
+      "top1_fold_concentration": 0.5331
+    },
+    "stress_2x": {
+      "fee_bps": 25.0,
+      "trades": 18,
+      "pnl": 924.63,
+      "pf": 3.148,
+      "wr": 72.22,
+      "exp_per_week": 215.447,
+      "dd": 12.44
+    },
+    "coin_breakdown": {
+      "coins_with_trades": 12,
+      "top5": [
+        {
+          "coin": "XL1/USD",
+          "pnl": 549.02
+        },
+        {
+          "coin": "GHIBLI/USD",
+          "pnl": 158.04
+        },
+        {
+          "coin": "XAN/USD",
+          "pnl": 126.63
+        },
+        {
+          "coin": "KOBAN/USD",
+          "pnl": 111.46
+        },
+        {
+          "coin": "SBR/USD",
+          "pnl": 43.75
+        }
+      ],
+      "worst5": [
+        {
+          "coin": "SGB/USD",
+          "pnl": -77.99
+        },
+        {
+          "coin": "BANANAS31/USD",
+          "pnl": 8.04
+        },
+        {
+          "coin": "MEME/USD",
+          "pnl": 8.4
+        },
+        {
+          "coin": "BTT/USD",
+          "pnl": 9.49
+        },
+        {
+          "coin": "ELX/USD",
+          "pnl": 38.38
+        }
+      ],
+      "top1_coin_conc": 0.4833,
+      "top3_coin_conc": 0.7338,
+      "all_coin_pnl": {
+        "REKT/USD": 43.54,
+        "ELX/USD": 38.38,
+        "GHIBLI/USD": 158.04,
+        "SGB/USD": -77.99,
+        "BTT/USD": 9.49,
+        "SBR/USD": 43.75,
+        "BANANAS31/USD": 8.04,
+        "KOBAN/USD": 111.46,
+        "DOGS/USD": 39.3,
+        "XL1/USD": 549.02,
+        "XAN/USD": 126.63,
+        "MEME/USD": 8.4
+      }
+    },
+    "gates": {
+      "G1_trades_per_week": {
+        "value": 4.19,
+        "threshold": ">=0.5/wk",
+        "pass": true
+      },
+      "G2_max_gap_days": {
+        "value": 4.83,
+        "threshold": "<=21d",
+        "pass": true
+      },
+      "G3_exp_per_week_mkt": {
+        "value": 246.5371,
+        "threshold": ">$0",
+        "pass": true
+      },
+      "G4_exp_per_week_2x": {
+        "value": 215.447,
+        "threshold": ">$0",
+        "pass": true
+      },
+      "G5_max_dd_pct": {
+        "value": 11.1,
+        "threshold": "<=50%",
+        "pass": true
+      },
+      "G6_wf_folds_positive": {
+        "value": 3,
+        "threshold": ">=3/5",
+        "pass": true
+      },
+      "G8_top1_fold_conc": {
+        "value": 0.5331,
+        "threshold": "<0.60",
+        "pass": true
+      }
+    },
+    "verdict": "PASS",
+    "failed_gates": []
+  },
+  "tier2": {
+    "label": "T2",
+    "coins": 199,
+    "fee_bps": 23.5,
+    "baseline": {
+      "trades": 38,
+      "pnl": 2214.08,
+      "pf": 2.611,
+      "wr": 57.89,
+      "dd": 8.4,
+      "expectancy": 58.2651,
+      "trades_per_week": 8.85,
+      "exp_per_week": 515.9011,
+      "fee_drag_pct": 14.51
+    },
+    "max_gap": {
+      "bars": 66,
+      "days": 2.75
+    },
+    "walk_forward": {
+      "folds_positive": 5,
+      "folds_total": 5,
+      "fold_details": [
+        {
+          "fold": 0,
+          "trades": 7,
+          "pnl": 709.24,
+          "positive": true
+        },
+        {
+          "fold": 1,
+          "trades": 9,
+          "pnl": 188.45,
+          "positive": true
+        },
+        {
+          "fold": 2,
+          "trades": 7,
+          "pnl": 79.89,
+          "positive": true
+        },
+        {
+          "fold": 3,
+          "trades": 6,
+          "pnl": 427.55,
+          "positive": true
+        },
+        {
+          "fold": 4,
+          "trades": 9,
+          "pnl": 268.59,
+          "positive": true
+        }
+      ],
+      "top1_fold_concentration": 0.4238
+    },
+    "stress_2x": {
+      "fee_bps": 47.0,
+      "trades": 38,
+      "pnl": 1527.69,
+      "pf": 2.056,
+      "wr": 57.89,
+      "exp_per_week": 355.966,
+      "dd": 9.71
+    },
+    "coin_breakdown": {
+      "coins_with_trades": 29,
+      "top5": [
+        {
+          "coin": "AURA/USD",
+          "pnl": 486.12
+        },
+        {
+          "coin": "INIT/USD",
+          "pnl": 311.41
+        },
+        {
+          "coin": "SPICE/USD",
+          "pnl": 275.41
+        },
+        {
+          "coin": "CVC/USD",
+          "pnl": 265.74
+        },
+        {
+          "coin": "SIGMA/USD",
+          "pnl": 259.21
+        }
+      ],
+      "worst5": [
+        {
+          "coin": "GLMR/USD",
+          "pnl": -243.29
+        },
+        {
+          "coin": "PUPS/USD",
+          "pnl": -215.17
+        },
+        {
+          "coin": "MF/USD",
+          "pnl": -176.71
+        },
+        {
+          "coin": "DRV/USD",
+          "pnl": -139.32
+        },
+        {
+          "coin": "SUSHI/USD",
+          "pnl": -95.89
+        }
+      ],
+      "top1_coin_conc": 0.1492,
+      "top3_coin_conc": 0.3292,
+      "all_coin_pnl": {
+        "JUNO/USD": 150.22,
+        "XYO/USD": 21.8,
+        "BLZ/USD": 10.35,
+        "TOKEN/USD": 164.76,
+        "SIGMA/USD": 259.21,
+        "NYM/USD": 137.49,
+        "CAMP/USD": -36.12,
+        "ALPHA/USD": 83.36,
+        "NOBODY/USD": 208.3,
+        "AURA/USD": 486.12,
+        "GOMINING/USD": 164.3,
+        "SAMO/USD": -38.34,
+        "AUDIO/USD": 214.2,
+        "ARPA/USD": -44.37,
+        "DEEP/USD": -10.19,
+        "MF/USD": -176.71,
+        "BILLY/USD": 229.9,
+        "CVC/USD": 265.74,
+        "SAROS/USD": -45.37,
+        "DRV/USD": -139.32,
+        "BODEN/USD": 96.21,
+        "OGN/USD": 47.35,
+        "SUSHI/USD": -95.89,
+        "SPICE/USD": 275.41,
+        "PUPS/USD": -215.17,
+        "ALT/USD": 85.76,
+        "PHA/USD": 46.96,
+        "INIT/USD": 311.41,
+        "GLMR/USD": -243.29
+      }
+    },
+    "gates": {
+      "G1_trades_per_week": {
+        "value": 8.85,
+        "threshold": ">=0.5/wk",
+        "pass": true
+      },
+      "G2_max_gap_days": {
+        "value": 2.75,
+        "threshold": "<=21d",
+        "pass": true
+      },
+      "G3_exp_per_week_mkt": {
+        "value": 515.9011,
+        "threshold": ">$0",
+        "pass": true
+      },
+      "G4_exp_per_week_2x": {
+        "value": 355.966,
+        "threshold": ">$0",
+        "pass": true
+      },
+      "G5_max_dd_pct": {
+        "value": 8.4,
+        "threshold": "<=50%",
+        "pass": true
+      },
+      "G6_wf_folds_positive": {
+        "value": 5,
+        "threshold": ">=3/5",
+        "pass": true
+      },
+      "G8_top1_fold_conc": {
+        "value": 0.4238,
+        "threshold": "<0.60",
+        "pass": true
+      }
+    },
+    "verdict": "PASS",
+    "failed_gates": []
+  },
+  "combined": {
+    "label": "COMBINED",
+    "coins": 295,
+    "baseline": {
+      "trades": 56,
+      "pnl": 3272.13,
+      "pf": 2.834,
+      "wr": 64.29,
+      "dd": 8.63,
+      "expectancy": 58.4309,
+      "trades_per_week": 13.05,
+      "exp_per_week": 762.4382,
+      "fee_drag_pct": 12.27
+    },
+    "max_gap": {
+      "bars": 66,
+      "days": 2.75
+    },
+    "walk_forward": {
+      "folds_positive": 4,
+      "folds_total": 5,
+      "fold_details": [
+        {
+          "fold": 0,
+          "trades": 10,
+          "pnl": 909.08,
+          "positive": true,
+          "t1_pnl": 199.84,
+          "t2_pnl": 709.24
+        },
+        {
+          "fold": 1,
+          "trades": 13,
+          "pnl": 57.54,
+          "positive": true,
+          "t1_pnl": -130.91,
+          "t2_pnl": 188.45
+        },
+        {
+          "fold": 2,
+          "trades": 9,
+          "pnl": -17.57,
+          "positive": false,
+          "t1_pnl": -97.46,
+          "t2_pnl": 79.89
+        },
+        {
+          "fold": 3,
+          "trades": 9,
+          "pnl": 792.44,
+          "positive": true,
+          "t1_pnl": 364.89,
+          "t2_pnl": 427.55
+        },
+        {
+          "fold": 4,
+          "trades": 15,
+          "pnl": 913.43,
+          "positive": true,
+          "t1_pnl": 644.84,
+          "t2_pnl": 268.59
+        }
+      ],
+      "top1_fold_concentration": 0.3418
+    },
+    "stress_2x": {
+      "trades": 56,
+      "pnl": 2452.32,
+      "exp_per_week": 571.4144
+    },
+    "coin_breakdown": {
+      "coins_with_trades": 41,
+      "top5": [
+        {
+          "coin": "XL1/USD",
+          "pnl": 549.02
+        },
+        {
+          "coin": "AURA/USD",
+          "pnl": 486.12
+        },
+        {
+          "coin": "INIT/USD",
+          "pnl": 311.41
+        },
+        {
+          "coin": "SPICE/USD",
+          "pnl": 275.41
+        },
+        {
+          "coin": "CVC/USD",
+          "pnl": 265.74
+        }
+      ],
+      "worst5": [
+        {
+          "coin": "GLMR/USD",
+          "pnl": -243.29
+        },
+        {
+          "coin": "PUPS/USD",
+          "pnl": -215.17
+        },
+        {
+          "coin": "MF/USD",
+          "pnl": -176.71
+        },
+        {
+          "coin": "DRV/USD",
+          "pnl": -139.32
+        },
+        {
+          "coin": "SUSHI/USD",
+          "pnl": -95.89
+        }
+      ],
+      "top1_coin_conc": 0.1249,
+      "top3_coin_conc": 0.3064,
+      "all_coin_pnl": {
+        "REKT/USD": 43.54,
+        "ELX/USD": 38.38,
+        "GHIBLI/USD": 158.04,
+        "SGB/USD": -77.99,
+        "BTT/USD": 9.49,
+        "SBR/USD": 43.75,
+        "BANANAS31/USD": 8.04,
+        "KOBAN/USD": 111.46,
+        "DOGS/USD": 39.3,
+        "XL1/USD": 549.02,
+        "XAN/USD": 126.63,
+        "MEME/USD": 8.4,
+        "JUNO/USD": 150.22,
+        "XYO/USD": 21.8,
+        "BLZ/USD": 10.35,
+        "TOKEN/USD": 164.76,
+        "SIGMA/USD": 259.21,
+        "NYM/USD": 137.49,
+        "CAMP/USD": -36.12,
+        "ALPHA/USD": 83.36,
+        "NOBODY/USD": 208.3,
+        "AURA/USD": 486.12,
+        "GOMINING/USD": 164.3,
+        "SAMO/USD": -38.34,
+        "AUDIO/USD": 214.2,
+        "ARPA/USD": -44.37,
+        "DEEP/USD": -10.19,
+        "MF/USD": -176.71,
+        "BILLY/USD": 229.9,
+        "CVC/USD": 265.74,
+        "SAROS/USD": -45.37,
+        "DRV/USD": -139.32,
+        "BODEN/USD": 96.21,
+        "OGN/USD": 47.35,
+        "SUSHI/USD": -95.89,
+        "SPICE/USD": 275.41,
+        "PUPS/USD": -215.17,
+        "ALT/USD": 85.76,
+        "PHA/USD": 46.96,
+        "INIT/USD": 311.41,
+        "GLMR/USD": -243.29
+      }
+    },
+    "gates": {
+      "G1_trades_per_week": {
+        "value": 13.05,
+        "threshold": ">=0.5/wk",
+        "pass": true
+      },
+      "G2_max_gap_days": {
+        "value": 2.75,
+        "threshold": "<=21d",
+        "pass": true
+      },
+      "G3_exp_per_week_mkt": {
+        "value": 762.4382,
+        "threshold": ">$0",
+        "pass": true
+      },
+      "G4_exp_per_week_2x": {
+        "value": 571.4143689320389,
+        "threshold": ">$0",
+        "pass": true
+      },
+      "G5_max_dd_pct": {
+        "value": 8.63,
+        "threshold": "<=50%",
+        "pass": true
+      },
+      "G6_wf_folds_positive": {
+        "value": 4,
+        "threshold": ">=3/5",
+        "pass": true
+      },
+      "G8_top1_fold_conc": {
+        "value": 0.3418,
+        "threshold": "<0.60",
+        "pass": true
+      }
+    },
+    "verdict": "PASS",
+    "failed_gates": []
+  },
+  "t2_at_t1_fees": {
+    "label": "T2 @ T1 fees",
+    "coins": 199,
+    "fee_bps": 12.5,
+    "baseline": {
+      "trades": 38,
+      "pnl": 2578.47,
+      "pf": 2.937,
+      "wr": 57.89,
+      "dd": 7.78,
+      "expectancy": 67.8545,
+      "trades_per_week": 8.85,
+      "exp_per_week": 600.8086,
+      "fee_drag_pct": 7.72
+    },
+    "stress_2x": {
+      "fee_bps": 25.0,
+      "trades": 38,
+      "pnl": 2166.63,
+      "pf": 2.571,
+      "wr": 57.89,
+      "exp_per_week": 504.8452,
+      "dd": 8.48
+    }
+  },
+  "edge_contribution": {
+    "t1_pnl": 1058.06,
+    "t2_pnl": 2214.08,
+    "combined_pnl": 3272.13,
+    "t1_share_pct": 32.3,
+    "t2_share_pct": 67.7,
+    "fee_impact_on_t2": 364.39
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "run_header": {
+    "sprint": "reality_check",
+    "task": "fill_model_design",
+    "date": "2026-02-15",
+    "commit": "566d686"
+  },
+  "modes": {
+    "market": {
+      "tier1": {
+        "fee_bps": 0.0,
+        "spread_bps": 4.0,
+        "slippage_bps": 2.0,
+        "fill_rate": 1.0,
+        "adverse_bps": 0,
+        "total_per_side_bps": 6.0
+      },
+      "tier2": {
+        "fee_bps": 0.0,
+        "spread_bps": 15.0,
+        "slippage_bps": 10.0,
+        "fill_rate": 1.0,
+        "adverse_bps": 0,
+        "total_per_side_bps": 25.0
+      }
+    },
+    "limit_optimistic": {
+      "tier1": {
+        "fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "fill_rate": 0.80,
+        "adverse_bps": 3.0,
+        "total_per_side_bps": 3.0
+      },
+      "tier2": {
+        "fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "fill_rate": 0.80,
+        "adverse_bps": 3.0,
+        "total_per_side_bps": 3.0
+      }
+    },
+    "limit_realistic": {
+      "tier1": {
+        "fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "fill_rate": 0.55,
+        "adverse_bps": 8.0,
+        "total_per_side_bps": 8.0
+      },
+      "tier2": {
+        "fee_bps": 0.0,
+        "spread_bps": 0.0,
+        "slippage_bps": 0.0,
+        "fill_rate": 0.55,
+        "adverse_bps": 8.0,
+        "total_per_side_bps": 8.0
+      }
+    }
+  },
+  "vs_kraken_current": {
+    "kraken_t1_bps": 31,
+    "kraken_t2_bps": 56,
+    "mexc_market_t1_bps": 6.0,
+    "mexc_market_t2_bps": 25.0,
+    "mexc_limit_opt_t1_effective_bps": 3.0,
+    "mexc_limit_real_t1_effective_bps": 8.0
+  }
+}

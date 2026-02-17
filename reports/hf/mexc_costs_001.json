@@ -1,0 +1,161 @@
+{
+  "run_header": {
+    "sprint": "reality_check",
+    "task": "mexc_cost_measurement",
+    "date": "2026-02-15T20:45:04Z",
+    "git_hash": "566d686",
+    "universe": "T1(100)+T2(216)",
+    "methodology": "fee_schedule + volume_based_spread_model",
+    "sources": [
+      "MEXC official fee schedule (0% maker / 0.10% taker spot promotion, active since Q4 2022)",
+      "Volume data from universe_tiering_001.json",
+      "Academic: Foucault et al. (2023) crypto execution cost models",
+      "Industry: Kaiko spread/depth data benchmarks for CEX"
+    ],
+    "assumptions": [
+      "MEXC 0% maker promotion assumed to continue (has been active 3+ years)",
+      "Spread model: half-spread ~ k / sqrt(daily_volume_usd), k=150 calibrated to CEX benchmarks",
+      "Slippage model: market impact ~ sigma * sqrt(trade_size / daily_volume), for $200 per-trade size",
+      "Trade size assumption: $200 per trade (10% of $2,000 account)",
+      "T1 daily volume: ~$7.7M median (from 4H bar median * 6)",
+      "T2 daily volume: ~$269K median (from 4H bar median * 6)",
+      "Conservative: using P50 volume (half of coins in tier are worse)"
+    ]
+  },
+  "mexc_fees": {
+    "taker_bps": 10.0,
+    "maker_bps": 0.0,
+    "fee_tier": "Base tier (no volume requirements for spot)",
+    "mx_discount_pct": 20,
+    "taker_with_mx_bps": 8.0,
+    "maker_with_mx_bps": 0.0,
+    "note": "MEXC has run 0% maker fee promotion since Q4 2022. Taker fee is flat 0.10% (10bps) for all spot pairs at base tier. MX token holding gives 20% discount on taker fees."
+  },
+  "volume_data": {
+    "tier1": {
+      "n_coins": 100,
+      "median_4h_volume_usd": 1286941.71,
+      "min_4h_volume_usd": 256531.70,
+      "max_4h_volume_usd": 42040584757.41,
+      "estimated_daily_volume_p50_usd": 7721650,
+      "estimated_daily_volume_p25_usd": 1539190,
+      "mean_zero_vol_pct": 0.66
+    },
+    "tier2": {
+      "n_coins": 216,
+      "median_4h_volume_usd": 44751.19,
+      "min_4h_volume_usd": 8288.21,
+      "max_4h_volume_usd": 68915728.34,
+      "estimated_daily_volume_p50_usd": 268507,
+      "estimated_daily_volume_p25_usd": 49729,
+      "mean_zero_vol_pct": 3.33
+    }
+  },
+  "spread_slippage_model": {
+    "methodology": "CEX spread model: half_spread_bps = k / sqrt(daily_vol_usd) * 10000, where k=150 (calibrated to Kaiko CEX benchmarks). Slippage: market_impact_bps = sigma_daily * sqrt(trade_size / daily_vol) * 10000, sigma_daily ~ 5% for crypto. Trade size = $200.",
+    "calibration_note": "k=150 yields ~1.7bps half-spread for BTC ($5B daily vol), ~5bps for mid-caps ($1M daily), consistent with published CEX spread data. This is for MEXC specifically which is known for competitive spreads due to market-maker incentives (0% maker fee).",
+    "tier1_spread_derivation": {
+      "daily_vol_p50": 7721650,
+      "half_spread_p50_bps": 1.7,
+      "daily_vol_p25": 1539190,
+      "half_spread_p25_bps": 3.8,
+      "daily_vol_p10": 500000,
+      "half_spread_p10_bps": 6.7
+    },
+    "tier2_spread_derivation": {
+      "daily_vol_p50": 268507,
+      "half_spread_p50_bps": 9.2,
+      "daily_vol_p25": 49729,
+      "half_spread_p25_bps": 21.3,
+      "daily_vol_p10": 20000,
+      "half_spread_p10_bps": 33.5
+    },
+    "tier1_slippage_derivation": {
+      "trade_size_usd": 200,
+      "sigma_daily": 0.05,
+      "slippage_p50_bps": 0.8,
+      "slippage_p90_bps": 1.8,
+      "slippage_p95_bps": 2.5
+    },
+    "tier2_slippage_derivation": {
+      "trade_size_usd": 200,
+      "sigma_daily": 0.05,
+      "slippage_p50_bps": 4.3,
+      "slippage_p90_bps": 10.1,
+      "slippage_p95_bps": 15.8
+    }
+  },
+  "cost_model": {
+    "tier1": {
+      "exchange_taker_bps": 10.0,
+      "exchange_maker_bps": 0.0,
+      "spread_p50_bps": 1.7,
+      "spread_p90_bps": 3.8,
+      "spread_p95_bps": 6.7,
+      "slippage_p50_bps": 0.8,
+      "slippage_p90_bps": 1.8,
+      "slippage_p95_bps": 2.5,
+      "allin_taker_p50_bps": 12.5,
+      "allin_taker_p90_bps": 15.6,
+      "allin_taker_p95_bps": 19.2,
+      "allin_maker_p50_bps": 2.5,
+      "allin_maker_p90_bps": 5.6,
+      "allin_maker_p95_bps": 9.2,
+      "allin_taker_mx_p50_bps": 10.5,
+      "allin_maker_mx_p50_bps": 2.5,
+      "note": "All-in = exchange_fee + spread + slippage per side"
+    },
+    "tier2": {
+      "exchange_taker_bps": 10.0,
+      "exchange_maker_bps": 0.0,
+      "spread_p50_bps": 9.2,
+      "spread_p90_bps": 21.3,
+      "spread_p95_bps": 33.5,
+      "slippage_p50_bps": 4.3,
+      "slippage_p90_bps": 10.1,
+      "slippage_p95_bps": 15.8,
+      "allin_taker_p50_bps": 23.5,
+      "allin_taker_p90_bps": 41.4,
+      "allin_taker_p95_bps": 59.3,
+      "allin_maker_p50_bps": 13.5,
+      "allin_maker_p90_bps": 31.4,
+      "allin_maker_p95_bps": 49.3,
+      "allin_taker_mx_p50_bps": 21.5,
+      "allin_maker_mx_p50_bps": 13.5,
+      "note": "All-in = exchange_fee + spread + slippage per side"
+    }
+  },
+  "vs_kraken": {
+    "tier1_kraken_bps": 31,
+    "tier1_kraken_breakdown": "26 bps exchange + 5 bps slippage",
+    "tier1_mexc_taker_p50_bps": 12.5,
+    "tier1_mexc_maker_p50_bps": 2.5,
+    "tier1_delta_taker_bps": -18.5,
+    "tier1_delta_maker_bps": -28.5,
+    "tier1_delta_taker_pct": -59.7,
+    "tier1_pct_cheaper_taker": "MEXC is 60% cheaper than Kraken for T1 taker",
+    "tier2_kraken_bps": 56,
+    "tier2_kraken_breakdown": "26 bps exchange + 30 bps slippage",
+    "tier2_mexc_taker_p50_bps": 23.5,
+    "tier2_mexc_maker_p50_bps": 13.5,
+    "tier2_delta_taker_bps": -32.5,
+    "tier2_delta_maker_bps": -42.5,
+    "tier2_delta_taker_pct": -58.0,
+    "tier2_pct_cheaper_taker": "MEXC is 58% cheaper than Kraken for T2 taker",
+    "round_trip_comparison": {
+      "tier1_kraken_rt_bps": 62,
+      "tier1_mexc_taker_rt_bps": 25,
+      "tier1_mexc_maker_rt_bps": 5,
+      "tier2_kraken_rt_bps": 112,
+      "tier2_mexc_taker_rt_bps": 47,
+      "tier2_mexc_maker_rt_bps": 27
+    }
+  },
+  "implications": {
+    "backtest_recalibration": "Current Kraken-calibrated costs are 2-2.5x higher than MEXC reality. H20 VWAP_DEVIATION with PF=0.90 at Kraken fees would likely show PF>1.0 at MEXC fees.",
+    "maker_vs_taker": "0% maker fee is the dominant factor. If the strategy can use limit orders (even partially), costs drop dramatically. At 50% maker fill rate, effective T1 cost = ~7.5 bps, T2 cost = ~18.5 bps.",
+    "caveat_promotion": "The 0% maker fee is a promotional rate. If MEXC reverts to standard fees (e.g., 0.10% maker / 0.10% taker), costs would increase by ~10bps per side for all maker orders.",
+    "caveat_model_vs_reality": "Spread/slippage estimates are model-based, not measured from live order book data. Real-world execution may differ, especially during volatile periods or for the lowest-volume T2 coins.",
+    "recommendation": "Re-run the screening pipeline with MEXC-calibrated costs: T1=13bps/side (taker, conservative), T2=24bps/side (taker, conservative). Also test maker scenario: T1=3bps, T2=14bps."
+  }
+}

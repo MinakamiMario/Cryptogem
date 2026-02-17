@@ -1,0 +1,107 @@
+{
+  "version": "kraken-confirm",
+  "timestamp": "2026-02-17T12:31:08.055308+00:00",
+  "results": [
+    {
+      "idx": 1,
+      "label": "baseline_native",
+      "run_id": "confirm_001_baseline_native_2659755",
+      "source": "native",
+      "trades": 16,
+      "pnl": 363.81,
+      "pf": 2.5248,
+      "wr": 75.0,
+      "dd": 7.21,
+      "ev": 22.74,
+      "verdict": "GO",
+      "mode": "baseline"
+    },
+    {
+      "idx": 2,
+      "label": "baseline_proxy",
+      "run_id": "confirm_002_baseline_proxy_2659755",
+      "source": "proxy",
+      "trades": 22,
+      "pnl": -71.38,
+      "pf": 0.8963,
+      "wr": 63.64,
+      "dd": 20.13,
+      "ev": -3.24,
+      "verdict": "NO-GO",
+      "mode": "baseline"
+    },
+    {
+      "idx": 3,
+      "label": "slope_moderate_native",
+      "run_id": "confirm_003_slope_moderate_native_2659755",
+      "source": "native",
+      "trades": 16,
+      "pnl": 267.13,
+      "pf": 4.2353,
+      "wr": 75.0,
+      "dd": 1.94,
+      "ev": 16.7,
+      "verdict": "GO",
+      "mode": "slope_sizing"
+    },
+    {
+      "idx": 4,
+      "label": "slope_moderate_proxy",
+      "run_id": "confirm_004_slope_moderate_proxy_2659755",
+      "source": "proxy",
+      "trades": 22,
+      "pnl": 33.68,
+      "pf": 1.1138,
+      "wr": 63.64,
+      "dd": 9.17,
+      "ev": 1.53,
+      "verdict": "NO-GO",
+      "mode": "slope_sizing"
+    },
+    {
+      "idx": 5,
+      "label": "hard_gate_slope8_native",
+      "run_id": "confirm_005_hard_gate_slope8_native_2659755",
+      "source": "native",
+      "trades": 5,
+      "pnl": 256.56,
+      "pf": Infinity,
+      "wr": 100.0,
+      "dd": 3.09,
+      "ev": 51.31,
+      "verdict": "INSUFFICIENT_SAMPLE",
+      "mode": "regime_gate"
+    },
+    {
+      "idx": 6,
+      "label": "hard_gate_slope8_proxy",
+      "run_id": "confirm_006_hard_gate_slope8_proxy_2659755",
+      "source": "proxy",
+      "trades": 5,
+      "pnl": 253.54,
+      "pf": 7.4016,
+      "wr": 80.0,
+      "dd": 2.05,
+      "ev": 50.71,
+      "verdict": "INSUFFICIENT_SAMPLE",
+      "mode": "regime_gate"
+    }
+  ],
+  "deltas": {
+    "baseline": {
+      "trades": -6,
+      "pnl": 435.19,
+      "pf": 1.6285
+    },
+    "slope_sizing": {
+      "trades": -6,
+      "pnl": 233.45,
+      "pf": 3.1215
+    },
+    "regime_gate": {
+      "trades": 0,
+      "pnl": 3.02,
+      "pf": Infinity
+    }
+  }
+}

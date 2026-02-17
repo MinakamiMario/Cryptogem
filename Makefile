@@ -1,7 +1,7 @@
 .PHONY: check schema tests capsule robustness robustness-tests last60d last60d-all last60d-tests compare-universe compare-universe-all compare-universe-tests build-unfiltered-cache build-research-cache compare-caches compare-caches-smoke compare-caches-tests grid_best-check grid_best-robustness hf-check hf-robustness ci-guard
 
-# Full validation (schema + tests) — run before any PR
-check: schema tests context
+# Full validation (schema + tests + data) — run before any PR
+check: schema tests context data-verify
 	@echo ""
 	@echo "✅ All checks passed"
 
@@ -121,6 +121,11 @@ endif
 compare-caches-tests:
 	@echo "=== Compare Caches Tests ==="
 	python3 trading_bot/test_compare_caches.py
+
+# Dataset registry verification
+data-verify:
+	@echo "=== Data Registry Check ==="
+	@python3 ~/CryptogemData/dataset_verify.py
 
 # ─── GRID_BEST frozen baseline ───────────────────────────────
 

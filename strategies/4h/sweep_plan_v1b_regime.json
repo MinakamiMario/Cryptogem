@@ -1,0 +1,233 @@
+{
+  "version": "v1b-regime",
+  "created": "2026-02-17",
+  "description": "Regime-filtered rerun of hnotrl_msp20 on EARLY+LATE+FULL windows with SMA50 slope gates",
+  "total_configs": 12,
+  "configs": [
+    {
+      "idx": 1,
+      "label": "msp20_early_nofilter",
+      "block": "control",
+      "window": "early",
+      "description": "Control: hnotrl_msp20 on EARLY without regime filter",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 2,
+      "label": "msp20_early_slope_m6",
+      "block": "regime",
+      "window": "early",
+      "description": "EARLY + regime filter: SMA50 slope <= -6% (mild threshold)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {"sma_period": 50, "slope_max_pct": -6.0}
+    },
+    {
+      "idx": 3,
+      "label": "msp20_early_slope_m8",
+      "block": "regime",
+      "window": "early",
+      "description": "EARLY + regime filter: SMA50 slope <= -8% (moderate threshold)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {"sma_period": 50, "slope_max_pct": -8.0}
+    },
+    {
+      "idx": 4,
+      "label": "msp20_early_slope_m10",
+      "block": "regime",
+      "window": "early",
+      "description": "EARLY + regime filter: SMA50 slope <= -10% (strict threshold)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {"sma_period": 50, "slope_max_pct": -10.0}
+    },
+    {
+      "idx": 5,
+      "label": "msp20_late_nofilter",
+      "block": "control",
+      "window": "late",
+      "description": "Control: hnotrl_msp20 on LATE without regime filter",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 6,
+      "label": "msp20_late_slope_m6",
+      "block": "regime",
+      "window": "late",
+      "description": "LATE + regime filter: SMA50 slope <= -6%",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {"sma_period": 50, "slope_max_pct": -6.0}
+    },
+    {
+      "idx": 7,
+      "label": "msp20_late_slope_m8",
+      "block": "regime",
+      "window": "late",
+      "description": "LATE + regime filter: SMA50 slope <= -8%",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {"sma_period": 50, "slope_max_pct": -8.0}
+    },
+    {
+      "idx": 8,
+      "label": "msp20_late_slope_m10",
+      "block": "regime",
+      "window": "late",
+      "description": "LATE + regime filter: SMA50 slope <= -10%",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {"sma_period": 50, "slope_max_pct": -10.0}
+    },
+    {
+      "idx": 9,
+      "label": "msp20_full_nofilter",
+      "block": "control",
+      "window": "full",
+      "description": "Control: hnotrl_msp20 on FULL without regime filter",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 10,
+      "label": "msp20_full_slope_m6",
+      "block": "regime",
+      "window": "full",
+      "description": "FULL + regime filter: SMA50 slope <= -6%",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {"sma_period": 50, "slope_max_pct": -6.0}
+    },
+    {
+      "idx": 11,
+      "label": "msp20_full_slope_m8",
+      "block": "regime",
+      "window": "full",
+      "description": "FULL + regime filter: SMA50 slope <= -8%",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {"sma_period": 50, "slope_max_pct": -8.0}
+    },
+    {
+      "idx": 12,
+      "label": "msp20_full_slope_m10",
+      "block": "regime",
+      "window": "full",
+      "description": "FULL + regime filter: SMA50 slope <= -10%",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {"sma_period": 50, "slope_max_pct": -10.0}
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "exit_type": "hybrid_notrl",
+  "max_pos": 2,
+  "max_stop_pct": 20.0,
+  "rsi_max": 42,
+  "rsi_rec_target": 45,
+  "rsi_recovery": true,
+  "time_max_bars": 20,
+  "vol_confirm": true,
+  "vol_spike_mult": 3.0
+}

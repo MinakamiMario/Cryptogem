@@ -1,0 +1,574 @@
+{
+  "version": "v1",
+  "created": "2026-02-17",
+  "dataset_id": "ohlcv_4h_kraken_spot_usd_526",
+  "total_configs": 30,
+  "configs": [
+    {
+      "idx": 1,
+      "label": "trail_baseline",
+      "block": "A",
+      "description": "BASELINE control — V5+VolSpk3 production config",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 40,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 2,
+      "label": "trail_rsi35",
+      "block": "A",
+      "description": "Tighter RSI filter — fewer but higher-conviction entries",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 35,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 3,
+      "label": "trail_rsi38",
+      "block": "A",
+      "description": "Moderate RSI tightening — midpoint between 35 and 40",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 38,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 4,
+      "label": "trail_rsi42",
+      "block": "A",
+      "description": "Looser RSI filter (BEST_KNOWN value) — more entries",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 42,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 5,
+      "label": "trail_rsi45",
+      "block": "A",
+      "description": "Widest RSI filter — maximum trade count, test selectivity",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 45,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 6,
+      "label": "trail_atr15",
+      "block": "A",
+      "description": "Tighter ATR trail (1.5x) — faster stop tightening",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 40,
+        "atr_mult": 1.5,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 7,
+      "label": "trail_atr25",
+      "block": "A",
+      "description": "Wider ATR trail (2.5x) — more room for price swings",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 40,
+        "atr_mult": 2.5,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 8,
+      "label": "trail_be20",
+      "block": "A",
+      "description": "Earlier breakeven trigger (2.0x) — faster risk reduction",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 40,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 9,
+      "label": "trail_tm6",
+      "block": "A",
+      "description": "Shorter time limit (6 bars) — faster exit from stale trades",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 40,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 6,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 10,
+      "label": "trail_tm15",
+      "block": "A",
+      "description": "Longer time limit (15 bars) — let winners run longer",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 40,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 15,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 11,
+      "label": "trail_best_known",
+      "block": "A",
+      "description": "BEST_KNOWN combo — rsi42 + be2.0 + tm6 + msp12",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 42,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 2.0,
+        "time_max_bars": 6,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 12.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 12,
+      "label": "trail_vspk25",
+      "block": "A",
+      "description": "Lower vol spike threshold (2.5x) — more entries, test filter edge",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 40,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 2.5,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 13,
+      "label": "hnotrl_baseline",
+      "block": "B",
+      "description": "HYBRID_NOTRL control — V3 pipeline winner, no trail stop",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 14,
+      "label": "hnotrl_rsi40",
+      "block": "B",
+      "description": "Tighter RSI (40) on hybrid_notrl — match BASELINE entry filter",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 40,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 15,
+      "label": "hnotrl_rsi45",
+      "block": "B",
+      "description": "Wider RSI (45) on hybrid_notrl — more entries",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 45,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 16,
+      "label": "hnotrl_msp12",
+      "block": "B",
+      "description": "Tighter max stop (12%) — less risk per trade",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 12.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 17,
+      "label": "hnotrl_msp20",
+      "block": "B",
+      "description": "Wider max stop (20%) — more room before stop-out",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 20.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 18,
+      "label": "hnotrl_tm15",
+      "block": "B",
+      "description": "Shorter time limit (15 bars) — faster exit from stale positions",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 15,
+        "max_stop_pct": 15.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 19,
+      "label": "hnotrl_tm25",
+      "block": "B",
+      "description": "Longer time limit (25 bars) — let winners run further",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 25,
+        "max_stop_pct": 15.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 20,
+      "label": "hnotrl_mp1",
+      "block": "B",
+      "description": "Single position (max_pos=1) — concentrated bets, more compounding",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 21,
+      "label": "hnotrl_tight_combo",
+      "block": "B",
+      "description": "Tighter combo — rsi40 + msp12 + max_pos=1 (defensive)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 40,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 12.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 22,
+      "label": "hnotrl_vspk25",
+      "block": "B",
+      "description": "Lower vol spike (2.5x) on hybrid_notrl — more entries",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 2.5,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 23,
+      "label": "tpsl_tp7_sl10",
+      "block": "C",
+      "description": "TP/SL baseline — 7% target, 10% stop, fixed exits",
+      "params": {
+        "exit_type": "tp_sl",
+        "rsi_max": 40,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": false,
+        "time_max_bars": 10,
+        "tp_pct": 7.0,
+        "sl_pct": 10.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 24,
+      "label": "tpsl_tp10_sl15",
+      "block": "C",
+      "description": "Wide TP/SL — 10% target, 15% stop, more room",
+      "params": {
+        "exit_type": "tp_sl",
+        "rsi_max": 40,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": false,
+        "time_max_bars": 10,
+        "tp_pct": 10.0,
+        "sl_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 25,
+      "label": "tpsl_tp7_sl15",
+      "block": "C",
+      "description": "Asymmetric — 7% target, 15% stop, wide stop tolerance",
+      "params": {
+        "exit_type": "tp_sl",
+        "rsi_max": 40,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": false,
+        "time_max_bars": 10,
+        "tp_pct": 7.0,
+        "sl_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 26,
+      "label": "tpsl_tp10_sl10",
+      "block": "C",
+      "description": "Symmetric 1:1 — 10% target, 10% stop, balanced R:R",
+      "params": {
+        "exit_type": "tp_sl",
+        "rsi_max": 40,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": false,
+        "time_max_bars": 10,
+        "tp_pct": 10.0,
+        "sl_pct": 10.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 27,
+      "label": "tpsl_rsi42",
+      "block": "C",
+      "description": "TP/SL with looser RSI (42) — more entries on base tp7/sl10",
+      "params": {
+        "exit_type": "tp_sl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": false,
+        "time_max_bars": 10,
+        "tp_pct": 7.0,
+        "sl_pct": 10.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 28,
+      "label": "tpsl_rsi35",
+      "block": "C",
+      "description": "TP/SL with tight RSI (35) — fewer high-conviction entries",
+      "params": {
+        "exit_type": "tp_sl",
+        "rsi_max": 35,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": false,
+        "time_max_bars": 10,
+        "tp_pct": 7.0,
+        "sl_pct": 10.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 29,
+      "label": "trail_baseline_mp2",
+      "block": "D",
+      "description": "BASELINE with max_pos=2 — test multi-position on trail",
+      "params": {
+        "exit_type": "trail",
+        "rsi_max": 40,
+        "atr_mult": 2.0,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": true,
+        "be_trigger": 3.0,
+        "time_max_bars": 10,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_stop_pct": 15.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 30,
+      "label": "hnotrl_mp1_rsi38",
+      "block": "D",
+      "description": "HYBRID_NOTRL fresh combo — max_pos=1 + rsi38 (untested)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 38,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    }
+  ]
+}

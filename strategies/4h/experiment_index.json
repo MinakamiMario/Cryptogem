@@ -1,0 +1,82 @@
+{
+  "version": "v1",
+  "generated": "2026-02-17",
+  "git_hash": "2659755",
+  "experiments": [
+    {
+      "id": "v1",
+      "name": "Sweep V1",
+      "adr": "4H-002",
+      "dataset_id": "ohlcv_4h_kraken_spot_usd_526",
+      "universe_id": "kraken_4h_526_v1",
+      "fee_model": "kraken_spot_26bps",
+      "configs": 30,
+      "go": 3,
+      "scoreboard": "reports/4h/scoreboard_sweep_v1.json",
+      "sweep_plan": "strategies/4h/sweep_plan_v1.json",
+      "results_dir": "reports/4h/sweep_v1_*_2659755/"
+    },
+    {
+      "id": "v1b",
+      "name": "Time Window Split",
+      "adr": "4H-003",
+      "dataset_id": "ohlcv_4h_kraken_spot_usd_526",
+      "universe_id": "kraken_4h_526_v1",
+      "fee_model": "kraken_spot_26bps",
+      "configs": 6,
+      "go": 1,
+      "scoreboard": null,
+      "sweep_plan": "strategies/4h/sweep_plan_v1b.json"
+    },
+    {
+      "id": "v1b-regime",
+      "name": "Regime Filter (SMA50 slope)",
+      "adr": "4H-004",
+      "dataset_id": "ohlcv_4h_kraken_spot_usd_526",
+      "universe_id": "kraken_4h_526_v1",
+      "fee_model": "kraken_spot_26bps",
+      "configs": 12,
+      "go": 0,
+      "scoreboard": null,
+      "sweep_plan": "strategies/4h/sweep_plan_v1b_regime.json",
+      "note": "Diagnostic only, not deployable"
+    },
+    {
+      "id": "v2",
+      "name": "Extended 360d Proxy",
+      "adr": "4H-005",
+      "dataset_id": "ohlcv_4h_kraken_spot_usd_v2",
+      "universe_ids": ["kraken_4h_cohortA_170_v1", "kraken_4h_cohortB_242_v1"],
+      "fee_model": "kraken_spot_26bps",
+      "configs": 6,
+      "go": 0,
+      "scoreboard": "reports/4h/scoreboard_sweep_v2.json",
+      "sweep_plan": "strategies/4h/sweep_plan_v2_extended.json"
+    },
+    {
+      "id": "confirm",
+      "name": "Kraken Native Confirm",
+      "adr": "4H-005-A",
+      "dataset_id": "ohlcv_4h_kraken_spot_usd_native_confirm",
+      "universe_id": "kraken_4h_native_62_v1",
+      "fee_model": "kraken_spot_26bps",
+      "configs": 6,
+      "go": 2,
+      "scoreboard": "reports/4h/scoreboard_confirm.json",
+      "sweep_plan": "strategies/4h/sweep_plan_kraken_confirm.json"
+    },
+    {
+      "id": "mexc",
+      "name": "MEXC Portability Test",
+      "adr": "4H-006",
+      "dataset_id": "ohlcv_4h_mexc_spot_usdt_v1",
+      "universe_id": "mexc_4h_cohortA_144_v1",
+      "fee_models": ["mexc_spot_10bps", "kraken_spot_26bps"],
+      "configs": 4,
+      "go": 0,
+      "scoreboard": "reports/4h/scoreboard_sweep_v2.json",
+      "sweep_plan": "strategies/4h/sweep_plan_mexc_confirm.json",
+      "comparison": "reports/4h/kraken_vs_mexc_comparison.json"
+    }
+  ]
+}

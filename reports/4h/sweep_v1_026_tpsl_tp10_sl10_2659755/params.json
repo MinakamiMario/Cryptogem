@@ -1,0 +1,12 @@
+{
+  "breakeven": false,
+  "exit_type": "tp_sl",
+  "max_pos": 1,
+  "rsi_max": 40,
+  "rsi_recovery": false,
+  "sl_pct": 10.0,
+  "time_max_bars": 10,
+  "tp_pct": 10.0,
+  "vol_confirm": true,
+  "vol_spike_mult": 3.0
+}

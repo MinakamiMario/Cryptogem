@@ -119,3 +119,16 @@
 - Assume MEXC fee structure applies to other exchanges
 - Assume 10s sampling scales to >100 coins — use tiered sampling policy
 - Reopen Part 2 — project CLOSED (see HF_PART2_FINAL.md)
+
+## Runbook — Starting a New Research Run
+
+```bash
+# 1. Verify data integrity
+python3 ~/CryptogemData/dataset_verify.py
+
+# 2. Run full check (66 tests + schema + context + data)
+make check
+
+# 3. Only then: run collectors, backtests, or overnight scripts
+# New data goes to ~/CryptogemData/raw/ or derived/, NEVER to data/ directly
+```

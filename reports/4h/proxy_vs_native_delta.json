@@ -1,0 +1,383 @@
+{
+  "comparison": "proxy_cryptocompare_vs_native_kraken",
+  "coins": 62,
+  "matched_bars": 41617,
+  "close_median_diff_pct": 0.0,
+  "close_p95_diff_pct": 0.00645,
+  "vwap_median_diff_pct": 0.306569,
+  "volume_median_diff_pct": 0.0,
+  "per_coin": [
+    {
+      "pair": "LUNA/USD",
+      "matched_bars": 314,
+      "close_median_diff_pct": 243133.4835,
+      "vwap_median_diff_pct": 244122.9121
+    },
+    {
+      "pair": "KIN/USD",
+      "matched_bars": 480,
+      "close_median_diff_pct": 0.2625,
+      "vwap_median_diff_pct": 21.8769
+    },
+    {
+      "pair": "LSK/USD",
+      "matched_bars": 678,
+      "close_median_diff_pct": 0.0124,
+      "vwap_median_diff_pct": 0.3112
+    },
+    {
+      "pair": "ADA/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0059,
+      "vwap_median_diff_pct": 0.1665
+    },
+    {
+      "pair": "NANO/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0036,
+      "vwap_median_diff_pct": 0.2342
+    },
+    {
+      "pair": "OMG/USD",
+      "matched_bars": 676,
+      "close_median_diff_pct": 0.0036,
+      "vwap_median_diff_pct": 0.2795
+    },
+    {
+      "pair": "AEVO/USD",
+      "matched_bars": 708,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3239
+    },
+    {
+      "pair": "AKT/USD",
+      "matched_bars": 718,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2354
+    },
+    {
+      "pair": "ALT/USD",
+      "matched_bars": 631,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3655
+    },
+    {
+      "pair": "APE/USD",
+      "matched_bars": 718,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2786
+    },
+    {
+      "pair": "ATH/USD",
+      "matched_bars": 718,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2904
+    },
+    {
+      "pair": "ATLAS/USD",
+      "matched_bars": 667,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3332
+    },
+    {
+      "pair": "AUDIO/USD",
+      "matched_bars": 663,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2326
+    },
+    {
+      "pair": "BAL/USD",
+      "matched_bars": 658,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.31
+    },
+    {
+      "pair": "BERA/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2985
+    },
+    {
+      "pair": "BICO/USD",
+      "matched_bars": 688,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2264
+    },
+    {
+      "pair": "BLUR/USD",
+      "matched_bars": 656,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3419
+    },
+    {
+      "pair": "BLZ/USD",
+      "matched_bars": 665,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.32
+    },
+    {
+      "pair": "BOBA/USD",
+      "matched_bars": 611,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2529
+    },
+    {
+      "pair": "BOND/USD",
+      "matched_bars": 678,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.5304
+    },
+    {
+      "pair": "BTC/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.0836
+    },
+    {
+      "pair": "CHR/USD",
+      "matched_bars": 567,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3898
+    },
+    {
+      "pair": "COW/USD",
+      "matched_bars": 718,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3015
+    },
+    {
+      "pair": "DENT/USD",
+      "matched_bars": 711,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3295
+    },
+    {
+      "pair": "DYM/USD",
+      "matched_bars": 717,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3847
+    },
+    {
+      "pair": "EGLD/USD",
+      "matched_bars": 718,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2778
+    },
+    {
+      "pair": "ENJ/USD",
+      "matched_bars": 717,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2463
+    },
+    {
+      "pair": "ETH/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.1187
+    },
+    {
+      "pair": "EUL/USD",
+      "matched_bars": 717,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3025
+    },
+    {
+      "pair": "FIDA/USD",
+      "matched_bars": 634,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3105
+    },
+    {
+      "pair": "FORTH/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.1789
+    },
+    {
+      "pair": "GHST/USD",
+      "matched_bars": 700,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3101
+    },
+    {
+      "pair": "GMT/USD",
+      "matched_bars": 691,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3168
+    },
+    {
+      "pair": "GMX/USD",
+      "matched_bars": 656,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2752
+    },
+    {
+      "pair": "GRASS/USD",
+      "matched_bars": 672,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.4304
+    },
+    {
+      "pair": "GRT/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2364
+    },
+    {
+      "pair": "GTC/USD",
+      "matched_bars": 634,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3567
+    },
+    {
+      "pair": "HFT/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2664
+    },
+    {
+      "pair": "HONEY/USD",
+      "matched_bars": 718,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3559
+    },
+    {
+      "pair": "ICX/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.203
+    },
+    {
+      "pair": "IMX/USD",
+      "matched_bars": 718,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2912
+    },
+    {
+      "pair": "INJ/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2532
+    },
+    {
+      "pair": "JUNO/USD",
+      "matched_bars": 716,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.4544
+    },
+    {
+      "pair": "KNC/USD",
+      "matched_bars": 642,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2414
+    },
+    {
+      "pair": "L3/USD",
+      "matched_bars": 452,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.9438
+    },
+    {
+      "pair": "LCX/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3127
+    },
+    {
+      "pair": "LOCKIN/USD",
+      "matched_bars": 699,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.535
+    },
+    {
+      "pair": "MINA/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2841
+    },
+    {
+      "pair": "MIR/USD",
+      "matched_bars": 648,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.6796
+    },
+    {
+      "pair": "MNGO/USD",
+      "matched_bars": 634,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.6154
+    },
+    {
+      "pair": "MV/USD",
+      "matched_bars": 533,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.6417
+    },
+    {
+      "pair": "NOT/USD",
+      "matched_bars": 703,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3436
+    },
+    {
+      "pair": "NTRN/USD",
+      "matched_bars": 524,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.4144
+    },
+    {
+      "pair": "OCEAN/USD",
+      "matched_bars": 716,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2227
+    },
+    {
+      "pair": "OGN/USD",
+      "matched_bars": 621,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2652
+    },
+    {
+      "pair": "OM/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2861
+    },
+    {
+      "pair": "PERP/USD",
+      "matched_bars": 692,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.4686
+    },
+    {
+      "pair": "PHA/USD",
+      "matched_bars": 712,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3248
+    },
+    {
+      "pair": "POND/USD",
+      "matched_bars": 606,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3562
+    },
+    {
+      "pair": "PYTH/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2549
+    },
+    {
+      "pair": "RARI/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.3684
+    },
+    {
+      "pair": "RAY/USD",
+      "matched_bars": 719,
+      "close_median_diff_pct": 0.0,
+      "vwap_median_diff_pct": 0.2889
+    }
+  ]
+}

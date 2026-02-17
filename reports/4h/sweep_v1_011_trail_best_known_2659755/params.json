@@ -1,0 +1,14 @@
+{
+  "atr_mult": 2.0,
+  "be_trigger": 2.0,
+  "breakeven": true,
+  "exit_type": "trail",
+  "max_pos": 1,
+  "max_stop_pct": 12.0,
+  "rsi_max": 42,
+  "rsi_rec_target": 45,
+  "rsi_recovery": true,
+  "time_max_bars": 6,
+  "vol_confirm": true,
+  "vol_spike_mult": 3.0
+}

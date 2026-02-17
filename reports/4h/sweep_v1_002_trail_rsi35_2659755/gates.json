@@ -1,0 +1,74 @@
+{
+  "verdict": "NO-GO",
+  "passed_all": false,
+  "n_passed": 4,
+  "n_total": 5,
+  "summary": "[NO-GO] 4/5 | G1:MIN_TRADES=PASS | G2:MAX_DRAWDOWN=PASS | G3:PROFIT_FACTOR=PASS | G4:EXPECTANCY=PASS | G5:ROBUSTNESS_SPLIT=FAIL || G6:OUTLIER_CONC=OK | G7:COIN_CONC=OK",
+  "gates": [
+    {
+      "name": "G1:MIN_TRADES",
+      "description": "Minimum trade count for statistical significance",
+      "passed": true,
+      "value": 36.0,
+      "threshold": ">= 15",
+      "detail": "36 trades (sufficient)",
+      "advisory": false
+    },
+    {
+      "name": "G2:MAX_DRAWDOWN",
+      "description": "Maximum drawdown for capital preservation",
+      "passed": true,
+      "value": 29.31,
+      "threshold": "<= 40.0%",
+      "detail": "DD 29.3% (within limit)",
+      "advisory": false
+    },
+    {
+      "name": "G3:PROFIT_FACTOR",
+      "description": "Profit factor for edge confirmation",
+      "passed": true,
+      "value": 4.13,
+      "threshold": ">= 1.3",
+      "detail": "PF 4.13 (edge confirmed)",
+      "advisory": false
+    },
+    {
+      "name": "G4:EXPECTANCY",
+      "description": "Positive expected value per trade",
+      "passed": true,
+      "value": 127.93,
+      "threshold": "> $0",
+      "detail": "EV/trade $127.93 (positive)",
+      "advisory": false
+    },
+    {
+      "name": "G5:ROBUSTNESS_SPLIT",
+      "description": "2-split temporal validation (both halves profitable)",
+      "passed": false,
+      "value": 0.0,
+      "threshold": "both halves P&L > $0",
+      "detail": "H1: 18tr $-364 | H2: 18tr $+4969 (FAIL)",
+      "advisory": false
+    }
+  ],
+  "advisory_gates": [
+    {
+      "name": "G6:OUTLIER_CONC",
+      "description": "Top-1 trade share of total profit (advisory)",
+      "passed": true,
+      "value": 49.3,
+      "threshold": "< 70.0%",
+      "detail": "Top-1 trade $+2998 = 49.3% of $6075 profit (OK)",
+      "advisory": true
+    },
+    {
+      "name": "G7:COIN_CONC",
+      "description": "Top-1 coin share of total profit (advisory)",
+      "passed": true,
+      "value": 49.3,
+      "threshold": "< 70.0%",
+      "detail": "Top coin ZEUS/USD $+2998 = 49.3% of $6075 profit (OK)",
+      "advisory": true
+    }
+  ]
+}

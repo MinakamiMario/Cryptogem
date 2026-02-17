@@ -1,0 +1,205 @@
+{
+  "version": "v2",
+  "generated": "2026-02-17T12:31:31.524028+00:00",
+  "git_hash": "2659755",
+  "total_runs": 6,
+  "passed_gates": 2,
+  "failed_gates": 2,
+  "insufficient_sample": 2,
+  "other": null,
+  "top_3": [
+    {
+      "run_id": "confirm_003_slope_moderate_native_2659755",
+      "idx": "003",
+      "label": "slope_moderate_native",
+      "exit_type": "hybrid_notrl",
+      "block": "slope_sizing",
+      "trades": 16,
+      "wr": 75.0,
+      "pnl": 267.13,
+      "pf": 4.24,
+      "dd": 1.9,
+      "ev_per_trade": 16.7,
+      "verdict": "GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": true,
+        "G4": true,
+        "G5": true
+      },
+      "rank": 1
+    },
+    {
+      "run_id": "confirm_001_baseline_native_2659755",
+      "idx": "001",
+      "label": "baseline_native",
+      "exit_type": "hybrid_notrl",
+      "block": "control",
+      "trades": 16,
+      "wr": 75.0,
+      "pnl": 363.81,
+      "pf": 2.52,
+      "dd": 7.2,
+      "ev_per_trade": 22.74,
+      "verdict": "GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": true,
+        "G4": true,
+        "G5": true
+      },
+      "rank": 2
+    }
+  ],
+  "all_results": [
+    {
+      "run_id": "confirm_003_slope_moderate_native_2659755",
+      "idx": "003",
+      "label": "slope_moderate_native",
+      "exit_type": "hybrid_notrl",
+      "block": "slope_sizing",
+      "trades": 16,
+      "wr": 75.0,
+      "pnl": 267.13,
+      "pf": 4.24,
+      "dd": 1.9,
+      "ev_per_trade": 16.7,
+      "verdict": "GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": true,
+        "G4": true,
+        "G5": true
+      },
+      "rank": 1
+    },
+    {
+      "run_id": "confirm_001_baseline_native_2659755",
+      "idx": "001",
+      "label": "baseline_native",
+      "exit_type": "hybrid_notrl",
+      "block": "control",
+      "trades": 16,
+      "wr": 75.0,
+      "pnl": 363.81,
+      "pf": 2.52,
+      "dd": 7.2,
+      "ev_per_trade": 22.74,
+      "verdict": "GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": true,
+        "G4": true,
+        "G5": true
+      },
+      "rank": 2
+    },
+    {
+      "run_id": "confirm_002_baseline_proxy_2659755",
+      "idx": "002",
+      "label": "baseline_proxy",
+      "exit_type": "hybrid_notrl",
+      "block": "control",
+      "trades": 22,
+      "wr": 63.6,
+      "pnl": -71.38,
+      "pf": 0.9,
+      "dd": 20.1,
+      "ev_per_trade": -3.24,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "confirm_004_slope_moderate_proxy_2659755",
+      "idx": "004",
+      "label": "slope_moderate_proxy",
+      "exit_type": "hybrid_notrl",
+      "block": "slope_sizing",
+      "trades": 22,
+      "wr": 63.6,
+      "pnl": 33.68,
+      "pf": 1.11,
+      "dd": 9.2,
+      "ev_per_trade": 1.53,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": false,
+        "G4": true,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "confirm_005_hard_gate_slope8_native_2659755",
+      "idx": "005",
+      "label": "hard_gate_slope8_native",
+      "exit_type": "hybrid_notrl",
+      "block": "regime_gate",
+      "trades": 5,
+      "wr": 100.0,
+      "pnl": 256.56,
+      "pf": 99.99,
+      "dd": 3.1,
+      "ev_per_trade": 51.31,
+      "verdict": "INSUFFICIENT_SAMPLE",
+      "gates": {
+        "G1": false,
+        "G2": true,
+        "G3": true,
+        "G4": true,
+        "G5": true
+      },
+      "rank": null
+    },
+    {
+      "run_id": "confirm_006_hard_gate_slope8_proxy_2659755",
+      "idx": "006",
+      "label": "hard_gate_slope8_proxy",
+      "exit_type": "hybrid_notrl",
+      "block": "regime_gate",
+      "trades": 5,
+      "wr": 80.0,
+      "pnl": 253.54,
+      "pf": 7.4,
+      "dd": 2.0,
+      "ev_per_trade": 50.71,
+      "verdict": "INSUFFICIENT_SAMPLE",
+      "gates": {
+        "G1": false,
+        "G2": true,
+        "G3": true,
+        "G4": true,
+        "G5": true
+      },
+      "rank": null
+    }
+  ],
+  "provenance": {
+    "dataset_id": "ohlcv_4h_kraken_spot_usd_native_confirm",
+    "exchange": "kraken",
+    "source": "kraken",
+    "venue": "native",
+    "fee_bps_per_side": 26,
+    "coins": 62,
+    "time_window": "120d (721 bars)",
+    "time_range": "2025-10-20 / 2026-02-17",
+    "universe_id": "kraken_4h_native_62_v1",
+    "fee_model": "kraken_spot_26bps",
+    "initial_capital_usd": 2000,
+    "sweep_plan": "strategies/4h/sweep_plan_kraken_confirm.json",
+    "has_native_vwap": true
+  }
+}

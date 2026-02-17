@@ -1,0 +1,141 @@
+{
+  "version": "kraken-confirm",
+  "created": "2026-02-17",
+  "description": "Native Kraken 4H confirm run: 62 coins (all traded + BTC/ETH), 120 days, 3 variants. Ground truth comparison against CryptoCompare proxy data.",
+  "data_source": {
+    "source": "kraken_native_ohlc",
+    "venue": "native",
+    "coins": 62,
+    "bars": 721,
+    "range": "2025-10-20 / 2026-02-17 (120 days)",
+    "has_native_vwap": true
+  },
+  "total_configs": 6,
+  "configs": [
+    {
+      "idx": 1,
+      "label": "baseline_native",
+      "block": "control",
+      "description": "hnotrl_msp20 baseline on native Kraken data (62 coins, 120d)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 2,
+      "label": "baseline_proxy",
+      "block": "control",
+      "description": "hnotrl_msp20 baseline on PROXY data (same 62 coins, same 120d window) for A/B comparison",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "_use_proxy_data": true
+    },
+    {
+      "idx": 3,
+      "label": "slope_moderate_native",
+      "block": "slope_sizing",
+      "description": "Slope-as-sizing moderate (min=0.3) on native Kraken data",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "slope_sizing": {
+        "sma_period": 50,
+        "steep_thresh": -10.0,
+        "mild_thresh": -3.0,
+        "min_scale": 0.3
+      }
+    },
+    {
+      "idx": 4,
+      "label": "slope_moderate_proxy",
+      "block": "slope_sizing",
+      "description": "Slope-as-sizing moderate (min=0.3) on PROXY data for A/B comparison",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "slope_sizing": {
+        "sma_period": 50,
+        "steep_thresh": -10.0,
+        "mild_thresh": -3.0,
+        "min_scale": 0.3
+      },
+      "_use_proxy_data": true
+    },
+    {
+      "idx": 5,
+      "label": "hard_gate_slope8_native",
+      "block": "regime_gate",
+      "description": "Hard regime gate (SMA50 slope < -8%) on native data — blocks entries in mild regime",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {
+        "sma_period": 50,
+        "slope_max_pct": -8.0
+      }
+    },
+    {
+      "idx": 6,
+      "label": "hard_gate_slope8_proxy",
+      "block": "regime_gate",
+      "description": "Hard regime gate (SMA50 slope < -8%) on PROXY data for A/B comparison",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "regime_filter": {
+        "sma_period": 50,
+        "slope_max_pct": -8.0
+      },
+      "_use_proxy_data": true
+    }
+  ]
+}

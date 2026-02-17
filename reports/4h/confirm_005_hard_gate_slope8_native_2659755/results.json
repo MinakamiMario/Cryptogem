@@ -1,0 +1,183 @@
+{
+  "metadata": {
+    "run_id": "confirm_005_hard_gate_slope8_native_2659755",
+    "timestamp": "2026-02-17T12:31:08.030160+00:00",
+    "git_hash": "2659755",
+    "data_source": "native",
+    "n_coins": 62,
+    "elapsed_s": 0.03,
+    "label": "hard_gate_slope8_native"
+  },
+  "summary": {
+    "trades": 5,
+    "wr": 100.0,
+    "pnl": 256.56,
+    "final_equity": 2256.56,
+    "pf": Infinity,
+    "dd": 3.09,
+    "broke": false,
+    "early_stopped": false
+  },
+  "exit_classes": {
+    "A": {
+      "RSI RECOVERY": {
+        "count": 2,
+        "pnl": 44.95334028390425,
+        "wins": 2
+      },
+      "DC TARGET": {
+        "count": 3,
+        "pnl": 211.60509410974623,
+        "wins": 3
+      }
+    },
+    "B": {}
+  },
+  "gates": {
+    "verdict": "INSUFFICIENT_SAMPLE",
+    "passed_all": false,
+    "n_passed": 4,
+    "n_total": 5,
+    "summary": "[NO-GO] 4/5 | G1:MIN_TRADES=FAIL | G2:MAX_DRAWDOWN=PASS | G3:PROFIT_FACTOR=PASS | G4:EXPECTANCY=PASS | G5:ROBUSTNESS_SPLIT=PASS || G6:OUTLIER_CONC=OK | G7:COIN_CONC=OK",
+    "gates": [
+      {
+        "name": "G1:MIN_TRADES",
+        "description": "Minimum trade count for statistical significance",
+        "passed": false,
+        "value": 5.0,
+        "threshold": ">= 15",
+        "detail": "5 trades (need >= 15)",
+        "advisory": false
+      },
+      {
+        "name": "G2:MAX_DRAWDOWN",
+        "description": "Maximum drawdown for capital preservation",
+        "passed": true,
+        "value": 3.09,
+        "threshold": "<= 40.0%",
+        "detail": "DD 3.1% (within limit)",
+        "advisory": false
+      },
+      {
+        "name": "G3:PROFIT_FACTOR",
+        "description": "Profit factor for edge confirmation",
+        "passed": true,
+        "value": 99.9,
+        "threshold": ">= 1.3",
+        "detail": "PF 99.90 (edge confirmed)",
+        "advisory": false
+      },
+      {
+        "name": "G4:EXPECTANCY",
+        "description": "Positive expected value per trade",
+        "passed": true,
+        "value": 51.31,
+        "threshold": "> $0",
+        "detail": "EV/trade $51.31 (positive)",
+        "advisory": false
+      },
+      {
+        "name": "G5:ROBUSTNESS_SPLIT",
+        "description": "2-split temporal validation (both halves profitable)",
+        "passed": true,
+        "value": 1.0,
+        "threshold": "both halves P&L > $0",
+        "detail": "H1: 2tr $+45 | H2: 3tr $+212 (PASS)",
+        "advisory": false
+      }
+    ],
+    "advisory_gates": [
+      {
+        "name": "G6:OUTLIER_CONC",
+        "description": "Top-1 trade share of total profit (advisory)",
+        "passed": true,
+        "value": 45.1,
+        "threshold": "< 70.0%",
+        "detail": "Top-1 trade $+116 = 45.1% of $257 profit (OK)",
+        "advisory": true
+      },
+      {
+        "name": "G7:COIN_CONC",
+        "description": "Top-1 coin share of total profit (advisory)",
+        "passed": true,
+        "value": 45.1,
+        "threshold": "< 70.0%",
+        "detail": "Top coin ALT/USD $+116 = 45.1% of $257 profit (OK)",
+        "advisory": true
+      }
+    ]
+  },
+  "slope_sizing": null,
+  "regime_filter": {
+    "sma_period": 50,
+    "slope_max_pct": -8.0
+  },
+  "slope_sizing_stats": null,
+  "trades": [
+    {
+      "pair": "CHR/USD",
+      "entry": 0.0555,
+      "exit": 0.056,
+      "pnl": 3.7856,
+      "pnl_pct": 0.3786,
+      "reason": "RSI RECOVERY",
+      "bars": 3,
+      "entry_bar": 192,
+      "exit_bar": 195,
+      "size": 1000.0,
+      "equity_after": 1003.7856
+    },
+    {
+      "pair": "RAY/USD",
+      "entry": 1.011,
+      "exit": 1.058,
+      "pnl": 41.1678,
+      "pnl_pct": 4.1168,
+      "reason": "RSI RECOVERY",
+      "bars": 12,
+      "entry_bar": 192,
+      "exit_bar": 204,
+      "size": 1000.0,
+      "equity_after": 2044.9533
+    },
+    {
+      "pair": "BERA/USD",
+      "entry": 0.589,
+      "exit": 0.6082,
+      "pnl": 27.9268,
+      "pnl_pct": 2.7313,
+      "reason": "DC TARGET",
+      "bars": 7,
+      "entry_bar": 604,
+      "exit_bar": 611,
+      "size": 1022.4767,
+      "equity_after": 2072.8801
+    },
+    {
+      "pair": "OM/USD",
+      "entry": 0.0423,
+      "exit": 0.0453,
+      "pnl": 67.9258,
+      "pnl_pct": 6.5538,
+      "reason": "DC TARGET",
+      "bars": 3,
+      "entry_bar": 651,
+      "exit_bar": 654,
+      "size": 1036.4401,
+      "equity_after": 1104.3658
+    },
+    {
+      "pair": "ALT/USD",
+      "entry": 0.0077,
+      "exit": 0.0086,
+      "pnl": 115.7525,
+      "pnl_pct": 11.1683,
+      "reason": "DC TARGET",
+      "bars": 4,
+      "entry_bar": 651,
+      "exit_bar": 655,
+      "size": 1036.4401,
+      "equity_after": 2256.5584
+    }
+  ]
+}

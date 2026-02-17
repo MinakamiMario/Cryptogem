@@ -1,0 +1,1015 @@
+{
+  "version": "v1",
+  "exchange": "mexc",
+  "quote_currency": "USDT",
+  "internal_format": "SYM/USD",
+  "n_coins": 200,
+  "min_bars": 2160,
+  "min_days": 360,
+  "max_coins": 200,
+  "generated_at": "2026-02-17T13:44:01Z",
+  "coins": [
+    "SOL/USD",
+    "XRP/USD",
+    "DOGE/USD",
+    "BNB/USD",
+    "SUI/USD",
+    "PEPE/USD",
+    "LTC/USD",
+    "ADA/USD",
+    "BCH/USD",
+    "TRX/USD",
+    "ZEC/USD",
+    "TAO/USD",
+    "NEAR/USD",
+    "UNI/USD",
+    "ORCA/USD",
+    "AAVE/USD",
+    "RAY/USD",
+    "ENA/USD",
+    "RPL/USD",
+    "HBAR/USD",
+    "LINK/USD",
+    "XLM/USD",
+    "SHIB/USD",
+    "DASH/USD",
+    "PIPPIN/USD",
+    "MX/USD",
+    "TON/USD",
+    "ALEO/USD",
+    "PENGU/USD",
+    "TRUMP/USD",
+    "ATOM/USD",
+    "ULTIMA/USD",
+    "UMA/USD",
+    "OGN/USD",
+    "WBTC/USD",
+    "DOT/USD",
+    "POPCAT/USD",
+    "AVAX/USD",
+    "ICP/USD",
+    "ZRO/USD",
+    "OP/USD",
+    "BERA/USD",
+    "WLD/USD",
+    "CHZ/USD",
+    "XMR/USD",
+    "MAGIC/USD",
+    "ARB/USD",
+    "IP/USD",
+    "ETC/USD",
+    "BDX/USD",
+    "ETHFI/USD",
+    "APT/USD",
+    "XUSD/USD",
+    "OM/USD",
+    "ZANO/USD",
+    "OG/USD",
+    "FIL/USD",
+    "ALGO/USD",
+    "KAS/USD",
+    "DEEP/USD",
+    "ARPA/USD",
+    "STEEM/USD",
+    "AXS/USD",
+    "HNT/USD",
+    "DUSK/USD",
+    "POL/USD",
+    "PUMP/USD",
+    "NEXO/USD",
+    "JTO/USD",
+    "LUNA/USD",
+    "WIF/USD",
+    "ONDO/USD",
+    "SKX/USD",
+    "PRO/USD",
+    "ZEN/USD",
+    "INJ/USD",
+    "VVV/USD",
+    "SEI/USD",
+    "L3/USD",
+    "LRC/USD",
+    "VET/USD",
+    "MERL/USD",
+    "LISTA/USD",
+    "CAKE/USD",
+    "MOODENG/USD",
+    "OBT/USD",
+    "AIXBT/USD",
+    "PI/USD",
+    "AITECH/USD",
+    "W/USD",
+    "BONK/USD",
+    "CRV/USD",
+    "RENDER/USD",
+    "ZBCN/USD",
+    "HTX/USD",
+    "FARTCOIN/USD",
+    "TNSR/USD",
+    "STORJ/USD",
+    "JST/USD",
+    "M/USD",
+    "AR/USD",
+    "OKB/USD",
+    "SKL/USD",
+    "EGLD/USD",
+    "SHELL/USD",
+    "XVG/USD",
+    "REZ/USD",
+    "VIRTUAL/USD",
+    "MANTA/USD",
+    "CRO/USD",
+    "LUNC/USD",
+    "JUP/USD",
+    "TIA/USD",
+    "HOT/USD",
+    "PENDLE/USD",
+    "IO/USD",
+    "COW/USD",
+    "RAD/USD",
+    "RUNE/USD",
+    "ME/USD",
+    "VR/USD",
+    "MBL/USD",
+    "PROPC/USD",
+    "SYN/USD",
+    "C98/USD",
+    "ALPINE/USD",
+    "FTT/USD",
+    "SAGA/USD",
+    "DYM/USD",
+    "MORPHO/USD",
+    "GALA/USD",
+    "COMP/USD",
+    "KMNO/USD",
+    "BIO/USD",
+    "JELLYJELLY/USD",
+    "RIF/USD",
+    "VIC/USD",
+    "ENS/USD",
+    "IMX/USD",
+    "MEME/USD",
+    "DRIFT/USD",
+    "BAN/USD",
+    "STRK/USD",
+    "XDC/USD",
+    "CHR/USD",
+    "S/USD",
+    "KSM/USD",
+    "SUN/USD",
+    "APE/USD",
+    "SATS/USD",
+    "SNX/USD",
+    "RARE/USD",
+    "SEDA/USD",
+    "SOLV/USD",
+    "BEL/USD",
+    "SPELL/USD",
+    "ZK/USD",
+    "NMR/USD",
+    "PYTH/USD",
+    "FET/USD",
+    "YGG/USD",
+    "ANKR/USD",
+    "NIBI/USD",
+    "PLB/USD",
+    "ALICE/USD",
+    "FLT/USD",
+    "EIGEN/USD",
+    "ACT/USD",
+    "TEL/USD",
+    "USTC/USD",
+    "KCS/USD",
+    "BSV/USD",
+    "ZIL/USD",
+    "CYBER/USD",
+    "STX/USD",
+    "DCR/USD",
+    "HEI/USD",
+    "VANA/USD",
+    "ART/USD",
+    "CETUS/USD",
+    "PHB/USD",
+    "COREUM/USD",
+    "PNUT/USD",
+    "XVS/USD",
+    "SPX/USD",
+    "CFX/USD",
+    "TLM/USD",
+    "PONKE/USD",
+    "ACH/USD",
+    "DEXE/USD",
+    "AMP/USD",
+    "ORAI/USD",
+    "LPT/USD",
+    "NPC/USD",
+    "KAITO/USD",
+    "API3/USD",
+    "QNT/USD",
+    "CVX/USD",
+    "TRUF/USD",
+    "BANANA/USD"
+  ],
+  "coin_stats": {
+    "SOL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "XRP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "DOGE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BNB/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SUI/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PEPE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "LTC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ADA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BCH/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "TRX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ZEC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "TAO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "NEAR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "UNI/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ORCA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "AAVE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "RAY/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ENA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "RPL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "HBAR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "LINK/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "XLM/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SHIB/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "DASH/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PIPPIN/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "MX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "TON/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ALEO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PENGU/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "TRUMP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ATOM/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ULTIMA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "UMA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "OGN/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "WBTC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "DOT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "POPCAT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "AVAX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ICP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ZRO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "OP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BERA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "WLD/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "CHZ/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "XMR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "MAGIC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ARB/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "IP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ETC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BDX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ETHFI/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "APT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "XUSD/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "OM/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ZANO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "OG/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "FIL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ALGO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "KAS/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "DEEP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ARPA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "STEEM/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "AXS/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "HNT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "DUSK/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "POL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PUMP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "NEXO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "JTO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "LUNA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "WIF/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ONDO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SKX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PRO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ZEN/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "INJ/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "VVV/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SEI/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "L3/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "LRC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "VET/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "MERL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "LISTA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "CAKE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "MOODENG/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "OBT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "AIXBT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PI/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "AITECH/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "W/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BONK/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "CRV/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "RENDER/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ZBCN/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "HTX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "FARTCOIN/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "TNSR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "STORJ/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "JST/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "M/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "AR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "OKB/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SKL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "EGLD/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SHELL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "XVG/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "REZ/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "VIRTUAL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "MANTA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "CRO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "LUNC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "JUP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "TIA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "HOT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PENDLE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "IO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "COW/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "RAD/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "RUNE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ME/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "VR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "MBL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PROPC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SYN/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "C98/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ALPINE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "FTT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SAGA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "DYM/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "MORPHO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "GALA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "COMP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "KMNO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BIO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "JELLYJELLY/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "RIF/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "VIC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ENS/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "IMX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "MEME/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "DRIFT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BAN/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "STRK/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "XDC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "CHR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "S/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "KSM/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SUN/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "APE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SATS/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SNX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "RARE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SEDA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SOLV/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BEL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SPELL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ZK/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "NMR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PYTH/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "FET/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "YGG/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ANKR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "NIBI/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PLB/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ALICE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "FLT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "EIGEN/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ACT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "TEL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "USTC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "KCS/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BSV/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ZIL/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "CYBER/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "STX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "DCR/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "HEI/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "VANA/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ART/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "CETUS/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PHB/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "COREUM/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PNUT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "XVS/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "SPX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "CFX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "TLM/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "PONKE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ACH/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "DEXE/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "AMP/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "ORAI/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "LPT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "NPC/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "KAITO/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "API3/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "QNT/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "CVX/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "TRUF/USD": {
+      "bars": 2160,
+      "days": 360
+    },
+    "BANANA/USD": {
+      "bars": 2160,
+      "days": 360
+    }
+  }
+}

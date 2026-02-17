@@ -1,0 +1,104 @@
+{
+  "version": "mexc-confirm",
+  "created": "2026-02-17",
+  "description": "MEXC 4H portability test: same hnotrl_msp20 configs as Kraken, MEXC fee structure (0%/10bps). Cohort A = coins with ≥2160 bars (≥360d).",
+  "data_source": {
+    "registry_id": "ohlcv_4h_mexc_spot_usdt_v1",
+    "source": "cryptocompare",
+    "venue": "proxy",
+    "exchange": "mexc",
+    "fee_bps_per_side": 10,
+    "fee_note": "MEXC SPOT taker 10bps, maker 0%. Conservative: use taker for all."
+  },
+  "total_configs": 4,
+  "configs": [
+    {
+      "idx": 1,
+      "label": "baseline_mexc_cohortA",
+      "block": "control",
+      "cohort": "A",
+      "description": "hnotrl_msp20 baseline on MEXC cohort A (≥360d) with MEXC fees (10bps/side)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "fee_override": 0.001
+    },
+    {
+      "idx": 2,
+      "label": "slope_moderate_mexc_cohortA",
+      "block": "slope_sizing",
+      "cohort": "A",
+      "description": "Slope-as-sizing moderate (min=0.3) on MEXC with MEXC fees",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "slope_sizing": {
+        "sma_period": 50,
+        "steep_thresh": -10.0,
+        "mild_thresh": -3.0,
+        "min_scale": 0.3
+      },
+      "fee_override": 0.001
+    },
+    {
+      "idx": 3,
+      "label": "baseline_mexc_krakenFee_cohortA",
+      "block": "fee_comparison",
+      "cohort": "A",
+      "description": "hnotrl_msp20 on MEXC data but with KRAKEN fees (26bps) — isolates fee vs universe effect",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "fee_override": 0.0026
+    },
+    {
+      "idx": 4,
+      "label": "slope_moderate_mexc_krakenFee_cohortA",
+      "block": "fee_comparison",
+      "cohort": "A",
+      "description": "Slope-sizing on MEXC data with KRAKEN fees — isolates fee vs universe effect",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "slope_sizing": {
+        "sma_period": 50,
+        "steep_thresh": -10.0,
+        "mild_thresh": -3.0,
+        "min_scale": 0.3
+      },
+      "fee_override": 0.0026
+    }
+  ]
+}

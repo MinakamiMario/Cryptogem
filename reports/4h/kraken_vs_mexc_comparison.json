@@ -1,0 +1,256 @@
+{
+  "version": "v1",
+  "generated": "2026-02-17T15:30:00+00:00",
+  "git_hash": "2659755",
+  "description": "Cross-exchange comparison: Kraken vs MEXC for 4H DualConfirm hnotrl_msp20 strategy",
+
+  "exchanges": {
+    "kraken": {
+      "fee_bps_per_side": 26,
+      "fee_note": "Kraken SPOT taker 26bps per side (standard tier)",
+      "data_sources": {
+        "native_120d": {
+          "source": "kraken_api",
+          "venue": "native",
+          "coins": 62,
+          "bars_median": 721,
+          "days": 120
+        },
+        "proxy_360d": {
+          "source": "cryptocompare",
+          "venue": "proxy",
+          "coins": 170,
+          "bars_median": 2183,
+          "days": 363
+        }
+      }
+    },
+    "mexc": {
+      "fee_bps_per_side": 10,
+      "fee_note": "MEXC SPOT taker 10bps per side (0% maker, conservative taker-only)",
+      "data_sources": {
+        "proxy_360d": {
+          "source": "cryptocompare",
+          "venue": "proxy",
+          "coins": 144,
+          "bars_median": 2483,
+          "days": 360,
+          "cohort": "A (>= 2160 bars)"
+        }
+      }
+    }
+  },
+
+  "head_to_head": {
+    "description": "Apples-to-apples: 360d proxy data, cohort A, same strategy (hnotrl_msp20), each exchange's own fees",
+    "baseline": {
+      "kraken_360d_proxy": {
+        "trades": 76,
+        "wr": 56.6,
+        "pnl": -668.67,
+        "pf": 0.64,
+        "dd": 41.7,
+        "ev_per_trade": -8.80,
+        "coins": 170,
+        "fee_bps": 26,
+        "verdict": "NO-GO"
+      },
+      "mexc_360d_proxy": {
+        "trades": 23,
+        "wr": 65.2,
+        "pnl": -58.09,
+        "pf": 0.92,
+        "dd": 33.0,
+        "ev_per_trade": -2.53,
+        "coins": 144,
+        "fee_bps": 10,
+        "verdict": "NO-GO"
+      },
+      "delta": {
+        "trades": -53,
+        "wr": 8.6,
+        "pnl": 610.58,
+        "pf": 0.28,
+        "dd": -8.7,
+        "ev_per_trade": 6.27,
+        "note": "MEXC better on all metrics, but trade count drops from 76 to 23 (70% fewer trades)"
+      }
+    },
+    "slope_sized": {
+      "kraken_360d_proxy": {
+        "trades": 76,
+        "wr": 56.6,
+        "pnl": 61.62,
+        "pf": 1.09,
+        "dd": 10.5,
+        "ev_per_trade": 0.81,
+        "coins": 170,
+        "fee_bps": 26,
+        "verdict": "NO-GO"
+      },
+      "mexc_360d_proxy": {
+        "trades": 23,
+        "wr": 65.2,
+        "pnl": 158.77,
+        "pf": 1.51,
+        "dd": 13.5,
+        "ev_per_trade": 6.90,
+        "coins": 144,
+        "fee_bps": 10,
+        "verdict": "NO-GO (G5 fail)"
+      },
+      "delta": {
+        "trades": -53,
+        "wr": 8.6,
+        "pnl": 97.15,
+        "pf": 0.42,
+        "dd": 3.0,
+        "ev_per_trade": 6.09,
+        "note": "MEXC slope-sized passes G1-G4 but fails G5 (robustness split). Best MEXC result overall."
+      }
+    }
+  },
+
+  "fee_isolation": {
+    "description": "Same MEXC data, different fee levels. Isolates fee contribution from universe difference.",
+    "baseline_mexc_data": {
+      "with_mexc_fee_10bps": {
+        "trades": 23,
+        "wr": 65.2,
+        "pnl": -58.09,
+        "pf": 0.92,
+        "dd": 33.0,
+        "ev_per_trade": -2.53
+      },
+      "with_kraken_fee_26bps": {
+        "trades": 23,
+        "wr": 65.2,
+        "pnl": -127.89,
+        "pf": 0.84,
+        "dd": 34.2,
+        "ev_per_trade": -5.56
+      },
+      "fee_delta": {
+        "pnl_difference": 69.80,
+        "pf_difference": 0.08,
+        "dd_difference": -1.3,
+        "ev_difference": 3.03,
+        "note": "Fee difference costs $69.80 across 23 trades ($3.03/trade). Same trade signals, only fee changes."
+      }
+    },
+    "slope_sized_mexc_data": {
+      "with_mexc_fee_10bps": {
+        "trades": 23,
+        "wr": 65.2,
+        "pnl": 158.77,
+        "pf": 1.51,
+        "dd": 13.5,
+        "ev_per_trade": 6.90
+      },
+      "with_kraken_fee_26bps": {
+        "trades": 23,
+        "wr": 65.2,
+        "pnl": 118.41,
+        "pf": 1.38,
+        "dd": 13.9,
+        "ev_per_trade": 5.15
+      },
+      "fee_delta": {
+        "pnl_difference": 40.36,
+        "pf_difference": 0.13,
+        "dd_difference": -0.5,
+        "ev_difference": 1.75,
+        "note": "Fee difference costs $40.36 ($1.75/trade). Smaller impact because slope-sizing reduces position sizes (avg_scale=0.513)."
+      }
+    },
+    "total_fee_vs_universe": {
+      "fee_contribution": 40.36,
+      "fee_contribution_note": "MEXC fee 10bps vs Kraken 26bps saves $40 on slope-sized ($70 on baseline)",
+      "universe_contribution": 56.79,
+      "universe_contribution_note": "Total head-to-head delta ($97.15) minus fee delta ($40.36). MEXC universe accounts for $57.",
+      "trade_count_difference": -53,
+      "trade_count_note": "MEXC 144 coins produce only 23 trades vs Kraken 170 coins producing 76 trades. Fewer coins = fewer bad trades filtered out."
+    }
+  },
+
+  "universe_comparison": {
+    "kraken_proxy_360d": {
+      "coins": 170,
+      "cohort": "A (>= 2160 bars)",
+      "trades_baseline": 76,
+      "trades_per_coin": 0.45
+    },
+    "mexc_proxy_360d": {
+      "coins": 144,
+      "cohort": "A (>= 2160 bars)",
+      "trades_baseline": 23,
+      "trades_per_coin": 0.16
+    },
+    "overlap_note": "MEXC has 144 vs Kraken 170 coins in cohort A. 15% fewer coins but 70% fewer trades — the MEXC universe triggers fewer DualConfirm entries because MEXC coins may have different volatility/RSI profiles."
+  },
+
+  "slope_sizing_impact": {
+    "description": "Slope-as-sizing converts negative baseline into positive on BOTH exchanges",
+    "kraken_360d": {
+      "baseline_pnl": -668.67,
+      "slope_pnl": 61.62,
+      "improvement": 730.29,
+      "baseline_dd": 41.7,
+      "slope_dd": 10.5,
+      "dd_reduction": 31.2
+    },
+    "mexc_360d": {
+      "baseline_pnl": -58.09,
+      "slope_pnl": 158.77,
+      "improvement": 216.86,
+      "baseline_dd": 33.0,
+      "slope_dd": 13.5,
+      "dd_reduction": 19.5
+    },
+    "conclusion": "Slope-sizing is ESSENTIAL on both exchanges. Turns -$669 -> +$62 on Kraken, -$58 -> +$159 on MEXC."
+  },
+
+  "kraken_native_reference": {
+    "description": "Kraken native 120d for reference (best Kraken results, not directly comparable to 360d)",
+    "baseline_native_120d": {
+      "trades": 16,
+      "pf": 2.52,
+      "pnl": 363.81,
+      "dd": 7.2,
+      "ev_per_trade": 22.74,
+      "verdict": "GO"
+    },
+    "slope_native_120d": {
+      "trades": 16,
+      "pf": 4.24,
+      "pnl": 267.13,
+      "dd": 1.9,
+      "ev_per_trade": 16.70,
+      "verdict": "GO"
+    },
+    "note": "120d native Kraken is GO because window falls in steep downtrend regime. Not directly comparable to 360d extended."
+  },
+
+  "conclusion": {
+    "verdict": "NO-GO for MEXC deployment",
+    "reasons": [
+      "Only 23 trades on 144 coins over 360 days (vs 76 on Kraken 170 coins)",
+      "Best MEXC config (slope-sized, MEXC fees) passes G1-G4 but fails G5 (robustness split: H1 -$114, H2 +$273)",
+      "MEXC baseline is negative (-$58) even with lower fees",
+      "Insufficient trade count for statistical confidence (23 is just barely above G1=15 threshold)",
+      "Trade concentration: 70% fewer trades than Kraken extended data — not enough market exposure"
+    ],
+    "key_findings": [
+      "Fee delta is modest: $40-70 across 23 trades ($1.75-3.03/trade)",
+      "Universe difference is the primary driver: MEXC coins trigger fewer DualConfirm entries",
+      "Slope-sizing is essential on BOTH exchanges: converts negative baseline to positive",
+      "The 4H DualConfirm strategy is structurally regime-dependent regardless of exchange"
+    ],
+    "cross_exchange_observations": [
+      "DualConfirm bounce needs specific volatility/RSI profiles that occur more on Kraken's coin universe",
+      "MEXC USDT pairs behave differently from Kraken USD pairs in mean-reversion characteristics",
+      "Lower fees alone do not rescue a strategy that lacks sufficient signal generation",
+      "Slope-sizing is a universal improvement pattern (works on both exchanges)"
+    ]
+  }
+}

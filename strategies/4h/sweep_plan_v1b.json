@@ -1,0 +1,148 @@
+{
+  "version": "v1b",
+  "created": "2026-02-17",
+  "description": "Confirmatory time-window sweep: 3 GO configs from v1 on EARLY + LATE 360-bar windows",
+  "parent_plan": "sweep_plan_v1.json",
+  "go_source": "reports/4h/scoreboard_v1.md",
+  "windows": {
+    "early": {
+      "dataset": "reports/4h/windows/candle_cache_early_360.json",
+      "bars": 360,
+      "description": "First ~360 bars (early period)"
+    },
+    "late": {
+      "dataset": "reports/4h/windows/candle_cache_late_360.json",
+      "bars": 360,
+      "description": "Last ~360 bars (late period)"
+    }
+  },
+  "total_configs": 6,
+  "configs": [
+    {
+      "idx": 1,
+      "label": "hnotrl_mp1_early",
+      "window": "early",
+      "v1_idx": 20,
+      "v1_label": "hnotrl_mp1",
+      "block": "B",
+      "description": "Single position (max_pos=1) on EARLY window",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 2,
+      "label": "hnotrl_msp20_early",
+      "window": "early",
+      "v1_idx": 17,
+      "v1_label": "hnotrl_msp20",
+      "block": "B",
+      "description": "Wider max stop (20%) on EARLY window",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 20.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 3,
+      "label": "hnotrl_mp1_rsi38_early",
+      "window": "early",
+      "v1_idx": 30,
+      "v1_label": "hnotrl_mp1_rsi38",
+      "block": "D",
+      "description": "max_pos=1 + rsi38 on EARLY window",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 38,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 4,
+      "label": "hnotrl_mp1_late",
+      "window": "late",
+      "v1_idx": 20,
+      "v1_label": "hnotrl_mp1",
+      "block": "B",
+      "description": "Single position (max_pos=1) on LATE window",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    },
+    {
+      "idx": 5,
+      "label": "hnotrl_msp20_late",
+      "window": "late",
+      "v1_idx": 17,
+      "v1_label": "hnotrl_msp20",
+      "block": "B",
+      "description": "Wider max stop (20%) on LATE window",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 20.0,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 6,
+      "label": "hnotrl_mp1_rsi38_late",
+      "window": "late",
+      "v1_idx": 30,
+      "v1_label": "hnotrl_mp1_rsi38",
+      "block": "D",
+      "description": "max_pos=1 + rsi38 on LATE window",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 38,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "breakeven": false,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "time_max_bars": 20,
+        "max_stop_pct": 15.0,
+        "max_pos": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+{
+  "version": "v2",
+  "generated": "2026-02-17T15:22:21.161385+00:00",
+  "git_hash": "2659755",
+  "total_runs": 10,
+  "passed_gates": 0,
+  "failed_gates": 10,
+  "insufficient_sample": 0,
+  "other": null,
+  "top_3": [],
+  "all_results": [
+    {
+      "run_id": "sweep_v2_001_baseline_mexc_cohorta_2659755",
+      "idx": "001",
+      "label": "baseline_mexc_cohorta",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 23,
+      "wr": 65.2,
+      "pnl": -58.09,
+      "pf": 0.92,
+      "dd": 33.0,
+      "ev_per_trade": -2.53,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "sweep_v2_001_baseline_msp20_cohorta_2659755",
+      "idx": "001",
+      "label": "baseline_msp20_cohorta",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 76,
+      "wr": 56.6,
+      "pnl": -668.67,
+      "pf": 0.64,
+      "dd": 41.7,
+      "ev_per_trade": -8.8,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "sweep_v2_002_slope_conservative_cohorta_2659755",
+      "idx": "002",
+      "label": "slope_conservative_cohorta",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 76,
+      "wr": 56.6,
+      "pnl": -147.04,
+      "pf": 0.86,
+      "dd": 17.7,
+      "ev_per_trade": -1.93,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "sweep_v2_002_slope_moderate_mexc_cohorta_2659755",
+      "idx": "002",
+      "label": "slope_moderate_mexc_cohorta",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 23,
+      "wr": 65.2,
+      "pnl": 158.77,
+      "pf": 1.51,
+      "dd": 13.5,
+      "ev_per_trade": 6.9,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": true,
+        "G4": true,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "sweep_v2_003_baseline_mexc_krakenfee_cohort_2659755",
+      "idx": "003",
+      "label": "baseline_mexc_krakenfee_cohort",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 23,
+      "wr": 65.2,
+      "pnl": -127.89,
+      "pf": 0.84,
+      "dd": 34.2,
+      "ev_per_trade": -5.56,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "sweep_v2_003_slope_moderate_cohorta_2659755",
+      "idx": "003",
+      "label": "slope_moderate_cohorta",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 76,
+      "wr": 56.6,
+      "pnl": 61.62,
+      "pf": 1.09,
+      "dd": 10.5,
+      "ev_per_trade": 0.81,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": false,
+        "G4": true,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "sweep_v2_004_slope_aggressive_cohorta_2659755",
+      "idx": "004",
+      "label": "slope_aggressive_cohorta",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 76,
+      "wr": 56.6,
+      "pnl": 60.52,
+      "pf": 1.09,
+      "dd": 9.1,
+      "ev_per_trade": 0.8,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": false,
+        "G4": true,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "sweep_v2_004_slope_moderate_mexc_krakenfee__2659755",
+      "idx": "004",
+      "label": "slope_moderate_mexc_krakenfee_",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 23,
+      "wr": 65.2,
+      "pnl": 118.41,
+      "pf": 1.38,
+      "dd": 13.9,
+      "ev_per_trade": 5.15,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": true,
+        "G4": true,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "sweep_v2_005_baseline_msp20_cohortb_2659755",
+      "idx": "005",
+      "label": "baseline_msp20_cohortb",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 97,
+      "wr": 58.8,
+      "pnl": -480.75,
+      "pf": 0.8,
+      "dd": 51.8,
+      "ev_per_trade": -4.96,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": false,
+        "G3": false,
+        "G4": false,
+        "G5": false
+      },
+      "rank": null
+    },
+    {
+      "run_id": "sweep_v2_006_slope_moderate_cohortb_2659755",
+      "idx": "006",
+      "label": "slope_moderate_cohortb",
+      "exit_type": "hybrid_notrl",
+      "block": "A",
+      "trades": 97,
+      "wr": 58.8,
+      "pnl": 205.49,
+      "pf": 1.2,
+      "dd": 19.2,
+      "ev_per_trade": 2.12,
+      "verdict": "NO-GO",
+      "gates": {
+        "G1": true,
+        "G2": true,
+        "G3": false,
+        "G4": true,
+        "G5": false
+      },
+      "rank": null
+    }
+  ],
+  "provenance": {
+    "dataset_ids": [
+      "ohlcv_4h_kraken_spot_usd_v2",
+      "ohlcv_4h_mexc_spot_usdt_v1"
+    ],
+    "exchanges": [
+      "kraken",
+      "mexc"
+    ],
+    "source": "cryptocompare",
+    "venue": "proxy",
+    "fee_models": {
+      "kraken": {
+        "fee_bps_per_side": 26,
+        "model": "kraken_spot_26bps"
+      },
+      "mexc": {
+        "fee_bps_per_side": 10,
+        "model": "mexc_spot_10bps"
+      }
+    },
+    "universe_ids": [
+      "kraken_4h_cohortA_170_v1",
+      "kraken_4h_cohortB_242_v1",
+      "mexc_4h_cohortA_144_v1"
+    ],
+    "time_window": "360d+ (median 2183-2501 bars)",
+    "initial_capital_usd": 2000,
+    "sweep_plans": [
+      "strategies/4h/sweep_plan_v2_extended.json",
+      "strategies/4h/sweep_plan_mexc_confirm.json"
+    ]
+  }
+}

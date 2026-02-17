@@ -1,0 +1,440 @@
+{
+  "metadata": {
+    "run_id": "sweep_v2_003_baseline_mexc_krakenfee_cohort_2659755",
+    "timestamp": "2026-02-17T15:21:28.090584+00:00",
+    "git_hash": "2659755",
+    "config_source": "sweep_plan_v2:baseline_mexc_krakenFee_cohortA (idx=3)",
+    "dataset": "candle_cache_4h_mexc_v1.json",
+    "dataset_path": "/Users/oussama/CryptogemData/derived/candle_cache/mexc/4h/candle_cache_4h_mexc_v1.json",
+    "exchange": "kraken",
+    "fee_bps": 26.0,
+    "initial_capital": 2000,
+    "start_bar": 50,
+    "n_coins": 144,
+    "elapsed_s": 0.22,
+    "engine": "agent_team_v3.run_backtest",
+    "sweep_plan": "/Users/oussama/Cryptogem/strategies/4h/sweep_plan_mexc_confirm.json",
+    "sweep_index": 3,
+    "cohort": "A",
+    "cohort_threshold": 2160
+  },
+  "summary": {
+    "trades": 23,
+    "wr": 65.22,
+    "pnl": -127.89,
+    "final_equity": 1872.11,
+    "pf": 0.8371,
+    "dd": 34.23,
+    "broke": false,
+    "early_stopped": false
+  },
+  "exit_classes": {
+    "A": {
+      "DC TARGET": {
+        "count": 5,
+        "pnl": 320.61320627248676,
+        "wins": 4
+      },
+      "RSI RECOVERY": {
+        "count": 12,
+        "pnl": 276.16571619255524,
+        "wins": 10
+      },
+      "BB TARGET": {
+        "count": 1,
+        "pnl": 5.142811192860404,
+        "wins": 1
+      }
+    },
+    "B": {
+      "FIXED STOP": {
+        "count": 2,
+        "pnl": -398.22292734803125,
+        "wins": 0
+      },
+      "TIME MAX": {
+        "count": 3,
+        "pnl": -331.5918909863892,
+        "wins": 0
+      }
+    }
+  },
+  "trade_count": 23,
+  "gates": {
+    "verdict": "NO-GO",
+    "passed_all": false,
+    "n_passed": 2,
+    "n_total": 5,
+    "summary": "[NO-GO] 2/5 | G1:MIN_TRADES=PASS | G2:MAX_DRAWDOWN=PASS | G3:PROFIT_FACTOR=FAIL | G4:EXPECTANCY=FAIL | G5:ROBUSTNESS_SPLIT=FAIL || G6:OUTLIER_CONC=OK | G7:COIN_CONC=OK",
+    "gates": [
+      {
+        "name": "G1:MIN_TRADES",
+        "description": "Minimum trade count for statistical significance",
+        "passed": true,
+        "value": 23.0,
+        "threshold": ">= 15",
+        "detail": "23 trades (sufficient)",
+        "advisory": false
+      },
+      {
+        "name": "G2:MAX_DRAWDOWN",
+        "description": "Maximum drawdown for capital preservation",
+        "passed": true,
+        "value": 34.23,
+        "threshold": "<= 40.0%",
+        "detail": "DD 34.2% (within limit)",
+        "advisory": false
+      },
+      {
+        "name": "G3:PROFIT_FACTOR",
+        "description": "Profit factor for edge confirmation",
+        "passed": false,
+        "value": 0.84,
+        "threshold": ">= 1.3",
+        "detail": "PF 0.84 (below 1.3)",
+        "advisory": false
+      },
+      {
+        "name": "G4:EXPECTANCY",
+        "description": "Positive expected value per trade",
+        "passed": false,
+        "value": -5.56,
+        "threshold": "> $0",
+        "detail": "EV/trade $-5.56 (negative or zero)",
+        "advisory": false
+      },
+      {
+        "name": "G5:ROBUSTNESS_SPLIT",
+        "description": "2-split temporal validation (both halves profitable)",
+        "passed": false,
+        "value": 0.0,
+        "threshold": "both halves P&L > $0",
+        "detail": "H1: 12tr $-416 | H2: 11tr $+288 (FAIL)",
+        "advisory": false
+      }
+    ],
+    "advisory_gates": [
+      {
+        "name": "G6:OUTLIER_CONC",
+        "description": "Top-1 trade share of total profit (advisory)",
+        "passed": true,
+        "value": 30.4,
+        "threshold": "< 70.0%",
+        "detail": "Top-1 trade $+200 = 30.4% of $657 profit (OK)",
+        "advisory": true
+      },
+      {
+        "name": "G7:COIN_CONC",
+        "description": "Top-1 coin share of total profit (advisory)",
+        "passed": true,
+        "value": 33.0,
+        "threshold": "< 70.0%",
+        "detail": "Top coin XRP/USD $+217 = 33.0% of $657 profit (OK)",
+        "advisory": true
+      }
+    ]
+  },
+  "cohort": "A",
+  "slope_sizing": null,
+  "trades": [
+    {
+      "pair": "OP/USD",
+      "entry": 1.663,
+      "exit": 1.729,
+      "pnl": 34.3841,
+      "pnl_pct": 3.4384,
+      "reason": "DC TARGET",
+      "bars": 2,
+      "entry_bar": 100,
+      "exit_bar": 102,
+      "size": 1000.0,
+      "equity_after": 1034.3841
+    },
+    {
+      "pair": "STRK/USD",
+      "entry": 0.3975,
+      "exit": 0.4157,
+      "pnl": 40.4671,
+      "pnl_pct": 4.0467,
+      "reason": "DC TARGET",
+      "bars": 5,
+      "entry_bar": 100,
+      "exit_bar": 105,
+      "size": 1000.0,
+      "equity_after": 2074.8512
+    },
+    {
+      "pair": "CAKE/USD",
+      "entry": 1.851,
+      "exit": 1.964,
+      "pnl": 57.7736,
+      "pnl_pct": 5.5689,
+      "reason": "RSI RECOVERY",
+      "bars": 11,
+      "entry_bar": 183,
+      "exit_bar": 194,
+      "size": 1037.4256,
+      "equity_after": 2132.6248
+    },
+    {
+      "pair": "AXS/USD",
+      "entry": 4.907,
+      "exit": 3.9256,
+      "pnl": -218.2528,
+      "pnl_pct": -20.468,
+      "reason": "FIXED STOP",
+      "bars": 5,
+      "entry_bar": 218,
+      "exit_bar": 223,
+      "size": 1066.3124,
+      "equity_after": 1914.372
+    },
+    {
+      "pair": "IP/USD",
+      "entry": 5.023,
+      "exit": 4.187,
+      "pnl": -163.8718,
+      "pnl_pct": -17.1202,
+      "reason": "TIME MAX",
+      "bars": 20,
+      "entry_bar": 275,
+      "exit_bar": 295,
+      "size": 957.186,
+      "equity_after": 1750.5001
+    },
+    {
+      "pair": "MBL/USD",
+      "entry": 0.0026,
+      "exit": 0.0026,
+      "pnl": 16.3866,
+      "pnl_pct": 1.8722,
+      "reason": "RSI RECOVERY",
+      "bars": 10,
+      "entry_bar": 315,
+      "exit_bar": 325,
+      "size": 875.2501,
+      "equity_after": 891.6366
+    },
+    {
+      "pair": "ATOM/USD",
+      "entry": 4.616,
+      "exit": 4.78,
+      "pnl": 26.4643,
+      "pnl_pct": 3.0236,
+      "reason": "RSI RECOVERY",
+      "bars": 10,
+      "entry_bar": 315,
+      "exit_bar": 325,
+      "size": 875.2501,
+      "equity_after": 1793.351
+    },
+    {
+      "pair": "XRP/USD",
+      "entry": 2.187,
+      "exit": 2.24,
+      "pnl": 17.0109,
+      "pnl_pct": 1.8971,
+      "reason": "RSI RECOVERY",
+      "bars": 12,
+      "entry_bar": 357,
+      "exit_bar": 369,
+      "size": 896.6755,
+      "equity_after": 913.6864
+    },
+    {
+      "pair": "NEXO/USD",
+      "entry": 1.238,
+      "exit": 1.224,
+      "pnl": -14.7765,
+      "pnl_pct": -1.6479,
+      "reason": "RSI RECOVERY",
+      "bars": 13,
+      "entry_bar": 357,
+      "exit_bar": 370,
+      "size": 896.6755,
+      "equity_after": 1795.5854
+    },
+    {
+      "pair": "HTX/USD",
+      "entry": 0.0,
+      "exit": 0.0,
+      "pnl": -37.0345,
+      "pnl_pct": -4.1251,
+      "reason": "RSI RECOVERY",
+      "bars": 18,
+      "entry_bar": 431,
+      "exit_bar": 449,
+      "size": 897.7927,
+      "equity_after": 1758.551
+    },
+    {
+      "pair": "ZBCN/USD",
+      "entry": 0.0009,
+      "exit": 0.0007,
+      "pnl": -179.9701,
+      "pnl_pct": -20.468,
+      "reason": "FIXED STOP",
+      "bars": 7,
+      "entry_bar": 691,
+      "exit_bar": 698,
+      "size": 879.2755,
+      "equity_after": 1578.5808
+    },
+    {
+      "pair": "BONK/USD",
+      "entry": 0.0,
+      "exit": 0.0,
+      "pnl": 5.1428,
+      "pnl_pct": 0.6516,
+      "reason": "BB TARGET",
+      "bars": 11,
+      "entry_bar": 1056,
+      "exit_bar": 1067,
+      "size": 789.2904,
+      "equity_after": 1583.7237
+    },
+    {
+      "pair": "VIC/USD",
+      "entry": 0.1449,
+      "exit": 0.1316,
+      "pnl": -76.6117,
+      "pnl_pct": -9.6749,
+      "reason": "TIME MAX",
+      "bars": 20,
+      "entry_bar": 1826,
+      "exit_bar": 1846,
+      "size": 791.8618,
+      "equity_after": 1507.112
+    },
+    {
+      "pair": "OKB/USD",
+      "entry": 135.51,
+      "exit": 119.79,
+      "pnl": -91.1084,
+      "pnl_pct": -12.0905,
+      "reason": "TIME MAX",
+      "bars": 20,
+      "entry_bar": 1862,
+      "exit_bar": 1882,
+      "size": 753.556,
+      "equity_after": 1416.0036
+    },
+    {
+      "pair": "SEI/USD",
+      "entry": 0.132,
+      "exit": 0.1332,
+      "pnl": 2.738,
+      "pnl_pct": 0.3867,
+      "reason": "RSI RECOVERY",
+      "bars": 12,
+      "entry_bar": 1972,
+      "exit_bar": 1984,
+      "size": 708.0018,
+      "equity_after": 710.7398
+    },
+    {
+      "pair": "AR/USD",
+      "entry": 3.727,
+      "exit": 3.805,
+      "pnl": 11.0972,
+      "pnl_pct": 1.5674,
+      "reason": "RSI RECOVERY",
+      "bars": 12,
+      "entry_bar": 1972,
+      "exit_bar": 1984,
+      "size": 708.0018,
+      "equity_after": 1429.8388
+    },
+    {
+      "pair": "FARTCOIN/USD",
+      "entry": 0.2726,
+      "exit": 0.315,
+      "pnl": 107.1913,
+      "pnl_pct": 14.9935,
+      "reason": "RSI RECOVERY",
+      "bars": 3,
+      "entry_bar": 2030,
+      "exit_bar": 2033,
+      "size": 714.9194,
+      "equity_after": 822.1107
+    },
+    {
+      "pair": "STORJ/USD",
+      "entry": 0.1431,
+      "exit": 0.148,
+      "pnl": 20.6989,
+      "pnl_pct": 2.8953,
+      "reason": "RSI RECOVERY",
+      "bars": 7,
+      "entry_bar": 2030,
+      "exit_bar": 2037,
+      "size": 714.9194,
+      "equity_after": 1557.7291
+    },
+    {
+      "pair": "LTC/USD",
+      "entry": 79.24,
+      "exit": 79.32,
+      "pnl": -3.2658,
+      "pnl_pct": -0.4193,
+      "reason": "DC TARGET",
+      "bars": 12,
+      "entry_bar": 2281,
+      "exit_bar": 2293,
+      "size": 778.8645,
+      "equity_after": 1554.4632
+    },
+    {
+      "pair": "RENDER/USD",
+      "entry": 2.079,
+      "exit": 2.136,
+      "pnl": 17.2124,
+      "pnl_pct": 2.2146,
+      "reason": "RSI RECOVERY",
+      "bars": 15,
+      "entry_bar": 2323,
+      "exit_bar": 2338,
+      "size": 777.2316,
+      "equity_after": 1571.6756
+    },
+    {
+      "pair": "PIPPIN/USD",
+      "entry": 0.339,
+      "exit": 0.363,
+      "pnl": 51.4035,
+      "pnl_pct": 6.5412,
+      "reason": "RSI RECOVERY",
+      "bars": 14,
+      "entry_bar": 2360,
+      "exit_bar": 2374,
+      "size": 785.8378,
+      "equity_after": 1623.0791
+    },
+    {
+      "pair": "OBT/USD",
+      "entry": 0.0015,
+      "exit": 0.0016,
+      "pnl": 49.4836,
+      "pnl_pct": 6.0975,
+      "reason": "DC TARGET",
+      "bars": 3,
+      "entry_bar": 2423,
+      "exit_bar": 2426,
+      "size": 811.5396,
+      "equity_after": 1672.5627
+    },
+    {
+      "pair": "XRP/USD",
+      "entry": 1.215,
+      "exit": 1.512,
+      "pnl": 199.5442,
+      "pnl_pct": 23.8609,
+      "reason": "DC TARGET",
+      "bars": 4,
+      "entry_bar": 2430,
+      "exit_bar": 2434,
+      "size": 836.2814,
+      "equity_after": 1872.1069
+    }
+  ]
+}

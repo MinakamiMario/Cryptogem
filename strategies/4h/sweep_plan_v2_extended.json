@@ -1,0 +1,150 @@
+{
+  "version": "v2-extended",
+  "created": "2026-02-17",
+  "description": "Extended 360+ day backtest: baseline hnotrl_msp20 + slope-as-sizing variants. Data source: CryptoCompare (proxy for Kraken venue). Cohort A = coins with ≥2160 bars (≥360d), Cohort B = ≥1080 bars (≥180d).",
+  "data_source": {
+    "registry_id": "ohlcv_4h_kraken_spot_usd_v2",
+    "source": "cryptocompare",
+    "venue": "proxy",
+    "requested_coins": 526,
+    "downloaded_coins": 336,
+    "failed": 190,
+    "cohort_a_eligible": 170,
+    "cohort_b_eligible": 242
+  },
+  "total_configs": 6,
+  "configs": [
+    {
+      "idx": 1,
+      "label": "baseline_msp20_cohortA",
+      "block": "control",
+      "cohort": "A",
+      "description": "hnotrl_msp20 baseline on Cohort A (≥360d, 170 coins) — no slope sizing",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 2,
+      "label": "slope_conservative_cohortA",
+      "block": "slope_sizing",
+      "cohort": "A",
+      "description": "Slope-as-sizing on Cohort A: steep=-10%/mild=-3%/min=0.5 (conservative)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "slope_sizing": {
+        "sma_period": 50,
+        "steep_thresh": -10.0,
+        "mild_thresh": -3.0,
+        "min_scale": 0.5
+      }
+    },
+    {
+      "idx": 3,
+      "label": "slope_moderate_cohortA",
+      "block": "slope_sizing",
+      "cohort": "A",
+      "description": "Slope-as-sizing on Cohort A: steep=-10%/mild=-3%/min=0.3 (moderate)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "slope_sizing": {
+        "sma_period": 50,
+        "steep_thresh": -10.0,
+        "mild_thresh": -3.0,
+        "min_scale": 0.3
+      }
+    },
+    {
+      "idx": 4,
+      "label": "slope_aggressive_cohortA",
+      "block": "slope_sizing",
+      "cohort": "A",
+      "description": "Slope-as-sizing on Cohort A: steep=-8%/mild=-2%/min=0.2 (aggressive)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "slope_sizing": {
+        "sma_period": 50,
+        "steep_thresh": -8.0,
+        "mild_thresh": -2.0,
+        "min_scale": 0.2
+      }
+    },
+    {
+      "idx": 5,
+      "label": "baseline_msp20_cohortB",
+      "block": "control",
+      "cohort": "B",
+      "description": "hnotrl_msp20 baseline on Cohort B (≥180d, 242 coins) — secondary check",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      }
+    },
+    {
+      "idx": 6,
+      "label": "slope_moderate_cohortB",
+      "block": "slope_sizing",
+      "cohort": "B",
+      "description": "Slope-as-sizing on Cohort B: steep=-10%/mild=-3%/min=0.3 (moderate, secondary check)",
+      "params": {
+        "exit_type": "hybrid_notrl",
+        "rsi_max": 42,
+        "vol_spike_mult": 3.0,
+        "vol_confirm": true,
+        "max_stop_pct": 20.0,
+        "time_max_bars": 20,
+        "rsi_recovery": true,
+        "rsi_rec_target": 45,
+        "max_pos": 2
+      },
+      "slope_sizing": {
+        "sma_period": 50,
+        "steep_thresh": -10.0,
+        "mild_thresh": -3.0,
+        "min_scale": 0.3
+      }
+    }
+  ]
+}

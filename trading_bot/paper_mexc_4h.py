@@ -995,7 +995,7 @@ def main():
 
     # MEXC client
     mexc_key = os.getenv('MEXC_API_KEY', '')
-    mexc_secret = os.getenv('MEXC_SECRET', '')
+    mexc_secret = os.getenv('MEXC_SECRET_KEY', '') or os.getenv('MEXC_SECRET', '')
 
     if not mexc_key or not mexc_secret:
         logger.error("MEXC_API_KEY or MEXC_SECRET not set in .env")

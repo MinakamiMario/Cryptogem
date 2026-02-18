@@ -2,7 +2,7 @@
 
 Quick-lookup: experiment → dataset → scoreboard → verdict → ADR.
 
-Generated: 2026-02-17 | Git: 2659755
+Generated: 2026-02-18 | Git: 42b2e94
 
 ## Experiments
 
@@ -19,6 +19,17 @@ Generated: 2026-02-17 | Git: 2659755
 | sprint3 | Sprint 3 Exit-Intelligence Porting (18 configs, DC exits) | `ohlcv_4h_kraken_spot_usd_526` | `universe_sprint1` (487 coins) | `kraken_spot_26bps` | `scoreboard_sprint3.json` | **0 GO** | 4H-009 |
 | sprint4 | Sprint 4 DC-Compatible Entry Mining (42→10 configs, 7 families) | `ohlcv_4h_kraken_spot_usd_526` | `universe_sprint1` (487 coins) | `kraken_spot_26bps` | `scoreboard_sprint4_strict.json` | **7/10 PF>1.05** (8 STRONG) | 4H-010 |
 | sprint4_val | Sprint 4 P0/P1/P2 Validation Pipeline | `ohlcv_4h_kraken_spot_usd_526` | `universe_sprint1` (487 coins) | `kraken_spot_26bps` | `sprint4_truthpass_summary.json` | **1 VERIFIED, 1 CONDITIONAL** | 4H-011 |
+| sprint4_val | Wrapped Truth-Pass (041+042 vol_scale) | `ohlcv_4h_kraken_spot_usd_526` | `universe_sprint1` (487 coins) | `kraken_spot_26bps` | `sprint4_truthpass_wrapped_041.json` | 041 raw VERIFIED > wrapped | 4H-012 |
+| mexc_041 | MEXC Portability 041 (V1: 145 coins) | `ohlcv_4h_mexc_spot_usdt_v1` | `mexc_4h_cohortA_144_v1` (145 coins) | `mexc_spot_10bps` | `mexc_041_portability_scoreboard_001.json` | CONDITIONAL (PF=1.17) | 4H-013 |
+| mexc_041_v2 | MEXC 041 V2 (439 coins) | `ohlcv_4h_mexc_spot_usdt_v2` | `mexc_4h_v2_439` (439 coins) | `mexc_spot_10bps` | `mexc_041_portability_scoreboard_002.json` | **NO-GO** (PF=0.97) | 4H-013 add. |
+| mexc_top200 | MEXC Top-200 Volume + Strict Entries | `ohlcv_4h_mexc_spot_usdt_v2` | top-200 by volume (200 coins) | `mexc_spot_10bps` | `mexc_v2_top200_003.json` | CONDITIONAL | 4H-013 add.2 |
+| mexc_top200_fr | MEXC Top-200 Full-Range (467d) | `ohlcv_4h_mexc_spot_usdt_v2` | top-200 by volume (200 coins) | `mexc_spot_10bps` | `mexc_v2_top200_fullrange_004.json` | PAPERTRADE CANDIDATE | 4H-013 add.3 |
+| mexc_top200_tp | MEXC Top-200 Truth-Pass (fixed-notional) | `ohlcv_4h_mexc_spot_usdt_v2` | top-200 by volume (200 coins) | `mexc_spot_10bps` | `mexc_v2_top200_truthpass_005.json` | **GO — PAPERTRADE** | 4H-013 add.4 |
+| mexc_risk | MEXC Risk Wrappers (49 combos) | `ohlcv_4h_mexc_spot_usdt_v2` | top-200 by volume (200 coins) | `mexc_spot_10bps` | `mexc_risk_wrappers_006.json` | 12 deploy candidates | 4H-013 add.5 |
+| mexc_exits | MEXC Exit Tweaks (24 configs) | `ohlcv_4h_mexc_spot_usdt_v2` | top-200 by volume (200 coins) | `mexc_spot_10bps` | `mexc_exit_tweaks_007.json` | rsi_rec_min_bars=5 best | 4H-013 add.5 |
+| mexc_deploy | MEXC Combined Deploy + Truth-Pass | `ohlcv_4h_mexc_spot_usdt_v2` | top-200 by volume (200 coins) | `mexc_spot_10bps` | `mexc_combined_deploy_008.json` | VERIFIED 3/3, **6/7 gates** | 4H-013 add.6 |
+| mexc_trades | MEXC Trades-Gate Sweep (maxpos variants) | `ohlcv_4h_mexc_spot_usdt_v2` | top-200 by volume (200 coins) | `mexc_spot_10bps` | `mexc_trades_gate_sweep_009.json` | 3/2/1 best (6/7 gates) | 4H-014 |
+| mexc_dd_micro | MEXC DD Micro-Sweep → **7/7 gates** | `ohlcv_4h_mexc_spot_usdt_v2` | top-200 by volume (200 coins) | `mexc_spot_10bps` | `mexc_dd_microsweep_010.json` | **GO — PAPERTRADE** | 4H-014 add. |
 
 ## Scoreboards
 
@@ -47,6 +58,7 @@ Generated: 2026-02-17 | Git: 2659755
 | `ohlcv_4h_kraken_spot_usd_v2` | Kraken | CC proxy | 336 | 2183 | frozen | `084da932` |
 | `ohlcv_4h_kraken_spot_usd_native_confirm` | Kraken | native | 62 | 721 | frozen | `db88a213` |
 | `ohlcv_4h_mexc_spot_usdt_v1` | MEXC | CC proxy | 146 | 2501 | frozen | `f7801b8d` |
+| `ohlcv_4h_mexc_spot_usdt_v2` | MEXC | CC proxy | 439 | 2853 | frozen | `96a16cba` |
 
 ## Fee Models
 
@@ -65,6 +77,8 @@ Generated: 2026-02-17 | Git: 2659755
 | `kraken_4h_native_62_v1` | Kraken | 62 | Traded coins + BTC/ETH | `ohlcv_4h_kraken_spot_usd_native_confirm` |
 | `mexc_4h_200_v1` | MEXC | 200 | Top-200 by volume, ≥2160 bars | — (200 selected, 146 downloaded) |
 | `mexc_4h_cohortA_144_v1` | MEXC | 144 | ≥2160 bars from downloaded | `ohlcv_4h_mexc_spot_usdt_v1` |
+| `mexc_4h_v2_439` | MEXC | 439 | All ≥720 bars from v2 | `ohlcv_4h_mexc_spot_usdt_v2` |
+| `mexc_4h_top200_v1` | MEXC | 200 | Top-200 by median volume, ≥2160 bars | `ohlcv_4h_mexc_spot_usdt_v2` |
 
 ## ADR Quick Reference
 
@@ -82,6 +96,10 @@ Generated: 2026-02-17 | Git: 2659755
 | 4H-009 | Sprint 3 Exit-Intelligence Porting | ACCEPTED (NO-GO) | 0/18 pass, DC exits NOT portable (best PF=0.95), entry+exit co-dependent |
 | 4H-010 | Sprint 4 DC-Compatible Entry Mining | ACCEPTED | 7/10 PF>1.05, 8 STRONG LEADs, Class A 100% dominant, geometric compatibility validated |
 | 4H-011 | Sprint 4 P0/P1/P2 Validation | ACCEPTED | 1 VERIFIED (041), 1 CONDITIONAL (042). Vol-scale best wrapper. Z-Score/DC-Lite eliminated. |
+| 4H-012 | Wrapped Truth-Pass (041+042) | ACCEPTED | Vol_scale degrades 041 bootstrap (0.92→0.83). 041 stronger UNWRAPPED. |
+| 4H-013 | MEXC Portability 041 (6 addenda) | ACCEPTED | V1 CONDITIONAL (PF=1.17), V2 NO-GO (PF=0.97). Top-200+strict→VERIFIED. Combined deploy 6/7 gates. |
+| 4H-014 | MEXC Trades-Gate + DD Micro-Sweep | ACCEPTED (GO) | dd_throttle 5%/0.22x + adaptive_maxpos 3/2/1 = **7/7 gates**, PF=1.45, DD=19.4% |
+| 4H-015 | Paper Trading Monitoring Plan | ACCEPTED | 3-layer monitoring, 4 rollback criteria, Telegram alerts, JSON dashboard |
 
 ## Key Conclusions
 
@@ -105,7 +123,10 @@ Generated: 2026-02-17 | Git: 2659755
 18. **FIXED STOP = 71.1% of drawdown** — TIME MAX = 24.6%. Stop distance reduction and vol-scaling sizing are the primary DD reduction levers.
 19. **Trade frequency is robust** — 40/40 sensitivity tests pass quality gates. RSI and volume thresholds stable. Full pool adds 0 trades.
 20. **Sprint4_041 is the primary production candidate** — VERIFIED truth-pass, PF=1.41, bootstrap P5=0.92, 90.9% profitable shuffles, 1.8 trades/day. DD=49.8% (needs risk wrapper).
+21. **MEXC portability: pool size vs quality** — 145→439 coins degraded PF (1.17→0.97). Top-200 volume filter + strict entries (vol=3.5, rsi=35) recovered PF to 1.36 VERIFIED.
+22. **Risk wrappers solve DD problem** — dd_throttle(5%/0.22x) + adaptive_maxpos(3/2/1): DD from 52.6%→19.4%, PF=1.45, 7/7 gates PASS.
+23. **MEXC deploy config frozen (ADR-4H-014)** — Vol Cap 3.5x RSI35 + rsi_rec_min_bars=5 + wrappers. Paper trading started.
 
 ---
 
-*Last updated: 2026-02-17 | Git: 9a606d9 | Source: `strategies/4h/DECISIONS_4H.md`*
+*Last updated: 2026-02-18 | Git: 42b2e94 | Source: `strategies/4h/DECISIONS_4H.md`*

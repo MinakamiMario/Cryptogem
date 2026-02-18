@@ -1,0 +1,10 @@
+{
+  "close_margin_pct": 0.5,
+  "dc_period": 25,
+  "max_pos": 3,
+  "min_range_atr": 0.8,
+  "sl_pct": 8,
+  "time_limit": 25,
+  "tp_pct": 12,
+  "vol_mult": 2.5
+}

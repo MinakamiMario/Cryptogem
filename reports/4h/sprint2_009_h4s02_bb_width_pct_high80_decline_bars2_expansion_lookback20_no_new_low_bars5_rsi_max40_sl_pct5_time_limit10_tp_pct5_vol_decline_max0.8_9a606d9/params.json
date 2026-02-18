@@ -1,0 +1,12 @@
+{
+  "bb_width_pct_high": 80,
+  "decline_bars": 2,
+  "expansion_lookback": 20,
+  "max_pos": 3,
+  "no_new_low_bars": 5,
+  "rsi_max": 40,
+  "sl_pct": 5,
+  "time_limit": 10,
+  "tp_pct": 5,
+  "vol_decline_max": 0.8
+}

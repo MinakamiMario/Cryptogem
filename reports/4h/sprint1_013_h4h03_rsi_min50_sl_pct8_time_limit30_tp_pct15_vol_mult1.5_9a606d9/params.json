@@ -1,0 +1,8 @@
+{
+  "max_pos": 5,
+  "rsi_min": 50,
+  "sl_pct": 8,
+  "time_limit": 30,
+  "tp_pct": 15,
+  "vol_mult": 1.5
+}

@@ -1,0 +1,8 @@
+{
+  "max_pos": 3,
+  "sl_pct": 5,
+  "squeeze_pct": 25,
+  "time_limit": 20,
+  "tp_pct": 8,
+  "vol_mult": 2.0
+}

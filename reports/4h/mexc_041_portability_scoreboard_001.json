@@ -1,0 +1,53 @@
+{
+  "experiment": "mexc_portability_041",
+  "timestamp": "2026-02-17T22:50:21.526644+00:00",
+  "git_hash": "9a606d9",
+  "configs": [
+    {
+      "label": "041 MEXC 10bps (721 bars)",
+      "trades": 101,
+      "pf": 1.1684,
+      "pnl": 516.52,
+      "wr": 51.49,
+      "dd": 51.45,
+      "tpd": 0.9,
+      "window_pass": true,
+      "boot_pass": false
+    },
+    {
+      "label": "041 MEXC 26bps (721 bars)",
+      "trades": 101,
+      "pf": 1.0852,
+      "pnl": 258.07,
+      "wr": 49.5,
+      "dd": 51.92,
+      "tpd": 0.9,
+      "window_pass": false,
+      "boot_pass": false
+    },
+    {
+      "label": "041 MEXC 10bps (FULL)",
+      "trades": 242,
+      "pf": 1.6987,
+      "pnl": 0,
+      "wr": 0,
+      "dd": 51.45,
+      "tpd": 0.81,
+      "window_pass": null,
+      "boot_pass": null,
+      "note": "1845 bars, 299 days. PnL not comparable (equity compounding over 299d vs 112d)"
+    },
+    {
+      "label": "041 KRAKEN 26bps (ref)",
+      "trades": 216,
+      "pf": 1.4058,
+      "pnl": 3349.79,
+      "wr": 54.63,
+      "dd": 36.37,
+      "tpd": 1.93,
+      "window_pass": true,
+      "boot_pass": true,
+      "note": "487 coins, 721 bars"
+    }
+  ]
+}

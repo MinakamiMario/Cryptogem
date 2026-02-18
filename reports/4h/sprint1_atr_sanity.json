@@ -1,0 +1,215 @@
+{
+  "baseline_pf": 0.89,
+  "grid": [
+    {
+      "id": "atr_sl1.5_tp2.0_tm10",
+      "params": {
+        "rsi_entry": 25,
+        "k_sl": 1.5,
+        "k_tp": 2.0,
+        "time_limit": 10,
+        "max_pos": 3
+      },
+      "trades": 342,
+      "wr": 35.67,
+      "pf": 0.7831,
+      "dd": 80.03,
+      "pnl": -1467.17,
+      "exits": {
+        "stop": 156,
+        "tp": 91,
+        "tm": 92,
+        "end": 3
+      }
+    },
+    {
+      "id": "atr_sl1.5_tp3.0_tm15",
+      "params": {
+        "rsi_entry": 25,
+        "k_sl": 1.5,
+        "k_tp": 3.0,
+        "time_limit": 15,
+        "max_pos": 3
+      },
+      "trades": 261,
+      "wr": 37.55,
+      "pf": 0.7955,
+      "dd": 70.32,
+      "pnl": -1237.18,
+      "exits": {
+        "stop": 133,
+        "tp": 76,
+        "tm": 49,
+        "end": 3
+      }
+    },
+    {
+      "id": "atr_sl1.5_tp4.0_tm20",
+      "params": {
+        "rsi_entry": 25,
+        "k_sl": 1.5,
+        "k_tp": 4.0,
+        "time_limit": 20,
+        "max_pos": 3
+      },
+      "trades": 220,
+      "wr": 33.64,
+      "pf": 0.8112,
+      "dd": 52.51,
+      "pnl": -845.72,
+      "exits": {
+        "stop": 126,
+        "tp": 55,
+        "tm": 36,
+        "end": 3
+      }
+    },
+    {
+      "id": "atr_sl2.0_tp2.0_tm10",
+      "params": {
+        "rsi_entry": 25,
+        "k_sl": 2.0,
+        "k_tp": 2.0,
+        "time_limit": 10,
+        "max_pos": 3
+      },
+      "trades": 307,
+      "wr": 40.07,
+      "pf": 0.7355,
+      "dd": 83.31,
+      "pnl": -1398.94,
+      "exits": {
+        "stop": 107,
+        "tp": 95,
+        "tm": 102,
+        "end": 3
+      }
+    },
+    {
+      "id": "atr_sl2.0_tp3.0_tm15",
+      "params": {
+        "rsi_entry": 25,
+        "k_sl": 2.0,
+        "k_tp": 3.0,
+        "time_limit": 15,
+        "max_pos": 3
+      },
+      "trades": 239,
+      "wr": 35.98,
+      "pf": 0.6653,
+      "dd": 76.21,
+      "pnl": -1365.86,
+      "exits": {
+        "stop": 111,
+        "tp": 65,
+        "tm": 60,
+        "end": 3
+      }
+    },
+    {
+      "id": "atr_sl2.0_tp4.0_tm20",
+      "params": {
+        "rsi_entry": 25,
+        "k_sl": 2.0,
+        "k_tp": 4.0,
+        "time_limit": 20,
+        "max_pos": 3
+      },
+      "trades": 200,
+      "wr": 35.5,
+      "pf": 0.7278,
+      "dd": 68.04,
+      "pnl": -1208.05,
+      "exits": {
+        "stop": 105,
+        "tp": 53,
+        "tm": 39,
+        "end": 3
+      }
+    },
+    {
+      "id": "atr_sl2.5_tp2.0_tm10",
+      "params": {
+        "rsi_entry": 25,
+        "k_sl": 2.5,
+        "k_tp": 2.0,
+        "time_limit": 10,
+        "max_pos": 3
+      },
+      "trades": 293,
+      "wr": 41.3,
+      "pf": 0.8204,
+      "dd": 77.09,
+      "pnl": -990.82,
+      "exits": {
+        "stop": 86,
+        "tp": 90,
+        "tm": 114,
+        "end": 3
+      }
+    },
+    {
+      "id": "atr_sl2.5_tp3.0_tm15",
+      "params": {
+        "rsi_entry": 25,
+        "k_sl": 2.5,
+        "k_tp": 3.0,
+        "time_limit": 15,
+        "max_pos": 3
+      },
+      "trades": 206,
+      "wr": 37.38,
+      "pf": 0.8039,
+      "dd": 57.81,
+      "pnl": -690.83,
+      "exits": {
+        "stop": 63,
+        "tp": 60,
+        "tm": 80,
+        "end": 3
+      }
+    },
+    {
+      "id": "atr_sl2.5_tp4.0_tm20",
+      "params": {
+        "rsi_entry": 25,
+        "k_sl": 2.5,
+        "k_tp": 4.0,
+        "time_limit": 20,
+        "max_pos": 3
+      },
+      "trades": 171,
+      "wr": 34.5,
+      "pf": 0.6599,
+      "dd": 75.8,
+      "pnl": -1086.06,
+      "exits": {
+        "stop": 76,
+        "tp": 41,
+        "tm": 51,
+        "end": 3
+      }
+    }
+  ],
+  "best": {
+    "id": "atr_sl2.5_tp2.0_tm10",
+    "params": {
+      "rsi_entry": 25,
+      "k_sl": 2.5,
+      "k_tp": 2.0,
+      "time_limit": 10,
+      "max_pos": 3
+    },
+    "trades": 293,
+    "wr": 41.3,
+    "pf": 0.8204,
+    "dd": 77.09,
+    "pnl": -990.82,
+    "exits": {
+      "stop": 86,
+      "tp": 90,
+      "tm": 114,
+      "end": 3
+    }
+  }
+}

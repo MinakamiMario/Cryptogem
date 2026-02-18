@@ -1,0 +1,698 @@
+{
+  "experiment": "mexc_trades_gate_sweep",
+  "experiment_id": "mexc_trades_gate_sweep_009",
+  "adr": "4H-014",
+  "timestamp": "2026-02-18T11:53:59.135831+00:00",
+  "git_hash": "9a606d9",
+  "dataset_id": "ohlcv_4h_mexc_spot_usdt_v2",
+  "universe": {
+    "filter": "top 200 by median volume, >=2160 bars",
+    "n_coins": 200
+  },
+  "fee": 0.001,
+  "fee_model": "mexc_spot_10bps",
+  "sizing": "fixed_notional_2000",
+  "config": {
+    "hypothesis_id": "H4S4-G05",
+    "entry": {
+      "vol_mult": 3.5,
+      "rsi_max": 35
+    },
+    "exit": {
+      "max_stop_pct": 15.0,
+      "time_max_bars": 15,
+      "rsi_recovery": true,
+      "rsi_rec_target": 45.0,
+      "rsi_rec_min_bars": 5
+    },
+    "dd_throttle": {
+      "threshold": 0.05,
+      "scale": 0.25
+    }
+  },
+  "variants": {
+    "baseline_2_1_1": {
+      "variant": {
+        "name": "baseline_2_1_1",
+        "label": "Baseline (2/1/1) \u2014 from report 008",
+        "maxpos_normal": 2,
+        "maxpos_dd10": 1,
+        "maxpos_dd20": 1
+      },
+      "full_metrics": {
+        "trades": 238,
+        "pf": 1.5556,
+        "pnl": 3361.79,
+        "dd": 16.16,
+        "wr": 55.46,
+        "final_equity": 5361.79,
+        "ev_trade": 14.13,
+        "trades_per_day": 0.55,
+        "n_raw": 328,
+        "n_fixed": 328,
+        "n_wrapped": 238,
+        "n_skipped": 90,
+        "n_capped": 1
+      },
+      "exit_attribution": {
+        "TIME MAX": {
+          "class": "B",
+          "count": 47,
+          "pnl": -1825.75,
+          "wins": 0,
+          "wr": 0.0
+        },
+        "FIXED STOP": {
+          "class": "B",
+          "count": 38,
+          "pnl": -4023.86,
+          "wins": 0,
+          "wr": 0.0
+        },
+        "DC TARGET": {
+          "class": "A",
+          "count": 79,
+          "pnl": 3892.26,
+          "wins": 74,
+          "wr": 93.7
+        },
+        "RSI RECOVERY": {
+          "class": "A",
+          "count": 69,
+          "pnl": 5151.75,
+          "wins": 53,
+          "wr": 76.8
+        },
+        "BB TARGET": {
+          "class": "A",
+          "count": 5,
+          "pnl": 167.39,
+          "wins": 5,
+          "wr": 100.0
+        }
+      },
+      "window_split": {
+        "w1": {
+          "start": 50,
+          "end": 610,
+          "trades": 67,
+          "pf": 1.9929,
+          "pnl": 1941.55,
+          "wr": 53.73,
+          "dd": 16.16
+        },
+        "w2": {
+          "start": 610,
+          "end": 1170,
+          "trades": 51,
+          "pf": 1.178,
+          "pnl": 294.04,
+          "wr": 52.94,
+          "dd": 17.85
+        },
+        "w3": {
+          "start": 1170,
+          "end": 1730,
+          "trades": 29,
+          "pf": 1.1425,
+          "pnl": 117.78,
+          "wr": 44.83,
+          "dd": 19.78
+        },
+        "w4": {
+          "start": 1730,
+          "end": 2290,
+          "trades": 38,
+          "pf": 1.1813,
+          "pnl": 184.87,
+          "wr": 63.16,
+          "dd": 17.48
+        },
+        "w5": {
+          "start": 2290,
+          "end": 2853,
+          "trades": 13,
+          "pf": 1.0076,
+          "pnl": 3.26,
+          "wr": 61.54,
+          "dd": 18.97
+        },
+        "n_profitable": 5,
+        "pass": true
+      },
+      "walk_forward": {
+        "split_a": {
+          "cal": {
+            "bars": "50-984",
+            "trades": 112,
+            "pf": 2.0383,
+            "pnl": 2949.75
+          },
+          "test": {
+            "bars": "984-2853",
+            "trades": 86,
+            "pf": 1.1658,
+            "pnl": 386.21
+          },
+          "pass": true
+        },
+        "split_b": {
+          "cal": {
+            "bars": "50-1918",
+            "trades": 186,
+            "pf": 1.5972,
+            "pnl": 3003.98
+          },
+          "test": {
+            "bars": "1918-2853",
+            "trades": 37,
+            "pf": 1.129,
+            "pnl": 128.61
+          },
+          "pass": true
+        },
+        "pass": true
+      },
+      "bootstrap": {
+        "n_resamples": 1000,
+        "n_trades": 238,
+        "median_pf": 1.5415,
+        "p5_pf": 1.0831,
+        "p95_pf": 2.3473,
+        "median_pnl": 3241.61,
+        "p5_pnl": 530.28,
+        "pct_profitable": 97.3,
+        "pass": true
+      },
+      "determinism": {
+        "pass": true,
+        "run1": {
+          "trades": 238,
+          "pf": 1.5556,
+          "pnl": 3361.79
+        },
+        "run2": {
+          "trades": 238,
+          "pf": 1.5556,
+          "pnl": 3361.79
+        }
+      },
+      "gates": {
+        "pf": {
+          "gate": "PF >= 1.3",
+          "value": 1.5556,
+          "pass": true
+        },
+        "dd": {
+          "gate": "DD <= 20.0%",
+          "value": 16.16,
+          "pass": true
+        },
+        "bootstrap_p5": {
+          "gate": "Boot P5 PF >= 0.85",
+          "value": 1.0831,
+          "pass": true
+        },
+        "bootstrap_prof": {
+          "gate": "Boot %prof >= 80.0%",
+          "value": 97.3,
+          "pass": true
+        },
+        "window_split": {
+          "gate": "Window >= 4/5",
+          "value": 5,
+          "pass": true
+        },
+        "trades": {
+          "gate": "Trades >= 250",
+          "value": 238,
+          "pass": false
+        },
+        "determinism": {
+          "gate": "Determinism",
+          "value": "PASS",
+          "pass": true
+        }
+      },
+      "n_gates_pass": 6,
+      "all_gates_pass": false,
+      "verdict": "VERIFIED",
+      "tests_passed": 3
+    },
+    "relaxed_A_2_2_1": {
+      "variant": {
+        "name": "relaxed_A_2_2_1",
+        "label": "Relaxed A (2/2/1) \u2014 allow 2 at DD 10-20%",
+        "maxpos_normal": 2,
+        "maxpos_dd10": 2,
+        "maxpos_dd20": 1
+      },
+      "full_metrics": {
+        "trades": 260,
+        "pf": 1.511,
+        "pnl": 3326.21,
+        "dd": 20.32,
+        "wr": 56.15,
+        "final_equity": 5326.21,
+        "ev_trade": 12.79,
+        "trades_per_day": 0.6,
+        "n_raw": 328,
+        "n_fixed": 328,
+        "n_wrapped": 260,
+        "n_skipped": 68,
+        "n_capped": 1
+      },
+      "exit_attribution": {
+        "TIME MAX": {
+          "class": "B",
+          "count": 51,
+          "pnl": -1980.49,
+          "wins": 0,
+          "wr": 0.0
+        },
+        "FIXED STOP": {
+          "class": "B",
+          "count": 42,
+          "pnl": -4327.54,
+          "wins": 0,
+          "wr": 0.0
+        },
+        "DC TARGET": {
+          "class": "A",
+          "count": 87,
+          "pnl": 4300.77,
+          "wins": 82,
+          "wr": 94.3
+        },
+        "RSI RECOVERY": {
+          "class": "A",
+          "count": 74,
+          "pnl": 5151.57,
+          "wins": 58,
+          "wr": 78.4
+        },
+        "BB TARGET": {
+          "class": "A",
+          "count": 6,
+          "pnl": 181.9,
+          "wins": 6,
+          "wr": 100.0
+        }
+      },
+      "window_split": {
+        "w1": {
+          "start": 50,
+          "end": 610,
+          "trades": 74,
+          "pf": 1.9373,
+          "pnl": 1910.82,
+          "wr": 55.41,
+          "dd": 20.32
+        },
+        "w2": {
+          "start": 610,
+          "end": 1170,
+          "trades": 64,
+          "pf": 1.1317,
+          "pnl": 238.71,
+          "wr": 54.69,
+          "dd": 23.06
+        },
+        "w3": {
+          "start": 1170,
+          "end": 1730,
+          "trades": 45,
+          "pf": 1.0663,
+          "pnl": 71.37,
+          "wr": 51.11,
+          "dd": 20.36
+        },
+        "w4": {
+          "start": 1730,
+          "end": 2290,
+          "trades": 43,
+          "pf": 0.9517,
+          "pnl": -58.8,
+          "wr": 55.81,
+          "dd": 22.21
+        },
+        "w5": {
+          "start": 2290,
+          "end": 2853,
+          "trades": 21,
+          "pf": 0.8851,
+          "pnl": -73.76,
+          "wr": 57.14,
+          "dd": 23.5
+        },
+        "n_profitable": 3,
+        "pass": false
+      },
+      "walk_forward": {
+        "split_a": {
+          "cal": {
+            "bars": "50-984",
+            "trades": 121,
+            "pf": 1.9772,
+            "pnl": 2898.66
+          },
+          "test": {
+            "bars": "984-2853",
+            "trades": 134,
+            "pf": 1.1087,
+            "pnl": 349.61
+          },
+          "pass": true
+        },
+        "split_b": {
+          "cal": {
+            "bars": "50-1918",
+            "trades": 199,
+            "pf": 1.5603,
+            "pnl": 2930.85
+          },
+          "test": {
+            "bars": "1918-2853",
+            "trades": 52,
+            "pf": 1.0926,
+            "pnl": 125.3
+          },
+          "pass": true
+        },
+        "pass": true
+      },
+      "bootstrap": {
+        "n_resamples": 1000,
+        "n_trades": 260,
+        "median_pf": 1.5252,
+        "p5_pf": 1.0318,
+        "p95_pf": 2.1267,
+        "median_pnl": 3324.49,
+        "p5_pnl": 242.8,
+        "pct_profitable": 96.2,
+        "pass": true
+      },
+      "determinism": {
+        "pass": true,
+        "run1": {
+          "trades": 260,
+          "pf": 1.511,
+          "pnl": 3326.21
+        },
+        "run2": {
+          "trades": 260,
+          "pf": 1.511,
+          "pnl": 3326.21
+        }
+      },
+      "gates": {
+        "pf": {
+          "gate": "PF >= 1.3",
+          "value": 1.511,
+          "pass": true
+        },
+        "dd": {
+          "gate": "DD <= 20.0%",
+          "value": 20.32,
+          "pass": false
+        },
+        "bootstrap_p5": {
+          "gate": "Boot P5 PF >= 0.85",
+          "value": 1.0318,
+          "pass": true
+        },
+        "bootstrap_prof": {
+          "gate": "Boot %prof >= 80.0%",
+          "value": 96.2,
+          "pass": true
+        },
+        "window_split": {
+          "gate": "Window >= 4/5",
+          "value": 3,
+          "pass": false
+        },
+        "trades": {
+          "gate": "Trades >= 250",
+          "value": 260,
+          "pass": true
+        },
+        "determinism": {
+          "gate": "Determinism",
+          "value": "PASS",
+          "pass": true
+        }
+      },
+      "n_gates_pass": 5,
+      "all_gates_pass": false,
+      "verdict": "CONDITIONAL",
+      "tests_passed": 2
+    },
+    "relaxed_B_3_2_1": {
+      "variant": {
+        "name": "relaxed_B_3_2_1",
+        "label": "Relaxed B (3/2/1) \u2014 allow 3 when healthy",
+        "maxpos_normal": 3,
+        "maxpos_dd10": 2,
+        "maxpos_dd20": 1
+      },
+      "full_metrics": {
+        "trades": 301,
+        "pf": 1.4796,
+        "pnl": 3671.07,
+        "dd": 20.32,
+        "wr": 54.49,
+        "final_equity": 5671.07,
+        "ev_trade": 12.2,
+        "trades_per_day": 0.69,
+        "n_raw": 328,
+        "n_fixed": 328,
+        "n_wrapped": 301,
+        "n_skipped": 27,
+        "n_capped": 1
+      },
+      "exit_attribution": {
+        "TIME MAX": {
+          "class": "B",
+          "count": 65,
+          "pnl": -2698.39,
+          "wins": 0,
+          "wr": 0.0
+        },
+        "FIXED STOP": {
+          "class": "B",
+          "count": 47,
+          "pnl": -4707.14,
+          "wins": 0,
+          "wr": 0.0
+        },
+        "DC TARGET": {
+          "class": "A",
+          "count": 97,
+          "pnl": 4620.84,
+          "wins": 90,
+          "wr": 92.8
+        },
+        "RSI RECOVERY": {
+          "class": "A",
+          "count": 86,
+          "pnl": 6273.86,
+          "wins": 68,
+          "wr": 79.1
+        },
+        "BB TARGET": {
+          "class": "A",
+          "count": 6,
+          "pnl": 181.9,
+          "wins": 6,
+          "wr": 100.0
+        }
+      },
+      "window_split": {
+        "w1": {
+          "start": 50,
+          "end": 610,
+          "trades": 88,
+          "pf": 1.8002,
+          "pnl": 1892.99,
+          "wr": 54.55,
+          "dd": 20.32
+        },
+        "w2": {
+          "start": 610,
+          "end": 1170,
+          "trades": 66,
+          "pf": 1.0748,
+          "pnl": 145.34,
+          "wr": 54.55,
+          "dd": 21.25
+        },
+        "w3": {
+          "start": 1170,
+          "end": 1730,
+          "trades": 45,
+          "pf": 1.0663,
+          "pnl": 71.37,
+          "wr": 51.11,
+          "dd": 20.36
+        },
+        "w4": {
+          "start": 1730,
+          "end": 2290,
+          "trades": 58,
+          "pf": 1.7121,
+          "pnl": 1009.11,
+          "wr": 58.62,
+          "dd": 13.21
+        },
+        "w5": {
+          "start": 2290,
+          "end": 2853,
+          "trades": 21,
+          "pf": 0.8851,
+          "pnl": -73.76,
+          "wr": 57.14,
+          "dd": 23.5
+        },
+        "n_profitable": 4,
+        "pass": true
+      },
+      "walk_forward": {
+        "split_a": {
+          "cal": {
+            "bars": "50-984",
+            "trades": 142,
+            "pf": 1.7272,
+            "pnl": 2626.29
+          },
+          "test": {
+            "bars": "984-2853",
+            "trades": 144,
+            "pf": 1.2612,
+            "pnl": 921.38
+          },
+          "pass": true
+        },
+        "split_b": {
+          "cal": {
+            "bars": "50-1918",
+            "trades": 233,
+            "pf": 1.5634,
+            "pnl": 3434.32
+          },
+          "test": {
+            "bars": "1918-2853",
+            "trades": 53,
+            "pf": 1.0776,
+            "pnl": 109.08
+          },
+          "pass": true
+        },
+        "pass": true
+      },
+      "bootstrap": {
+        "n_resamples": 1000,
+        "n_trades": 301,
+        "median_pf": 1.4618,
+        "p5_pf": 1.0089,
+        "p95_pf": 2.047,
+        "median_pnl": 3535.52,
+        "p5_pnl": 75.95,
+        "pct_profitable": 95.4,
+        "pass": true
+      },
+      "determinism": {
+        "pass": true,
+        "run1": {
+          "trades": 301,
+          "pf": 1.4796,
+          "pnl": 3671.07
+        },
+        "run2": {
+          "trades": 301,
+          "pf": 1.4796,
+          "pnl": 3671.07
+        }
+      },
+      "gates": {
+        "pf": {
+          "gate": "PF >= 1.3",
+          "value": 1.4796,
+          "pass": true
+        },
+        "dd": {
+          "gate": "DD <= 20.0%",
+          "value": 20.32,
+          "pass": false
+        },
+        "bootstrap_p5": {
+          "gate": "Boot P5 PF >= 0.85",
+          "value": 1.0089,
+          "pass": true
+        },
+        "bootstrap_prof": {
+          "gate": "Boot %prof >= 80.0%",
+          "value": 95.4,
+          "pass": true
+        },
+        "window_split": {
+          "gate": "Window >= 4/5",
+          "value": 4,
+          "pass": true
+        },
+        "trades": {
+          "gate": "Trades >= 250",
+          "value": 301,
+          "pass": true
+        },
+        "determinism": {
+          "gate": "Determinism",
+          "value": "PASS",
+          "pass": true
+        }
+      },
+      "n_gates_pass": 6,
+      "all_gates_pass": false,
+      "verdict": "VERIFIED",
+      "tests_passed": 3
+    }
+  },
+  "best_variant": null,
+  "scoreboard": {
+    "baseline_2_1_1": {
+      "maxpos": "2/1/1",
+      "trades": 238,
+      "pf": 1.5556,
+      "pnl": 3361.79,
+      "dd": 16.16,
+      "windows": 5,
+      "boot_p5": 1.0831,
+      "gates": 6,
+      "deploy": false,
+      "verdict": "VERIFIED"
+    },
+    "relaxed_A_2_2_1": {
+      "maxpos": "2/2/1",
+      "trades": 260,
+      "pf": 1.511,
+      "pnl": 3326.21,
+      "dd": 20.32,
+      "windows": 3,
+      "boot_p5": 1.0318,
+      "gates": 5,
+      "deploy": false,
+      "verdict": "CONDITIONAL"
+    },
+    "relaxed_B_3_2_1": {
+      "maxpos": "3/2/1",
+      "trades": 301,
+      "pf": 1.4796,
+      "pnl": 3671.07,
+      "dd": 20.32,
+      "windows": 4,
+      "boot_p5": 1.0089,
+      "gates": 6,
+      "deploy": false,
+      "verdict": "VERIFIED"
+    }
+  }
+}

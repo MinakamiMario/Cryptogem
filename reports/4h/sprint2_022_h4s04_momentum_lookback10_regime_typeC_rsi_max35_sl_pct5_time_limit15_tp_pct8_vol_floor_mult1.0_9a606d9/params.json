@@ -1,0 +1,10 @@
+{
+  "max_pos": 3,
+  "momentum_lookback": 10,
+  "regime_type": "C",
+  "rsi_max": 35,
+  "sl_pct": 5,
+  "time_limit": 15,
+  "tp_pct": 8,
+  "vol_floor_mult": 1.0
+}

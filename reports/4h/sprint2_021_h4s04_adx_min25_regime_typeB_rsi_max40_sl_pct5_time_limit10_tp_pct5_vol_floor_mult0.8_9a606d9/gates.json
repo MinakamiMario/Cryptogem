@@ -1,0 +1,65 @@
+{
+  "verdict": "NO-GO",
+  "passed_all_hard": false,
+  "n_hard_passed": 1,
+  "n_hard_total": 4,
+  "summary": "[NO-GO] 1/4 | G1:PF=FAIL | G2:MAX_DD=FAIL | G3:TOP10_CONC=PASS | G4:WINDOW_SPLIT=FAIL || S1:TRADE_FREQ=OK | S2:EV_TRADE=LOW",
+  "hard_gates": [
+    {
+      "name": "G1:PF",
+      "description": "Profit factor minimum",
+      "passed": false,
+      "value": 0.68,
+      "threshold": ">= 1.05",
+      "detail": "PF 0.68 (below 1.05)",
+      "hard": true
+    },
+    {
+      "name": "G2:MAX_DD",
+      "description": "Maximum drawdown",
+      "passed": false,
+      "value": 71.89,
+      "threshold": "<= 25.0%",
+      "detail": "DD 71.9% (exceeds 25.0%)",
+      "hard": true
+    },
+    {
+      "name": "G3:TOP10_CONC",
+      "description": "Top-10 coin concentration (trades + P&L)",
+      "passed": true,
+      "value": 14.9,
+      "threshold": "trades<=50.0% & pnl<=60.0%",
+      "detail": "Top10: 14.9% trades, 3.4% P&L (PASS)",
+      "hard": true
+    },
+    {
+      "name": "G4:WINDOW_SPLIT",
+      "description": "3-way temporal split (1/3 must pass)",
+      "passed": false,
+      "value": 0.0,
+      "threshold": "1/3 windows PF >= 1.05",
+      "detail": "W1: 154tr PF=0.59 [FAIL] | W2: 124tr PF=0.85 [FAIL] | W3: 137tr PF=0.71 [FAIL]",
+      "hard": true
+    }
+  ],
+  "soft_gates": [
+    {
+      "name": "S1:TRADE_FREQ",
+      "description": "Trade frequency target (ranking)",
+      "passed": true,
+      "value": 416.0,
+      "threshold": ">= 50 (target)",
+      "detail": "416 trades (meets target)",
+      "hard": false
+    },
+    {
+      "name": "S2:EV_TRADE",
+      "description": "Expected value per trade (ranking)",
+      "passed": false,
+      "value": -3.12,
+      "threshold": "> $0",
+      "detail": "EV/trade $-3.12 (negative or zero)",
+      "hard": false
+    }
+  ]
+}

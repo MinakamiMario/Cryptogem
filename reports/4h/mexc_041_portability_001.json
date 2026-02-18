@@ -1,0 +1,335 @@
+{
+  "config_id": "sprint4_041_h4s4g05_vol3x_bblow_rsi40",
+  "experiment": "mexc_portability_041",
+  "timestamp": "2026-02-17T22:50:21.526644+00:00",
+  "git_hash": "9a606d9",
+  "dataset_id": "ohlcv_4h_mexc_spot_usdt_v1",
+  "universe_id": "mexc_4h_cohortA_144_v1",
+  "n_coins": 145,
+  "max_bars": 721,
+  "runs": {
+    "mexc_10bps": {
+      "fee_model": "mexc_spot_10bps",
+      "fee": 0.001,
+      "trades": 101,
+      "pf": 1.1684,
+      "pnl": 516.52,
+      "wr": 51.49,
+      "dd": 51.45,
+      "ev_per_trade": 5.11,
+      "trades_per_day": 0.9,
+      "n_days": 111.8,
+      "n_coins": 145,
+      "max_bars": 721
+    },
+    "mexc_26bps": {
+      "fee_model": "kraken_spot_26bps",
+      "fee": 0.0026,
+      "trades": 101,
+      "pf": 1.0852,
+      "pnl": 258.07,
+      "wr": 49.5,
+      "dd": 51.92,
+      "ev_per_trade": 2.56,
+      "trades_per_day": 0.9,
+      "n_days": 111.8,
+      "n_coins": 145,
+      "max_bars": 721
+    }
+  },
+  "full_range_10bps": {
+    "max_bars": 1845,
+    "n_days": 299.2,
+    "trades": 242,
+    "pf": 1.6987,
+    "dd": 51.45,
+    "trades_per_day": 0.81
+  },
+  "analysis": {
+    "window_split_mexc_10bps": {
+      "windows": {
+        "early": {
+          "trades": 37,
+          "pf": 1.0409,
+          "pnl": 50.1,
+          "wr": 40.54,
+          "start_bar": 50,
+          "end_bar": 273
+        },
+        "mid": {
+          "trades": 35,
+          "pf": 1.8504,
+          "pnl": 744.61,
+          "wr": 57.14,
+          "start_bar": 273,
+          "end_bar": 496
+        },
+        "late": {
+          "trades": 29,
+          "pf": 0.7119,
+          "pnl": -278.19,
+          "wr": 58.62,
+          "start_bar": 496,
+          "end_bar": 721
+        }
+      },
+      "windows_profitable": 2,
+      "pass": true
+    },
+    "window_split_mexc_26bps": {
+      "windows": {
+        "early": {
+          "trades": 37,
+          "pf": 0.976,
+          "pnl": -30.0,
+          "wr": 37.84,
+          "start_bar": 50,
+          "end_bar": 273
+        },
+        "mid": {
+          "trades": 35,
+          "pf": 1.7137,
+          "pnl": 617.08,
+          "wr": 57.14,
+          "start_bar": 273,
+          "end_bar": 496
+        },
+        "late": {
+          "trades": 29,
+          "pf": 0.6401,
+          "pnl": -329.01,
+          "wr": 55.17,
+          "start_bar": 496,
+          "end_bar": 721
+        }
+      },
+      "windows_profitable": 1,
+      "pass": false
+    },
+    "top10_mexc_10bps": {
+      "top10_pnl_share": 0.4989,
+      "top10_coins": 7,
+      "total_coins": 66,
+      "top10_trades": [
+        {
+          "pair": "PUMP/USD",
+          "pnl": 651.79,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "PUMP/USD",
+          "pnl": 453.92,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "SKX/USD",
+          "pnl": 178.9,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "JELLYJELLY/USD",
+          "pnl": 178.69,
+          "reason": "DC TARGET"
+        },
+        {
+          "pair": "RUNE/USD",
+          "pnl": 172.89,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "PUMP/USD",
+          "pnl": 151.52,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "PUMP/USD",
+          "pnl": -143.86,
+          "reason": "FIXED STOP"
+        },
+        {
+          "pair": "PIPPIN/USD",
+          "pnl": -133.54,
+          "reason": "FIXED STOP"
+        },
+        {
+          "pair": "ZBCN/USD",
+          "pnl": -131.41,
+          "reason": "FIXED STOP"
+        },
+        {
+          "pair": "JUP/USD",
+          "pnl": -127.9,
+          "reason": "FIXED STOP"
+        }
+      ]
+    },
+    "top10_mexc_26bps": {
+      "top10_pnl_share": 0.5543,
+      "top10_coins": 7,
+      "total_coins": 66,
+      "top10_trades": [
+        {
+          "pair": "PUMP/USD",
+          "pnl": 620.71,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "PUMP/USD",
+          "pnl": 446.26,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "RUNE/USD",
+          "pnl": 167.71,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "JELLYJELLY/USD",
+          "pnl": 163.6,
+          "reason": "DC TARGET"
+        },
+        {
+          "pair": "SKX/USD",
+          "pnl": 163.01,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "PUMP/USD",
+          "pnl": 138.72,
+          "reason": "RSI RECOVERY"
+        },
+        {
+          "pair": "PUMP/USD",
+          "pnl": -135.48,
+          "reason": "FIXED STOP"
+        },
+        {
+          "pair": "PIPPIN/USD",
+          "pnl": -124.55,
+          "reason": "FIXED STOP"
+        },
+        {
+          "pair": "RAY/USD",
+          "pnl": -123.05,
+          "reason": "FIXED STOP"
+        },
+        {
+          "pair": "COW/USD",
+          "pnl": 122.47,
+          "reason": "RSI RECOVERY"
+        }
+      ]
+    },
+    "exit_attribution_mexc_10bps": {
+      "DC TARGET": {
+        "class": "A",
+        "count": 21,
+        "pnl": 847.42,
+        "wr": 76.2
+      },
+      "RSI RECOVERY": {
+        "class": "A",
+        "count": 42,
+        "pnl": 2507.7,
+        "wr": 81.0
+      },
+      "BB TARGET": {
+        "class": "A",
+        "count": 2,
+        "pnl": 46.4,
+        "wr": 100.0
+      },
+      "FIXED STOP": {
+        "class": "B",
+        "count": 19,
+        "pnl": -2093.47,
+        "wr": 0.0
+      },
+      "TIME MAX": {
+        "class": "B",
+        "count": 17,
+        "pnl": -791.52,
+        "wr": 0.0
+      }
+    },
+    "exit_attribution_mexc_26bps": {
+      "DC TARGET": {
+        "class": "A",
+        "count": 21,
+        "pnl": 742.13,
+        "wr": 76.2
+      },
+      "RSI RECOVERY": {
+        "class": "A",
+        "count": 42,
+        "pnl": 2299.67,
+        "wr": 76.2
+      },
+      "BB TARGET": {
+        "class": "A",
+        "count": 2,
+        "pnl": 40.15,
+        "wr": 100.0
+      },
+      "FIXED STOP": {
+        "class": "B",
+        "count": 19,
+        "pnl": -2035.62,
+        "wr": 0.0
+      },
+      "TIME MAX": {
+        "class": "B",
+        "count": 17,
+        "pnl": -788.25,
+        "wr": 0.0
+      }
+    },
+    "bootstrap_mexc_10bps": {
+      "n_resamples": 1000,
+      "n_trades": 101,
+      "median_pf": 1.1555,
+      "p5_pf": 0.6767,
+      "p95_pf": 1.8931,
+      "median_pnl": 461.22,
+      "p5_pnl": -1158.07,
+      "pct_profitable": 66.4,
+      "pass": false
+    },
+    "bootstrap_mexc_26bps": {
+      "n_resamples": 1000,
+      "n_trades": 101,
+      "median_pf": 1.0685,
+      "p5_pf": 0.6194,
+      "p95_pf": 1.7672,
+      "median_pnl": 218.83,
+      "p5_pnl": -1338.97,
+      "pct_profitable": 57.0,
+      "pass": false
+    },
+    "fee_delta": {
+      "pf_diff": 0.0832,
+      "pnl_diff": 258.45,
+      "dd_diff": -0.47,
+      "wr_diff": 1.99
+    },
+    "kraken_delta": {
+      "mexc_pf": 1.1684,
+      "kraken_pf": 1.4058,
+      "pf_diff": -0.2374,
+      "mexc_trades": 101,
+      "kraken_trades": 216,
+      "mexc_dd": 51.45,
+      "kraken_dd": 36.37,
+      "mexc_wr": 51.49,
+      "kraken_wr": 54.63,
+      "note": "MEXC: 145 USDT coins, 10bps. Kraken: 487 USD coins, 26bps. Different pools+fees+microstructure."
+    }
+  },
+  "kraken_reference": {
+    "pf": 1.4058,
+    "trades": 216,
+    "dd": 36.37,
+    "pnl": 3349.79,
+    "wr": 54.63
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "adx_min": 20,
+  "lookback": 20,
+  "max_pos": 3,
+  "sl_pct": 5,
+  "time_limit": 20,
+  "tp_pct": 8
+}

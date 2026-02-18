@@ -1,0 +1,105 @@
+{
+  "config_id": "sprint4_035_h4s4f05_z2.0_dclow_rsi45_highvol",
+  "dataset_id": "ohlcv_4h_kraken_spot_usd_526",
+  "universe_id": "universe_sprint1",
+  "fee_model": "kraken_spot_26bps",
+  "git_hash": "9a606d9",
+  "timestamp": "2026-02-17T21:08:12.795309+00:00",
+  "full_run": {
+    "trades": 206,
+    "pf": 1.1618,
+    "pnl": 810.21,
+    "wr": 49.51,
+    "dd": 53.2
+  },
+  "window_split": {
+    "early": {
+      "start_bar": 50,
+      "end_bar": 273,
+      "trades": 74,
+      "pf": 0.4663,
+      "pnl": -974.14,
+      "wr": 45.95,
+      "dd": 53.2
+    },
+    "mid": {
+      "start_bar": 273,
+      "end_bar": 496,
+      "trades": 67,
+      "pf": 1.0979,
+      "pnl": 192.82,
+      "wr": 52.24,
+      "dd": 34.85
+    },
+    "late": {
+      "start_bar": 496,
+      "end_bar": 721,
+      "trades": 75,
+      "pf": 1.637,
+      "pnl": 2056.81,
+      "wr": 53.33,
+      "dd": 25.8
+    },
+    "windows_profitable": 2,
+    "pass": true
+  },
+  "walk_forward": {
+    "cal_early_test_midlate": {
+      "cal": {
+        "start_bar": 50,
+        "end_bar": 273,
+        "trades": 74,
+        "pf": 0.4663,
+        "pnl": -974.14,
+        "wr": 45.95,
+        "dd": 53.2
+      },
+      "test": {
+        "start_bar": 273,
+        "end_bar": 721,
+        "trades": 135,
+        "pf": 1.5253,
+        "pnl": 3040.53,
+        "wr": 51.85,
+        "dd": 34.85
+      },
+      "pass": false
+    },
+    "cal_earlymid_test_late": {
+      "cal": {
+        "start_bar": 50,
+        "end_bar": 496,
+        "trades": 138,
+        "pf": 0.7303,
+        "pnl": -777.03,
+        "wr": 48.55,
+        "dd": 53.2
+      },
+      "test": {
+        "start_bar": 496,
+        "end_bar": 721,
+        "trades": 75,
+        "pf": 1.637,
+        "pnl": 2056.81,
+        "wr": 53.33,
+        "dd": 25.8
+      },
+      "pass": false
+    },
+    "pass": false
+  },
+  "bootstrap": {
+    "n_resamples": 1000,
+    "seed": 42,
+    "n_trades": 206,
+    "median_pf": 1.127,
+    "p5_pf": 0.5649,
+    "p95_pf": 2.154,
+    "median_pnl": 637.22,
+    "p5_pnl": -2395.86,
+    "pct_profitable": 59.8,
+    "pass": false
+  },
+  "verdict": "FAILED",
+  "tests_passed": 1
+}

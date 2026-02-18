@@ -1,0 +1,12 @@
+{
+  "breadth_min": 0.3,
+  "max_pos": 3,
+  "momentum_period": 10,
+  "require_positive_return": true,
+  "sl_pct": 5,
+  "sma_filter": true,
+  "time_limit": 20,
+  "top_pct": 20,
+  "tp_pct": 8,
+  "vol_mult": 1.0
+}

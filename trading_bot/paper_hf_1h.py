@@ -97,7 +97,7 @@ def create_exchange():
     """Create MEXC SPOT exchange via CCXT."""
     import ccxt
     api_key = os.environ.get('MEXC_API_KEY', '')
-    secret = os.environ.get('MEXC_SECRET', '')
+    secret = os.environ.get('MEXC_SECRET_KEY', '') or os.environ.get('MEXC_SECRET', '')
     if not api_key or not secret:
         raise ValueError("MEXC_API_KEY and MEXC_SECRET must be set in .env")
     exchange = ccxt.mexc({

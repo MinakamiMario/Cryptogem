@@ -1,0 +1,73 @@
+{
+  "tier_a": [
+    {
+      "symbol": "VINE/USDT",
+      "touch_rate": 0.6923,
+      "full_fill_rate": 0.6923,
+      "avg_wait_s": 25.44,
+      "n_actionable": 13,
+      "n_fills": 9,
+      "n_partials": 0,
+      "n_misses": 4,
+      "n_errors": 0,
+      "n_excluded": 0,
+      "n_total": 13,
+      "error_rate": 0.0
+    }
+  ],
+  "tier_b": [
+    {
+      "symbol": "AEVO/USDT",
+      "touch_rate": 0.4615,
+      "full_fill_rate": 0.3846,
+      "avg_wait_s": 65.42,
+      "n_actionable": 13,
+      "n_fills": 5,
+      "n_partials": 1,
+      "n_misses": 7,
+      "n_errors": 0,
+      "n_excluded": 0,
+      "n_total": 13,
+      "error_rate": 0.0
+    },
+    {
+      "symbol": "PHA/USDT",
+      "touch_rate": 0.4167,
+      "full_fill_rate": 0.4167,
+      "avg_wait_s": 59.81,
+      "n_actionable": 12,
+      "n_fills": 5,
+      "n_partials": 0,
+      "n_misses": 7,
+      "n_errors": 0,
+      "n_excluded": 0,
+      "n_total": 12,
+      "error_rate": 0.0
+    },
+    {
+      "symbol": "ES/USDT",
+      "touch_rate": 0.25,
+      "full_fill_rate": 0.25,
+      "avg_wait_s": 68.81,
+      "n_actionable": 12,
+      "n_fills": 3,
+      "n_partials": 0,
+      "n_misses": 9,
+      "n_errors": 0,
+      "n_excluded": 0,
+      "n_total": 12,
+      "error_rate": 0.0
+    }
+  ],
+  "tier_c": [],
+  "invalid_symbols": [],
+  "summary": {
+    "n_a": 1,
+    "n_b": 3,
+    "n_c": 0,
+    "n_invalid": 0,
+    "tier_a_touch_rate": 0.6923,
+    "total_rounds": 50
+  },
+  "log_path": "reports/hf/live_fill_test_20260219_164744.jsonl"
+}

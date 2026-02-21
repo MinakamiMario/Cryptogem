@@ -13,11 +13,14 @@ from strategies.hf.screening.live_fill_test import (
     _compute_limit_price,
     _compute_quantity,
     _generate_summary,
+    _safe_sell_back,
     _validate_coins_against_markets,
     checkpoint_decision,
     checkpoint_report,
     theoretical_fill_prob,
     load_fill_test_coins,
+    wilson_ci,
+    DUST_CAP_USD,
     MAX_ORDER_USD,
     MAX_EXPOSURE_USD,
     MIN_ORDER_USD,
@@ -599,3 +602,273 @@ class TestClassifyCLI:
             assert all(c["tier"] == "tier_a" for c in coins)
         finally:
             os.unlink(filter_path)
+
+
+# ---------------------------------------------------------------------------
+# _safe_sell_back tests
+# ---------------------------------------------------------------------------
+
+class TestSafeSellBack:
+    """Tests for centralized sell-back with retries and dust handling."""
+
+    def _mock_exchange(self, *, sell_raises=None, sell_returns=None,
+                       precision_raises=False, min_amount=None, min_cost=None):
+        """Create mock exchange for sell-back tests."""
+        exchange = MagicMock()
+        exchange.markets = {
+            "TEST/USDT": {
+                "precision": {"amount": 2, "price": 4},
+                "limits": {
+                    "amount": {"min": min_amount},
+                    "cost": {"min": min_cost},
+                },
+            }
+        }
+        if precision_raises:
+            exchange.amount_to_precision.side_effect = Exception("no precision")
+        else:
+            exchange.amount_to_precision.return_value = "100.00"
+
+        if sell_raises:
+            exchange.create_market_sell_order.side_effect = sell_raises
+        elif sell_returns:
+            exchange.create_market_sell_order.return_value = sell_returns
+        else:
+            exchange.create_market_sell_order.return_value = {"id": "sell_123"}
+
+        exchange.fetch_order.return_value = {
+            "average": 1.05, "filled": 100.0, "status": "closed",
+            "fee": {"cost": 0.005, "currency": "USDT"},
+        }
+        return exchange
+
+    @patch("strategies.hf.screening.live_fill_test.time.sleep")
+    def test_dust_below_min_amount(self, mock_sleep):
+        """Sell skipped when qty < min_amount → dust_remaining=True, no WARNING."""
+        exchange = self._mock_exchange(min_amount=200.0)
+        result = _safe_sell_back(exchange, "TEST/USDT", qty=100.0, fill_price=1.0)
+        assert result["dust_remaining"] is True
+        assert result["dust_reason"] == "below_min_amount"
+        assert "WARNING" not in result
+        exchange.create_market_sell_order.assert_not_called()
+
+    @patch("strategies.hf.screening.live_fill_test.time.sleep")
+    def test_dust_below_min_cost(self, mock_sleep):
+        """Sell skipped when notional < min_cost → dust_remaining=True."""
+        exchange = self._mock_exchange(min_cost=10.0)
+        # qty=100, price=0.001 → notional = $0.10 < $10
+        result = _safe_sell_back(exchange, "TEST/USDT", qty=100.0, fill_price=0.001)
+        assert result["dust_remaining"] is True
+        assert result["dust_reason"] == "below_min_cost"
+
+    @patch("strategies.hf.screening.live_fill_test.time.sleep")
+    def test_dust_below_dust_cap(self, mock_sleep):
+        """Sell skipped when notional ≤ DUST_CAP_USD."""
+        exchange = self._mock_exchange()
+        # qty=100, price=0.001 → notional = $0.10 ≤ $0.50
+        result = _safe_sell_back(exchange, "TEST/USDT", qty=100.0, fill_price=0.001)
+        assert result["dust_remaining"] is True
+        assert result["dust_reason"] == "below_dust_cap"
+
+    @patch("strategies.hf.screening.live_fill_test.time.sleep")
+    def test_retry_success_second_attempt(self, mock_sleep):
+        """First sell fails, second succeeds → sell_attempts=2, no WARNING."""
+        exchange = self._mock_exchange(
+            sell_raises=[Exception("timeout"), {"id": "sell_ok"}]
+        )
+        # Need side_effect list: first call raises, second returns
+        exchange.create_market_sell_order.side_effect = [
+            Exception("timeout"),
+            {"id": "sell_ok"},
+        ]
+        result = _safe_sell_back(exchange, "TEST/USDT", qty=100.0, fill_price=1.0)
+        assert result["sell_attempts"] == 2
+        assert "sell_price" in result
+        assert "WARNING" not in result
+
+    @patch("strategies.hf.screening.live_fill_test.time.sleep")
+    def test_all_retries_fail(self, mock_sleep):
+        """All 3 sell attempts fail → WARNING set, sell_attempts=3."""
+        exchange = self._mock_exchange(
+            sell_raises=Exception("rejected")
+        )
+        result = _safe_sell_back(exchange, "TEST/USDT", qty=100.0, fill_price=1.0)
+        assert result["sell_attempts"] == 3
+        assert result["WARNING"] == "POSITION OPEN — manual close needed!"
+
+    @patch("strategies.hf.screening.live_fill_test.time.sleep")
+    def test_precision_fallback(self, mock_sleep):
+        """CCXT precision fails → falls back to manual precision."""
+        exchange = self._mock_exchange(precision_raises=True)
+        # With manual fallback, qty=100.123 → 100.12 (precision=2)
+        result = _safe_sell_back(exchange, "TEST/USDT", qty=100.123, fill_price=1.0)
+        # Should still attempt sell (notional > dust cap)
+        assert exchange.create_market_sell_order.called
+
+    @patch("strategies.hf.screening.live_fill_test.time.sleep")
+    def test_zero_qty_after_precision(self, mock_sleep):
+        """Qty becomes 0 after precision → dust."""
+        exchange = self._mock_exchange()
+        exchange.amount_to_precision.return_value = "0.0"
+        result = _safe_sell_back(exchange, "TEST/USDT", qty=0.001, fill_price=1.0)
+        # After float("0.0") = 0.0, should be dust
+        assert result.get("dust_remaining") is True
+
+
+# ---------------------------------------------------------------------------
+# Orderbook retry tests
+# ---------------------------------------------------------------------------
+
+class TestOrderbookRetry:
+    """Tests for orderbook fetch retry logic."""
+
+    def _mock_exchange(self):
+        exchange = MagicMock()
+        exchange.markets = {
+            "TEST/USDT": {
+                "active": True,
+                "precision": {"amount": 2, "price": 4},
+                "limits": {"amount": {"min": 1}, "cost": {"min": 5}},
+            }
+        }
+        return exchange
+
+    @patch("strategies.hf.screening.live_fill_test.time.sleep")
+    def test_retry_success_after_one_failure(self, mock_sleep):
+        """First OB fetch fails, second succeeds → ob_retries=2 in result."""
+        from strategies.hf.screening.live_fill_test import run_single_fill_test
+
+        exchange = self._mock_exchange()
+        # First call raises, second returns valid OB
+        exchange.fetch_order_book.side_effect = [
+            Exception("timeout"),
+            {"bids": [[1.0, 100]], "asks": [[1.01, 100]]},
+        ]
+        # Order will fail but OB should succeed
+        exchange.create_limit_buy_order.side_effect = Exception("test stop")
+
+        coin = {"symbol": "TEST/USDT", "internal": "TEST/USD", "tier": "tier_a"}
+        result = run_single_fill_test(exchange, coin, order_usd=10.0)
+        # OB succeeded on retry → should NOT be ERROR_ORDERBOOK
+        assert result.get("status") != "ERROR_ORDERBOOK"
+        assert result.get("ob_retries") == 2
+
+    @patch("strategies.hf.screening.live_fill_test.time.sleep")
+    def test_all_retries_fail(self, mock_sleep):
+        """All 3 OB fetches fail → ERROR_ORDERBOOK with ob_retries=3."""
+        from strategies.hf.screening.live_fill_test import run_single_fill_test
+
+        exchange = self._mock_exchange()
+        exchange.fetch_order_book.side_effect = Exception("rate limit 429")
+
+        coin = {"symbol": "TEST/USDT", "internal": "TEST/USD", "tier": "tier_a"}
+        result = run_single_fill_test(exchange, coin, order_usd=10.0)
+        assert result["status"] == "ERROR_ORDERBOOK"
+        assert result["ob_retries"] == 3
+        assert result.get("error_type") in ("transient", "permanent", "unknown")
+
+
+# ---------------------------------------------------------------------------
+# Summary dust + per-coin flatten fees tests
+# ---------------------------------------------------------------------------
+
+class TestSummaryDustAndFees:
+    """Tests for dust_positions and per-coin flatten fees in summary."""
+
+    def _make_result(self, status, symbol="TEST/USDT", **kwargs):
+        r = {
+            "status": status,
+            "symbol": symbol,
+            "tier": "tier_a",
+            "spread_bps": 5.0,
+            "theoretical_fill_prob": 0.7,
+        }
+        if status == "FILLED":
+            r["wait_seconds"] = kwargs.get("wait", 10)
+            r["roundtrip_pnl"] = kwargs.get("rt_pnl", 0)
+        r.update(kwargs)
+        return r
+
+    def test_dust_positions_count(self):
+        """Summary must count dust_remaining records."""
+        results = [
+            self._make_result("FILLED", dust_remaining=True),
+            self._make_result("FILLED"),
+            self._make_result("FILLED", dust_remaining=True),
+        ]
+        summary = _generate_summary(results)
+        assert summary["dust_positions"] == 2
+
+    def test_dust_positions_zero(self):
+        """No dust → dust_positions=0."""
+        results = [self._make_result("FILLED")]
+        summary = _generate_summary(results)
+        assert summary["dust_positions"] == 0
+
+    def test_per_coin_flatten_fees(self):
+        """Per-coin breakdown must include total_flatten_fees."""
+        results = [
+            self._make_result("FILLED", symbol="ADA/USDT", sell_fee_cost=0.003),
+            self._make_result("FILLED", symbol="ADA/USDT", sell_fee_cost=0.004),
+            self._make_result("FILLED", symbol="XRP/USDT", sell_fee_cost=0.002),
+        ]
+        summary = _generate_summary(results)
+        ada = summary["coin_breakdown"]["ADA/USDT"]
+        xrp = summary["coin_breakdown"]["XRP/USDT"]
+        assert ada["total_flatten_fees"] == pytest.approx(0.007, abs=0.0001)
+        assert xrp["total_flatten_fees"] == pytest.approx(0.002, abs=0.0001)
+
+
+class TestWilsonCI:
+    """Tests for Wilson score confidence interval."""
+
+    def test_wilson_ci_perfect(self):
+        """100% success rate — CI upper should be near 1.0."""
+        lo, hi = wilson_ci(20, 20)
+        assert hi > 0.95
+        assert lo > 0.80
+
+    def test_wilson_ci_zero(self):
+        """0% success rate — CI lower should be near 0.0."""
+        lo, hi = wilson_ci(0, 20)
+        assert lo < 0.05
+        assert hi < 0.20
+
+    def test_wilson_ci_half(self):
+        """50% success rate with n=100 — CI should be ~[40%, 60%]."""
+        lo, hi = wilson_ci(50, 100)
+        assert 0.35 < lo < 0.45
+        assert 0.55 < hi < 0.65
+
+    def test_wilson_ci_empty(self):
+        """n=0 — should return (0, 0) without error."""
+        lo, hi = wilson_ci(0, 0)
+        assert lo == 0.0
+        assert hi == 0.0
+
+    def test_wilson_ci_small_n(self):
+        """Small sample — CI should be wide."""
+        lo, hi = wilson_ci(3, 5)
+        width = hi - lo
+        assert width > 0.30  # Wide CI for small N
+
+    def test_wilson_ci_in_summary(self):
+        """Wilson CI should appear in per-coin summary."""
+        results = [
+            {"symbol": "ADA/USDT", "status": "FILLED", "tier": "tier_a",
+             "spread_bps": 3.0, "wait_seconds": 10, "slippage_vs_mid_bps": 1.0},
+            {"symbol": "ADA/USDT", "status": "MISSED", "tier": "tier_a",
+             "spread_bps": 3.0},
+        ]
+        summary = _generate_summary(results)
+        ada = summary["coin_breakdown"]["ADA/USDT"]
+        assert "touch_ci_lower" in ada
+        assert "touch_ci_upper" in ada
+        assert "fill_ci_lower" in ada
+        assert "fill_ci_upper" in ada
+        # 1/2 = 50% fill/touch, CI should bracket 0.5
+        assert ada["touch_ci_lower"] < 0.5
+        assert ada["touch_ci_upper"] > 0.5
+        # Global CI should also exist
+        assert "touch_ci_lower" in summary
+        assert "fill_ci_upper" in summary

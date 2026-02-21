@@ -294,6 +294,57 @@ class MEXCExchangeClient(ExchangeClient):
             logger.error(f"MEXC sell error voor {pair}: {e}")
         return None
 
+    def place_limit_buy(self, pair: str, volume: float, price: float) -> Optional[dict]:
+        """
+        Place a limit buy order on MEXC.
+
+        Returns full order dict with 'id', 'status', 'price', 'amount', 'filled',
+        or None on error.
+        """
+        self._rate_limit()
+        try:
+            order = self._exchange.create_limit_buy_order(pair, volume, price)
+            if order:
+                logger.info(
+                    f"MEXC LIMIT BUY: {pair} vol={volume} price={price} "
+                    f"order={order.get('id', '')}"
+                )
+                return order
+        except Exception as e:
+            logger.error(f"MEXC limit buy error voor {pair}: {e}")
+        return None
+
+    def cancel_order(self, order_id: str, pair: str) -> bool:
+        """Cancel an open order on MEXC. Returns True if cancelled successfully."""
+        self._rate_limit()
+        try:
+            self._exchange.cancel_order(order_id, pair)
+            logger.info(f"MEXC CANCEL: order={order_id} pair={pair}")
+            return True
+        except Exception as e:
+            logger.error(f"MEXC cancel error voor {order_id}: {e}")
+            return False
+
+    def fetch_order(self, order_id: str, pair: str) -> Optional[dict]:
+        """Fetch order status from MEXC. Returns CCXT order dict."""
+        self._rate_limit()
+        try:
+            order = self._exchange.fetch_order(order_id, pair)
+            return order
+        except Exception as e:
+            logger.error(f"MEXC fetch_order error voor {order_id}: {e}")
+            return None
+
+    def fetch_orderbook(self, pair: str, limit: int = 5) -> Optional[dict]:
+        """Fetch orderbook for a pair. Returns {'bids': [...], 'asks': [...]}."""
+        self._rate_limit()
+        try:
+            ob = self._exchange.fetch_order_book(pair, limit=limit)
+            return ob
+        except Exception as e:
+            logger.error(f"MEXC orderbook error voor {pair}: {e}")
+            return None
+
     def get_tradeable_pairs(self) -> List[str]:
         """
         Haal alle USDT spot pairs op van MEXC.

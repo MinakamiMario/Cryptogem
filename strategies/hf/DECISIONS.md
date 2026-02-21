@@ -2258,3 +2258,114 @@ Deploy near_ask strategy to paper trader (VINE/AEVO/PHA/ES subset).
 - `reports/hf/live_fill_test_20260220_154958.jsonl` — 200-round near_ask retest (complete)
 - `reports/hf/near_ask_retest_200.log` — part1 stdout (40 rounds)
 - `reports/hf/near_ask_retest_part2.log` — part2 stdout (160 rounds)
+
+### Iteration 8: 20-Coin Expansion + Curated Universe (2026-02-21)
+
+**Config**: 20 halal coins, near_ask pricing, TTL 120s, $5/order, spread-cap 75bps, kill-partials 0
+
+**Part 1**: 70 rounds → stopped at round 70 (flatten_failed on PEPE/USDT: market sell rejected by MEXC). 13/70 ERROR_ORDERBOOK (rate limiting, concentrated rounds 30-69). Position manually closed.
+
+**Fixes applied** (code changes to `live_fill_test.py`):
+1. `_safe_sell_back()`: centralized sell with CCXT `amount_to_precision()`, dust detection, 3x retry with exponential backoff + jitter
+2. Orderbook retry: 3 attempts with 1s/2s + jitter, error classification (transient/permanent/unknown)
+3. Kill-switch softened: only triggers if open_notional > DUST_CAP_USD ($0.50) after all retries
+4. Per-coin flatten fees tracking in summary
+5. 12 new tests (62→68 total, all passing)
+
+**Part 2**: 311 rounds → 311 actionable. **0 ERROR_ORDERBOOK, 0 taker_incidents, 0 open_positions, 0 dust**. All fixes validated.
+
+**Combined results** (part 2 only — clean data after fixes):
+
+| Metric | Value | 95% CI |
+|--------|-------|--------|
+| Rounds | 311 | — |
+| Actionable | 311 | — |
+| Filled | 291 | — |
+| Partial | 5 | — |
+| Missed | 15 | — |
+| **Touch rate** | **95.2%** | [92.2%, 97.1%] |
+| **Fill rate** | **93.6%** | [90.3%, 95.8%] |
+| Taker incidents | 0 | — |
+| Open positions | 0 | — |
+| Dust positions | 0 | — |
+| ERROR_ORDERBOOK | 0 | — |
+| Avg spread | 6.3 bps | — |
+| Avg fill wait | 15s | — |
+| Avg slippage vs mid | +2.8 bps | — |
+| Total RT P&L | -$0.94 | — |
+
+**Per-coin breakdown** (sorted by fill rate, part 2):
+
+| Coin | Act | Filled | Partial | Missed | Fill% | Touch% | Touch 95%CI | Spread | Wait |
+|------|:---:|:------:|:-------:|:------:|:-----:|:------:|:-----------:|-------:|-----:|
+| ADA/USDT | 16 | 16 | 0 | 0 | 100% | 100% | [81%, 100%] | 3.6 | 12s |
+| FET/USDT | 16 | 16 | 0 | 0 | 100% | 100% | [81%, 100%] | 6.0 | 11s |
+| FLOKI/USDT | 16 | 16 | 0 | 0 | 100% | 100% | [81%, 100%] | 3.3 | 11s |
+| GALA/USDT | 16 | 16 | 0 | 0 | 100% | 100% | [81%, 100%] | 11.7 | 11s |
+| GRT/USDT | 16 | 16 | 0 | 0 | 100% | 100% | [81%, 100%] | 5.1 | 11s |
+| HBAR/USDT | 16 | 16 | 0 | 0 | 100% | 100% | [81%, 100%] | 1.1 | 13s |
+| PEPE/USDT | 16 | 16 | 0 | 0 | 100% | 100% | [81%, 100%] | 5.5 | 17s |
+| SHIB/USDT | 15 | 15 | 0 | 0 | 100% | 100% | [80%, 100%] | 5.5 | 11s |
+| SUI/USDT | 15 | 15 | 0 | 0 | 100% | 100% | [80%, 100%] | 1.1 | 11s |
+| TRX/USDT | 15 | 15 | 0 | 0 | 100% | 100% | [80%, 100%] | 4.2 | 11s |
+| XLM/USDT | 15 | 15 | 0 | 0 | 100% | 100% | [80%, 100%] | 6.2 | 11s |
+| XRP/USDT | 15 | 15 | 0 | 0 | 100% | 100% | [80%, 100%] | 1.0 | 11s |
+| ARB/USDT | 15 | 15 | 0 | 0 | 100% | 100% | [80%, 100%] | 9.5 | 18s |
+| ATOM/USDT | 15 | 15 | 0 | 0 | 100% | 100% | [80%, 100%] | 12.3 | 13s |
+| AVAX/USDT | 15 | 15 | 0 | 0 | 100% | 100% | [80%, 100%] | 4.0 | 18s |
+| SEI/USDT | 16 | 15 | 0 | 1 | 94% | 94% | [72%, 99%] | 4.2 | 14s |
+| KAS/USDT | 16 | 14 | 0 | 2 | 88% | 88% | [64%, 97%] | 11.9 | 13s |
+| JASMY/USDT | 16 | 12 | 2 | 2 | 75% | 88% | [64%, 97%] | 17.6 | 37s |
+| APT/USDT | 15 | 11 | 0 | 4 | 73% | 73% | [48%, 89%] | 6.9 | 33s |
+| ALGO/USDT | 16 | 7 | 3 | 6 | 44% | 63% | [39%, 82%] | 4.9 | 55s |
+
+**Curated Universe**: 17 coins selected → `papertrade_universe_v1.json`
+
+Selection criteria: fill_rate ≥ 85%, avg_spread ≤ 15 bps, avg_wait ≤ 30s, partial_rate ≤ 10%.
+Rejected: ALGO (44% fill, 19% partials), APT (73% fill, wait 33s), JASMY (75% fill, spread 17.6 bps).
+
+### Decision: GO → HF Paper Trading (Execution Validation)
+
+**Status**: DECIDED — **GO paper trade only**
+
+**Scope**: This is **execution validation**, NOT alpha/PnL validation.
+
+**Purpose**: Validate that near_ask maker limit orders work reliably in a continuous trading loop. Specifically:
+- Fill-rate stability in real trading (not isolated test rounds)
+- Slippage/fees burn under continuous operation
+- Execution path correctness (no stuck positions, no taker incidents)
+- Infrastructure reliability (no API errors, no kill-switch triggers)
+
+**Deployment**:
+- **Strategy**: near_ask maker limit orders (ask - spread × 0.10)
+- **Universe**: `reports/hf/papertrade_universe_v1.json` (17 coins, T1+T2)
+- **TTL**: 120s
+- **Order size**: $5–15 (small notional, configurable)
+- **Entrypoint**: `trading_bot/paper_hf_1h.py` (NEW, separate from MEXC-4H-PAPER)
+- **Separate from**: `trading_bot/paper_mexc_4h.py` (4H DualConfirm, ADR-4H-015)
+
+**Paper trade success criteria** (after 50–100 trades):
+1. Fill rate ≥ 80% (matching expansion test — expect ~93%)
+2. Slippage vs mid ≤ 15 bps (expansion avg: +2.8 bps)
+3. No stuck positions (all flattened within TTL + sell window)
+4. Flatten success rate ≥ 99%
+5. Taker incidents = 0
+
+**Rollback criteria** (any trigger → STOP + investigate):
+1. Open position > 0 for > 5 minutes (stuck position)
+2. Taker incident > 0 (maker guard failure)
+3. Flatten fee avg > $0.50/trade (excessive measurement overhead)
+4. Abnormal slippage > 25 bps avg (execution degradation)
+5. ERROR_ORDERBOOK > 10% of rounds (API instability)
+6. Fill rate < 50% over 50+ trades (signal degradation)
+
+**What comes AFTER paper trade success**:
+- Alpha/PnL validation: integrate H20 VWAP_DEVIATION signal (or successor)
+- Position holding: keep fills instead of immediate flatten
+- Larger notional: scale from $5-15 to strategy-level sizing
+
+**Artifacts**:
+- `reports/hf/live_fill_test_20260221_093629.jsonl` — 381-record expansion data (70 part1 + 311 part2)
+- `reports/hf/expansion_20coin_report.json` — final report with Wilson CI
+- `reports/hf/expansion_20coin_report.md` — markdown report
+- `reports/hf/papertrade_universe_v1.json` — curated 17-coin pool

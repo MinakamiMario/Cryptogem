@@ -82,6 +82,7 @@ MAX_SPREAD_BPS = 200.0        # Skip coins with spread > 200bps (2%)
 DAILY_MAX_ORDERS = 50         # Max orders per 24h period
 MAX_CONSECUTIVE_ERRORS = 3    # Kill-switch: consecutive API errors
 MAX_CONSECUTIVE_PARTIALS = 3  # Kill-switch: consecutive partial fills
+DUST_CAP_USD = 0.50           # Positions ≤ $0.50 are dust — not fatal, skip sell
 
 # ---------------------------------------------------------------------------
 # Coin selection (reuses orderbook_collector logic)
@@ -300,12 +301,105 @@ def _compute_quantity(price: float, notional_usd: float, market_info: dict) -> O
     return raw_qty
 
 
+def _safe_sell_back(exchange, symbol: str, qty: float, fill_price: float) -> dict:
+    """Sell back filled/partial position with retries and dust handling.
+
+    Uses CCXT amount_to_precision() for exchange-correct rounding.
+    Pre-checks minimums to detect dust positions that cannot be sold.
+    Retries up to 3x with exponential backoff + jitter.
+
+    Returns dict with sell result fields (sell_price, sell_qty, sell_fee_cost, etc).
+    If position is dust or all retries fail, sets WARNING or dust_remaining accordingly.
+    """
+    result: dict = {}
+    market_info = exchange.markets.get(symbol, {})
+
+    # 1. Apply CCXT amount precision (exchange-correct, replaces manual floor)
+    try:
+        qty = float(exchange.amount_to_precision(symbol, qty))
+    except Exception:
+        # Fallback: manual precision from market_info (same as _compute_quantity)
+        amount_precision = market_info.get("precision", {}).get("amount")
+        if amount_precision is not None:
+            if isinstance(amount_precision, int):
+                qty = math.floor(qty * 10**amount_precision) / 10**amount_precision
+            else:
+                qty = math.floor(qty / amount_precision) * amount_precision
+
+    # 2. Pre-check minimums — if below, this is dust
+    min_amount = market_info.get("limits", {}).get("amount", {}).get("min")
+    min_cost = market_info.get("limits", {}).get("cost", {}).get("min")
+    estimated_notional = qty * fill_price
+
+    if qty <= 0:
+        result["dust_remaining"] = True
+        result["dust_notional"] = 0.0
+        result["dust_reason"] = "zero_qty_after_precision"
+        return result
+
+    if (min_amount and qty < min_amount) or \
+       (min_cost and estimated_notional < min_cost) or \
+       estimated_notional <= DUST_CAP_USD:
+        result["dust_remaining"] = True
+        result["dust_notional"] = round(estimated_notional, 4)
+        result["dust_reason"] = (
+            "below_min_amount" if min_amount and qty < min_amount
+            else "below_min_cost" if min_cost and estimated_notional < min_cost
+            else "below_dust_cap"
+        )
+        return result
+
+    # 3. Retry loop (3 attempts, exponential backoff + jitter)
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            wait = 0.5 + attempt * 1.5 + random.uniform(0, 0.5)
+            time.sleep(wait)
+            sell_order = exchange.create_market_sell_order(symbol, qty)
+            sell_id = sell_order.get("id", "")
+            result["sell_order_id"] = sell_id
+            result["sell_attempts"] = attempt + 1
+
+            # Check execution
+            time.sleep(2.0)
+            try:
+                sell_status = exchange.fetch_order(sell_id, symbol)
+                sell_price = float(
+                    sell_status.get("average", 0)
+                    or sell_status.get("price", 0) or 0
+                )
+                sell_qty = float(sell_status.get("filled", 0) or 0)
+                result["sell_price"] = sell_price
+                result["sell_qty"] = sell_qty
+                result["sell_notional"] = round(sell_qty * sell_price, 4)
+                result["sell_status"] = sell_status.get("status", "unknown")
+                sell_fees_raw = sell_status.get("fee", {})
+                if sell_fees_raw and sell_fees_raw.get("cost"):
+                    result["sell_fee_cost"] = float(sell_fees_raw["cost"])
+                    result["sell_fee_currency"] = sell_fees_raw.get("currency", "")
+            except Exception as e:
+                result["sell_check_error"] = str(e)
+
+            return result  # Success — exit retry loop
+
+        except Exception as e:
+            result["sell_error"] = str(e)
+            result["sell_attempts"] = attempt + 1
+            if attempt < max_retries - 1:
+                continue
+
+    # All retries failed — position open
+    result["WARNING"] = "POSITION OPEN — manual close needed!"
+    return result
+
+
 def run_single_fill_test(
     exchange,
     coin_info: dict,
     order_usd: float = DEFAULT_ORDER_USD,
     ttl_seconds: float = ORDER_TTL_SECONDS,
     price_strategy: str = "near_bid",
+    max_spread_bps: float = MAX_SPREAD_BPS,
 ) -> dict:
     """Execute one fill test: place limit buy, wait, check, cancel/sell.
 
@@ -323,13 +417,35 @@ def run_single_fill_test(
         "ttl_seconds": ttl_seconds,
     }
 
-    # 1. Fetch orderbook
-    try:
-        ob = exchange.fetch_order_book(symbol, limit=5)
-    except Exception as e:
+    # 1. Fetch orderbook (with retries + backoff)
+    ob = None
+    ob_error = None
+    for ob_attempt in range(3):
+        try:
+            ob = exchange.fetch_order_book(symbol, limit=5)
+            break
+        except Exception as e:
+            ob_error = str(e)
+            if ob_attempt < 2:
+                jitter = random.uniform(0, 0.5)
+                time.sleep((2 ** ob_attempt) + jitter)  # ~1s, ~2s
+
+    if ob is None:
         result["status"] = "ERROR_ORDERBOOK"
-        result["error"] = str(e)
+        result["error"] = ob_error
+        result["ob_retries"] = 3
+        # Classify error type for audit
+        err_lower = (ob_error or "").lower()
+        if "timeout" in err_lower or "rate" in err_lower or "429" in err_lower:
+            result["error_type"] = "transient"
+        elif "not found" in err_lower or "not support" in err_lower:
+            result["error_type"] = "permanent"
+        else:
+            result["error_type"] = "unknown"
         return result
+
+    if ob_attempt > 0:
+        result["ob_retries"] = ob_attempt + 1
 
     bids = ob.get("bids", [])
     asks = ob.get("asks", [])
@@ -348,7 +464,7 @@ def run_single_fill_test(
     result["spread_bps"] = round(spread_bps, 2)
 
     # Safety: skip extreme spreads
-    if spread_bps > MAX_SPREAD_BPS:
+    if spread_bps > max_spread_bps:
         result["status"] = "SKIPPED_SPREAD"
         return result
 
@@ -474,38 +590,13 @@ def run_single_fill_test(
                 (fill_price - mid) / mid * 10_000, 2
             )  # Negative = filled below mid (good for buyer)
 
-        # 7. Sell back immediately (market sell to recover capital)
-        try:
-            time.sleep(0.5)  # Brief pause
-            sell_order = exchange.create_market_sell_order(symbol, fill_qty)
-            sell_id = sell_order.get("id", "")
-            result["sell_order_id"] = sell_id
-
-            # Check sell execution
-            time.sleep(2.0)
-            try:
-                sell_status = exchange.fetch_order(sell_id, symbol)
-                sell_price = float(sell_status.get("average", 0) or sell_status.get("price", 0) or 0)
-                sell_qty = float(sell_status.get("filled", 0) or 0)
-                sell_fees_raw = sell_status.get("fee", {})
-                result["sell_price"] = sell_price
-                result["sell_qty"] = sell_qty
-                result["sell_notional"] = round(sell_qty * sell_price, 4)
-                result["roundtrip_pnl"] = round(
-                    (sell_price - fill_price) * fill_qty, 4
-                )
-                result["sell_status"] = sell_status.get("status", "unknown")
-
-                # Track fees paid (from CCXT fee field)
-                if sell_fees_raw and sell_fees_raw.get("cost"):
-                    result["sell_fee_cost"] = float(sell_fees_raw["cost"])
-                    result["sell_fee_currency"] = sell_fees_raw.get("currency", "")
-            except Exception as e:
-                result["sell_check_error"] = str(e)
-
-        except Exception as e:
-            result["sell_error"] = str(e)
-            result["WARNING"] = "POSITION OPEN — manual close needed!"
+        # 7. Sell back immediately (centralized with retries + dust handling)
+        sell_result = _safe_sell_back(exchange, symbol, fill_qty, fill_price)
+        result.update(sell_result)
+        if "sell_price" in sell_result and fill_price:
+            result["roundtrip_pnl"] = round(
+                (sell_result["sell_price"] - fill_price) * fill_qty, 4
+            )
     elif fill_qty > 0:
         # Partial fill — always flatten immediately
         result["status"] = "PARTIAL"
@@ -518,27 +609,13 @@ def run_single_fill_test(
                 (fill_price - mid) / mid * 10_000, 2
             )
 
-        # Sell partial fill
-        try:
-            time.sleep(0.5)
-            sell_order = exchange.create_market_sell_order(symbol, fill_qty)
-            result["sell_order_id"] = sell_order.get("id", "")
-            time.sleep(2.0)
-            try:
-                sell_status = exchange.fetch_order(sell_order.get("id", ""), symbol)
-                sell_price = float(sell_status.get("average", 0) or sell_status.get("price", 0) or 0)
-                result["sell_price"] = sell_price
-                result["sell_qty"] = float(sell_status.get("filled", 0) or 0)
-                result["sell_notional"] = round(result["sell_qty"] * sell_price, 4)
-                result["roundtrip_pnl"] = round(
-                    (sell_price - fill_price) * fill_qty, 4
-                )
-                result["sell_status"] = sell_status.get("status", "unknown")
-            except Exception:
-                pass
-        except Exception as e:
-            result["sell_error"] = str(e)
-            result["WARNING"] = "PARTIAL POSITION OPEN — manual close needed!"
+        # Sell partial fill (centralized with retries + dust handling)
+        sell_result = _safe_sell_back(exchange, symbol, fill_qty, fill_price)
+        result.update(sell_result)
+        if "sell_price" in sell_result and fill_price:
+            result["roundtrip_pnl"] = round(
+                (sell_result["sell_price"] - fill_price) * fill_qty, 4
+            )
     else:
         result["status"] = "MISSED"
 
@@ -587,6 +664,7 @@ def run_fill_test(
     seed: int = 42,
     daily_max_orders: int = DAILY_MAX_ORDERS,
     kill_partials: int = MAX_CONSECUTIVE_PARTIALS,
+    spread_cap: float = MAX_SPREAD_BPS,
     coins_override: Optional[List[Dict[str, str]]] = None,
 ) -> dict:
     """Run the full fill-rate test.
@@ -630,6 +708,7 @@ def run_fill_test(
     print(f"[fill-test] Max exposure (concurrent): ${order_usd} (1 order at a time)")
     print(f"[fill-test] Max risk (cumulative budget): ${max_total_risk}")
     print(f"[fill-test] Daily max: {daily_max_orders}")
+    print(f"[fill-test] Spread cap: {spread_cap} bps")
     partials_label = str(kill_partials) if kill_partials > 0 else "disabled"
     print(f"[fill-test] Kill-switch: {MAX_CONSECUTIVE_ERRORS} errors, "
           f"{partials_label} partials")
@@ -695,6 +774,7 @@ def run_fill_test(
                 order_usd=order_usd,
                 ttl_seconds=ttl_seconds,
                 price_strategy=price_strategy,
+                max_spread_bps=spread_cap,
             )
 
             result["round"] = round_num
@@ -750,12 +830,52 @@ def run_fill_test(
                 result["kill_switch"] = "consecutive_partials"
                 break
 
-            # Kill-switch: cancel-fail (order stuck open)
-            if result.get("WARNING", "").startswith("POSITION OPEN") or \
-               result.get("WARNING", "").startswith("PARTIAL POSITION OPEN"):
-                print(f"\n[KILL-SWITCH] Failed to flatten position. Stopping.")
-                result["kill_switch"] = "flatten_failed"
-                break
+            # Kill-switch: flatten-fail — only if exposure > dust cap after retries
+            warn = result.get("WARNING", "")
+            if warn.startswith("POSITION OPEN") or warn.startswith("PARTIAL POSITION OPEN"):
+                open_notional = result.get("fill_notional", 0)
+                if result.get("dust_remaining"):
+                    print(f"  [DUST] ${result.get('dust_notional', 0):.4f} "
+                          f"({result.get('dust_reason', '?')}). Continuing.")
+                elif open_notional > DUST_CAP_USD:
+                    print(f"\n[KILL-SWITCH] Open position ${open_notional:.2f} > "
+                          f"dust cap ${DUST_CAP_USD}. Stopping.")
+                    result["kill_switch"] = "flatten_failed"
+                    break
+                else:
+                    print(f"  [DUST] ${open_notional:.4f} <= "
+                          f"${DUST_CAP_USD}. Continuing.")
+                    result["dust_remaining"] = True
+
+            # --- Stop-early checkpoint at round 100 (expansion runs only) ---
+            if round_num == 100 and len(coins) > 4:
+                _ACTIONABLE = {"FILLED", "PARTIAL", "MISSED"}
+                coin_touch: dict = {}
+                for r in results:
+                    s = r.get("symbol", "")
+                    st = r.get("status", "")
+                    if st in _ACTIONABLE:
+                        if s not in coin_touch:
+                            coin_touch[s] = {"n": 0, "touch": 0}
+                        coin_touch[s]["n"] += 1
+                        if st in ("FILLED", "PARTIAL"):
+                            coin_touch[s]["touch"] += 1
+                promising = sum(
+                    1 for v in coin_touch.values()
+                    if v["n"] >= 3 and v["touch"] / v["n"] >= 0.40
+                )
+                print(f"\n[CHECKPOINT 100] {promising} coins with touch >= 40% "
+                      f"(gate: >= 3)")
+                for sym, v in sorted(
+                    coin_touch.items(),
+                    key=lambda x: -x[1]["touch"] / max(x[1]["n"], 1),
+                ):
+                    tr = v["touch"] / v["n"] if v["n"] else 0
+                    print(f"  {sym:15s} {v['touch']}/{v['n']} ({tr:.0%})")
+                if promising < 3:
+                    print("[STOP-EARLY] < 3 promising coins. "
+                          "Stopping for reconfig.")
+                    break
 
             # Pause between rounds
             if round_num < n_rounds and not _SHUTDOWN:
@@ -781,6 +901,20 @@ def run_fill_test(
     return summary
 
 
+def wilson_ci(successes: int, n: int, z: float = 1.96) -> tuple:
+    """Wilson score interval for binomial proportion (95% CI by default).
+
+    Returns (lower, upper) bounds. No continuity correction.
+    """
+    if n == 0:
+        return (0.0, 0.0)
+    p = successes / n
+    denom = 1 + z ** 2 / n
+    centre = p + z ** 2 / (2 * n)
+    margin = z * math.sqrt(p * (1 - p) / n + z ** 2 / (4 * n ** 2))
+    return (round((centre - margin) / denom, 4), round((centre + margin) / denom, 4))
+
+
 def _generate_summary(results: List[dict]) -> dict:
     """Generate summary statistics from test results."""
     total = len(results)
@@ -799,6 +933,9 @@ def _generate_summary(results: List[dict]) -> dict:
         1 for r in results
         if r.get("maker_safe_after_rounding") is False or r.get("price_adjusted")
     )
+
+    # Dust positions: sells skipped because position was below minimums/dust cap
+    dust_positions = sum(1 for r in results if r.get("dust_remaining"))
 
     # Actionable orders = total - skipped - errors
     actionable = total - len(skipped) - len(errors)
@@ -867,7 +1004,7 @@ def _generate_summary(results: List[dict]) -> dict:
                 "tier": r.get("tier", ""),
                 "total": 0, "filled": 0, "partial": 0, "missed": 0,
                 "skipped": 0, "errors": 0,
-                "fill_waits": [], "spreads": [], "slippages": [],
+                "fill_waits": [], "spreads": [], "slippages": [], "flatten_fees": [],
             }
         cs = coin_stats[sym]
         cs["total"] += 1
@@ -888,6 +1025,8 @@ def _generate_summary(results: List[dict]) -> dict:
             cs["errors"] += 1
         if "spread_bps" in r:
             cs["spreads"].append(r["spread_bps"])
+        if st in ("FILLED", "PARTIAL") and "sell_fee_cost" in r:
+            cs["flatten_fees"].append(r["sell_fee_cost"])
 
     # Collapse lists into aggregates
     coin_summary = {}
@@ -905,7 +1044,17 @@ def _generate_summary(results: List[dict]) -> dict:
             "avg_spread_bps": round(sum(cs["spreads"]) / len(cs["spreads"]), 2) if cs["spreads"] else 0,
             "avg_wait_seconds": round(sum(cs["fill_waits"]) / len(cs["fill_waits"]), 1) if cs["fill_waits"] else 0,
             "avg_slippage_bps": round(sum(cs["slippages"]) / len(cs["slippages"]), 2) if cs["slippages"] else 0,
+            "total_flatten_fees": round(sum(cs["flatten_fees"]), 6) if cs["flatten_fees"] else 0,
+            "partial_rate": round(cs["partial"] / act, 4) if act > 0 else 0.0,
         }
+        # Add Wilson CI for touch and fill rates
+        touch_count = cs["filled"] + cs["partial"]
+        t_lo, t_hi = wilson_ci(touch_count, act)
+        f_lo, f_hi = wilson_ci(cs["filled"], act)
+        coin_summary[sym]["touch_ci_lower"] = t_lo
+        coin_summary[sym]["touch_ci_upper"] = t_hi
+        coin_summary[sym]["fill_ci_lower"] = f_lo
+        coin_summary[sym]["fill_ci_upper"] = f_hi
 
     return {
         "total_rounds": total,
@@ -931,6 +1080,11 @@ def _generate_summary(results: List[dict]) -> dict:
         "theoretical_avg_fill_prob": round(avg_theo_prob, 4),
         "model_vs_reality_delta": round(touch_rate - avg_theo_prob, 4) if theo_probs else None,
         "taker_incidents": taker_incidents,
+        "dust_positions": dust_positions,
+        "touch_ci_lower": wilson_ci(len(filled) + len(partial), actionable)[0] if actionable > 0 else 0.0,
+        "touch_ci_upper": wilson_ci(len(filled) + len(partial), actionable)[1] if actionable > 0 else 0.0,
+        "fill_ci_lower": wilson_ci(len(filled), actionable)[0] if actionable > 0 else 0.0,
+        "fill_ci_upper": wilson_ci(len(filled), actionable)[1] if actionable > 0 else 0.0,
         "tier_breakdown": tier_stats,
         "coin_breakdown": coin_summary,
     }
@@ -956,8 +1110,12 @@ def _print_summary(summary: dict):
 
     print()
     print("--- Rates ---")
-    print(f"  Touch rate:     {summary.get('touch_rate', 0):.1%}  (PRIMARY: filled+partial / actionable)")
-    print(f"  Fill rate:      {summary['fill_rate']:.1%}  (secondary: filled-only)")
+    t_lo = summary.get('touch_ci_lower', 0)
+    t_hi = summary.get('touch_ci_upper', 0)
+    f_lo = summary.get('fill_ci_lower', 0)
+    f_hi = summary.get('fill_ci_upper', 0)
+    print(f"  Touch rate:     {summary.get('touch_rate', 0):.1%}  95%CI [{t_lo:.1%}, {t_hi:.1%}]  (PRIMARY)")
+    print(f"  Fill rate:      {summary['fill_rate']:.1%}  95%CI [{f_lo:.1%}, {f_hi:.1%}]  (secondary)")
     print(f"  Partial rate:   {summary['partial_rate']:.1%}")
     print(f"  Timeout rate:   {summary['timeout_rate']:.1%}")
     print(f"  Cancelled %:    {summary['cancelled_rate']:.1%}")
@@ -976,6 +1134,7 @@ def _print_summary(summary: dict):
     print(f"  Avg RT P&L:           ${summary.get('avg_roundtrip_pnl', 0):.4f}")
     print(f"  Total deployed:       ${summary.get('total_deployed_usd', 0):.0f}")
     print(f"  Taker incidents:      {summary.get('taker_incidents', 0)}")
+    print(f"  Dust positions:       {summary.get('dust_positions', 0)}")
 
     print()
     print("--- Model Comparison ---")
@@ -997,17 +1156,21 @@ def _print_summary(summary: dict):
     print("--- Per-Coin Breakdown ---")
     coin_stats = summary.get("coin_breakdown", {})
     if coin_stats:
-        # Sort by total descending
-        for sym in sorted(coin_stats, key=lambda s: coin_stats[s]["total"], reverse=True):
+        # Sort by fill_rate descending
+        for sym in sorted(coin_stats, key=lambda s: coin_stats[s]["fill_rate"], reverse=True):
             cs = coin_stats[sym]
             if cs["total"] == 0:
                 continue
-            print(f"  {sym:20s} {cs['tier']:5s} | "
+            ci_lo = cs.get('touch_ci_lower', 0)
+            ci_hi = cs.get('touch_ci_upper', 0)
+            print(f"  {sym:20s} {cs['tier']:7s} | "
                   f"{cs['filled']}/{cs['actionable']} fill "
                   f"({cs['fill_rate']:.0%}) | "
+                  f"touch: {cs.get('touch_rate', 0):.0%} [{ci_lo:.0%}-{ci_hi:.0%}] | "
                   f"spread: {cs['avg_spread_bps']:.1f}bps | "
                   f"wait: {cs['avg_wait_seconds']:.0f}s | "
-                  f"slip: {cs['avg_slippage_bps']:+.1f}bps")
+                  f"slip: {cs['avg_slippage_bps']:+.1f}bps | "
+                  f"fees: ${cs.get('total_flatten_fees', 0):.4f}")
 
     print("=" * 70)
 
@@ -1223,6 +1386,10 @@ def main():
         help=f"Kill-switch: max consecutive partials before stop (0=disable, default: {MAX_CONSECUTIVE_PARTIALS})"
     )
     parser.add_argument(
+        "--spread-cap", type=float, default=MAX_SPREAD_BPS,
+        help=f"Max spread in bps before SKIPPED_SPREAD (default: {MAX_SPREAD_BPS})"
+    )
+    parser.add_argument(
         "--seed", type=int, default=42,
         help="Random seed for coin selection (default: 42)"
     )
@@ -1300,6 +1467,7 @@ def main():
         kp_label = str(args.kill_partials) if args.kill_partials > 0 else "disabled"
         print(f"  Kill-switch: {MAX_CONSECUTIVE_ERRORS} errors, "
               f"{kp_label} partials")
+        print(f"  Spread cap: {args.spread_cap} bps")
         print(f"  Run ID: {_RUN_ID}")
         print(f"  Output: {args.output}")
         print(f"  Validation: {validation_mode}")
@@ -1343,6 +1511,7 @@ def main():
         seed=args.seed,
         daily_max_orders=args.daily_max,
         kill_partials=args.kill_partials,
+        spread_cap=args.spread_cap,
         coins_override=coins_override,
     )
 

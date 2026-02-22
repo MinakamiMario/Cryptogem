@@ -665,6 +665,19 @@ def main():
         shutdown[0] = True
     signal.signal(signal.SIGINT, handle_sigint)
 
+    # SIGHUP handler — hot-reload universe from disk
+    def handle_sighup(sig, frame):
+        nonlocal coins, coin_idx
+        try:
+            new_coins = load_universe(universe_path)
+            old_count = len(coins)
+            coins = new_coins
+            coin_idx = 0  # reset round-robin
+            logger.info(f"[SIGHUP] Universe reloaded: {old_count} → {len(coins)} coins from {universe_path.name}")
+        except Exception as e:
+            logger.error(f"[SIGHUP] Failed to reload universe: {e}")
+    signal.signal(signal.SIGHUP, handle_sighup)
+
     # Time limit
     end_time = None
     if args.hours > 0:

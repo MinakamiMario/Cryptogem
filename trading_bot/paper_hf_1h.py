@@ -31,8 +31,10 @@ import math
 import time
 import random
 import signal
+import socket
 import logging
 import argparse
+import urllib.request
 from datetime import datetime, timezone
 from typing import Optional, Dict, List
 from pathlib import Path
@@ -68,8 +70,19 @@ SPREAD_CAP_BPS = 75.0
 
 # Safety
 DUST_CAP_USD = 0.50
-MAX_CONSECUTIVE_ERRORS = 3
+MAX_CONSECUTIVE_ERRORS = 3  # legacy — now governed by outage-aware logic
 POLL_INTERVAL_SECONDS = 20
+
+# Resilience (outage-aware)
+NETWORK_CHECK_TIMEOUT = 5          # seconds for pre-flight check
+NETWORK_DOWN_RETRY_INTERVAL = 30   # seconds between retries during outage
+NETWORK_DOWN_MAX_HOURS = 2         # hard stop after this many hours of network down
+OB_ERROR_PAUSE_SECONDS = 15 * 60   # 15 min pause on orderbook error burst
+OB_ERROR_BURST_THRESHOLD = 3       # consecutive OB errors → pause
+OB_ERROR_MAX_BURSTS = 3            # max bursts in burst window → hard stop
+OB_ERROR_BURST_WINDOW = 2 * 3600   # 2 hour window for burst counting
+COIN_COOLDOWN_ERRORS = 3           # errors on same coin → cooldown
+COIN_COOLDOWN_SECONDS = 60 * 60    # 1 hour cooldown per coin
 
 # Cycle timing (1H = 3600s)
 CYCLE_INTERVAL_SECONDS = 3600
@@ -108,6 +121,56 @@ def create_exchange():
     })
     exchange.load_markets()
     return exchange
+
+
+# ─── Network Pre-flight ───────────────────────────────────
+
+def network_ok() -> bool:
+    """Pre-flight check: DNS + HTTPS GET to MEXC API.
+    Returns True if network is reachable, False otherwise."""
+    # Step 1: DNS resolve
+    try:
+        socket.setdefaulttimeout(NETWORK_CHECK_TIMEOUT)
+        socket.getaddrinfo('api.mexc.com', 443)
+    except (socket.gaierror, socket.timeout, OSError):
+        return False
+
+    # Step 2: HTTPS GET to MEXC ping endpoint
+    try:
+        req = urllib.request.Request(
+            'https://api.mexc.com/api/v3/ping',
+            headers={'User-Agent': 'paper-hf-1h/1.0'}
+        )
+        with urllib.request.urlopen(req, timeout=NETWORK_CHECK_TIMEOUT) as resp:
+            return resp.status == 200
+    except Exception:
+        return False
+
+
+def wait_for_network(logger, shutdown_flag: list) -> bool:
+    """Block until network is back. Returns True if resumed, False if hard-stop."""
+    down_since = time.time()
+    max_down = NETWORK_DOWN_MAX_HOURS * 3600
+
+    logger.warning("[NETWORK_DOWN] Network unreachable. Pausing trades, retrying every 30s.")
+
+    while not shutdown_flag[0]:
+        elapsed = time.time() - down_since
+        if elapsed > max_down:
+            logger.error(f"[HARD-STOP] Network down > {NETWORK_DOWN_MAX_HOURS}h. Stopping.")
+            return False
+
+        time.sleep(NETWORK_DOWN_RETRY_INTERVAL)
+
+        if network_ok():
+            logger.info(f"[NETWORK_UP] Network restored after {elapsed/60:.1f} min. Resuming.")
+            return True
+
+        mins = int(elapsed // 60)
+        if mins % 5 == 0 and mins > 0:  # log every 5 min
+            logger.warning(f"[NETWORK_DOWN] Still down after {mins} min.")
+
+    return False  # shutdown requested
 
 
 # ─── Universe Loading ───────────────────────────────────────
@@ -684,18 +747,63 @@ def main():
         end_time = time.time() + args.hours * 3600
         logger.info(f"Will run for {args.hours}h")
 
-    # Main loop
+    # Main loop — outage-aware
     coin_idx = 0
+    ob_burst_times = []            # timestamps of OB error bursts (for burst counting)
+    coin_error_counts = {}         # {symbol: [error_timestamps]} for per-coin cooldown
+    coin_cooldowns = {}            # {symbol: cooldown_until_timestamp}
+
+    # Clear stale rollback from previous run (allows resume after outage stop)
+    if state.get('rollback_triggered') == 'consecutive_errors':
+        logger.info("[RESUME] Clearing stale consecutive_errors rollback from previous run")
+        state['rollback_triggered'] = None
+        state['consecutive_errors'] = 0
+        save_state(state)
+
     while not shutdown[0]:
         if end_time and time.time() > end_time:
             logger.info("Time limit reached")
             break
 
-        # Pick coin (round-robin)
-        symbol = coins[coin_idx % len(coins)]
-        coin_idx += 1
+        # ── Pre-flight: network check ──
+        if not network_ok():
+            resumed = wait_for_network(logger, shutdown)
+            if not resumed:
+                state['rollback_triggered'] = 'network_down_timeout'
+                save_state(state)
+                break
+            # Re-create exchange after network restore (connections may be stale)
+            try:
+                exchange = create_exchange()
+                logger.info("Exchange reconnected after network restore")
+            except Exception as e:
+                logger.error(f"Exchange reconnect failed: {e}. Will retry next round.")
+                time.sleep(NETWORK_DOWN_RETRY_INTERVAL)
+                continue
 
-        # Run round
+        # ── Pick coin (round-robin, skip cooldowns) ──
+        now_ts = time.time()
+        symbol = None
+        attempts = 0
+        while attempts < len(coins):
+            candidate = coins[coin_idx % len(coins)]
+            coin_idx += 1
+            attempts += 1
+            cooldown_until = coin_cooldowns.get(candidate, 0)
+            if now_ts >= cooldown_until:
+                symbol = candidate
+                break
+            # else: coin on cooldown, try next
+
+        if symbol is None:
+            # All coins on cooldown — wait for shortest cooldown to expire
+            min_wait = min(coin_cooldowns.values()) - now_ts
+            if min_wait > 0:
+                logger.info(f"[COOLDOWN] All coins on cooldown. Waiting {min_wait:.0f}s.")
+                time.sleep(min(min_wait + 1, 60))
+            continue
+
+        # ── Run round ──
         logger.info(f"[round {state['total_rounds'] + 1}] {symbol} — ${order_usd}")
         result = run_single_round(exchange, symbol, order_usd, logger)
 
@@ -711,7 +819,7 @@ def main():
         update_state(state, result)
         save_state(state)
 
-        # Check rollback
+        # ── Hard rollback checks (taker, stuck — always stop) ──
         trigger = check_rollback(state, logger)
         if trigger:
             logger.error(f"[ROLLBACK] Trigger: {trigger}. Stopping.")
@@ -719,12 +827,68 @@ def main():
             save_state(state)
             break
 
-        # Check consecutive errors
-        if state['consecutive_errors'] >= MAX_CONSECUTIVE_ERRORS:
-            logger.error(f"[KILL-SWITCH] {MAX_CONSECUTIVE_ERRORS} consecutive errors. Stopping.")
-            state['rollback_triggered'] = 'consecutive_errors'
-            save_state(state)
-            break
+        # ── Outage-aware error handling ──
+        if status == 'ERROR_ORDERBOOK':
+            # Per-coin error tracking
+            coin_errors = coin_error_counts.setdefault(symbol, [])
+            coin_errors.append(now_ts)
+            # Keep only errors in last hour
+            coin_errors[:] = [t for t in coin_errors if now_ts - t < COIN_COOLDOWN_SECONDS]
+            if len(coin_errors) >= COIN_COOLDOWN_ERRORS:
+                coin_cooldowns[symbol] = now_ts + COIN_COOLDOWN_SECONDS
+                logger.warning(f"[COOLDOWN] {symbol}: {len(coin_errors)} errors in 1h → blacklisted for 60 min")
+                coin_error_counts[symbol] = []
+
+            # Consecutive OB error burst detection
+            if state['consecutive_errors'] >= OB_ERROR_BURST_THRESHOLD:
+                # Check if this is a network issue first
+                if not network_ok():
+                    resumed = wait_for_network(logger, shutdown)
+                    if not resumed:
+                        state['rollback_triggered'] = 'network_down_timeout'
+                        save_state(state)
+                        break
+                    try:
+                        exchange = create_exchange()
+                        logger.info("Exchange reconnected after network restore")
+                    except Exception as e:
+                        logger.error(f"Exchange reconnect failed: {e}")
+                    state['consecutive_errors'] = 0
+                    save_state(state)
+                    continue
+
+                # Network OK → exchange-side issue. Pause and count burst.
+                ob_burst_times.append(now_ts)
+                # Keep only bursts in window
+                ob_burst_times[:] = [t for t in ob_burst_times if now_ts - t < OB_ERROR_BURST_WINDOW]
+
+                if len(ob_burst_times) >= OB_ERROR_MAX_BURSTS:
+                    logger.error(f"[HARD-STOP] {len(ob_burst_times)} OB error bursts in "
+                                 f"{OB_ERROR_BURST_WINDOW//3600}h. Stopping.")
+                    state['rollback_triggered'] = 'ob_error_burst_limit'
+                    save_state(state)
+                    break
+
+                pause_min = OB_ERROR_PAUSE_SECONDS // 60
+                logger.warning(f"[PAUSE] {state['consecutive_errors']} consecutive OB errors "
+                               f"(burst {len(ob_burst_times)}/{OB_ERROR_MAX_BURSTS}). "
+                               f"Pausing {pause_min} min.")
+                state['consecutive_errors'] = 0
+                save_state(state)
+
+                # Sleep in small chunks so SIGINT works
+                pause_end = time.time() + OB_ERROR_PAUSE_SECONDS
+                while time.time() < pause_end and not shutdown[0]:
+                    time.sleep(10)
+
+                if shutdown[0]:
+                    break
+
+                logger.info("[RESUME] Pause ended, resuming trading.")
+                continue
+        else:
+            # Non-error status → reset consecutive errors (already done in update_state)
+            pass
 
         # Inter-round delay (avoid rate limits)
         if not shutdown[0]:

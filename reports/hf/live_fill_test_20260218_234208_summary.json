@@ -1,0 +1,107 @@
+{
+  "total_rounds": 5,
+  "actionable": 3,
+  "filled": 2,
+  "partial": 0,
+  "missed": 1,
+  "skipped": 0,
+  "errors": 2,
+  "cancelled": 1,
+  "fill_rate": 0.6667,
+  "partial_rate": 0.0,
+  "timeout_rate": 0.3333,
+  "cancelled_rate": 0.3333,
+  "avg_fill_wait_seconds": 51.8,
+  "avg_spread_bps": 6.24,
+  "avg_slippage_vs_mid_bps": -4.92,
+  "total_flatten_fees_paid": 0,
+  "flatten_fees_note": "Sell-side taker fees are measurement overhead, not part of maker fill model",
+  "total_roundtrip_pnl": -0.0777,
+  "avg_roundtrip_pnl": -0.0389,
+  "theoretical_avg_fill_prob": 0.6562,
+  "model_vs_reality_delta": 0.0105,
+  "tier_breakdown": {
+    "tier1": {
+      "total": 3,
+      "actionable": 1,
+      "filled": 1,
+      "partial": 0,
+      "fill_rate": 1.0,
+      "avg_wait_seconds": 51.8
+    },
+    "tier2": {
+      "total": 2,
+      "actionable": 2,
+      "filled": 1,
+      "partial": 0,
+      "fill_rate": 0.5,
+      "avg_wait_seconds": 51.9
+    }
+  },
+  "coin_breakdown": {
+    "BTC/USDT": {
+      "tier": "tier1",
+      "total": 1,
+      "actionable": 0,
+      "filled": 0,
+      "partial": 0,
+      "missed": 0,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 0.31,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "ETH/USDT": {
+      "tier": "tier1",
+      "total": 1,
+      "actionable": 0,
+      "filled": 0,
+      "partial": 0,
+      "missed": 0,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 0.05,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "SNEK/USDT": {
+      "tier": "tier1",
+      "total": 1,
+      "actionable": 1,
+      "filled": 1,
+      "partial": 0,
+      "missed": 0,
+      "fill_rate": 1.0,
+      "avg_spread_bps": 3.53,
+      "avg_wait_seconds": 51.8,
+      "avg_slippage_bps": -1.76
+    },
+    "VINE/USDT": {
+      "tier": "tier2",
+      "total": 1,
+      "actionable": 1,
+      "filled": 1,
+      "partial": 0,
+      "missed": 0,
+      "fill_rate": 1.0,
+      "avg_spread_bps": 16.17,
+      "avg_wait_seconds": 51.9,
+      "avg_slippage_bps": -8.08
+    },
+    "AEVO/USDT": {
+      "tier": "tier2",
+      "total": 1,
+      "actionable": 1,
+      "filled": 0,
+      "partial": 0,
+      "missed": 1,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 11.15,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    }
+  },
+  "total_deployed_usd": 20.0,
+  "duration_minutes": 4.9,
+  "daily_orders_placed": 3,
+  "kill_switch_triggered": null
+}

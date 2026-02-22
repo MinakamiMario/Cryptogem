@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-02-21T20:04:21.929797+00:00",
+  "config": {
+    "signal": "Vol Capitulation H4S4-G05",
+    "exchange": "MEXC SPOT",
+    "fee_bps": 10.0,
+    "capital_per_trade": 2000.0,
+    "entry_params": {
+      "vol_mult": 3.5,
+      "rsi_max": 35,
+      "require_dc_low_zone": true,
+      "require_bb_lower": false,
+      "require_green": false,
+      "max_stop_pct": 15.0,
+      "time_max_bars": 15
+    },
+    "exit_params": {
+      "max_stop_pct": 15.0,
+      "time_max_bars": 15,
+      "rsi_recovery": true,
+      "rsi_rec_target": 45.0,
+      "rsi_rec_min_bars": 5
+    },
+    "wrappers": {
+      "dd_throttle": {
+        "threshold": 0.05,
+        "scale": 0.22
+      },
+      "adaptive_maxpos": {
+        "normal": 3,
+        "warning": 2,
+        "critical": 1
+      }
+    }
+  },
+  "metrics": {
+    "equity": 10000.0,
+    "pnl": 0.0,
+    "trades": 0,
+    "wins": 0,
+    "losses": 0,
+    "win_rate": 0.0,
+    "profit_factor": 0,
+    "avg_pnl": 0,
+    "dd_current": 0.0,
+    "dd_max": 0.0,
+    "consecutive_losses": 0,
+    "max_consecutive_losses": 0,
+    "trades_skipped_dd": 0,
+    "class_a_share": 0.0
+  },
+  "positions": {},
+  "exit_attribution": {
+    "class_a": {},
+    "class_b": {}
+  },
+  "alerts": [],
+  "rollback_criteria": {
+    "pf_below_1_after_30": false,
+    "dd_above_25": false,
+    "consecutive_losses_5": false,
+    "wr_below_40_after_20": false,
+    "a_share_below_30_after_20": false,
+    "consec_losses_8": false
+  },
+  "checks": 22,
+  "last_trades": []
+}

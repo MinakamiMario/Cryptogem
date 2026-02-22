@@ -4,7 +4,7 @@ data/manifest_hf_*.json
 data/cache_parts_hf/
 data/orderbook_snapshots/
 trading_bot/candle_cache*.json
-backtest_engine_v2.0/data/
+archive/backtest_engine_v2.0/data/
 
 # Runtime
 __pycache__/

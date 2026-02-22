@@ -1,0 +1,107 @@
+{
+  "total_rounds": 5,
+  "actionable": 5,
+  "filled": 0,
+  "partial": 0,
+  "missed": 5,
+  "skipped": 0,
+  "errors": 0,
+  "cancelled": 5,
+  "fill_rate": 0.0,
+  "partial_rate": 0.0,
+  "timeout_rate": 1.0,
+  "cancelled_rate": 1.0,
+  "avg_fill_wait_seconds": 0,
+  "avg_spread_bps": 18.32,
+  "avg_slippage_vs_mid_bps": 0,
+  "total_flatten_fees_paid": 0,
+  "flatten_fees_note": "Sell-side taker fees are measurement overhead, not part of maker fill model",
+  "total_roundtrip_pnl": 0,
+  "avg_roundtrip_pnl": 0,
+  "theoretical_avg_fill_prob": 0.5457,
+  "model_vs_reality_delta": -0.5457,
+  "tier_breakdown": {
+    "tier1": {
+      "total": 1,
+      "actionable": 1,
+      "filled": 0,
+      "partial": 0,
+      "fill_rate": 0.0,
+      "avg_wait_seconds": 0
+    },
+    "tier2": {
+      "total": 4,
+      "actionable": 4,
+      "filled": 0,
+      "partial": 0,
+      "fill_rate": 0.0,
+      "avg_wait_seconds": 0
+    }
+  },
+  "coin_breakdown": {
+    "SNEK/USDT": {
+      "tier": "tier1",
+      "total": 1,
+      "actionable": 1,
+      "filled": 0,
+      "partial": 0,
+      "missed": 1,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 26.71,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "VINE/USDT": {
+      "tier": "tier2",
+      "total": 1,
+      "actionable": 1,
+      "filled": 0,
+      "partial": 0,
+      "missed": 1,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 21.56,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "AEVO/USDT": {
+      "tier": "tier2",
+      "total": 1,
+      "actionable": 1,
+      "filled": 0,
+      "partial": 0,
+      "missed": 1,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 11.13,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "FIDA/USDT": {
+      "tier": "tier2",
+      "total": 1,
+      "actionable": 1,
+      "filled": 0,
+      "partial": 0,
+      "missed": 1,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 15.94,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "ES/USDT": {
+      "tier": "tier2",
+      "total": 1,
+      "actionable": 1,
+      "filled": 0,
+      "partial": 0,
+      "missed": 1,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 16.28,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    }
+  },
+  "total_deployed_usd": 0.0,
+  "duration_minutes": 7.2,
+  "daily_orders_placed": 5,
+  "kill_switch_triggered": null
+}

@@ -1,0 +1,143 @@
+{
+  "total_rounds": 15,
+  "actionable": 12,
+  "filled": 1,
+  "partial": 0,
+  "missed": 11,
+  "skipped": 2,
+  "errors": 1,
+  "cancelled": 11,
+  "fill_rate": 0.0833,
+  "partial_rate": 0.0,
+  "timeout_rate": 0.9167,
+  "cancelled_rate": 0.9167,
+  "avg_fill_wait_seconds": 33.3,
+  "avg_spread_bps": 371.17,
+  "avg_slippage_vs_mid_bps": 0.45,
+  "total_flatten_fees_paid": 0,
+  "flatten_fees_note": "Sell-side taker fees are measurement overhead, not part of maker fill model",
+  "total_roundtrip_pnl": -0.0376,
+  "avg_roundtrip_pnl": -0.0376,
+  "theoretical_avg_fill_prob": 0.7,
+  "model_vs_reality_delta": -0.6167,
+  "tier_breakdown": {
+    "tier1": {
+      "total": 2,
+      "actionable": 2,
+      "filled": 0,
+      "partial": 0,
+      "fill_rate": 0.0,
+      "avg_wait_seconds": 0
+    },
+    "tier2": {
+      "total": 13,
+      "actionable": 10,
+      "filled": 1,
+      "partial": 0,
+      "fill_rate": 0.1,
+      "avg_wait_seconds": 33.3
+    }
+  },
+  "coin_breakdown": {
+    "SNEK/USDT": {
+      "tier": "tier1",
+      "total": 2,
+      "actionable": 2,
+      "filled": 0,
+      "partial": 0,
+      "missed": 2,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 42.62,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "VINE/USDT": {
+      "tier": "tier2",
+      "total": 2,
+      "actionable": 2,
+      "filled": 0,
+      "partial": 0,
+      "missed": 2,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 29.73,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "AEVO/USDT": {
+      "tier": "tier2",
+      "total": 2,
+      "actionable": 2,
+      "filled": 0,
+      "partial": 0,
+      "missed": 2,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 13.04,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "FIDA/USDT": {
+      "tier": "tier2",
+      "total": 2,
+      "actionable": 2,
+      "filled": 0,
+      "partial": 0,
+      "missed": 2,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 13.35,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "ES/USDT": {
+      "tier": "tier2",
+      "total": 2,
+      "actionable": 2,
+      "filled": 1,
+      "partial": 0,
+      "missed": 1,
+      "fill_rate": 0.5,
+      "avg_spread_bps": 9.0,
+      "avg_wait_seconds": 33.3,
+      "avg_slippage_bps": 0.45
+    },
+    "ALTHEA/USDT": {
+      "tier": "tier2",
+      "total": 2,
+      "actionable": 0,
+      "filled": 0,
+      "partial": 0,
+      "missed": 0,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 2447.47,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "SUKU/USDT": {
+      "tier": "tier2",
+      "total": 2,
+      "actionable": 1,
+      "filled": 0,
+      "partial": 0,
+      "missed": 1,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 65.4,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    },
+    "PHA/USDT": {
+      "tier": "tier2",
+      "total": 1,
+      "actionable": 1,
+      "filled": 0,
+      "partial": 0,
+      "missed": 1,
+      "fill_rate": 0.0,
+      "avg_spread_bps": 20.63,
+      "avg_wait_seconds": 0,
+      "avg_slippage_bps": 0
+    }
+  },
+  "total_deployed_usd": 10.0,
+  "duration_minutes": 19.4,
+  "daily_orders_placed": 12,
+  "kill_switch_triggered": null
+}

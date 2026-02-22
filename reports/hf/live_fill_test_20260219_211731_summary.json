@@ -1,0 +1,102 @@
+{
+  "total_rounds": 132,
+  "actionable": 132,
+  "filled": 46,
+  "partial": 9,
+  "missed": 77,
+  "skipped": 0,
+  "errors": 0,
+  "cancelled": 86,
+  "touch_rate": 0.4167,
+  "fill_rate": 0.3485,
+  "partial_rate": 0.0682,
+  "timeout_rate": 0.5833,
+  "cancelled_rate": 0.6515,
+  "avg_fill_wait_seconds": 45.9,
+  "avg_spread_bps": 16.28,
+  "avg_slippage_vs_mid_bps": 1.01,
+  "total_flatten_fees_paid": 0,
+  "flatten_fees_note": "Sell-side taker fees are measurement overhead, not part of maker fill model",
+  "total_roundtrip_pnl": -0.971,
+  "avg_roundtrip_pnl": -0.0211,
+  "theoretical_avg_fill_prob": 0.7,
+  "model_vs_reality_delta": -0.2833,
+  "tier_breakdown": {
+    "tier1": {
+      "total": 0,
+      "actionable": 0,
+      "filled": 0,
+      "partial": 0,
+      "touch_rate": 0.0,
+      "fill_rate": 0.0,
+      "avg_wait_seconds": 0
+    },
+    "tier2": {
+      "total": 0,
+      "actionable": 0,
+      "filled": 0,
+      "partial": 0,
+      "touch_rate": 0.0,
+      "fill_rate": 0.0,
+      "avg_wait_seconds": 0
+    }
+  },
+  "coin_breakdown": {
+    "VINE/USDT": {
+      "tier": "tier_a",
+      "total": 33,
+      "actionable": 33,
+      "filled": 20,
+      "partial": 2,
+      "missed": 11,
+      "touch_rate": 0.6667,
+      "fill_rate": 0.6061,
+      "avg_spread_bps": 18.65,
+      "avg_wait_seconds": 39.8,
+      "avg_slippage_bps": 1.62
+    },
+    "AEVO/USDT": {
+      "tier": "tier_b",
+      "total": 33,
+      "actionable": 33,
+      "filled": 9,
+      "partial": 4,
+      "missed": 20,
+      "touch_rate": 0.3939,
+      "fill_rate": 0.2727,
+      "avg_spread_bps": 15.6,
+      "avg_wait_seconds": 50.6,
+      "avg_slippage_bps": 0.85
+    },
+    "PHA/USDT": {
+      "tier": "tier_b",
+      "total": 33,
+      "actionable": 33,
+      "filled": 9,
+      "partial": 1,
+      "missed": 23,
+      "touch_rate": 0.303,
+      "fill_rate": 0.2727,
+      "avg_spread_bps": 17.09,
+      "avg_wait_seconds": 56.3,
+      "avg_slippage_bps": 1.35
+    },
+    "ES/USDT": {
+      "tier": "tier_b",
+      "total": 33,
+      "actionable": 33,
+      "filled": 8,
+      "partial": 2,
+      "missed": 23,
+      "touch_rate": 0.303,
+      "fill_rate": 0.2424,
+      "avg_spread_bps": 13.77,
+      "avg_wait_seconds": 43.9,
+      "avg_slippage_bps": -0.28
+    }
+  },
+  "total_deployed_usd": 490.6,
+  "duration_minutes": 282.1,
+  "daily_orders_placed": 132,
+  "kill_switch_triggered": null
+}

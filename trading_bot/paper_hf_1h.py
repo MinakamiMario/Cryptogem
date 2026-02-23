@@ -102,6 +102,13 @@ MICRO_MAX_ORDER_USD = 25.0
 MICRO_STALE_HOURS = 24            # warn if position open > 24h
 MICRO_DASHBOARD_INTERVAL = 10     # write dashboard every N rounds
 
+# ─── Micro Exit Constants ───────────────────────────────────
+MICRO_TP_PCT = 5.0                # take profit % (configurable via --tp)
+MICRO_SL_PCT = 3.0                # stop loss %   (configurable via --sl)
+MICRO_MAX_HOLD_HOURS = 24         # failsafe time exit
+MICRO_COUNTERFACTUAL_HOURS = [12, 24]  # snapshot intervals for counterfactual log
+MICRO_EXIT_FEE_BPS = 10.0        # MEXC taker fee for market sell (bps)
+
 
 # ─── Logging ────────────────────────────────────────────────
 
@@ -398,6 +405,35 @@ def compute_micro_unrealized(state: dict, exchange) -> float:
     return round(total, 4)
 
 
+def _build_closed_summary(closed: list) -> dict:
+    """Build summary statistics for closed micro positions."""
+    if not closed:
+        return {'count': 0}
+
+    total_net = sum(c.get('net_pnl', 0) for c in closed)
+    total_gross = sum(c.get('gross_pnl', 0) for c in closed)
+    total_fees = sum(c.get('total_fees', 0) for c in closed)
+    wins = sum(1 for c in closed if c.get('net_pnl', 0) > 0)
+
+    by_reason = {}
+    for c in closed:
+        reason = c.get('exit_reason', '?')
+        by_reason.setdefault(reason, {'count': 0, 'net_pnl': 0})
+        by_reason[reason]['count'] += 1
+        by_reason[reason]['net_pnl'] = round(by_reason[reason]['net_pnl'] + c.get('net_pnl', 0), 4)
+
+    return {
+        'count': len(closed),
+        'total_net_pnl': round(total_net, 4),
+        'total_gross_pnl': round(total_gross, 4),
+        'total_fees': round(total_fees, 4),
+        'win_rate': round(wins / len(closed), 3) if closed else 0,
+        'avg_hold_hours': round(sum(c.get('hours_held', 0) for c in closed) / len(closed), 2),
+        'by_exit_reason': by_reason,
+        'last_close': closed[-1] if closed else None,
+    }
+
+
 def write_micro_dashboard(state: dict, exchange, mode: str):
     """Write JSON dashboard for micro mode monitoring."""
     if mode != 'micro':
@@ -443,7 +479,12 @@ def write_micro_dashboard(state: dict, exchange, mode: str):
             'taker_incidents': state.get('taker_incidents', 0),
             'stuck_positions': state.get('stuck_positions', 0),
         },
-        'closed_positions': len(state.get('micro_closed', [])),
+        'exit_config': {
+            'tp_pct': MICRO_TP_PCT,
+            'sl_pct': MICRO_SL_PCT,
+            'max_hold_hours': MICRO_MAX_HOLD_HOURS,
+        },
+        'closed_summary': _build_closed_summary(state.get('micro_closed', [])),
     }
 
     dashboard_path = BASE_DIR / 'dashboard_hf_micro.json'
@@ -452,6 +493,212 @@ def write_micro_dashboard(state: dict, exchange, mode: str):
             json.dump(dashboard, f, indent=2, default=str)
     except Exception:
         pass  # never crash on dashboard write
+
+
+# ─── Micro Exit Checking ──────────────────────────────────────
+
+def check_micro_exits(state: dict, exchange, logger, tg=None,
+                      tp_pct: float = MICRO_TP_PCT,
+                      sl_pct: float = MICRO_SL_PCT,
+                      max_hold_hours: float = MICRO_MAX_HOLD_HOURS) -> List[dict]:
+    """Check all open micro positions for TP/SL/TIME exit triggers.
+
+    For each triggered exit:
+      1. Fetch current bid price
+      2. Determine exit_reason (TP, SL, TIME)
+      3. Execute market sell via safe_sell_back()
+      4. Compute actual PnL, fees, slippage
+      5. Build counterfactual: what PnL at 12h/24h snapshots
+      6. Move to micro_closed with full trade log
+
+    Returns list of close records for Telegram/logging.
+    """
+    positions = state.get('micro_positions', {})
+    if not positions:
+        return []
+
+    now = datetime.now(timezone.utc)
+    closes = []
+    to_remove = []
+
+    for sym, pos in list(positions.items()):
+        entry_price = pos['entry_price']
+        qty = pos['qty']
+        entry_time = datetime.fromisoformat(pos['entry_time'])
+        hours_open = (now - entry_time).total_seconds() / 3600
+
+        # Fetch current bid
+        try:
+            ob = exchange.fetch_order_book(sym, limit=5)
+            if not ob.get('bids') or not ob['bids'][0]:
+                logger.warning(f"[EXIT_CHECK] {sym}: no bids in orderbook, skipping")
+                continue
+            current_bid = float(ob['bids'][0][0])
+            current_ask = float(ob['asks'][0][0]) if ob.get('asks') and ob['asks'][0] else current_bid
+            mid_price = (current_bid + current_ask) / 2
+        except Exception as e:
+            logger.warning(f"[EXIT_CHECK] {sym}: orderbook fetch failed: {e}")
+            time.sleep(0.5)
+            continue
+
+        # Compute unrealized %
+        pct_change = (current_bid - entry_price) / entry_price * 100 if entry_price > 0 else 0
+
+        # Store price snapshot for counterfactual (append to position)
+        snapshots = pos.setdefault('price_snapshots', [])
+        snapshots.append({
+            'ts': now.isoformat(),
+            'hours_open': round(hours_open, 2),
+            'bid': current_bid,
+            'mid': mid_price,
+            'pct_change': round(pct_change, 3),
+        })
+        # Keep only last 50 snapshots to limit state size
+        pos['price_snapshots'] = snapshots[-50:]
+
+        # Determine exit trigger
+        exit_reason = None
+        if pct_change >= tp_pct:
+            exit_reason = 'TP'
+        elif pct_change <= -sl_pct:
+            exit_reason = 'SL'
+        elif hours_open >= max_hold_hours:
+            exit_reason = 'TIME'
+
+        if exit_reason is None:
+            time.sleep(0.3)  # rate limit between position checks
+            continue
+
+        # ── TRIGGERED — execute exit ──
+        logger.info(f"[EXIT] {sym} → {exit_reason} | {pct_change:+.2f}% | "
+                    f"bid=${current_bid:.6f} | open={hours_open:.1f}h")
+
+        sell_result = safe_sell_back(exchange, sym, qty, entry_price)
+
+        # Compute actual exit price and fees
+        actual_sell_price = sell_result.get('sell_price', current_bid)
+        actual_sell_qty = sell_result.get('sell_qty', qty)
+        sell_fee_cost = sell_result.get('sell_fee_cost', 0)
+
+        # If sell failed (dust/error), use bid estimate
+        if sell_result.get('dust_remaining') or sell_result.get('WARNING'):
+            actual_sell_price = current_bid
+            actual_sell_qty = qty
+            # Estimate fee from bid
+            sell_fee_cost = current_bid * qty * MICRO_EXIT_FEE_BPS / 10000
+
+        # Actual PnL
+        gross_pnl = (actual_sell_price - entry_price) * actual_sell_qty
+        entry_fee_est = entry_price * qty * 0  # maker = 0% on MEXC
+        exit_fee = sell_fee_cost if sell_fee_cost > 0 else (actual_sell_price * actual_sell_qty * MICRO_EXIT_FEE_BPS / 10000)
+        net_pnl = gross_pnl - entry_fee_est - exit_fee
+
+        # Slippage vs mid at exit
+        slippage_vs_mid_bps = (actual_sell_price - mid_price) / mid_price * 10000 if mid_price > 0 else 0
+
+        # ── Counterfactual: what PnL would have been at 12h/24h ──
+        counterfactual = {}
+        for cf_hours in MICRO_COUNTERFACTUAL_HOURS:
+            # Find closest snapshot to cf_hours
+            cf_snap = None
+            min_diff = float('inf')
+            for snap in snapshots:
+                diff = abs(snap['hours_open'] - cf_hours)
+                if diff < min_diff:
+                    min_diff = diff
+                    cf_snap = snap
+            if cf_snap and min_diff < 2.0:  # within 2h tolerance
+                cf_bid = cf_snap['bid']
+                cf_gross = (cf_bid - entry_price) * qty
+                cf_exit_fee = cf_bid * qty * MICRO_EXIT_FEE_BPS / 10000
+                cf_net = cf_gross - cf_exit_fee
+                counterfactual[f'{cf_hours}h'] = {
+                    'bid': cf_bid,
+                    'pct_change': cf_snap['pct_change'],
+                    'gross_pnl': round(cf_gross, 4),
+                    'net_pnl': round(cf_net, 4),
+                    'snapshot_hours': cf_snap['hours_open'],
+                }
+            else:
+                counterfactual[f'{cf_hours}h'] = {
+                    'status': 'no_snapshot' if not cf_snap else f'nearest_at_{cf_snap["hours_open"]:.1f}h',
+                }
+
+        # Build close record
+        close_record = {
+            'symbol': sym,
+            'exit_reason': exit_reason,
+            'exit_time': now.isoformat(),
+            'entry_price': entry_price,
+            'entry_time': pos['entry_time'],
+            'exit_price': round(actual_sell_price, 8),
+            'qty': actual_sell_qty,
+            'notional_entry': pos.get('notional', 0),
+            'notional_exit': round(actual_sell_price * actual_sell_qty, 4),
+            'hours_held': round(hours_open, 2),
+            'pct_change': round(pct_change, 3),
+            'gross_pnl': round(gross_pnl, 4),
+            'net_pnl': round(net_pnl, 4),
+            'entry_fee': round(entry_fee_est, 6),
+            'exit_fee': round(exit_fee, 6),
+            'total_fees': round(entry_fee_est + exit_fee, 6),
+            'slippage_vs_mid_bps': round(slippage_vs_mid_bps, 2),
+            'sell_result': {
+                'order_id': sell_result.get('sell_order_id', ''),
+                'attempts': sell_result.get('sell_attempts', 0),
+                'dust': sell_result.get('dust_remaining', False),
+                'warning': sell_result.get('WARNING', ''),
+            },
+            'counterfactual': counterfactual,
+            'order_id_entry': pos.get('order_id', ''),
+        }
+
+        closes.append(close_record)
+        to_remove.append(sym)
+
+        # Log detailed
+        logger.info(f"  [CLOSE] {sym} {exit_reason}: entry=${entry_price:.6f} → "
+                    f"exit=${actual_sell_price:.6f} ({pct_change:+.2f}%)")
+        logger.info(f"  [CLOSE] Gross=${gross_pnl:.4f} Fees=${entry_fee_est + exit_fee:.4f} "
+                    f"Net=${net_pnl:.4f} Slip={slippage_vs_mid_bps:+.1f}bps")
+        for cf_key, cf_val in counterfactual.items():
+            if 'net_pnl' in cf_val:
+                logger.info(f"  [CF] @{cf_key}: would have been ${cf_val['net_pnl']:.4f} "
+                            f"({cf_val['pct_change']:+.2f}%)")
+            else:
+                logger.info(f"  [CF] @{cf_key}: {cf_val.get('status', 'n/a')}")
+
+        # Telegram alert
+        emoji = {'TP': '🎯', 'SL': '🔻', 'TIME': '⏰'}.get(exit_reason, '📤')
+        cf_lines = []
+        for cf_key, cf_val in counterfactual.items():
+            if 'net_pnl' in cf_val:
+                cf_lines.append(f"  @{cf_key}: ${cf_val['net_pnl']:.4f} ({cf_val['pct_change']:+.2f}%)")
+        cf_text = "\n".join(cf_lines) if cf_lines else "  no snapshots"
+
+        tg_send(tg, f"{emoji} EXIT: {exit_reason}\n"
+                     f"{sym}\n"
+                     f"Entry: ${entry_price:.6f}\n"
+                     f"Exit: ${actual_sell_price:.6f} ({pct_change:+.2f}%)\n"
+                     f"Net P&L: ${net_pnl:.4f}\n"
+                     f"Fees: ${entry_fee_est + exit_fee:.4f}\n"
+                     f"Held: {hours_open:.1f}h\n"
+                     f"Slip: {slippage_vs_mid_bps:+.1f}bps\n"
+                     f"Counterfactual:\n{cf_text}",
+                level='success' if net_pnl > 0 else 'warning')
+
+        time.sleep(0.5)  # rate limit between sells
+
+    # Remove closed positions from state
+    for sym in to_remove:
+        positions.pop(sym, None)
+
+    # Append to closed log (keep last 200)
+    closed_log = state.setdefault('micro_closed', [])
+    closed_log.extend(closes)
+    state['micro_closed'] = closed_log[-200:]
+
+    return closes
 
 
 # ─── Safe Sell Back ─────────────────────────────────────────
@@ -813,6 +1060,7 @@ def update_state(state: dict, result: dict, mode: str = 'paper'):
             'entry_time': result.get('ts', datetime.now(timezone.utc).isoformat()),
             'order_id': result.get('order_id', ''),
             'notional': result.get('fill_notional', 0),
+            'price_snapshots': [],  # populated by check_micro_exits() each round
         }
 
 
@@ -872,12 +1120,11 @@ def print_report(state: dict):
     if mode == 'micro':
         positions = state.get('micro_positions', {})
         closed = state.get('micro_closed', [])
-        print(f"\n--- Micro Positions ---")
+        print(f"\n--- Micro Open Positions ---")
         print(f"  Open:         {len(positions)}/{MAX_MICRO_POSITIONS}")
         total_notional = sum(p.get('notional', 0) for p in positions.values())
         print(f"  Notional:     ${total_notional:.2f}/${MAX_MICRO_NOTIONAL:.0f}")
         print(f"  Caps hit:     {state.get('micro_caps_hit', 0)}")
-        print(f"  Closed:       {len(closed)}")
         if positions:
             for sym, pos in positions.items():
                 entry_time = datetime.fromisoformat(pos['entry_time'])
@@ -885,6 +1132,52 @@ def print_report(state: dict):
                 print(f"    {sym:15s} entry=${pos['entry_price']:.6f} "
                       f"qty={pos['qty']} notional=${pos['notional']:.2f} "
                       f"open={hours:.1f}h")
+
+        # Closed positions analysis
+        print(f"\n--- Micro Closed Positions ({len(closed)}) ---")
+        if closed:
+            total_net = sum(c.get('net_pnl', 0) for c in closed)
+            total_gross = sum(c.get('gross_pnl', 0) for c in closed)
+            total_fees_paid = sum(c.get('total_fees', 0) for c in closed)
+            wins = [c for c in closed if c.get('net_pnl', 0) > 0]
+            losses = [c for c in closed if c.get('net_pnl', 0) <= 0]
+
+            # Exit reason breakdown
+            by_reason = {}
+            for c in closed:
+                reason = c.get('exit_reason', '?')
+                by_reason.setdefault(reason, []).append(c)
+
+            print(f"  Total Net P&L:  ${total_net:.4f}")
+            print(f"  Total Gross:    ${total_gross:.4f}")
+            print(f"  Total Fees:     ${total_fees_paid:.4f}")
+            print(f"  Win/Loss:       {len(wins)}/{len(losses)} "
+                  f"({len(wins)/len(closed)*100:.0f}% WR)" if closed else "")
+            print(f"  Avg hold time:  {sum(c.get('hours_held', 0) for c in closed)/len(closed):.1f}h")
+
+            print(f"\n  Exit Reasons:")
+            for reason in ['TP', 'SL', 'TIME']:
+                trades = by_reason.get(reason, [])
+                if trades:
+                    reason_pnl = sum(c.get('net_pnl', 0) for c in trades)
+                    reason_avg = reason_pnl / len(trades) if trades else 0
+                    print(f"    {reason:6s}: {len(trades):3d} trades | "
+                          f"Net=${reason_pnl:.4f} | Avg=${reason_avg:.4f}")
+
+            # Last 5 closed trades
+            print(f"\n  Last 5 Closes:")
+            for c in closed[-5:]:
+                cf_summary = ""
+                cf = c.get('counterfactual', {})
+                for cf_key, cf_val in cf.items():
+                    if 'net_pnl' in cf_val:
+                        cf_summary += f" | CF@{cf_key}=${cf_val['net_pnl']:.4f}"
+                print(f"    {c.get('symbol', '?'):15s} {c.get('exit_reason', '?'):4s} "
+                      f"net=${c.get('net_pnl', 0):.4f} "
+                      f"{c.get('pct_change', 0):+.2f}% "
+                      f"held={c.get('hours_held', 0):.1f}h{cf_summary}")
+        else:
+            print(f"  No closed positions yet")
 
     print("=" * 60)
 
@@ -901,9 +1194,15 @@ def main():
     parser.add_argument('--dry-run', action='store_true', help='1 cycle, no orders')
     parser.add_argument('--report', action='store_true', help='Print report from state')
     parser.add_argument('--reset-state', action='store_true', help='Reset state and start fresh')
+    parser.add_argument('--tp', type=float, default=MICRO_TP_PCT,
+                        help=f'Take profit %% for micro mode (default: {MICRO_TP_PCT})')
+    parser.add_argument('--sl', type=float, default=MICRO_SL_PCT,
+                        help=f'Stop loss %% for micro mode (default: {MICRO_SL_PCT})')
     args = parser.parse_args()
 
     mode = args.mode
+    tp_pct = args.tp
+    sl_pct = args.sl
 
     # Determine state file based on mode
     global STATE_FILE
@@ -968,6 +1267,8 @@ def main():
             logger.info(f"Micro positions: {len(positions)}/{MAX_MICRO_POSITIONS}")
             logger.info(f"Micro caps: notional=${MAX_MICRO_NOTIONAL}, "
                         f"loss=${MAX_MICRO_LOSS}, stale={MICRO_STALE_HOURS}h")
+            logger.info(f"Micro exits: TP=+{tp_pct}%, SL=-{sl_pct}%, "
+                        f"TIME={MICRO_MAX_HOLD_HOURS}h")
         return
 
     # Create exchange
@@ -981,6 +1282,7 @@ def main():
                      f"Mode: {mode}\n"
                      f"Coins: {', '.join(coins)}\n"
                      f"Order: ${order_usd}\n"
+                     f"TP: +{tp_pct}% | SL: -{sl_pct}% | TIME: {MICRO_MAX_HOLD_HOURS}h\n"
                      f"Positions: {len(positions)}/{MAX_MICRO_POSITIONS}\n"
                      f"Hours: {args.hours or '∞'}",
                 level='success')
@@ -1047,6 +1349,16 @@ def main():
                 time.sleep(NETWORK_DOWN_RETRY_INTERVAL)
                 continue
 
+        # ── Micro mode: check exits on open positions ──
+        if mode == 'micro' and state.get('micro_positions'):
+            exit_closes = check_micro_exits(
+                state, exchange, logger, tg,
+                tp_pct=tp_pct, sl_pct=sl_pct,
+                max_hold_hours=MICRO_MAX_HOLD_HOURS,
+            )
+            # Always save: snapshots are recorded even when no exits trigger
+            save_state(state)
+
         # ── Micro mode: cap checks before round ──
         if mode == 'micro':
             if not check_micro_caps(state, exchange, logger):
@@ -1057,7 +1369,7 @@ def main():
                 time.sleep(60)
                 continue
 
-            # Check staleness
+            # Check staleness (warn only, TIME exit handled by check_micro_exits)
             check_position_staleness(state, logger, tg)
 
         # ── Pick coin (round-robin, skip cooldowns + open micro positions) ──

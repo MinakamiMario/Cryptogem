@@ -2369,3 +2369,92 @@ Rejected: ALGO (44% fill, 19% partials), APT (73% fill, wait 33s), JASMY (75% fi
 - `reports/hf/expansion_20coin_report.json` — final report with Wilson CI
 - `reports/hf/expansion_20coin_report.md` — markdown report
 - `reports/hf/papertrade_universe_v1.json` — curated 17-coin pool
+
+---
+
+## ADR-HF-039: Execution Validated → Micro-Live Started
+
+**Date**: 2026-02-23
+**Status**: DECIDED
+**Context**: ADR-HF-038 paper trading completed. V2_strict 24h run proves execution layer is production-ready. Transitioning from paper (roundtrip) to controlled live micro-trading with hard caps.
+
+### V2_Strict Results (24h, 1087 rounds)
+
+| Metric | Value | Gate |
+|--------|-------|------|
+| Fill rate | 82.3% (893/1084 actionable) | ≥70% ✅ |
+| Taker incidents | 0 | = 0 ✅ |
+| Stuck positions | 0 | = 0 ✅ |
+| Slippage median | -0.36 bps | < 25 bps ✅ |
+| Slippage mean | +1.12 bps | < 25 bps ✅ |
+| Error rate | 0.28% (3/1087) | < 10% ✅ |
+| RT P&L (measurement cost) | -$2.87 | informational |
+| Runtime | 24h continuous | ✅ |
+
+### Per-Coin Fill Rates (v2_strict, ~217 rounds each)
+
+| Coin | Fill Rate | Rounds | Halal | Decision |
+|------|-----------|--------|-------|----------|
+| KAS/USDT | 94.9% | 217 | ✅ PoW L1 | KEEP |
+| ARB/USDT | 85.6% | 215 | ✅ L2 scaling | KEEP |
+| XRP/USDT | 84.8% | 217 | ✅ payments | KEEP |
+| SUI/USDT | 83.9% | 217 | ✅ L1 infra | KEEP |
+| GRT/USDT | 63.4% | 216 | ✅ indexing | DROP (< 70%) |
+
+### Universe V3 (Halal)
+
+4 coins, all halal-verified (whitelist). GRT dropped: 63.4% fill rate, structurally below 70% gate in both v1 (72.7%) and v2 (63.4%). Projected fill rate: 87.3%.
+
+File: `reports/hf/papertrade_universe_v3_halal.json`
+
+### Micro Mode Design
+
+**Core change**: On FILLED, skip `safe_sell_back()` → hold position.
+
+**Hard caps** (no auto-exit, block new entries only):
+
+| Cap | Threshold | Action |
+|-----|-----------|--------|
+| Max positions | 4 (1 per coin) | Block new entries |
+| Max notional | $100 total open | Block new entries |
+| Unrealized loss | > $25 | Block new entries |
+| Stale position | > 24h open | Telegram warn |
+| Order size | $10-$25 | Enforced at entry |
+
+**Monitoring**:
+- Dashboard JSON every 10 rounds (`dashboard_hf_micro.json`)
+- Telegram alerts: START 🚀, FILL ✅, every 50th MISS ⚠️, CAP HIT 🚨, ROLLBACK 🚨, STATUS 📊 every 100 rounds, STALE ⏰, STOP 🛑
+- Rollback criteria inherited from paper mode (R1-R6)
+
+**Separate state**: `paper_state_hf_1h_micro.json` (paper and micro state never mix)
+
+**CLI**: `python paper_hf_1h.py --mode micro --order-usd 10 --hours 168 --universe reports/hf/papertrade_universe_v3_halal.json`
+
+### Rollback Criteria (inherited + micro-specific)
+
+| # | Criterion | Action |
+|---|-----------|--------|
+| R1 | stuck_positions > 0 | STOP |
+| R2 | taker_incidents > 0 | STOP |
+| R3 | flatten fee avg > $0.50 | WARN (paper only) |
+| R4 | slippage > 25 bps (50-sample avg) | WARN |
+| R5 | fill rate < 50% after 50 trades | STOP |
+| R6 | error rate > 10% after 20 trades | WARN |
+| M1 | unrealized loss > $25 | Block entries |
+| M2 | position stale > 24h | Telegram warn |
+| M3 | all 4 positions open | Block entries |
+| M4 | total notional > $100 | Block entries |
+
+### Decision
+
+**DECIDED**: Execution layer validated. Start micro-live with:
+- 4 halal coins (KAS, ARB, XRP, SUI)
+- $10 initial order size
+- Hard caps as specified
+- Manual position close only (no auto-TP/SL)
+- 7-day initial observation period
+
+**Artifacts**:
+- `reports/hf/papertrade_universe_v3_halal.json` — v3 halal universe (4 coins)
+- `trading_bot/paper_hf_1h.py` — micro mode implementation
+- `trading_bot/dashboard_hf_micro.json` — runtime dashboard (generated)

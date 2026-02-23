@@ -39,6 +39,12 @@ from datetime import datetime, timezone
 from typing import Optional, Dict, List
 from pathlib import Path
 
+# Telegram (optional — fails silently if unavailable)
+try:
+    from telegram_notifier import TelegramNotifier
+except ImportError:
+    TelegramNotifier = None
+
 # ─── Path setup ─────────────────────────────────────────────
 BASE_DIR = Path(__file__).parent
 REPO_ROOT = BASE_DIR.parent
@@ -87,6 +93,15 @@ COIN_COOLDOWN_SECONDS = 60 * 60    # 1 hour cooldown per coin
 # Cycle timing (1H = 3600s)
 CYCLE_INTERVAL_SECONDS = 3600
 
+# ─── Micro Mode Constants ────────────────────────────────
+MAX_MICRO_POSITIONS = 4           # max 1 per coin
+MAX_MICRO_NOTIONAL = 100.0        # total open exposure USD
+MAX_MICRO_LOSS = 25.0             # unrealized loss → block new entries
+MICRO_MIN_ORDER_USD = 10.0
+MICRO_MAX_ORDER_USD = 25.0
+MICRO_STALE_HOURS = 24            # warn if position open > 24h
+MICRO_DASHBOARD_INTERVAL = 10     # write dashboard every N rounds
+
 
 # ─── Logging ────────────────────────────────────────────────
 
@@ -102,6 +117,27 @@ def setup_logging():
         ]
     )
     return logging.getLogger(TAG)
+
+
+# ─── Telegram Helper ──────────────────────────────────────
+
+def tg_send(tg, text: str, level: str = 'info'):
+    """Send telegram message. Fails silently if tg is None or send fails."""
+    if tg is None:
+        return
+    try:
+        if level == 'error':
+            tg.error(text)
+        elif level == 'warning':
+            tg.warning(text)
+        elif level == 'success':
+            tg.success(text)
+        elif level == 'status':
+            tg.status(text)
+        else:
+            tg.send(text)
+    except Exception:
+        pass  # never let TG failure crash the trader
 
 
 # ─── Exchange Setup ─────────────────────────────────────────
@@ -187,8 +223,9 @@ def load_universe(path: Path) -> List[str]:
 
 # ─── State Management ──────────────────────────────────────
 
-def new_state() -> dict:
-    return {
+def new_state(mode: str = 'paper') -> dict:
+    state = {
+        'mode': mode,
         'start_time': datetime.now(timezone.utc).isoformat(),
         'total_rounds': 0,
         'filled': 0,
@@ -206,6 +243,12 @@ def new_state() -> dict:
         'rollback_triggered': None,
         'trade_log': [],
     }
+    if mode == 'micro':
+        state['micro_positions'] = {}     # {symbol: {entry_price, qty, entry_time, order_id, notional}}
+        state['micro_closed'] = []        # closed position log
+        state['micro_caps_hit'] = 0       # number of times caps blocked entry
+        state['micro_new_entries_blocked'] = False
+    return state
 
 
 def load_state() -> dict:
@@ -274,6 +317,141 @@ def compute_quantity(order_usd: float, price: float, exchange, symbol: str) -> f
             qty = raw_qty
 
     return qty
+
+
+# ─── Micro Mode Functions ─────────────────────────────────
+
+def check_micro_caps(state: dict, exchange, logger) -> bool:
+    """Check micro mode hard caps. Returns True if new entries are allowed."""
+    positions = state.get('micro_positions', {})
+    open_count = len(positions)
+
+    # Cap 1: max positions
+    if open_count >= MAX_MICRO_POSITIONS:
+        logger.info(f"[MICRO_CAP] All {MAX_MICRO_POSITIONS} positions open — blocking new entries")
+        state['micro_new_entries_blocked'] = True
+        state['micro_caps_hit'] = state.get('micro_caps_hit', 0) + 1
+        return False
+
+    # Cap 2: total notional
+    total_notional = sum(p.get('notional', 0) for p in positions.values())
+    if total_notional >= MAX_MICRO_NOTIONAL:
+        logger.info(f"[MICRO_CAP] Notional ${total_notional:.2f} >= ${MAX_MICRO_NOTIONAL} — blocking")
+        state['micro_new_entries_blocked'] = True
+        state['micro_caps_hit'] = state.get('micro_caps_hit', 0) + 1
+        return False
+
+    # Cap 3: unrealized loss check (requires live prices)
+    try:
+        total_unrealized = 0.0
+        for sym, pos in positions.items():
+            ob = exchange.fetch_order_book(sym, limit=1)
+            if ob.get('bids') and ob['bids'][0]:
+                current_bid = float(ob['bids'][0][0])
+                unrealized = (current_bid - pos['entry_price']) * pos['qty']
+                total_unrealized += unrealized
+            time.sleep(0.3)  # rate limit
+
+        if total_unrealized < -MAX_MICRO_LOSS:
+            logger.warning(f"[MICRO_CAP] Unrealized loss ${total_unrealized:.2f} exceeds "
+                           f"${MAX_MICRO_LOSS} — blocking new entries")
+            state['micro_new_entries_blocked'] = True
+            state['micro_caps_hit'] = state.get('micro_caps_hit', 0) + 1
+            return False
+    except Exception as e:
+        logger.warning(f"[MICRO_CAP] Could not check unrealized P&L: {e}")
+        # On error, allow trading (don't block on monitoring failure)
+
+    state['micro_new_entries_blocked'] = False
+    return True
+
+
+def check_position_staleness(state: dict, logger, tg=None) -> List[str]:
+    """Check for stale positions (open > MICRO_STALE_HOURS). Returns list of stale symbols."""
+    stale = []
+    now = datetime.now(timezone.utc)
+    for sym, pos in state.get('micro_positions', {}).items():
+        entry_time = datetime.fromisoformat(pos['entry_time'])
+        hours_open = (now - entry_time).total_seconds() / 3600
+        if hours_open > MICRO_STALE_HOURS:
+            stale.append(sym)
+            logger.warning(f"[STALE] {sym} open {hours_open:.1f}h (entry ${pos['entry_price']:.6f}, "
+                           f"qty={pos['qty']}, notional=${pos['notional']:.2f})")
+            tg_send(tg, f"⏰ STALE POSITION\n{sym}: open {hours_open:.1f}h\n"
+                        f"Entry: ${pos['entry_price']:.6f}\nNotional: ${pos['notional']:.2f}",
+                    level='warning')
+    return stale
+
+
+def compute_micro_unrealized(state: dict, exchange) -> float:
+    """Compute total unrealized P&L for micro positions. Returns 0.0 on error."""
+    total = 0.0
+    for sym, pos in state.get('micro_positions', {}).items():
+        try:
+            ob = exchange.fetch_order_book(sym, limit=1)
+            if ob.get('bids') and ob['bids'][0]:
+                current_bid = float(ob['bids'][0][0])
+                total += (current_bid - pos['entry_price']) * pos['qty']
+            time.sleep(0.3)
+        except Exception:
+            pass
+    return round(total, 4)
+
+
+def write_micro_dashboard(state: dict, exchange, mode: str):
+    """Write JSON dashboard for micro mode monitoring."""
+    if mode != 'micro':
+        return
+
+    positions = state.get('micro_positions', {})
+    total_notional = sum(p.get('notional', 0) for p in positions.values())
+
+    # Compute unrealized P&L
+    unrealized = compute_micro_unrealized(state, exchange)
+
+    total = state.get('filled', 0) + state.get('partial', 0) + state.get('missed', 0)
+    fill_rate = state['filled'] / total if total > 0 else 0
+
+    dashboard = {
+        'ts': datetime.now(timezone.utc).isoformat(),
+        'mode': 'micro',
+        'rounds': state.get('total_rounds', 0),
+        'fill_rate': round(fill_rate, 3),
+        'positions': {
+            'count': len(positions),
+            'max': MAX_MICRO_POSITIONS,
+            'total_notional': round(total_notional, 2),
+            'max_notional': MAX_MICRO_NOTIONAL,
+            'unrealized_pnl': unrealized,
+            'max_loss': MAX_MICRO_LOSS,
+            'details': {sym: {
+                'entry_price': p['entry_price'],
+                'qty': p['qty'],
+                'notional': p['notional'],
+                'entry_time': p['entry_time'],
+            } for sym, p in positions.items()},
+        },
+        'caps': {
+            'entries_blocked': state.get('micro_new_entries_blocked', False),
+            'caps_hit_count': state.get('micro_caps_hit', 0),
+        },
+        'stats': {
+            'filled': state.get('filled', 0),
+            'missed': state.get('missed', 0),
+            'partial': state.get('partial', 0),
+            'errors': state.get('errors', 0),
+            'taker_incidents': state.get('taker_incidents', 0),
+            'stuck_positions': state.get('stuck_positions', 0),
+        },
+        'closed_positions': len(state.get('micro_closed', [])),
+    }
+
+    dashboard_path = BASE_DIR / 'dashboard_hf_micro.json'
+    try:
+        with open(dashboard_path, 'w') as f:
+            json.dump(dashboard, f, indent=2, default=str)
+    except Exception:
+        pass  # never crash on dashboard write
 
 
 # ─── Safe Sell Back ─────────────────────────────────────────
@@ -349,8 +527,9 @@ def safe_sell_back(exchange, symbol: str, qty: float, fill_price: float) -> dict
 
 # ─── Single Round ───────────────────────────────────────────
 
-def run_single_round(exchange, symbol: str, order_usd: float, logger) -> dict:
-    """Execute one fill test round: buy limit → wait → sell back.
+def run_single_round(exchange, symbol: str, order_usd: float, logger,
+                     mode: str = 'paper') -> dict:
+    """Execute one fill test round: buy limit → wait → sell back (paper) or hold (micro).
 
     Returns dict with all result fields.
     """
@@ -458,13 +637,17 @@ def run_single_round(exchange, symbol: str, order_usd: float, logger) -> dict:
         result['fill_price'] = fill_price_avg
         result['fill_notional'] = round(fill_qty * fill_price_avg, 4)
 
-        # Sell back immediately
-        sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg)
-        result.update(sell_result)
-        if 'sell_price' in sell_result and fill_price_avg:
-            result['roundtrip_pnl'] = round(
-                (sell_result['sell_price'] - fill_price_avg) * fill_qty, 4
-            )
+        if mode == 'micro':
+            # Micro mode: hold position, no sell-back
+            result['micro_held'] = True
+        else:
+            # Paper mode: sell back immediately
+            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg)
+            result.update(sell_result)
+            if 'sell_price' in sell_result and fill_price_avg:
+                result['roundtrip_pnl'] = round(
+                    (sell_result['sell_price'] - fill_price_avg) * fill_qty, 4
+                )
 
     elif fill_qty > 0:
         result['status'] = 'PARTIAL'
@@ -478,13 +661,17 @@ def run_single_round(exchange, symbol: str, order_usd: float, logger) -> dict:
         except Exception:
             pass
 
-        # Sell partial
-        sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg)
-        result.update(sell_result)
-        if 'sell_price' in sell_result and fill_price_avg:
-            result['roundtrip_pnl'] = round(
-                (sell_result['sell_price'] - fill_price_avg) * fill_qty, 4
-            )
+        if mode == 'micro':
+            # Micro mode: hold partial fill, no sell-back
+            result['micro_held'] = True
+        else:
+            # Paper mode: sell partial back
+            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg)
+            result.update(sell_result)
+            if 'sell_price' in sell_result and fill_price_avg:
+                result['roundtrip_pnl'] = round(
+                    (sell_result['sell_price'] - fill_price_avg) * fill_qty, 4
+                )
 
     else:
         result['status'] = 'MISSED'
@@ -542,7 +729,7 @@ def check_rollback(state: dict, logger) -> Optional[str]:
 
 # ─── Update State ───────────────────────────────────────────
 
-def update_state(state: dict, result: dict):
+def update_state(state: dict, result: dict, mode: str = 'paper'):
     """Update state with round result."""
     state['total_rounds'] += 1
     state['last_cycle'] = result.get('ts')
@@ -617,6 +804,17 @@ def update_state(state: dict, result: dict):
     trade_log.append(log_entry)
     state['trade_log'] = trade_log[-100:]
 
+    # Micro mode: record position on fill
+    if mode == 'micro' and result.get('micro_held') and sym:
+        positions = state.setdefault('micro_positions', {})
+        positions[sym] = {
+            'entry_price': result.get('fill_price', 0),
+            'qty': result.get('fill_qty', 0),
+            'entry_time': result.get('ts', datetime.now(timezone.utc).isoformat()),
+            'order_id': result.get('order_id', ''),
+            'notional': result.get('fill_notional', 0),
+        }
+
 
 # ─── Report ─────────────────────────────────────────────────
 
@@ -624,10 +822,13 @@ def print_report(state: dict):
     """Print summary report from state."""
     total = state.get('filled', 0) + state.get('partial', 0) + state.get('missed', 0)
     touch = state.get('filled', 0) + state.get('partial', 0)
+    mode = state.get('mode', 'paper')
 
     print("\n" + "=" * 60)
-    print(f"HF 1H PAPER TRADER — EXECUTION VALIDATION REPORT")
+    title = "HF 1H MICRO TRADER REPORT" if mode == 'micro' else "HF 1H PAPER TRADER — EXECUTION VALIDATION REPORT"
+    print(title)
     print("=" * 60)
+    print(f"  Mode:         {mode}")
     print(f"  Start:        {state.get('start_time', '?')}")
     print(f"  Last cycle:   {state.get('last_cycle', '?')}")
     print(f"  Total rounds: {state.get('total_rounds', 0)}")
@@ -667,13 +868,33 @@ def print_report(state: dict):
             print(f"  {sym:15s} fill={fr:.0%} ({cs['filled']}/{act}) "
                   f"RT=${cs.get('total_rt_pnl', 0):.4f} fees=${cs.get('total_fees', 0):.4f}")
 
+    # Micro positions
+    if mode == 'micro':
+        positions = state.get('micro_positions', {})
+        closed = state.get('micro_closed', [])
+        print(f"\n--- Micro Positions ---")
+        print(f"  Open:         {len(positions)}/{MAX_MICRO_POSITIONS}")
+        total_notional = sum(p.get('notional', 0) for p in positions.values())
+        print(f"  Notional:     ${total_notional:.2f}/${MAX_MICRO_NOTIONAL:.0f}")
+        print(f"  Caps hit:     {state.get('micro_caps_hit', 0)}")
+        print(f"  Closed:       {len(closed)}")
+        if positions:
+            for sym, pos in positions.items():
+                entry_time = datetime.fromisoformat(pos['entry_time'])
+                hours = (datetime.now(timezone.utc) - entry_time).total_seconds() / 3600
+                print(f"    {sym:15s} entry=${pos['entry_price']:.6f} "
+                      f"qty={pos['qty']} notional=${pos['notional']:.2f} "
+                      f"open={hours:.1f}h")
+
     print("=" * 60)
 
 
 # ─── Main Loop ──────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description='HF 1H MEXC Paper Trader (Execution Validation)')
+    parser = argparse.ArgumentParser(description='HF 1H MEXC Paper/Micro Trader')
+    parser.add_argument('--mode', choices=['paper', 'micro'], default='paper',
+                        help='Trading mode: paper (roundtrip validation) or micro (live hold)')
     parser.add_argument('--hours', type=float, default=0, help='Run for N hours (0=infinite)')
     parser.add_argument('--order-usd', type=float, default=DEFAULT_ORDER_USD, help='USD per order')
     parser.add_argument('--universe', type=str, default=str(DEFAULT_UNIVERSE), help='Universe JSON')
@@ -682,6 +903,13 @@ def main():
     parser.add_argument('--reset-state', action='store_true', help='Reset state and start fresh')
     args = parser.parse_args()
 
+    mode = args.mode
+
+    # Determine state file based on mode
+    global STATE_FILE
+    if mode == 'micro':
+        STATE_FILE = BASE_DIR / f'paper_state_{TAG}_micro.json'
+
     # Report mode
     if args.report:
         state = load_state()
@@ -689,37 +917,73 @@ def main():
         return
 
     logger = setup_logging()
-    logger.info(f"HF 1H Paper Trader starting — tag={TAG}")
+    logger.info(f"HF 1H {'MICRO' if mode == 'micro' else 'Paper'} Trader starting — tag={TAG} mode={mode}")
+
+    # Telegram (micro mode always, paper mode never)
+    tg = None
+    if mode == 'micro' and TelegramNotifier is not None:
+        try:
+            tg = TelegramNotifier()
+            logger.info("Telegram notifier initialized")
+        except Exception as e:
+            logger.warning(f"Telegram init failed (non-fatal): {e}")
 
     # Load universe
     universe_path = Path(args.universe)
     coins = load_universe(universe_path)
     logger.info(f"Universe: {len(coins)} coins from {universe_path.name}")
 
-    # Validate order size
-    order_usd = min(max(args.order_usd, MIN_ORDER_USD), MAX_ORDER_USD)
+    # Validate order size (micro mode has its own range)
+    if mode == 'micro':
+        order_usd = min(max(args.order_usd, MICRO_MIN_ORDER_USD), MICRO_MAX_ORDER_USD)
+    else:
+        order_usd = min(max(args.order_usd, MIN_ORDER_USD), MAX_ORDER_USD)
 
     # State
     if args.reset_state:
-        state = new_state()
+        state = new_state(mode=mode)
         save_state(state)
         logger.info("State reset")
     else:
         state = load_state()
+        # Ensure micro keys exist on resume
+        if mode == 'micro':
+            state.setdefault('mode', 'micro')
+            state.setdefault('micro_positions', {})
+            state.setdefault('micro_closed', [])
+            state.setdefault('micro_caps_hit', 0)
+            state.setdefault('micro_new_entries_blocked', False)
 
     # Dry run
     if args.dry_run:
+        logger.info(f"[DRY-RUN] Mode: {mode}")
         logger.info(f"[DRY-RUN] Would trade {len(coins)} coins @ ${order_usd}/order")
         for c in coins:
             logger.info(f"  {c}")
         logger.info(f"TTL: {ORDER_TTL_SECONDS}s, spread cap: {SPREAD_CAP_BPS} bps")
         logger.info(f"State: {state.get('total_rounds', 0)} rounds, "
                     f"{state.get('filled', 0)} filled")
+        if mode == 'micro':
+            positions = state.get('micro_positions', {})
+            logger.info(f"Micro positions: {len(positions)}/{MAX_MICRO_POSITIONS}")
+            logger.info(f"Micro caps: notional=${MAX_MICRO_NOTIONAL}, "
+                        f"loss=${MAX_MICRO_LOSS}, stale={MICRO_STALE_HOURS}h")
         return
 
     # Create exchange
     exchange = create_exchange()
     logger.info(f"Exchange connected: MEXC SPOT")
+
+    # Telegram: start alert
+    if mode == 'micro':
+        positions = state.get('micro_positions', {})
+        tg_send(tg, f"🚀 HF MICRO TRADER STARTED\n"
+                     f"Mode: {mode}\n"
+                     f"Coins: {', '.join(coins)}\n"
+                     f"Order: ${order_usd}\n"
+                     f"Positions: {len(positions)}/{MAX_MICRO_POSITIONS}\n"
+                     f"Hours: {args.hours or '∞'}",
+                level='success')
 
     # SIGINT handler
     shutdown = [False]
@@ -752,6 +1016,7 @@ def main():
     ob_burst_times = []            # timestamps of OB error bursts (for burst counting)
     coin_error_counts = {}         # {symbol: [error_timestamps]} for per-coin cooldown
     coin_cooldowns = {}            # {symbol: cooldown_until_timestamp}
+    miss_counter = 0               # for telegram miss alert throttling
 
     # Clear stale rollback from previous run (allows resume after outage stop)
     if state.get('rollback_triggered') == 'consecutive_errors':
@@ -771,6 +1036,7 @@ def main():
             if not resumed:
                 state['rollback_triggered'] = 'network_down_timeout'
                 save_state(state)
+                tg_send(tg, "🚨 HARD STOP: Network down timeout", level='error')
                 break
             # Re-create exchange after network restore (connections may be stale)
             try:
@@ -781,7 +1047,20 @@ def main():
                 time.sleep(NETWORK_DOWN_RETRY_INTERVAL)
                 continue
 
-        # ── Pick coin (round-robin, skip cooldowns) ──
+        # ── Micro mode: cap checks before round ──
+        if mode == 'micro':
+            if not check_micro_caps(state, exchange, logger):
+                # Caps hit — wait and retry
+                tg_send(tg, f"🚨 MICRO CAP HIT\n"
+                             f"Positions: {len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}\n"
+                             f"Entries blocked. Waiting 60s.", level='warning')
+                time.sleep(60)
+                continue
+
+            # Check staleness
+            check_position_staleness(state, logger, tg)
+
+        # ── Pick coin (round-robin, skip cooldowns + open micro positions) ──
         now_ts = time.time()
         symbol = None
         attempts = 0
@@ -790,22 +1069,35 @@ def main():
             coin_idx += 1
             attempts += 1
             cooldown_until = coin_cooldowns.get(candidate, 0)
-            if now_ts >= cooldown_until:
-                symbol = candidate
-                break
-            # else: coin on cooldown, try next
+            if now_ts < cooldown_until:
+                continue  # coin on cooldown
+
+            # Micro mode: skip coins with open positions
+            if mode == 'micro' and candidate in state.get('micro_positions', {}):
+                continue
+
+            symbol = candidate
+            break
 
         if symbol is None:
+            if mode == 'micro' and len(state.get('micro_positions', {})) >= len(coins):
+                # All coins have open positions
+                logger.info(f"[MICRO] All {len(coins)} coins have open positions. Waiting 60s.")
+                time.sleep(60)
+                continue
             # All coins on cooldown — wait for shortest cooldown to expire
-            min_wait = min(coin_cooldowns.values()) - now_ts
-            if min_wait > 0:
-                logger.info(f"[COOLDOWN] All coins on cooldown. Waiting {min_wait:.0f}s.")
-                time.sleep(min(min_wait + 1, 60))
+            if coin_cooldowns:
+                min_wait = min(coin_cooldowns.values()) - now_ts
+                if min_wait > 0:
+                    logger.info(f"[COOLDOWN] All coins on cooldown. Waiting {min_wait:.0f}s.")
+                    time.sleep(min(min_wait + 1, 60))
+            else:
+                time.sleep(5)
             continue
 
         # ── Run round ──
-        logger.info(f"[round {state['total_rounds'] + 1}] {symbol} — ${order_usd}")
-        result = run_single_round(exchange, symbol, order_usd, logger)
+        logger.info(f"[round {state['total_rounds'] + 1}] {symbol} — ${order_usd} ({mode})")
+        result = run_single_round(exchange, symbol, order_usd, logger, mode=mode)
 
         # Log result
         status = result.get('status', '?')
@@ -816,8 +1108,38 @@ def main():
                     f"Slip: {slip:+.1f}bps | RT P&L: ${rt_pnl:.4f}")
 
         # Update state
-        update_state(state, result)
+        update_state(state, result, mode=mode)
         save_state(state)
+
+        # ── Telegram alerts ──
+        if mode == 'micro':
+            if status == 'FILLED' and result.get('micro_held'):
+                tg_send(tg, f"✅ MICRO FILL\n{symbol}\n"
+                             f"Price: ${result.get('fill_price', 0):.6f}\n"
+                             f"Qty: {result.get('fill_qty', 0)}\n"
+                             f"Notional: ${result.get('fill_notional', 0):.2f}\n"
+                             f"Positions: {len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}",
+                        level='success')
+            elif status == 'MISSED':
+                miss_counter += 1
+                if miss_counter % 50 == 0:
+                    tg_send(tg, f"⚠️ MISS #{miss_counter}\n{symbol}\n"
+                                 f"Spread: {spread:.1f}bps", level='warning')
+
+            # Status update every 100 rounds
+            if state['total_rounds'] % 100 == 0 and state['total_rounds'] > 0:
+                total_acts = state['filled'] + state.get('partial', 0) + state['missed']
+                fr = state['filled'] / total_acts if total_acts > 0 else 0
+                positions = state.get('micro_positions', {})
+                tg_send(tg, f"📊 STATUS (round {state['total_rounds']})\n"
+                             f"Fill rate: {fr:.1%}\n"
+                             f"Positions: {len(positions)}/{MAX_MICRO_POSITIONS}\n"
+                             f"Filled: {state['filled']} | Missed: {state['missed']}",
+                        level='status')
+
+            # Dashboard write every N rounds
+            if state['total_rounds'] % MICRO_DASHBOARD_INTERVAL == 0:
+                write_micro_dashboard(state, exchange, mode)
 
         # ── Hard rollback checks (taker, stuck — always stop) ──
         trigger = check_rollback(state, logger)
@@ -825,6 +1147,8 @@ def main():
             logger.error(f"[ROLLBACK] Trigger: {trigger}. Stopping.")
             state['rollback_triggered'] = trigger
             save_state(state)
+            tg_send(tg, f"🚨 ROLLBACK TRIGGERED\nReason: {trigger}\nTrader stopped.",
+                    level='error')
             break
 
         # ── Outage-aware error handling ──
@@ -847,6 +1171,7 @@ def main():
                     if not resumed:
                         state['rollback_triggered'] = 'network_down_timeout'
                         save_state(state)
+                        tg_send(tg, "🚨 HARD STOP: Network down timeout", level='error')
                         break
                     try:
                         exchange = create_exchange()
@@ -867,6 +1192,8 @@ def main():
                                  f"{OB_ERROR_BURST_WINDOW//3600}h. Stopping.")
                     state['rollback_triggered'] = 'ob_error_burst_limit'
                     save_state(state)
+                    tg_send(tg, f"🚨 HARD STOP: {len(ob_burst_times)} OB error bursts",
+                            level='error')
                     break
 
                 pause_min = OB_ERROR_PAUSE_SECONDS // 60
@@ -894,9 +1221,20 @@ def main():
         if not shutdown[0]:
             time.sleep(2.0 + random.uniform(0, 1.0))
 
+    # Final dashboard write (micro)
+    if mode == 'micro':
+        try:
+            write_micro_dashboard(state, exchange, mode)
+        except Exception:
+            pass
+
     # Final report
     print_report(state)
-    logger.info("Paper trader stopped.")
+    logger.info(f"{'Micro' if mode == 'micro' else 'Paper'} trader stopped.")
+    tg_send(tg, f"🛑 HF {'MICRO' if mode == 'micro' else 'PAPER'} TRADER STOPPED\n"
+                 f"Rounds: {state.get('total_rounds', 0)}\n"
+                 f"Filled: {state.get('filled', 0)}",
+            level='warning')
 
 
 if __name__ == '__main__':

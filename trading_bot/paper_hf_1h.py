@@ -251,11 +251,11 @@ def new_state(mode: str = 'paper') -> dict:
     return state
 
 
-def load_state() -> dict:
+def load_state(mode: str = 'paper') -> dict:
     if STATE_FILE.exists():
         with open(STATE_FILE) as f:
             return json.load(f)
-    return new_state()
+    return new_state(mode=mode)
 
 
 def save_state(state: dict):
@@ -912,7 +912,7 @@ def main():
 
     # Report mode
     if args.report:
-        state = load_state()
+        state = load_state(mode=mode)
         print_report(state)
         return
 
@@ -945,10 +945,10 @@ def main():
         save_state(state)
         logger.info("State reset")
     else:
-        state = load_state()
+        state = load_state(mode=mode)
         # Ensure micro keys exist on resume
         if mode == 'micro':
-            state.setdefault('mode', 'micro')
+            state['mode'] = 'micro'  # always override to match CLI
             state.setdefault('micro_positions', {})
             state.setdefault('micro_closed', [])
             state.setdefault('micro_caps_hit', 0)

@@ -29,6 +29,7 @@ import sys
 import json
 import math
 import time
+import uuid
 import random
 import signal
 import socket
@@ -107,7 +108,7 @@ MICRO_TP_PCT = 5.0                # take profit % (configurable via --tp)
 MICRO_SL_PCT = 3.0                # stop loss %   (configurable via --sl)
 MICRO_MAX_HOLD_HOURS = 24         # failsafe time exit
 MICRO_COUNTERFACTUAL_HOURS = [12, 24]  # snapshot intervals for counterfactual log
-MICRO_EXIT_FEE_BPS = 10.0        # MEXC taker fee for market sell (bps)
+MICRO_EXIT_FEE_BPS = 5.0         # MEXC taker fee for market sell (5bps = 0.05%, verified via API)
 
 
 # ─── Logging ────────────────────────────────────────────────
@@ -570,8 +571,13 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
             continue
 
         # ── TRIGGERED — execute exit ──
-        logger.info(f"[EXIT] {sym} → {exit_reason} | {pct_change:+.2f}% | "
-                    f"bid=${current_bid:.6f} | open={hours_open:.1f}h")
+        logger.info(f"[EXIT] {sym} → {exit_reason} | trigger check: "
+                    f"bid=${current_bid:.6f} ask=${current_ask:.6f} mid=${mid_price:.6f} | "
+                    f"pct_vs_entry={pct_change:+.3f}% (threshold: TP≥+{tp_pct}% SL≤-{sl_pct}%) | "
+                    f"open={hours_open:.1f}h (max={max_hold_hours}h)")
+        logger.info(f"[EXIT] {sym} entry_order_id={pos.get('order_id', '?')} | "
+                    f"entry_price=${entry_price:.8f} | entry_qty={qty} | "
+                    f"check_price=bid (${current_bid:.8f})")
 
         sell_result = safe_sell_back(exchange, sym, qty, entry_price)
 
@@ -579,22 +585,28 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
         actual_sell_price = sell_result.get('sell_price', current_bid)
         actual_sell_qty = sell_result.get('sell_qty', qty)
         sell_fee_cost = sell_result.get('sell_fee_cost', 0)
+        sell_order_id = sell_result.get('sell_order_id', '')
 
         # If sell failed (dust/error), use bid estimate
+        sell_method = 'market_sell'
         if sell_result.get('dust_remaining') or sell_result.get('WARNING'):
             actual_sell_price = current_bid
             actual_sell_qty = qty
-            # Estimate fee from bid
             sell_fee_cost = current_bid * qty * MICRO_EXIT_FEE_BPS / 10000
+            sell_method = 'estimated_bid'
+
+        # Fee model: entry = maker limit (0% MEXC SPOT), exit = market taker (10bps)
+        entry_fee = 0.0  # maker 0% on MEXC SPOT
+        exit_fee = sell_fee_cost if sell_fee_cost > 0 else (actual_sell_price * actual_sell_qty * MICRO_EXIT_FEE_BPS / 10000)
 
         # Actual PnL
         gross_pnl = (actual_sell_price - entry_price) * actual_sell_qty
-        entry_fee_est = entry_price * qty * 0  # maker = 0% on MEXC
-        exit_fee = sell_fee_cost if sell_fee_cost > 0 else (actual_sell_price * actual_sell_qty * MICRO_EXIT_FEE_BPS / 10000)
-        net_pnl = gross_pnl - entry_fee_est - exit_fee
+        net_pnl = gross_pnl - entry_fee - exit_fee
 
-        # Slippage vs mid at exit
-        slippage_vs_mid_bps = (actual_sell_price - mid_price) / mid_price * 10000 if mid_price > 0 else 0
+        # Slippage: exit vs mid at time of exit
+        exit_slip_vs_mid_bps = (actual_sell_price - mid_price) / mid_price * 10000 if mid_price > 0 else 0
+        # Slippage: exit vs trigger bid (how much did market sell deviate from bid we saw)
+        exit_slip_vs_bid_bps = (actual_sell_price - current_bid) / current_bid * 10000 if current_bid > 0 else 0
 
         # ── Counterfactual: what PnL would have been at 12h/24h ──
         counterfactual = {}
@@ -624,14 +636,40 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
                     'status': 'no_snapshot' if not cf_snap else f'nearest_at_{cf_snap["hours_open"]:.1f}h',
                 }
 
+        # Compute TP/SL price levels for this position
+        tp_price_level = round(entry_price * (1 + tp_pct / 100), 8)
+        sl_price_level = round(entry_price * (1 - sl_pct / 100), 8)
+
         # Build close record
         close_record = {
+            'position_id': pos.get('position_id', 'legacy'),
             'symbol': sym,
             'exit_reason': exit_reason,
-            'exit_time': now.isoformat(),
-            'entry_price': entry_price,
-            'entry_time': pos['entry_time'],
-            'exit_price': round(actual_sell_price, 8),
+            # ── Timestamps ──
+            'entry_ts': pos['entry_time'],
+            'exit_ts': now.isoformat(),
+            # ── Entry details ──
+            'entry_price_avg': entry_price,
+            'entry_order_id': pos.get('order_id', ''),   # mexc_order_id_buy
+            'entry_fee_model': 'maker_0bps',
+            'entry_fee': round(entry_fee, 6),             # fees_buy
+            # ── Exit details ──
+            'exit_price_avg': round(actual_sell_price, 8),
+            'exit_order_id': sell_order_id,                # mexc_order_id_sell
+            'exit_fee_model': f'taker_{MICRO_EXIT_FEE_BPS:.0f}bps',
+            'exit_fee': round(exit_fee, 6),                # fees_sell
+            'exit_method': sell_method,
+            # ── TP/SL levels ──
+            'tp_price': tp_price_level,
+            'sl_price': sl_price_level,
+            'max_hold_hours': max_hold_hours,
+            # ── Trigger context ──
+            'trigger_price': current_bid,          # price that fired the exit
+            'trigger_basis': 'bid',                # bid/ask/last/mid
+            'trigger_ask': current_ask,
+            'trigger_mid': round(mid_price, 8),
+            'trigger_spread_bps': round((current_ask - current_bid) / mid_price * 10000, 2) if mid_price > 0 else 0,
+            # ── Trade metrics ──
             'qty': actual_sell_qty,
             'notional_entry': pos.get('notional', 0),
             'notional_exit': round(actual_sell_price * actual_sell_qty, 4),
@@ -639,28 +677,30 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
             'pct_change': round(pct_change, 3),
             'gross_pnl': round(gross_pnl, 4),
             'net_pnl': round(net_pnl, 4),
-            'entry_fee': round(entry_fee_est, 6),
-            'exit_fee': round(exit_fee, 6),
-            'total_fees': round(entry_fee_est + exit_fee, 6),
-            'slippage_vs_mid_bps': round(slippage_vs_mid_bps, 2),
+            'total_fees': round(entry_fee + exit_fee, 6),
+            'exit_slip_vs_mid_bps': round(exit_slip_vs_mid_bps, 2),
+            'exit_slip_vs_bid_bps': round(exit_slip_vs_bid_bps, 2),
+            # ── Sell execution ──
             'sell_result': {
-                'order_id': sell_result.get('sell_order_id', ''),
+                'order_id': sell_order_id,
                 'attempts': sell_result.get('sell_attempts', 0),
                 'dust': sell_result.get('dust_remaining', False),
                 'warning': sell_result.get('WARNING', ''),
             },
             'counterfactual': counterfactual,
-            'order_id_entry': pos.get('order_id', ''),
         }
 
         closes.append(close_record)
         to_remove.append(sym)
 
         # Log detailed
-        logger.info(f"  [CLOSE] {sym} {exit_reason}: entry=${entry_price:.6f} → "
-                    f"exit=${actual_sell_price:.6f} ({pct_change:+.2f}%)")
-        logger.info(f"  [CLOSE] Gross=${gross_pnl:.4f} Fees=${entry_fee_est + exit_fee:.4f} "
-                    f"Net=${net_pnl:.4f} Slip={slippage_vs_mid_bps:+.1f}bps")
+        logger.info(f"  [CLOSE] {sym} {exit_reason}: entry=${entry_price:.8f} → "
+                    f"exit=${actual_sell_price:.8f} ({pct_change:+.3f}%)")
+        logger.info(f"  [CLOSE] Gross=${gross_pnl:.4f} | "
+                    f"Fees: buy={entry_fee:.4f}(maker 0%) + sell={exit_fee:.4f}(taker {MICRO_EXIT_FEE_BPS:.0f}bps) = ${entry_fee + exit_fee:.4f} | "
+                    f"Net=${net_pnl:.4f}")
+        logger.info(f"  [CLOSE] Slip: vs_mid={exit_slip_vs_mid_bps:+.1f}bps vs_bid={exit_slip_vs_bid_bps:+.1f}bps | "
+                    f"sell_method={sell_method} sell_order={sell_order_id}")
         for cf_key, cf_val in counterfactual.items():
             if 'net_pnl' in cf_val:
                 logger.info(f"  [CF] @{cf_key}: would have been ${cf_val['net_pnl']:.4f} "
@@ -676,15 +716,16 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
                 cf_lines.append(f"  @{cf_key}: ${cf_val['net_pnl']:.4f} ({cf_val['pct_change']:+.2f}%)")
         cf_text = "\n".join(cf_lines) if cf_lines else "  no snapshots"
 
-        tg_send(tg, f"{emoji} EXIT: {exit_reason}\n"
-                     f"{sym}\n"
-                     f"Entry: ${entry_price:.6f}\n"
-                     f"Exit: ${actual_sell_price:.6f} ({pct_change:+.2f}%)\n"
-                     f"Net P&L: ${net_pnl:.4f}\n"
-                     f"Fees: ${entry_fee_est + exit_fee:.4f}\n"
-                     f"Held: {hours_open:.1f}h\n"
-                     f"Slip: {slippage_vs_mid_bps:+.1f}bps\n"
-                     f"Counterfactual:\n{cf_text}",
+        # Compact one-liner for easy debugging
+        level_str = {'TP': f'tp {tp_price_level:.4f}', 'SL': f'stop {sl_price_level:.4f}', 'TIME': f'time {hours_open:.1f}h'}
+        tg_send(tg, f"{emoji} CLOSE {exit_reason} | {sym}\n"
+                     f"entry {entry_price:.4f} | {level_str.get(exit_reason, '')} | "
+                     f"trigger bid {current_bid:.4f} | exit {actual_sell_price:.4f}\n"
+                     f"fees {entry_fee + exit_fee:.3f} | net {net_pnl:+.4f} | "
+                     f"held {hours_open:.1f}h | slip {exit_slip_vs_bid_bps:+.1f}bps\n"
+                     f"buy={pos.get('order_id', '?')[:20]}\n"
+                     f"sell={sell_order_id[:20]}\n"
+                     f"CF: {cf_text}",
                 level='success' if net_pnl > 0 else 'warning')
 
         time.sleep(0.5)  # rate limit between sells
@@ -1055,6 +1096,7 @@ def update_state(state: dict, result: dict, mode: str = 'paper'):
     if mode == 'micro' and result.get('micro_held') and sym:
         positions = state.setdefault('micro_positions', {})
         positions[sym] = {
+            'position_id': str(uuid.uuid4())[:12],  # short unique ID for cross-ref
             'entry_price': result.get('fill_price', 0),
             'qty': result.get('fill_qty', 0),
             'entry_time': result.get('ts', datetime.now(timezone.utc).isoformat()),
@@ -1275,6 +1317,25 @@ def main():
     exchange = create_exchange()
     logger.info(f"Exchange connected: MEXC SPOT")
 
+    # Fee model verification
+    logger.info(f"Fee model: entry=MAKER(0bps) exit=TAKER({MICRO_EXIT_FEE_BPS:.0f}bps)")
+    logger.info(f"Exit config: TP=+{tp_pct}% SL=-{sl_pct}% TIME={MICRO_MAX_HOLD_HOURS}h")
+    logger.info(f"Exit check: trigger_price=BID (conservative for sell-side)")
+    logger.info(f"Sell method: market_sell via safe_sell_back (3 retries)")
+    if mode == 'micro':
+        # Verify MEXC fee tier if possible
+        try:
+            fees_info = exchange.fetch_trading_fee(coins[0]) if coins else None
+            if fees_info:
+                maker_fee = fees_info.get('maker', '?')
+                taker_fee = fees_info.get('taker', '?')
+                logger.info(f"MEXC fee check ({coins[0]}): maker={maker_fee} taker={taker_fee}")
+                if isinstance(taker_fee, (int, float)) and taker_fee * 10000 != MICRO_EXIT_FEE_BPS:
+                    logger.warning(f"[FEE_MISMATCH] MEXC taker={taker_fee*10000:.1f}bps vs "
+                                   f"model={MICRO_EXIT_FEE_BPS:.1f}bps — update MICRO_EXIT_FEE_BPS!")
+        except Exception as e:
+            logger.info(f"Fee tier check skipped: {e}")
+
     # Telegram: start alert
     if mode == 'micro':
         positions = state.get('micro_positions', {})
@@ -1428,11 +1489,16 @@ def main():
         # ── Telegram alerts ──
         if mode == 'micro':
             if status == 'FILLED' and result.get('micro_held'):
-                tg_send(tg, f"✅ MICRO FILL\n{symbol}\n"
-                             f"Price: ${result.get('fill_price', 0):.6f}\n"
-                             f"Qty: {result.get('fill_qty', 0)}\n"
-                             f"Notional: ${result.get('fill_notional', 0):.2f}\n"
-                             f"Positions: {len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}",
+                pos_info = state.get('micro_positions', {}).get(symbol, {})
+                tp_lvl = result.get('fill_price', 0) * (1 + tp_pct / 100)
+                sl_lvl = result.get('fill_price', 0) * (1 - sl_pct / 100)
+                tg_send(tg, f"✅ FILL {symbol}\n"
+                             f"entry {result.get('fill_price', 0):.6f} | "
+                             f"qty {result.get('fill_qty', 0)} | ${result.get('fill_notional', 0):.2f}\n"
+                             f"TP={tp_lvl:.4f}(+{tp_pct}%) SL={sl_lvl:.4f}(-{sl_pct}%)\n"
+                             f"buy={result.get('order_id', '?')[:25]}\n"
+                             f"pos={pos_info.get('position_id', '?')} | "
+                             f"{len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}",
                         level='success')
             elif status == 'MISSED':
                 miss_counter += 1

@@ -690,10 +690,26 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
             'counterfactual': counterfactual,
         }
 
+        # ── Sanity checks ──
+        sanity = []
+        if exit_reason == 'SL' and not (current_bid <= sl_price_level):
+            sanity.append(f"FAIL: trigger_bid({current_bid}) > sl_price({sl_price_level})")
+        if exit_reason == 'TP' and not (current_bid >= tp_price_level):
+            sanity.append(f"FAIL: trigger_bid({current_bid}) < tp_price({tp_price_level})")
+        if exit_reason == 'TIME' and hours_open < max_hold_hours:
+            sanity.append(f"FAIL: hours_open({hours_open:.2f}) < max({max_hold_hours})")
+        if close_record['trigger_basis'] != 'bid':
+            sanity.append(f"FAIL: trigger_basis={close_record['trigger_basis']} != bid")
+        sanity_ok = len(sanity) == 0
+        close_record['sanity_ok'] = sanity_ok
+        close_record['sanity_errors'] = sanity if sanity else None
+
         closes.append(close_record)
         to_remove.append(sym)
 
         # Log detailed
+        sanity_tag = "✅" if sanity_ok else f"❌ {'; '.join(sanity)}"
+        logger.info(f"  [SANITY] {sanity_tag}")
         logger.info(f"  [CLOSE] {sym} {exit_reason}: entry=${entry_price:.8f} → "
                     f"exit=${actual_sell_price:.8f} ({pct_change:+.3f}%)")
         logger.info(f"  [CLOSE] Gross=${gross_pnl:.4f} | "

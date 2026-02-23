@@ -1362,10 +1362,12 @@ def main():
         # ── Micro mode: cap checks before round ──
         if mode == 'micro':
             if not check_micro_caps(state, exchange, logger):
-                # Caps hit — wait and retry
-                tg_send(tg, f"🚨 MICRO CAP HIT\n"
-                             f"Positions: {len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}\n"
-                             f"Entries blocked. Waiting 60s.", level='warning')
+                # Caps hit — only send TG alert once per 30 min to avoid spam
+                caps_hit_count = state.get('micro_caps_hit', 0)
+                if caps_hit_count == 1 or caps_hit_count % 30 == 0:
+                    tg_send(tg, f"🚨 MICRO CAP HIT\n"
+                                 f"Positions: {len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}\n"
+                                 f"Entries blocked. (alert every 30 min)", level='warning')
                 time.sleep(60)
                 continue
 

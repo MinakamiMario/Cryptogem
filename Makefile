@@ -1,4 +1,4 @@
-.PHONY: check schema tests capsule robustness robustness-tests last60d last60d-all last60d-tests compare-universe compare-universe-all compare-universe-tests build-unfiltered-cache build-research-cache compare-caches compare-caches-smoke compare-caches-tests grid_best-check grid_best-robustness hf-check hf-robustness ci-guard
+.PHONY: check schema tests capsule robustness robustness-tests last60d last60d-all last60d-tests compare-universe compare-universe-all compare-universe-tests build-unfiltered-cache build-research-cache compare-caches compare-caches-smoke compare-caches-tests grid_best-check grid_best-robustness hf-check hf-robustness ci-guard superhf-data superhf-sweep superhf-check
 
 # Full validation (schema + tests + data) — run before any PR
 check: schema tests context data-verify
@@ -159,3 +159,22 @@ hf-robustness:
 	@echo "No HF robustness harness yet — placeholder"
 	@echo "Reports will go to: reports/hf/"
 	@echo "✅ HF robustness passed (no harness)"
+
+# ─── SuperHF strategy (MTF 1H+15m) ──────────────────────────
+
+# Download 15m + 1H MEXC candles (top 200 coins)
+superhf-data:
+	@echo "=== SuperHF Data Pipeline ==="
+	python3 scripts/build_superhf_cache.py
+
+# Run SuperHF Sprint 1 sweep (12 configs)
+superhf-sweep:
+	@echo "=== SuperHF Sprint 1 Sweep ==="
+	python3 scripts/run_superhf_sprint1.py
+
+# SuperHF self-tests (indicators + hypotheses)
+superhf-check:
+	@echo "=== SuperHF Self-Tests ==="
+	PYTHONPATH=. python3 strategies/superhf/indicators.py
+	PYTHONPATH=. python3 strategies/superhf/hypotheses.py
+	@echo "✅ SuperHF tests passed"

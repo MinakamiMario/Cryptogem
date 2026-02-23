@@ -1,0 +1,2280 @@
+{
+ "_timestamp": 1771812198,
+ "_date": "2026-02-23 03:03",
+ "_universe": "superhf_mexc_top200",
+ "_coins_tested": 163,
+ "_configs_total": 12,
+ "_configs_pass": 0,
+ "results": [
+  {
+   "config_id": "SHF-A01",
+   "name": "PivotReclaim_pivot_only_35",
+   "family": "pivot_reclaim",
+   "description": "Pivot reclaim, RSI<35, no vol filter",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "rsi_max": 35,
+    "zone_type": "pivot_only",
+    "vol_filter": false
+   },
+   "trades": 1071,
+   "pf": 0.942,
+   "pnl": -1038.17,
+   "wr": 55.7,
+   "dd": 83.0,
+   "final_equity": 961.83,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 361,
+     "pf": 1.13,
+     "pnl": 1282.66,
+     "wr": 59.3
+    },
+    {
+     "fold": 2,
+     "trades": 366,
+     "pf": 0.713,
+     "pnl": -855.57,
+     "wr": 56.0
+    },
+    {
+     "fold": 3,
+     "trades": 341,
+     "pf": 0.689,
+     "pnl": -1018.14,
+     "wr": 50.7
+    }
+   ],
+   "wf_pass": 1,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 1071,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.942,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "1/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 17.0,
+     "top10_pnl_pct": 36.1,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 448,
+     "pnl": -8339.8,
+     "wr": 28.3
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 458,
+     "pnl": 8816.41,
+     "wr": 77.5
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 156,
+     "pnl": 2006.51,
+     "wr": 73.7
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 8,
+     "pnl": -2887.29,
+     "wr": 0.0
+    },
+    "TIME MAX": {
+     "class": "B",
+     "count": 1,
+     "pnl": -634.01,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "OSHI/USD",
+     "trades": 4,
+     "pnl": 1784.23,
+     "profit": 1979.07,
+     "wins": 1,
+     "wr": 25.0
+    },
+    {
+     "coin": "DASH/USD",
+     "trades": 11,
+     "pnl": 476.41,
+     "profit": 523.73,
+     "wins": 8,
+     "wr": 72.7
+    },
+    {
+     "coin": "FHE/USD",
+     "trades": 14,
+     "pnl": 435.01,
+     "profit": 636.36,
+     "wins": 8,
+     "wr": 57.1
+    },
+    {
+     "coin": "RESOLV/USD",
+     "trades": 14,
+     "pnl": 355.93,
+     "profit": 490.78,
+     "wins": 8,
+     "wr": 57.1
+    },
+    {
+     "coin": "TRADOOR/USD",
+     "trades": 16,
+     "pnl": 346.08,
+     "profit": 523.19,
+     "wins": 13,
+     "wr": 81.2
+    },
+    {
+     "coin": "PEPE/USD",
+     "trades": 7,
+     "pnl": 329.8,
+     "profit": 329.8,
+     "wins": 7,
+     "wr": 100.0
+    },
+    {
+     "coin": "MBG/USD",
+     "trades": 10,
+     "pnl": 315.37,
+     "profit": 440.18,
+     "wins": 5,
+     "wr": 50.0
+    },
+    {
+     "coin": "DCR/USD",
+     "trades": 12,
+     "pnl": 297.33,
+     "profit": 374.76,
+     "wins": 11,
+     "wr": 91.7
+    },
+    {
+     "coin": "NAORIS/USD",
+     "trades": 14,
+     "pnl": 262.86,
+     "profit": 353.47,
+     "wins": 10,
+     "wr": 71.4
+    },
+    {
+     "coin": "SNX/USD",
+     "trades": 3,
+     "pnl": 216.35,
+     "profit": 216.35,
+     "wins": 3,
+     "wr": 100.0
+    }
+   ],
+   "elapsed_s": 36.0
+  },
+  {
+   "config_id": "SHF-A06",
+   "name": "PivotReclaim_dc_bb_stack_40",
+   "family": "pivot_reclaim",
+   "description": "Stacked zone reclaim, RSI<40, vol confirm 1.5x",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "rsi_max": 40,
+    "zone_type": "dc_bb_stack",
+    "vol_filter": true,
+    "vol_mult": 1.5
+   },
+   "trades": 974,
+   "pf": 0.882,
+   "pnl": -1183.4,
+   "wr": 58.4,
+   "dd": 78.1,
+   "final_equity": 816.6,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 337,
+     "pf": 0.944,
+     "pnl": -270.5,
+     "wr": 63.5
+    },
+    {
+     "fold": 2,
+     "trades": 307,
+     "pf": 0.935,
+     "pnl": -218.96,
+     "wr": 56.4
+    },
+    {
+     "fold": 3,
+     "trades": 330,
+     "pf": 0.705,
+     "pnl": -920.29,
+     "wr": 55.2
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 974,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.882,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 15.8,
+     "top10_pnl_pct": 28.0,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 374,
+     "pnl": -5881.7,
+     "wr": 31.3
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 478,
+     "pnl": 5216.42,
+     "wr": 76.4
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 114,
+     "pnl": 948.82,
+     "wr": 76.3
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 6,
+     "pnl": -1330.44,
+     "wr": 0.0
+    },
+    "TIME MAX": {
+     "class": "B",
+     "count": 1,
+     "pnl": -126.55,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -9.95,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "TRADOOR/USD",
+     "trades": 13,
+     "pnl": 328.46,
+     "profit": 348.16,
+     "wins": 12,
+     "wr": 92.3
+    },
+    {
+     "coin": "PARTI/USD",
+     "trades": 11,
+     "pnl": 238.73,
+     "profit": 249.93,
+     "wins": 8,
+     "wr": 72.7
+    },
+    {
+     "coin": "DASH/USD",
+     "trades": 12,
+     "pnl": 180.79,
+     "profit": 361.63,
+     "wins": 10,
+     "wr": 83.3
+    },
+    {
+     "coin": "MBG/USD",
+     "trades": 11,
+     "pnl": 159.94,
+     "profit": 230.19,
+     "wins": 8,
+     "wr": 72.7
+    },
+    {
+     "coin": "H/USD",
+     "trades": 6,
+     "pnl": 134.18,
+     "profit": 134.18,
+     "wins": 6,
+     "wr": 100.0
+    },
+    {
+     "coin": "FF/USD",
+     "trades": 9,
+     "pnl": 131.17,
+     "profit": 265.43,
+     "wins": 7,
+     "wr": 77.8
+    },
+    {
+     "coin": "DCR/USD",
+     "trades": 12,
+     "pnl": 127.51,
+     "profit": 170.77,
+     "wins": 8,
+     "wr": 66.7
+    },
+    {
+     "coin": "FHE/USD",
+     "trades": 9,
+     "pnl": 112.98,
+     "profit": 187.58,
+     "wins": 4,
+     "wr": 44.4
+    },
+    {
+     "coin": "SAPIEN/USD",
+     "trades": 6,
+     "pnl": 106.29,
+     "profit": 117.33,
+     "wins": 5,
+     "wr": 83.3
+    },
+    {
+     "coin": "ICP/USD",
+     "trades": 3,
+     "pnl": 105.56,
+     "profit": 105.56,
+     "wins": 3,
+     "wr": 100.0
+    }
+   ],
+   "elapsed_s": 44.0
+  },
+  {
+   "config_id": "SHF-A03",
+   "name": "PivotReclaim_pivot_only_40",
+   "family": "pivot_reclaim",
+   "description": "Pivot reclaim, RSI<40, no vol filter",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "rsi_max": 40,
+    "zone_type": "pivot_only",
+    "vol_filter": false
+   },
+   "trades": 1296,
+   "pf": 0.849,
+   "pnl": -1467.67,
+   "wr": 56.0,
+   "dd": 80.3,
+   "final_equity": 532.33,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 428,
+     "pf": 0.821,
+     "pnl": -930.16,
+     "wr": 57.9
+    },
+    {
+     "fold": 2,
+     "trades": 442,
+     "pf": 1.02,
+     "pnl": 81.75,
+     "wr": 58.4
+    },
+    {
+     "fold": 3,
+     "trades": 424,
+     "pf": 0.727,
+     "pnl": -1081.83,
+     "wr": 50.9
+    }
+   ],
+   "wf_pass": 1,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 1296,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.849,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "1/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 16.3,
+     "top10_pnl_pct": 30.1,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 495,
+     "pnl": -5107.16,
+     "wr": 28.5
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 193,
+     "pnl": 860.64,
+     "wr": 66.3
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 599,
+     "pnl": 4477.51,
+     "wr": 76.3
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 7,
+     "pnl": -1430.73,
+     "wr": 0.0
+    },
+    "TIME MAX": {
+     "class": "B",
+     "count": 1,
+     "pnl": -266.86,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -1.07,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "SAPIEN/USD",
+     "trades": 13,
+     "pnl": 376.45,
+     "profit": 451.04,
+     "wins": 9,
+     "wr": 69.2
+    },
+    {
+     "coin": "MBG/USD",
+     "trades": 19,
+     "pnl": 243.09,
+     "profit": 319.67,
+     "wins": 11,
+     "wr": 57.9
+    },
+    {
+     "coin": "RESOLV/USD",
+     "trades": 15,
+     "pnl": 208.89,
+     "profit": 295.08,
+     "wins": 10,
+     "wr": 66.7
+    },
+    {
+     "coin": "ZRO/USD",
+     "trades": 9,
+     "pnl": 128.25,
+     "profit": 138.81,
+     "wins": 7,
+     "wr": 77.8
+    },
+    {
+     "coin": "SNX/USD",
+     "trades": 6,
+     "pnl": 124.2,
+     "profit": 126.38,
+     "wins": 5,
+     "wr": 83.3
+    },
+    {
+     "coin": "DASH/USD",
+     "trades": 12,
+     "pnl": 118.49,
+     "profit": 284.84,
+     "wins": 7,
+     "wr": 58.3
+    },
+    {
+     "coin": "BOBA/USD",
+     "trades": 9,
+     "pnl": 115.62,
+     "profit": 123.33,
+     "wins": 6,
+     "wr": 66.7
+    },
+    {
+     "coin": "XLM/USD",
+     "trades": 8,
+     "pnl": 80.18,
+     "profit": 86.63,
+     "wins": 4,
+     "wr": 50.0
+    },
+    {
+     "coin": "COCA/USD",
+     "trades": 23,
+     "pnl": 77.17,
+     "profit": 147.89,
+     "wins": 15,
+     "wr": 65.2
+    },
+    {
+     "coin": "ZIL/USD",
+     "trades": 3,
+     "pnl": 74.73,
+     "profit": 74.73,
+     "wins": 3,
+     "wr": 100.0
+    }
+   ],
+   "elapsed_s": 36.5
+  },
+  {
+   "config_id": "SHF-A02",
+   "name": "PivotReclaim_dc_bb_stack_35",
+   "family": "pivot_reclaim",
+   "description": "Stacked zone reclaim, RSI<35, no vol filter",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "rsi_max": 35,
+    "zone_type": "dc_bb_stack",
+    "vol_filter": false
+   },
+   "trades": 1102,
+   "pf": 0.81,
+   "pnl": -1876.9,
+   "wr": 54.9,
+   "dd": 96.2,
+   "final_equity": 123.1,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 386,
+     "pf": 0.956,
+     "pnl": -258.32,
+     "wr": 59.1
+    },
+    {
+     "fold": 2,
+     "trades": 370,
+     "pf": 0.682,
+     "pnl": -953.93,
+     "wr": 53.5
+    },
+    {
+     "fold": 3,
+     "trades": 344,
+     "pf": 0.439,
+     "pnl": -1729.73,
+     "wr": 52.0
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 1102,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.81,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 18.4,
+     "top10_pnl_pct": 29.1,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "BB TARGET": {
+     "class": "A",
+     "count": 199,
+     "pnl": 1807.81,
+     "wr": 80.9
+    },
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 462,
+     "pnl": -5439.22,
+     "wr": 27.9
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 425,
+     "pnl": 3860.6,
+     "wr": 74.1
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 14,
+     "pnl": -2053.84,
+     "wr": 0.0
+    },
+    "TIME MAX": {
+     "class": "B",
+     "count": 1,
+     "pnl": -51.1,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -1.14,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "DASH/USD",
+     "trades": 12,
+     "pnl": 236.7,
+     "profit": 352.06,
+     "wins": 8,
+     "wr": 66.7
+    },
+    {
+     "coin": "MBG/USD",
+     "trades": 12,
+     "pnl": 221.4,
+     "profit": 239.92,
+     "wins": 9,
+     "wr": 75.0
+    },
+    {
+     "coin": "NAORIS/USD",
+     "trades": 8,
+     "pnl": 220.9,
+     "profit": 237.05,
+     "wins": 6,
+     "wr": 75.0
+    },
+    {
+     "coin": "RDAC/USD",
+     "trades": 22,
+     "pnl": 195.73,
+     "profit": 333.96,
+     "wins": 12,
+     "wr": 54.5
+    },
+    {
+     "coin": "XP/USD",
+     "trades": 22,
+     "pnl": 148.77,
+     "profit": 203.71,
+     "wins": 12,
+     "wr": 54.5
+    },
+    {
+     "coin": "XMN/USD",
+     "trades": 16,
+     "pnl": 126.76,
+     "profit": 218.31,
+     "wins": 10,
+     "wr": 62.5
+    },
+    {
+     "coin": "XMR/USD",
+     "trades": 12,
+     "pnl": 120.29,
+     "profit": 139.35,
+     "wins": 9,
+     "wr": 75.0
+    },
+    {
+     "coin": "RESOLV/USD",
+     "trades": 8,
+     "pnl": 111.6,
+     "profit": 113.65,
+     "wins": 7,
+     "wr": 87.5
+    },
+    {
+     "coin": "SNX/USD",
+     "trades": 3,
+     "pnl": 107.28,
+     "profit": 107.28,
+     "wins": 3,
+     "wr": 100.0
+    },
+    {
+     "coin": "KDX/USD",
+     "trades": 22,
+     "pnl": 105.76,
+     "profit": 114.17,
+     "wins": 19,
+     "wr": 86.4
+    }
+   ],
+   "elapsed_s": 44.2
+  },
+  {
+   "config_id": "SHF-A04",
+   "name": "PivotReclaim_dc_bb_stack_40",
+   "family": "pivot_reclaim",
+   "description": "Stacked zone reclaim, RSI<40, no vol filter",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "rsi_max": 40,
+    "zone_type": "dc_bb_stack",
+    "vol_filter": false
+   },
+   "trades": 1231,
+   "pf": 0.805,
+   "pnl": -1791.8,
+   "wr": 55.6,
+   "dd": 91.6,
+   "final_equity": 208.2,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 433,
+     "pf": 0.862,
+     "pnl": -770.99,
+     "wr": 57.3
+    },
+    {
+     "fold": 2,
+     "trades": 422,
+     "pf": 0.811,
+     "pnl": -600.73,
+     "wr": 55.2
+    },
+    {
+     "fold": 3,
+     "trades": 372,
+     "pf": 0.585,
+     "pnl": -1528.81,
+     "wr": 53.5
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 1231,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.805,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 18.4,
+     "top10_pnl_pct": 27.3,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "BB TARGET": {
+     "class": "A",
+     "count": 218,
+     "pnl": 1475.52,
+     "wr": 81.7
+    },
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 503,
+     "pnl": -5210.04,
+     "wr": 27.2
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 497,
+     "pnl": 3894.01,
+     "wr": 74.2
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 11,
+     "pnl": -1880.0,
+     "wr": 0.0
+    },
+    "TIME MAX": {
+     "class": "B",
+     "count": 1,
+     "pnl": -61.0,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -10.29,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "MBG/USD",
+     "trades": 13,
+     "pnl": 241.56,
+     "profit": 249.92,
+     "wins": 11,
+     "wr": 84.6
+    },
+    {
+     "coin": "NAORIS/USD",
+     "trades": 9,
+     "pnl": 175.37,
+     "profit": 189.0,
+     "wins": 6,
+     "wr": 66.7
+    },
+    {
+     "coin": "RDAC/USD",
+     "trades": 21,
+     "pnl": 138.86,
+     "profit": 310.98,
+     "wins": 9,
+     "wr": 42.9
+    },
+    {
+     "coin": "FHE/USD",
+     "trades": 9,
+     "pnl": 104.72,
+     "profit": 151.96,
+     "wins": 5,
+     "wr": 55.6
+    },
+    {
+     "coin": "XMN/USD",
+     "trades": 18,
+     "pnl": 100.93,
+     "profit": 214.18,
+     "wins": 11,
+     "wr": 61.1
+    },
+    {
+     "coin": "PRO/USD",
+     "trades": 31,
+     "pnl": 94.48,
+     "profit": 188.47,
+     "wins": 20,
+     "wr": 64.5
+    },
+    {
+     "coin": "RESOLV/USD",
+     "trades": 9,
+     "pnl": 89.5,
+     "profit": 89.5,
+     "wins": 9,
+     "wr": 100.0
+    },
+    {
+     "coin": "SUI/USD",
+     "trades": 8,
+     "pnl": 88.43,
+     "profit": 94.76,
+     "wins": 6,
+     "wr": 75.0
+    },
+    {
+     "coin": "ZBCN/USD",
+     "trades": 13,
+     "pnl": 83.72,
+     "profit": 101.74,
+     "wins": 8,
+     "wr": 61.5
+    },
+    {
+     "coin": "XMR/USD",
+     "trades": 12,
+     "pnl": 78.73,
+     "profit": 116.56,
+     "wins": 9,
+     "wr": 75.0
+    }
+   ],
+   "elapsed_s": 43.6
+  },
+  {
+   "config_id": "SHF-A05",
+   "name": "PivotReclaim_pivot_only_35",
+   "family": "pivot_reclaim",
+   "description": "Pivot reclaim, RSI<35, vol confirm 1.5x",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "rsi_max": 35,
+    "zone_type": "pivot_only",
+    "vol_filter": true,
+    "vol_mult": 1.5
+   },
+   "trades": 753,
+   "pf": 0.792,
+   "pnl": -1515.98,
+   "wr": 54.2,
+   "dd": 82.0,
+   "final_equity": 484.02,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 248,
+     "pf": 0.978,
+     "pnl": -76.04,
+     "wr": 57.3
+    },
+    {
+     "fold": 2,
+     "trades": 253,
+     "pf": 0.614,
+     "pnl": -1034.71,
+     "wr": 54.5
+    },
+    {
+     "fold": 3,
+     "trades": 250,
+     "pf": 0.632,
+     "pnl": -971.38,
+     "wr": 50.8
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 753,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.792,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 18.2,
+     "top10_pnl_pct": 32.4,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 322,
+     "pnl": -3775.52,
+     "wr": 28.0
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 360,
+     "pnl": 3353.88,
+     "wr": 77.2
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 62,
+     "pnl": 181.62,
+     "wr": 64.5
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 8,
+     "pnl": -1251.22,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -24.73,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "TRADOOR/USD",
+     "trades": 16,
+     "pnl": 264.81,
+     "profit": 387.36,
+     "wins": 14,
+     "wr": 87.5
+    },
+    {
+     "coin": "MBG/USD",
+     "trades": 5,
+     "pnl": 203.62,
+     "profit": 237.43,
+     "wins": 4,
+     "wr": 80.0
+    },
+    {
+     "coin": "0G/USD",
+     "trades": 3,
+     "pnl": 139.09,
+     "profit": 139.09,
+     "wins": 3,
+     "wr": 100.0
+    },
+    {
+     "coin": "NXPC/USD",
+     "trades": 6,
+     "pnl": 125.34,
+     "profit": 125.34,
+     "wins": 6,
+     "wr": 100.0
+    },
+    {
+     "coin": "MYX/USD",
+     "trades": 8,
+     "pnl": 114.85,
+     "profit": 175.56,
+     "wins": 5,
+     "wr": 62.5
+    },
+    {
+     "coin": "FHE/USD",
+     "trades": 7,
+     "pnl": 112.97,
+     "profit": 147.75,
+     "wins": 4,
+     "wr": 57.1
+    },
+    {
+     "coin": "PARTI/USD",
+     "trades": 5,
+     "pnl": 108.36,
+     "profit": 115.31,
+     "wins": 3,
+     "wr": 60.0
+    },
+    {
+     "coin": "DUSK/USD",
+     "trades": 7,
+     "pnl": 84.48,
+     "profit": 84.48,
+     "wins": 7,
+     "wr": 100.0
+    },
+    {
+     "coin": "INIT/USD",
+     "trades": 8,
+     "pnl": 81.71,
+     "profit": 114.22,
+     "wins": 5,
+     "wr": 62.5
+    },
+    {
+     "coin": "NAORIS/USD",
+     "trades": 5,
+     "pnl": 76.0,
+     "profit": 80.85,
+     "wins": 4,
+     "wr": 80.0
+    }
+   ],
+   "elapsed_s": 36.5
+  },
+  {
+   "config_id": "SHF-B01",
+   "name": "SweepReclaim_v2.0_35",
+   "family": "sweep_reclaim",
+   "description": "Sweep+reclaim, vol 2x, RSI<35",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "vol_mult": 2.0,
+    "rsi_max": 35,
+    "follow_through": false,
+    "zone_type": "pivot_only"
+   },
+   "trades": 591,
+   "pf": 0.737,
+   "pnl": -1569.49,
+   "wr": 53.6,
+   "dd": 82.8,
+   "final_equity": 430.51,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 195,
+     "pf": 0.915,
+     "pnl": -255.28,
+     "wr": 58.5
+    },
+    {
+     "fold": 2,
+     "trades": 197,
+     "pf": 0.553,
+     "pnl": -1085.05,
+     "wr": 54.3
+    },
+    {
+     "fold": 3,
+     "trades": 198,
+     "pf": 0.564,
+     "pnl": -926.08,
+     "wr": 48.0
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 591,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.737,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 18.1,
+     "top10_pnl_pct": 31.6,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 256,
+     "pnl": -3209.68,
+     "wr": 25.8
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 285,
+     "pnl": 2694.1,
+     "wr": 78.2
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 41,
+     "pnl": 308.9,
+     "wr": 68.3
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 8,
+     "pnl": -1340.81,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -22.0,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "OVPP/USD",
+     "trades": 5,
+     "pnl": 149.09,
+     "profit": 149.87,
+     "wins": 4,
+     "wr": 80.0
+    },
+    {
+     "coin": "DCR/USD",
+     "trades": 5,
+     "pnl": 130.79,
+     "profit": 130.79,
+     "wins": 5,
+     "wr": 100.0
+    },
+    {
+     "coin": "MYX/USD",
+     "trades": 6,
+     "pnl": 124.84,
+     "profit": 149.75,
+     "wins": 3,
+     "wr": 50.0
+    },
+    {
+     "coin": "NXPC/USD",
+     "trades": 5,
+     "pnl": 121.54,
+     "profit": 121.54,
+     "wins": 5,
+     "wr": 100.0
+    },
+    {
+     "coin": "0G/USD",
+     "trades": 3,
+     "pnl": 121.14,
+     "profit": 141.63,
+     "wins": 2,
+     "wr": 66.7
+    },
+    {
+     "coin": "MEY/USD",
+     "trades": 10,
+     "pnl": 97.47,
+     "profit": 111.43,
+     "wins": 5,
+     "wr": 50.0
+    },
+    {
+     "coin": "TRADOOR/USD",
+     "trades": 12,
+     "pnl": 95.89,
+     "profit": 210.99,
+     "wins": 10,
+     "wr": 83.3
+    },
+    {
+     "coin": "RESOLV/USD",
+     "trades": 6,
+     "pnl": 88.0,
+     "profit": 90.58,
+     "wins": 4,
+     "wr": 66.7
+    },
+    {
+     "coin": "XMN/USD",
+     "trades": 5,
+     "pnl": 77.84,
+     "profit": 92.44,
+     "wins": 3,
+     "wr": 60.0
+    },
+    {
+     "coin": "INJ/USD",
+     "trades": 4,
+     "pnl": 76.89,
+     "profit": 78.27,
+     "wins": 3,
+     "wr": 75.0
+    }
+   ],
+   "elapsed_s": 36.6
+  },
+  {
+   "config_id": "SHF-B02",
+   "name": "SweepReclaim_v2.0_40",
+   "family": "sweep_reclaim",
+   "description": "Sweep+reclaim, vol 2x, RSI<40",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "vol_mult": 2.0,
+    "rsi_max": 40,
+    "follow_through": false,
+    "zone_type": "pivot_only"
+   },
+   "trades": 778,
+   "pf": 0.654,
+   "pnl": -1794.31,
+   "wr": 54.4,
+   "dd": 90.2,
+   "final_equity": 205.69,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 263,
+     "pf": 0.668,
+     "pnl": -1141.69,
+     "wr": 57.0
+    },
+    {
+     "fold": 2,
+     "trades": 252,
+     "pf": 0.626,
+     "pnl": -987.64,
+     "wr": 52.8
+    },
+    {
+     "fold": 3,
+     "trades": 260,
+     "pf": 0.606,
+     "pnl": -1065.84,
+     "wr": 52.7
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 778,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.654,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 16.2,
+     "top10_pnl_pct": 30.1,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 285,
+     "pnl": -2647.7,
+     "wr": 25.6
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 411,
+     "pnl": 2027.53,
+     "wr": 75.4
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 69,
+     "pnl": 250.15,
+     "wr": 58.0
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 11,
+     "pnl": -1376.33,
+     "wr": 0.0
+    },
+    "TIME MAX": {
+     "class": "B",
+     "count": 1,
+     "pnl": -37.46,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -10.51,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "XMN/USD",
+     "trades": 8,
+     "pnl": 128.1,
+     "profit": 135.59,
+     "wins": 5,
+     "wr": 62.5
+    },
+    {
+     "coin": "TRADOOR/USD",
+     "trades": 14,
+     "pnl": 112.39,
+     "profit": 128.76,
+     "wins": 11,
+     "wr": 78.6
+    },
+    {
+     "coin": "0G/USD",
+     "trades": 4,
+     "pnl": 109.79,
+     "profit": 122.44,
+     "wins": 3,
+     "wr": 75.0
+    },
+    {
+     "coin": "MANTA/USD",
+     "trades": 4,
+     "pnl": 70.55,
+     "profit": 70.73,
+     "wins": 3,
+     "wr": 75.0
+    },
+    {
+     "coin": "DCR/USD",
+     "trades": 7,
+     "pnl": 62.96,
+     "profit": 77.1,
+     "wins": 5,
+     "wr": 71.4
+    },
+    {
+     "coin": "PENGU/USD",
+     "trades": 4,
+     "pnl": 59.26,
+     "profit": 59.26,
+     "wins": 4,
+     "wr": 100.0
+    },
+    {
+     "coin": "PIPPIN/USD",
+     "trades": 6,
+     "pnl": 56.51,
+     "profit": 77.36,
+     "wins": 5,
+     "wr": 83.3
+    },
+    {
+     "coin": "STEEM/USD",
+     "trades": 3,
+     "pnl": 56.43,
+     "profit": 57.01,
+     "wins": 2,
+     "wr": 66.7
+    },
+    {
+     "coin": "XLM/USD",
+     "trades": 5,
+     "pnl": 53.39,
+     "profit": 55.53,
+     "wins": 4,
+     "wr": 80.0
+    },
+    {
+     "coin": "INJ/USD",
+     "trades": 4,
+     "pnl": 52.6,
+     "profit": 53.51,
+     "wins": 2,
+     "wr": 50.0
+    }
+   ],
+   "elapsed_s": 36.6
+  },
+  {
+   "config_id": "SHF-B03",
+   "name": "SweepReclaim_v3.0_35",
+   "family": "sweep_reclaim",
+   "description": "Sweep+reclaim, vol 3x, RSI<35",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "vol_mult": 3.0,
+    "rsi_max": 35,
+    "follow_through": false,
+    "zone_type": "pivot_only"
+   },
+   "trades": 398,
+   "pf": 0.636,
+   "pnl": -1338.68,
+   "wr": 55.0,
+   "dd": 71.3,
+   "final_equity": 661.32,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 128,
+     "pf": 0.563,
+     "pnl": -868.76,
+     "wr": 58.6
+    },
+    {
+     "fold": 2,
+     "trades": 132,
+     "pf": 0.915,
+     "pnl": -129.46,
+     "wr": 56.1
+    },
+    {
+     "fold": 3,
+     "trades": 138,
+     "pf": 0.519,
+     "pnl": -749.88,
+     "wr": 50.7
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 398,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.636,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 17.8,
+     "top10_pnl_pct": 36.6,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "DC TARGET": {
+     "class": "A",
+     "count": 205,
+     "pnl": 1441.87,
+     "wr": 75.1
+    },
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 170,
+     "pnl": -2049.13,
+     "wr": 30.6
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 19,
+     "pnl": 62.68,
+     "wr": 68.4
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 4,
+     "pnl": -794.1,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "NAORIS/USD",
+     "trades": 4,
+     "pnl": 113.68,
+     "profit": 128.63,
+     "wins": 3,
+     "wr": 75.0
+    },
+    {
+     "coin": "MYX/USD",
+     "trades": 6,
+     "pnl": 92.56,
+     "profit": 107.79,
+     "wins": 5,
+     "wr": 83.3
+    },
+    {
+     "coin": "TRADOOR/USD",
+     "trades": 7,
+     "pnl": 92.12,
+     "profit": 96.7,
+     "wins": 6,
+     "wr": 85.7
+    },
+    {
+     "coin": "NXPC/USD",
+     "trades": 3,
+     "pnl": 91.88,
+     "profit": 91.88,
+     "wins": 3,
+     "wr": 100.0
+    },
+    {
+     "coin": "ZEN/USD",
+     "trades": 2,
+     "pnl": 78.73,
+     "profit": 78.73,
+     "wins": 2,
+     "wr": 100.0
+    },
+    {
+     "coin": "OVPP/USD",
+     "trades": 2,
+     "pnl": 76.46,
+     "profit": 76.46,
+     "wins": 2,
+     "wr": 100.0
+    },
+    {
+     "coin": "MEY/USD",
+     "trades": 7,
+     "pnl": 65.71,
+     "profit": 73.76,
+     "wins": 5,
+     "wr": 71.4
+    },
+    {
+     "coin": "RESOLV/USD",
+     "trades": 2,
+     "pnl": 48.72,
+     "profit": 48.72,
+     "wins": 2,
+     "wr": 100.0
+    },
+    {
+     "coin": "CAKE/USD",
+     "trades": 6,
+     "pnl": 45.68,
+     "profit": 56.04,
+     "wins": 5,
+     "wr": 83.3
+    },
+    {
+     "coin": "DCR/USD",
+     "trades": 4,
+     "pnl": 44.65,
+     "profit": 45.6,
+     "wins": 3,
+     "wr": 75.0
+    }
+   ],
+   "elapsed_s": 36.7
+  },
+  {
+   "config_id": "SHF-B05",
+   "name": "SweepReclaim_v2.0_35",
+   "family": "sweep_reclaim",
+   "description": "Sweep+reclaim, vol 2x, RSI<35, follow-through",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "vol_mult": 2.0,
+    "rsi_max": 35,
+    "follow_through": true,
+    "zone_type": "pivot_only"
+   },
+   "trades": 339,
+   "pf": 0.627,
+   "pnl": -1247.21,
+   "wr": 51.0,
+   "dd": 63.6,
+   "final_equity": 752.79,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 115,
+     "pf": 0.796,
+     "pnl": -275.2,
+     "wr": 53.9
+    },
+    {
+     "fold": 2,
+     "trades": 112,
+     "pf": 0.593,
+     "pnl": -469.76,
+     "wr": 57.1
+    },
+    {
+     "fold": 3,
+     "trades": 112,
+     "pf": 0.429,
+     "pnl": -860.14,
+     "wr": 42.0
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 339,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.627,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 16.8,
+     "top10_pnl_pct": 34.3,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "DC TARGET": {
+     "class": "A",
+     "count": 152,
+     "pnl": 1272.83,
+     "wr": 76.3
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 36,
+     "pnl": 7.74,
+     "wr": 63.9
+    },
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 147,
+     "pnl": -1911.62,
+     "wr": 23.1
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 3,
+     "pnl": -577.7,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -38.47,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "MBG/USD",
+     "trades": 1,
+     "pnl": 60.56,
+     "profit": 60.56,
+     "wins": 1,
+     "wr": 100.0
+    },
+    {
+     "coin": "MYX/USD",
+     "trades": 5,
+     "pnl": 56.35,
+     "profit": 89.27,
+     "wins": 2,
+     "wr": 40.0
+    },
+    {
+     "coin": "ZEN/USD",
+     "trades": 1,
+     "pnl": 54.41,
+     "profit": 54.41,
+     "wins": 1,
+     "wr": 100.0
+    },
+    {
+     "coin": "DCR/USD",
+     "trades": 3,
+     "pnl": 50.08,
+     "profit": 50.08,
+     "wins": 3,
+     "wr": 100.0
+    },
+    {
+     "coin": "AGLD/USD",
+     "trades": 4,
+     "pnl": 48.48,
+     "profit": 48.87,
+     "wins": 3,
+     "wr": 75.0
+    },
+    {
+     "coin": "NXPC/USD",
+     "trades": 3,
+     "pnl": 42.28,
+     "profit": 42.28,
+     "wins": 3,
+     "wr": 100.0
+    },
+    {
+     "coin": "XMN/USD",
+     "trades": 2,
+     "pnl": 42.23,
+     "profit": 45.58,
+     "wins": 1,
+     "wr": 50.0
+    },
+    {
+     "coin": "SAPIEN/USD",
+     "trades": 2,
+     "pnl": 41.07,
+     "profit": 41.07,
+     "wins": 2,
+     "wr": 100.0
+    },
+    {
+     "coin": "INJ/USD",
+     "trades": 1,
+     "pnl": 36.74,
+     "profit": 36.74,
+     "wins": 1,
+     "wr": 100.0
+    },
+    {
+     "coin": "SOMI/USD",
+     "trades": 2,
+     "pnl": 35.31,
+     "profit": 35.31,
+     "wins": 2,
+     "wr": 100.0
+    }
+   ],
+   "elapsed_s": 36.7
+  },
+  {
+   "config_id": "SHF-B04",
+   "name": "SweepReclaim_v3.0_40",
+   "family": "sweep_reclaim",
+   "description": "Sweep+reclaim, vol 3x, RSI<40",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "vol_mult": 3.0,
+    "rsi_max": 40,
+    "follow_through": false,
+    "zone_type": "pivot_only"
+   },
+   "trades": 558,
+   "pf": 0.561,
+   "pnl": -1633.36,
+   "wr": 55.6,
+   "dd": 82.3,
+   "final_equity": 366.64,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 185,
+     "pf": 0.446,
+     "pnl": -1316.31,
+     "wr": 57.3
+    },
+    {
+     "fold": 2,
+     "trades": 182,
+     "pf": 1.087,
+     "pnl": 147.34,
+     "wr": 58.2
+    },
+    {
+     "fold": 3,
+     "trades": 189,
+     "pf": 0.504,
+     "pnl": -1011.98,
+     "wr": 50.8
+    }
+   ],
+   "wf_pass": 1,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 558,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.561,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "1/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 16.7,
+     "top10_pnl_pct": 29.4,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 199,
+     "pnl": -2102.99,
+     "wr": 26.6
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 315,
+     "pnl": 1337.66,
+     "wr": 73.7
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 37,
+     "pnl": 134.07,
+     "wr": 67.6
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 7,
+     "pnl": -1002.09,
+     "wr": 0.0
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "NAORIS/USD",
+     "trades": 6,
+     "pnl": 94.44,
+     "profit": 104.54,
+     "wins": 5,
+     "wr": 83.3
+    },
+    {
+     "coin": "TRADOOR/USD",
+     "trades": 9,
+     "pnl": 67.57,
+     "profit": 81.78,
+     "wins": 6,
+     "wr": 66.7
+    },
+    {
+     "coin": "ZEN/USD",
+     "trades": 3,
+     "pnl": 56.49,
+     "profit": 57.63,
+     "wins": 2,
+     "wr": 66.7
+    },
+    {
+     "coin": "BULLA/USD",
+     "trades": 6,
+     "pnl": 47.31,
+     "profit": 47.49,
+     "wins": 5,
+     "wr": 83.3
+    },
+    {
+     "coin": "OM/USD",
+     "trades": 6,
+     "pnl": 44.95,
+     "profit": 44.96,
+     "wins": 5,
+     "wr": 83.3
+    },
+    {
+     "coin": "RESOLV/USD",
+     "trades": 1,
+     "pnl": 35.29,
+     "profit": 35.29,
+     "wins": 1,
+     "wr": 100.0
+    },
+    {
+     "coin": "PIPPIN/USD",
+     "trades": 6,
+     "pnl": 34.11,
+     "profit": 44.04,
+     "wins": 4,
+     "wr": 66.7
+    },
+    {
+     "coin": "STEEM/USD",
+     "trades": 2,
+     "pnl": 31.98,
+     "profit": 35.33,
+     "wins": 1,
+     "wr": 50.0
+    },
+    {
+     "coin": "ASTER/USD",
+     "trades": 3,
+     "pnl": 26.3,
+     "profit": 26.3,
+     "wins": 3,
+     "wr": 100.0
+    },
+    {
+     "coin": "ALTLAYER/USD",
+     "trades": 4,
+     "pnl": 26.07,
+     "profit": 31.38,
+     "wins": 3,
+     "wr": 75.0
+    }
+   ],
+   "elapsed_s": 36.7
+  },
+  {
+   "config_id": "SHF-B06",
+   "name": "SweepReclaim_v3.0_40",
+   "family": "sweep_reclaim",
+   "description": "Sweep+reclaim, vol 3x, RSI<40, follow-through",
+   "params": {
+    "max_stop_pct": 15.0,
+    "time_max_bars": 60,
+    "rsi_recovery": true,
+    "rsi_rec_target": 45.0,
+    "rsi_rec_min_bars": 8,
+    "spread_cap_bps": 40,
+    "pivot_lookback": 40,
+    "vol_mult": 3.0,
+    "rsi_max": 40,
+    "follow_through": true,
+    "zone_type": "pivot_only"
+   },
+   "trades": 293,
+   "pf": 0.428,
+   "pnl": -1253.58,
+   "wr": 49.5,
+   "dd": 63.1,
+   "final_equity": 746.42,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 103,
+     "pf": 0.337,
+     "pnl": -884.8,
+     "wr": 53.4
+    },
+    {
+     "fold": 2,
+     "trades": 101,
+     "pf": 0.62,
+     "pnl": -285.65,
+     "wr": 48.5
+    },
+    {
+     "fold": 3,
+     "trades": 88,
+     "pf": 0.515,
+     "pnl": -442.02,
+     "wr": 45.5
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 293,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.428,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 18.1,
+     "top10_pnl_pct": 32.6,
+     "threshold": "trades\u226450% AND pnl\u226470%"
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "DC TARGET": {
+     "class": "A",
+     "count": 163,
+     "pnl": 506.22,
+     "wr": 66.9
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 26,
+     "pnl": -50.27,
+     "wr": 61.5
+    },
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 104,
+     "pnl": -1709.53,
+     "wr": 19.2
+    }
+   },
+   "top10_coins": [
+    {
+     "coin": "CYBER/USD",
+     "trades": 3,
+     "pnl": 39.31,
+     "profit": 39.31,
+     "wins": 3,
+     "wr": 100.0
+    },
+    {
+     "coin": "ZEN/USD",
+     "trades": 1,
+     "pnl": 38.95,
+     "profit": 38.95,
+     "wins": 1,
+     "wr": 100.0
+    },
+    {
+     "coin": "ALEO/USD",
+     "trades": 1,
+     "pnl": 31.6,
+     "profit": 31.6,
+     "wins": 1,
+     "wr": 100.0
+    },
+    {
+     "coin": "NXPC/USD",
+     "trades": 4,
+     "pnl": 30.64,
+     "profit": 31.36,
+     "wins": 3,
+     "wr": 75.0
+    },
+    {
+     "coin": "PROMPT/USD",
+     "trades": 2,
+     "pnl": 28.11,
+     "profit": 28.11,
+     "wins": 2,
+     "wr": 100.0
+    },
+    {
+     "coin": "ARPA/USD",
+     "trades": 3,
+     "pnl": 25.95,
+     "profit": 26.63,
+     "wins": 2,
+     "wr": 66.7
+    },
+    {
+     "coin": "PENDLE/USD",
+     "trades": 2,
+     "pnl": 21.29,
+     "profit": 21.29,
+     "wins": 2,
+     "wr": 100.0
+    },
+    {
+     "coin": "ACH/USD",
+     "trades": 3,
+     "pnl": 20.47,
+     "profit": 20.47,
+     "wins": 3,
+     "wr": 100.0
+    },
+    {
+     "coin": "RIVER/USD",
+     "trades": 3,
+     "pnl": 20.34,
+     "profit": 29.67,
+     "wins": 1,
+     "wr": 33.3
+    },
+    {
+     "coin": "ASTER/USD",
+     "trades": 3,
+     "pnl": 19.34,
+     "profit": 22.68,
+     "wins": 2,
+     "wr": 66.7
+    }
+   ],
+   "elapsed_s": 37.4
+  }
+ ]
+}

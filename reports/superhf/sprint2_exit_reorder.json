@@ -1,0 +1,333 @@
+{
+ "_timestamp": 1771819610,
+ "_date": "2026-02-23 05:06",
+ "_sprint": "Sprint 2: Exit Priority Reorder",
+ "_change": "STOP/TM \u2192 DC TARGET \u2192 BB TARGET \u2192 RSI RECOVERY (was: STOP/TM \u2192 RSI \u2192 DC \u2192 BB)",
+ "_universe": "superhf_mexc_top200",
+ "_coins_tested": 163,
+ "_configs_tested": 3,
+ "_total_elapsed_s": 131.1,
+ "results": [
+  {
+   "config_id": "SHF-A01",
+   "family": "pivot_reclaim",
+   "description": "Pivot reclaim, RSI<35, no vol filter",
+   "trades": 1071,
+   "pf": 0.942,
+   "pnl": -1038.17,
+   "wr": 55.7,
+   "dd": 83.0,
+   "final_equity": 961.83,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 361,
+     "pf": 1.13,
+     "pnl": 1282.66,
+     "wr": 59.3
+    },
+    {
+     "fold": 2,
+     "trades": 366,
+     "pf": 0.713,
+     "pnl": -855.57,
+     "wr": 56.0
+    },
+    {
+     "fold": 3,
+     "trades": 341,
+     "pf": 0.689,
+     "pnl": -1018.14,
+     "wr": 50.7
+    }
+   ],
+   "wf_pass": 1,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 1071,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.942,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "1/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 17.0,
+     "top10_pnl_pct": 36.1
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "BB TARGET": {
+     "class": "A",
+     "count": 225,
+     "pnl": 1892.44,
+     "wr": 64.9
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 585,
+     "pnl": 8082.73,
+     "wr": 69.4
+    },
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 252,
+     "pnl": -7492.03,
+     "wr": 17.9
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 8,
+     "pnl": -2887.29,
+     "wr": 0.0
+    },
+    "TIME MAX": {
+     "class": "B",
+     "count": 1,
+     "pnl": -634.01,
+     "wr": 0.0
+    }
+   },
+   "elapsed_s": 43.8,
+   "baseline": {
+    "pf": 0.942,
+    "trades": 1071,
+    "pnl": -1038,
+    "wr": 55.7,
+    "dd": 83.0,
+    "wf": "1/3"
+   },
+   "delta_pf": 0.0,
+   "delta_pnl": -0.0,
+   "delta_dd": -0.0
+  },
+  {
+   "config_id": "SHF-A03",
+   "family": "pivot_reclaim",
+   "description": "Pivot reclaim, RSI<40, no vol filter",
+   "trades": 1296,
+   "pf": 0.849,
+   "pnl": -1467.67,
+   "wr": 56.0,
+   "dd": 80.3,
+   "final_equity": 532.33,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 428,
+     "pf": 0.821,
+     "pnl": -930.16,
+     "wr": 57.9
+    },
+    {
+     "fold": 2,
+     "trades": 442,
+     "pf": 1.02,
+     "pnl": 81.75,
+     "wr": 58.4
+    },
+    {
+     "fold": 3,
+     "trades": 424,
+     "pf": 0.727,
+     "pnl": -1081.83,
+     "wr": 50.9
+    }
+   ],
+   "wf_pass": 1,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 1296,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.849,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "1/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 16.3,
+     "top10_pnl_pct": 30.1
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 271,
+     "pnl": -4091.8,
+     "wr": 15.5
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 741,
+     "pnl": 4016.69,
+     "wr": 70.2
+    },
+    "BB TARGET": {
+     "class": "A",
+     "count": 275,
+     "pnl": 306.1,
+     "wr": 59.6
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 7,
+     "pnl": -1430.73,
+     "wr": 0.0
+    },
+    "TIME MAX": {
+     "class": "B",
+     "count": 1,
+     "pnl": -266.86,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -1.07,
+     "wr": 0.0
+    }
+   },
+   "elapsed_s": 40.0,
+   "baseline": {
+    "pf": 0.849,
+    "trades": 1296,
+    "pnl": -1468,
+    "wr": 56.0,
+    "dd": 80.3,
+    "wf": "1/3"
+   },
+   "delta_pf": -0.0,
+   "delta_pnl": 0.0,
+   "delta_dd": 0.0
+  },
+  {
+   "config_id": "SHF-A06",
+   "family": "pivot_reclaim",
+   "description": "Stacked zone reclaim, RSI<40, vol confirm 1.5x",
+   "trades": 974,
+   "pf": 0.882,
+   "pnl": -1183.4,
+   "wr": 58.4,
+   "dd": 78.1,
+   "final_equity": 816.6,
+   "wf_detail": [
+    {
+     "fold": 1,
+     "trades": 337,
+     "pf": 0.944,
+     "pnl": -270.5,
+     "wr": 63.5
+    },
+    {
+     "fold": 2,
+     "trades": 307,
+     "pf": 0.935,
+     "pnl": -218.96,
+     "wr": 56.4
+    },
+    {
+     "fold": 3,
+     "trades": 330,
+     "pf": 0.705,
+     "pnl": -920.29,
+     "wr": 55.2
+    }
+   ],
+   "wf_pass": 0,
+   "gates": {
+    "S1_trades": {
+     "pass": true,
+     "value": 974,
+     "threshold": 80
+    },
+    "S2_pf": {
+     "pass": false,
+     "value": 0.882,
+     "threshold": 1.1
+    },
+    "S3_windows": {
+     "pass": false,
+     "value": "0/3",
+     "threshold": "\u22652/3"
+    },
+    "S4_concentration": {
+     "pass": true,
+     "top10_trade_pct": 15.8,
+     "top10_pnl_pct": 28.0
+    },
+    "_overall": false
+   },
+   "gates_pass": false,
+   "exit_breakdown": {
+    "BB TARGET": {
+     "class": "A",
+     "count": 173,
+     "pnl": 235.75,
+     "wr": 64.7
+    },
+    "RSI RECOVERY": {
+     "class": "A",
+     "count": 214,
+     "pnl": -4858.57,
+     "wr": 16.4
+    },
+    "DC TARGET": {
+     "class": "A",
+     "count": 579,
+     "pnl": 4906.37,
+     "wr": 72.9
+    },
+    "FIXED STOP": {
+     "class": "B",
+     "count": 6,
+     "pnl": -1330.44,
+     "wr": 0.0
+    },
+    "TIME MAX": {
+     "class": "B",
+     "count": 1,
+     "pnl": -126.55,
+     "wr": 0.0
+    },
+    "END": {
+     "class": "B",
+     "count": 1,
+     "pnl": -9.95,
+     "wr": 0.0
+    }
+   },
+   "elapsed_s": 47.4,
+   "baseline": {
+    "pf": 0.882,
+    "trades": 974,
+    "pnl": -1183,
+    "wr": 58.4,
+    "dd": 78.1,
+    "wf": "0/3"
+   },
+   "delta_pf": 0.0,
+   "delta_pnl": -0.0,
+   "delta_dd": -0.0
+  }
+ ]
+}

@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
 """
-Paper Trade — HF 1H MEXC Maker Execution Validation
-=====================================================
-Execution validation for near_ask maker limit orders on MEXC SPOT.
+Paper Trade — MEXC Maker Execution & Micro-Live Validation
+============================================================
+Two modes:
+  --mode paper : Execution validation for near_ask maker limit orders (fill-rate, slippage)
+  --mode micro : MX-MICRO-TP5SL3 alpha/edge validation (TP +5% / SL -3% / TIME 24h)
 
-This is NOT alpha/PnL validation. Purpose:
+Paper mode (HF-P2-LIVE-FILL):
   - Fill-rate stability in continuous trading loop
   - Slippage/fees burn under continuous operation
   - Execution path correctness (no stuck positions, no taker incidents)
   - Infrastructure reliability (no API errors, no kill-switch triggers)
+
+Micro mode (MX-MICRO-TP5SL3):
+  - Alpha/PnL validation via micro-live on MEXC
+  - Separate from HF-P2-LIVE-FILL (fill-rate only) and MEXC-4H-PAPER (4H paper trader)
+  - ADR: ADR-MX-001
 
 Strategy: near_ask (ask - spread × 0.10)
 Universe: papertrade_universe_v1.json (17 coins, curated from expansion test)
 TTL: 120s per order
 Order size: $5-15 (configurable)
 
-ADR: HF-038 Iteration 8 — GO paper trading (execution validation)
+ADR: HF-038 (paper mode), ADR-MX-001 (micro mode)
 Separate from: MEXC-4H-PAPER (trading_bot/paper_mexc_4h.py, ADR-4H-015)
 
 Usage:
@@ -61,6 +68,7 @@ except ImportError:
 
 # ─── Constants ──────────────────────────────────────────────
 TAG = 'hf_1h_paper'
+MICRO_TAG = 'mx_micro_tp5sl3'
 STATE_FILE = BASE_DIR / f'paper_state_{TAG}.json'
 LOG_DIR = BASE_DIR / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
@@ -113,8 +121,8 @@ MICRO_EXIT_FEE_BPS = 5.0         # MEXC taker fee for market sell (5bps = 0.05%,
 
 # ─── Logging ────────────────────────────────────────────────
 
-def setup_logging():
-    log_file = LOG_DIR / f"paper_{TAG}_{datetime.now().strftime('%Y%m%d_%H%M')}.log"
+def setup_logging(active_tag: str = TAG):
+    log_file = LOG_DIR / f"{active_tag}_{datetime.now().strftime('%Y%m%d_%H%M')}.log"
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s [%(levelname)s] %(message)s',
@@ -124,7 +132,7 @@ def setup_logging():
             logging.StreamHandler(),
         ]
     )
-    return logging.getLogger(TAG)
+    return logging.getLogger(active_tag)
 
 
 # ─── Telegram Helper ──────────────────────────────────────
@@ -488,7 +496,7 @@ def write_micro_dashboard(state: dict, exchange, mode: str):
         'closed_summary': _build_closed_summary(state.get('micro_closed', [])),
     }
 
-    dashboard_path = BASE_DIR / 'dashboard_hf_micro.json'
+    dashboard_path = BASE_DIR / f'dashboard_{MICRO_TAG}.json'
     try:
         with open(dashboard_path, 'w') as f:
             json.dump(dashboard, f, indent=2, default=str)
@@ -1131,7 +1139,7 @@ def print_report(state: dict):
     mode = state.get('mode', 'paper')
 
     print("\n" + "=" * 60)
-    title = "HF 1H MICRO TRADER REPORT" if mode == 'micro' else "HF 1H PAPER TRADER — EXECUTION VALIDATION REPORT"
+    title = "MX-MICRO-TP5SL3 TRADER REPORT" if mode == 'micro' else "HF 1H PAPER TRADER — EXECUTION VALIDATION REPORT"
     print(title)
     print("=" * 60)
     print(f"  Mode:         {mode}")
@@ -1243,7 +1251,7 @@ def print_report(state: dict):
 # ─── Main Loop ──────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description='HF 1H MEXC Paper/Micro Trader')
+    parser = argparse.ArgumentParser(description='MEXC Paper/Micro Trader (micro = MX-MICRO-TP5SL3)')
     parser.add_argument('--mode', choices=['paper', 'micro'], default='paper',
                         help='Trading mode: paper (roundtrip validation) or micro (live hold)')
     parser.add_argument('--hours', type=float, default=0, help='Run for N hours (0=infinite)')
@@ -1262,10 +1270,12 @@ def main():
     tp_pct = args.tp
     sl_pct = args.sl
 
-    # Determine state file based on mode
+    # Determine state file and active tag based on mode
     global STATE_FILE
+    active_tag = TAG
     if mode == 'micro':
-        STATE_FILE = BASE_DIR / f'paper_state_{TAG}_micro.json'
+        active_tag = MICRO_TAG
+        STATE_FILE = BASE_DIR / f'paper_state_{MICRO_TAG}.json'
 
     # Report mode
     if args.report:
@@ -1273,8 +1283,8 @@ def main():
         print_report(state)
         return
 
-    logger = setup_logging()
-    logger.info(f"HF 1H {'MICRO' if mode == 'micro' else 'Paper'} Trader starting — tag={TAG} mode={mode}")
+    logger = setup_logging(active_tag)
+    logger.info(f"{'MX-MICRO-TP5SL3' if mode == 'micro' else 'HF 1H Paper'} Trader starting — tag={active_tag} mode={mode}")
 
     # Telegram (micro mode always, paper mode never)
     tg = None
@@ -1355,8 +1365,7 @@ def main():
     # Telegram: start alert
     if mode == 'micro':
         positions = state.get('micro_positions', {})
-        tg_send(tg, f"🚀 HF MICRO TRADER STARTED\n"
-                     f"Mode: {mode}\n"
+        tg_send(tg, f"🚀 MX-MICRO-TP5SL3 STARTED\n"
                      f"Coins: {', '.join(coins)}\n"
                      f"Order: ${order_usd}\n"
                      f"TP: +{tp_pct}% | SL: -{sl_pct}% | TIME: {MICRO_MAX_HOLD_HOURS}h\n"
@@ -1397,10 +1406,14 @@ def main():
     coin_cooldowns = {}            # {symbol: cooldown_until_timestamp}
     miss_counter = 0               # for telegram miss alert throttling
 
-    # Clear stale rollback from previous run (allows resume after outage stop)
+    # Clear stale rollback + error counters from previous run (allows clean resume)
     if state.get('rollback_triggered') == 'consecutive_errors':
         logger.info("[RESUME] Clearing stale consecutive_errors rollback from previous run")
         state['rollback_triggered'] = None
+        state['consecutive_errors'] = 0
+        save_state(state)
+    elif state.get('consecutive_errors', 0) > 0:
+        logger.info(f"[RESUME] Resetting consecutive_errors from {state['consecutive_errors']} → 0 on restart")
         state['consecutive_errors'] = 0
         save_state(state)
 
@@ -1439,12 +1452,12 @@ def main():
         # ── Micro mode: cap checks before round ──
         if mode == 'micro':
             if not check_micro_caps(state, exchange, logger):
-                # Caps hit — only send TG alert once per 30 min to avoid spam
+                # Caps hit — only send TG alert once per 100 rounds to avoid spam
                 caps_hit_count = state.get('micro_caps_hit', 0)
-                if caps_hit_count == 1 or caps_hit_count % 30 == 0:
-                    tg_send(tg, f"🚨 MICRO CAP HIT\n"
+                if caps_hit_count == 1 or caps_hit_count % 100 == 0:
+                    tg_send(tg, f"🔒 MX-MICRO-TP5SL3 CAP HIT (#{caps_hit_count})\n"
                                  f"Positions: {len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}\n"
-                                 f"Entries blocked. (alert every 30 min)", level='warning')
+                                 f"Entries blocked.", level='info')
                 time.sleep(60)
                 continue
 
@@ -1498,6 +1511,10 @@ def main():
         logger.info(f"  Status: {status} | Spread: {spread:.1f}bps | "
                     f"Slip: {slip:+.1f}bps | RT P&L: ${rt_pnl:.4f}")
 
+        # Log error details (previously swallowed — see ADR-HF-040)
+        if status.startswith('ERROR') and result.get('error'):
+            logger.warning(f"  [ERR_DETAIL] {symbol}: {result['error']}")
+
         # Update state
         update_state(state, result, mode=mode)
         save_state(state)
@@ -1521,13 +1538,21 @@ def main():
                 if miss_counter % 50 == 0:
                     tg_send(tg, f"⚠️ MISS #{miss_counter}\n{symbol}\n"
                                  f"Spread: {spread:.1f}bps", level='warning')
+            elif status.startswith('ERROR'):
+                # Throttled error alert: first error + every 50th per coin
+                cs = state.get('coin_stats', {}).get(symbol, {})
+                coin_err_count = cs.get('errors', 0)
+                if coin_err_count == 1 or coin_err_count % 50 == 0:
+                    tg_send(tg, f"🚨 {status} #{coin_err_count} | {symbol}\n"
+                                 f"{result.get('error', '?')[:120]}",
+                            level='error')
 
             # Status update every 100 rounds
             if state['total_rounds'] % 100 == 0 and state['total_rounds'] > 0:
                 total_acts = state['filled'] + state.get('partial', 0) + state['missed']
                 fr = state['filled'] / total_acts if total_acts > 0 else 0
                 positions = state.get('micro_positions', {})
-                tg_send(tg, f"📊 STATUS (round {state['total_rounds']})\n"
+                tg_send(tg, f"📊 MX-MICRO-TP5SL3 (round {state['total_rounds']})\n"
                              f"Fill rate: {fr:.1%}\n"
                              f"Positions: {len(positions)}/{MAX_MICRO_POSITIONS}\n"
                              f"Filled: {state['filled']} | Missed: {state['missed']}",
@@ -1543,23 +1568,24 @@ def main():
             logger.error(f"[ROLLBACK] Trigger: {trigger}. Stopping.")
             state['rollback_triggered'] = trigger
             save_state(state)
-            tg_send(tg, f"🚨 ROLLBACK TRIGGERED\nReason: {trigger}\nTrader stopped.",
+            tg_send(tg, f"🚨 MX-MICRO-TP5SL3 ROLLBACK\nReason: {trigger}\nTrader stopped.",
                     level='error')
             break
 
         # ── Outage-aware error handling ──
-        if status == 'ERROR_ORDERBOOK':
-            # Per-coin error tracking
+        if status.startswith('ERROR'):
+            # Per-coin error tracking (handles ERROR_ORDERBOOK + ERROR_ORDER + any future error types)
             coin_errors = coin_error_counts.setdefault(symbol, [])
             coin_errors.append(now_ts)
             # Keep only errors in last hour
             coin_errors[:] = [t for t in coin_errors if now_ts - t < COIN_COOLDOWN_SECONDS]
             if len(coin_errors) >= COIN_COOLDOWN_ERRORS:
                 coin_cooldowns[symbol] = now_ts + COIN_COOLDOWN_SECONDS
-                logger.warning(f"[COOLDOWN] {symbol}: {len(coin_errors)} errors in 1h → blacklisted for 60 min")
+                logger.warning(f"[COOLDOWN] {symbol}: {len(coin_errors)} {status} errors in 1h "
+                               f"→ blacklisted for {COIN_COOLDOWN_SECONDS // 60} min")
                 coin_error_counts[symbol] = []
 
-            # Consecutive OB error burst detection
+            # Consecutive error burst detection (multi-coin = exchange/network issue)
             if state['consecutive_errors'] >= OB_ERROR_BURST_THRESHOLD:
                 # Check if this is a network issue first
                 if not network_ok():
@@ -1626,8 +1652,8 @@ def main():
 
     # Final report
     print_report(state)
-    logger.info(f"{'Micro' if mode == 'micro' else 'Paper'} trader stopped.")
-    tg_send(tg, f"🛑 HF {'MICRO' if mode == 'micro' else 'PAPER'} TRADER STOPPED\n"
+    logger.info(f"{'MX-MICRO-TP5SL3' if mode == 'micro' else 'Paper'} trader stopped.")
+    tg_send(tg, f"🛑 {'MX-MICRO-TP5SL3' if mode == 'micro' else 'HF PAPER'} STOPPED\n"
                  f"Rounds: {state.get('total_rounds', 0)}\n"
                  f"Filled: {state.get('filled', 0)}",
             level='warning')

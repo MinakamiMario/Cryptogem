@@ -38,3 +38,21 @@
   - H20 VWAP_DEVIATION is the only positive-expectancy signal (MEXC fees only)
   - 1H crypto at Kraken fees is structurally unprofitable (fee structure bottleneck)
   - See ADR-HF-029 for CONDITIONAL GO decision
+
+## ADR-MX-001: MX-MICRO-TP5SL3 micro-live track (TP5/SL3/T24h)
+- **Date**: 2026-02-26
+- **Context**: MEXC micro-live alpha validation needs clear naming to separate from HF-P2-LIVE-FILL (fill-rate only) and MEXC-4H-PAPER (4H paper trader). Previous naming used "HF" prefix which conflated alpha validation with HF screening research.
+- **Decision**: Track name is `MX-MICRO-TP5SL3`. All output artifacts use this prefix. Separate from HF-P2-LIVE-FILL.
+- **Naming contract**:
+  - Entrypoint: `trading_bot/paper_hf_1h.py --mode micro`
+  - State file: `trading_bot/paper_state_mx_micro_tp5sl3.json`
+  - Dashboard: `trading_bot/dashboard_mx_micro_tp5sl3.json`
+  - Logs: `trading_bot/logs/mx_micro_tp5sl3_*.log`
+  - Reports: `reports/mx_micro_tp5sl3/*`
+  - Telegram: first line always contains `MX-MICRO-TP5SL3`
+- **Config**: TP +5% / SL -3% / TIME 24h / MEXC SPOT / near_ask maker limit
+- **Consequences**:
+  - `MICRO_TAG = 'mx_micro_tp5sl3'` constant in `paper_hf_1h.py`
+  - Paper mode (`--mode paper`) unchanged — still uses `hf_1h_paper` TAG for fill-rate validation
+  - Old state files (`paper_state_hf_1h_paper_micro.json`, `dashboard_hf_micro.json`) are orphaned — not auto-migrated
+  - New runs create new state under `mx_micro_tp5sl3` naming

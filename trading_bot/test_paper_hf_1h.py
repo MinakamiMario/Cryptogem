@@ -26,6 +26,7 @@ from trading_bot.paper_hf_1h import (
     SPREAD_CAP_BPS,
     MAX_CONSECUTIVE_ERRORS,
     TAG,
+    MICRO_TAG,
 )
 
 
@@ -545,6 +546,9 @@ class TestConstants:
 
     def test_tag(self):
         assert TAG == 'hf_1h_paper'
+
+    def test_micro_tag(self):
+        assert MICRO_TAG == 'mx_micro_tp5sl3'
 
     def test_ttl(self):
         assert ORDER_TTL_SECONDS == 120

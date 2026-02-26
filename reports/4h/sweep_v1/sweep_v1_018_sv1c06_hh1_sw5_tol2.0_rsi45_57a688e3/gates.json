@@ -1,0 +1,71 @@
+{
+  "verdict": "NO-GO",
+  "passed_all_hard": false,
+  "n_hard_passed": 3,
+  "n_hard_total": 4,
+  "summary": "[NO-GO] 3/4 | G1:PF=PASS | G2:MAX_DD=FAIL | G3:TOP10_CONC=PASS | G4:WINDOW_SPLIT=PASS || S1:TRADE_FREQ=OK | S2:EV_TRADE=LOW",
+  "hard_gates": [
+    {
+      "name": "G1:PF",
+      "description": "Profit factor minimum",
+      "passed": true,
+      "value": 1.09,
+      "threshold": ">= 1.05",
+      "detail": "PF 1.09 (PASS)",
+      "hard": true
+    },
+    {
+      "name": "G2:MAX_DD",
+      "description": "Maximum drawdown",
+      "passed": false,
+      "value": 55.88,
+      "threshold": "<= 25.0%",
+      "detail": "DD 55.9% (exceeds 25.0%)",
+      "hard": true
+    },
+    {
+      "name": "G3:TOP10_CONC",
+      "description": "Top-10 coin concentration (trades + P&L)",
+      "passed": true,
+      "value": 15.5,
+      "threshold": "trades<=50.0% & pnl<=60.0%",
+      "detail": "Top10: 13.1% trades, 15.5% P&L (PASS)",
+      "hard": true
+    },
+    {
+      "name": "G4:WINDOW_SPLIT",
+      "description": "3-way temporal split (2/3 must pass)",
+      "passed": true,
+      "value": 2.0,
+      "threshold": "2/3 windows PF >= 1.05",
+      "detail": "W1: 85tr PF=1.03 [FAIL] | W2: 88tr PF=1.20 [PASS] | W3: 85tr PF=1.09 [PASS]",
+      "hard": true
+    }
+  ],
+  "soft_gates": [
+    {
+      "name": "S1:TRADE_FREQ",
+      "description": "Trade frequency target (ranking)",
+      "passed": true,
+      "value": 259.0,
+      "threshold": ">= 50 (target)",
+      "detail": "259 trades (meets target)",
+      "hard": false
+    },
+    {
+      "name": "S2:EV_TRADE",
+      "description": "Expected value per trade (ranking)",
+      "passed": false,
+      "value": -1.42,
+      "threshold": "> $0",
+      "detail": "EV/trade $-1.42 (negative or zero)",
+      "hard": false
+    }
+  ],
+  "_provenance": {
+    "timestamp": "2026-02-26T05:04:45.467072+00:00",
+    "dataset_id": "ohlcv_4h_kraken_spot_usd_526",
+    "git_hash": "57a688e3",
+    "fee_bps": 26.0
+  }
+}

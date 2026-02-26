@@ -1,0 +1,71 @@
+{
+  "verdict": "NO-GO",
+  "passed_all_hard": false,
+  "n_hard_passed": 1,
+  "n_hard_total": 4,
+  "summary": "[NO-GO] 1/4 | G1:PF=FAIL | G2:MAX_DD=FAIL | G3:TOP10_CONC=PASS | G4:WINDOW_SPLIT=FAIL || S1:TRADE_FREQ=OK | S2:EV_TRADE=LOW",
+  "hard_gates": [
+    {
+      "name": "G1:PF",
+      "description": "Profit factor minimum",
+      "passed": false,
+      "value": 0.7,
+      "threshold": ">= 1.05",
+      "detail": "PF 0.70 (below 1.05)",
+      "hard": true
+    },
+    {
+      "name": "G2:MAX_DD",
+      "description": "Maximum drawdown",
+      "passed": false,
+      "value": 84.31,
+      "threshold": "<= 25.0%",
+      "detail": "DD 84.3% (exceeds 25.0%)",
+      "hard": true
+    },
+    {
+      "name": "G3:TOP10_CONC",
+      "description": "Top-10 coin concentration (trades + P&L)",
+      "passed": true,
+      "value": 13.7,
+      "threshold": "trades<=50.0% & pnl<=60.0%",
+      "detail": "Top10: 13.7% trades, 7.6% P&L (PASS)",
+      "hard": true
+    },
+    {
+      "name": "G4:WINDOW_SPLIT",
+      "description": "3-way temporal split (2/3 must pass)",
+      "passed": false,
+      "value": 1.0,
+      "threshold": "2/3 windows PF >= 1.05",
+      "detail": "W1: 88tr PF=0.54 [FAIL] | W2: 80tr PF=1.09 [PASS] | W3: 79tr PF=0.58 [FAIL]",
+      "hard": true
+    }
+  ],
+  "soft_gates": [
+    {
+      "name": "S1:TRADE_FREQ",
+      "description": "Trade frequency target (ranking)",
+      "passed": true,
+      "value": 248.0,
+      "threshold": ">= 50 (target)",
+      "detail": "248 trades (meets target)",
+      "hard": false
+    },
+    {
+      "name": "S2:EV_TRADE",
+      "description": "Expected value per trade (ranking)",
+      "passed": false,
+      "value": -6.68,
+      "threshold": "> $0",
+      "detail": "EV/trade $-6.68 (negative or zero)",
+      "hard": false
+    }
+  ],
+  "_provenance": {
+    "timestamp": "2026-02-26T05:04:45.579036+00:00",
+    "dataset_id": "ohlcv_4h_kraken_spot_usd_526",
+    "git_hash": "57a688e3",
+    "fee_bps": 26.0
+  }
+}

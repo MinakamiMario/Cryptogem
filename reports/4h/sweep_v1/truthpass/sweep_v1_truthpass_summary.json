@@ -1,0 +1,55 @@
+{
+  "experiment": "sweep_v1_truthpass",
+  "timestamp": "2026-02-26T05:21:59.424759+00:00",
+  "n_configs": 3,
+  "min_trades_gate": 80,
+  "verdicts": {
+    "VERIFIED": 1,
+    "CONDITIONAL": 1,
+    "FAILED": 1
+  },
+  "configs": [
+    {
+      "config_id": "sweep_v1_006_sv1a06_rsi45_p8_atr2.0",
+      "verdict": "VERIFIED",
+      "tests_passed": 3,
+      "full_pf": 1.5215,
+      "full_pnl": 3425.19,
+      "full_trades": 347,
+      "trade_gate_fail": false,
+      "window_pass": true,
+      "wf_pass": true,
+      "bootstrap_pass": true,
+      "bootstrap_p5_pf": 0.9794,
+      "bootstrap_pct_profitable": 94.0
+    },
+    {
+      "config_id": "sweep_v1_002_sv1a02_rsi40_p5_atr1.5",
+      "verdict": "CONDITIONAL",
+      "tests_passed": 2,
+      "full_pf": 1.3549,
+      "full_pnl": 744.52,
+      "full_trades": 306,
+      "trade_gate_fail": false,
+      "window_pass": true,
+      "wf_pass": true,
+      "bootstrap_pass": false,
+      "bootstrap_p5_pf": 0.8206,
+      "bootstrap_pct_profitable": 82.3
+    },
+    {
+      "config_id": "sweep_v1_005_sv1a05_rsi40_p8_atr1.0_volhigh",
+      "verdict": "FAILED",
+      "tests_passed": 0,
+      "full_pf": 1.2362,
+      "full_pnl": 2847.68,
+      "full_trades": 313,
+      "trade_gate_fail": false,
+      "window_pass": false,
+      "wf_pass": false,
+      "bootstrap_pass": false,
+      "bootstrap_p5_pf": 0.7612,
+      "bootstrap_pct_profitable": 73.9
+    }
+  ]
+}

@@ -27,6 +27,12 @@ from trading_bot.paper_hf_1h import (
     MAX_CONSECUTIVE_ERRORS,
     TAG,
     MICRO_TAG,
+    _calc_rsi,
+    compute_entry_features,
+    passes_signal_gate,
+    format_features_short,
+    SIGNAL_VWAP_DEV_MIN,
+    SIGNAL_RSI_MAX,
 )
 
 
@@ -635,3 +641,146 @@ class TestMultiRoundProgression:
         logger = MagicMock()
         trigger = check_rollback(state, logger)
         assert trigger == 'low_fill_rate'
+
+
+# ---------------------------------------------------------------------------
+# Entry Features & Signal Gate
+# ---------------------------------------------------------------------------
+
+class TestCalcRsi:
+    """Test RSI computation."""
+
+    def test_rsi_all_up(self):
+        """All prices increasing → RSI near 100."""
+        closes = [float(i) for i in range(20)]
+        rsi = _calc_rsi(closes, 14)
+        assert rsi > 95
+
+    def test_rsi_all_down(self):
+        """All prices decreasing → RSI near 0."""
+        closes = [float(20 - i) for i in range(20)]
+        rsi = _calc_rsi(closes, 14)
+        assert rsi < 5
+
+    def test_rsi_insufficient_data(self):
+        """Too few bars → default 50."""
+        assert _calc_rsi([1, 2, 3], 14) == 50.0
+
+    def test_rsi_flat(self):
+        """Flat prices → no gains/losses → RSI depends on implementation."""
+        closes = [10.0] * 20
+        rsi = _calc_rsi(closes, 14)
+        # No gains and no losses — avg_loss == 0 → RSI == 100 or handle as 50
+        assert 0 <= rsi <= 100
+
+
+class TestPassesSignalGate:
+    """Test signal gate logic."""
+
+    def test_pass_oversold(self):
+        """Below VWAP + low RSI → passes gate."""
+        features = {'ok': True, 'vwap_dev_pct': -2.5, 'rsi_14': 30}
+        assert passes_signal_gate(features) is True
+
+    def test_fail_rsi_too_high(self):
+        """Below VWAP but RSI too high → fails."""
+        features = {'ok': True, 'vwap_dev_pct': -2.5, 'rsi_14': 55}
+        assert passes_signal_gate(features) is False
+
+    def test_fail_above_vwap(self):
+        """Above VWAP → fails regardless of RSI."""
+        features = {'ok': True, 'vwap_dev_pct': 1.0, 'rsi_14': 25}
+        assert passes_signal_gate(features) is False
+
+    def test_fail_features_error(self):
+        """Feature computation failed → never passes."""
+        features = {'ok': False, 'error': 'timeout'}
+        assert passes_signal_gate(features) is False
+
+    def test_exact_threshold_pass(self):
+        """Exactly at thresholds → passes (<=)."""
+        features = {'ok': True, 'vwap_dev_pct': SIGNAL_VWAP_DEV_MIN, 'rsi_14': SIGNAL_RSI_MAX}
+        assert passes_signal_gate(features) is True
+
+    def test_just_above_threshold_fail(self):
+        """Just above VWAP threshold → fails."""
+        features = {'ok': True, 'vwap_dev_pct': SIGNAL_VWAP_DEV_MIN + 0.01, 'rsi_14': 30}
+        assert passes_signal_gate(features) is False
+
+
+class TestFormatFeaturesShort:
+    """Test feature formatting."""
+
+    def test_format_ok(self):
+        features = {
+            'ok': True,
+            'vwap_dev_pct': -2.3,
+            'rsi_14': 35.2,
+            'dist_support_pct': 1.5,
+            'dist_dc_mid_pct': -3.1,
+            'vol_ratio': 1.8,
+        }
+        result = format_features_short(features)
+        assert 'vwap=-2.3%' in result
+        assert 'RSI=35' in result
+        assert 'vol=1.8x' in result
+
+    def test_format_error(self):
+        features = {'ok': False, 'error': 'timeout'}
+        result = format_features_short(features)
+        assert 'ERR' in result
+        assert 'timeout' in result
+
+
+class TestComputeEntryFeatures:
+    """Test feature computation with mocked exchange."""
+
+    def _make_candles(self, n=50, base_close=100, trend=0):
+        """Generate synthetic OHLCV candles."""
+        candles = []
+        for i in range(n):
+            c = base_close + trend * i
+            candles.append([
+                1000000 + i * 3600000,  # timestamp
+                c - 1,   # open
+                c + 2,   # high
+                c - 2,   # low
+                c,        # close
+                1000 + i * 10,  # volume
+            ])
+        return candles
+
+    def test_features_ok(self):
+        """Normal candle data → all features computed."""
+        exchange = MagicMock()
+        exchange.fetch_ohlcv.return_value = self._make_candles(50)
+        features = compute_entry_features(exchange, 'TEST/USDT')
+        assert features['ok'] is True
+        assert 'vwap_dev_pct' in features
+        assert 'rsi_14' in features
+        assert 'dist_support_pct' in features
+        assert 'vol_ratio' in features
+        assert isinstance(features['rsi_14'], float)
+
+    def test_features_insufficient_candles(self):
+        """Too few candles → ok=False."""
+        exchange = MagicMock()
+        exchange.fetch_ohlcv.return_value = [[0, 1, 2, 0.5, 1, 100]] * 5
+        features = compute_entry_features(exchange, 'TEST/USDT')
+        assert features['ok'] is False
+
+    def test_features_exchange_error(self):
+        """Exchange error → ok=False with error msg."""
+        exchange = MagicMock()
+        exchange.fetch_ohlcv.side_effect = Exception("rate limit")
+        features = compute_entry_features(exchange, 'TEST/USDT')
+        assert features['ok'] is False
+        assert 'rate limit' in features['error']
+
+    def test_features_downtrend_rsi_low(self):
+        """Downtrending candles → RSI < 50."""
+        exchange = MagicMock()
+        exchange.fetch_ohlcv.return_value = self._make_candles(50, base_close=200, trend=-1)
+        features = compute_entry_features(exchange, 'TEST/USDT')
+        assert features['ok'] is True
+        assert features['rsi_14'] < 50

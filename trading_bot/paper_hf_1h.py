@@ -118,6 +118,18 @@ MICRO_MAX_HOLD_HOURS = 24         # failsafe time exit
 MICRO_COUNTERFACTUAL_HOURS = [12, 24]  # snapshot intervals for counterfactual log
 MICRO_EXIT_FEE_BPS = 5.0         # MEXC taker fee for market sell (5bps = 0.05%, verified via API)
 
+# ─── Entry Feature / Signal Gate Constants ─────────────────
+FEATURE_CANDLE_TF = '1h'
+FEATURE_CANDLE_LIMIT = 50         # bars to fetch for indicator computation
+FEATURE_RSI_PERIOD = 14
+FEATURE_VWAP_PERIOD = 20          # rolling VWAP window
+FEATURE_DC_PERIOD = 20            # Donchian channel lookback
+FEATURE_VOL_AVG_PERIOD = 20       # volume average lookback
+
+# Signal gate thresholds (mode=signal only)
+SIGNAL_VWAP_DEV_MIN = -1.5        # price must be ≤ -1.5% below VWAP
+SIGNAL_RSI_MAX = 40               # RSI must be ≤ 40 (oversold zone)
+
 
 # ─── Logging ────────────────────────────────────────────────
 
@@ -137,6 +149,20 @@ def setup_logging(active_tag: str = TAG):
 
 # ─── Telegram Helper ──────────────────────────────────────
 
+def _get_git_hash() -> str:
+    """Return short git commit hash, or 'unknown' if not in a git repo."""
+    try:
+        import subprocess
+        result = subprocess.run(
+            ['git', 'rev-parse', '--short', 'HEAD'],
+            capture_output=True, text=True, timeout=5,
+            cwd=os.path.dirname(os.path.abspath(__file__))
+        )
+        return result.stdout.strip() if result.returncode == 0 else 'unknown'
+    except Exception:
+        return 'unknown'
+
+
 def tg_send(tg, text: str, level: str = 'info'):
     """Send telegram message. Fails silently if tg is None or send fails."""
     if tg is None:
@@ -154,6 +180,139 @@ def tg_send(tg, text: str, level: str = 'info'):
             tg.send(text)
     except Exception:
         pass  # never let TG failure crash the trader
+
+
+# ─── Entry Feature Computation ─────────────────────────────
+
+def _calc_rsi(closes: list, period: int = FEATURE_RSI_PERIOD) -> float:
+    """Compute RSI from a list of close prices. Returns 50.0 on insufficient data."""
+    if len(closes) < period + 1:
+        return 50.0
+    gains, losses = [], []
+    for i in range(1, len(closes)):
+        delta = closes[i] - closes[i - 1]
+        gains.append(max(0, delta))
+        losses.append(max(0, -delta))
+    if len(gains) < period:
+        return 50.0
+    avg_gain = sum(gains[-period:]) / period
+    avg_loss = sum(losses[-period:]) / period
+    if avg_loss == 0:
+        return 100.0
+    rs = avg_gain / avg_loss
+    return 100.0 - (100.0 / (1.0 + rs))
+
+
+def compute_entry_features(exchange, symbol: str, logger=None) -> dict:
+    """Fetch 1H candles and compute entry features for signal gating.
+
+    Returns dict with:
+      vwap_dev_pct   — (close - rolling_vwap) / rolling_vwap * 100
+      rsi_14         — 14-period RSI
+      dist_support_pct — (close - dc_low) / close * 100 (positive = above support)
+      dist_dc_mid_pct  — (close - dc_mid) / close * 100 (negative = below midpoint)
+      vol_ratio      — last bar volume / 20-bar avg volume
+      close          — latest close price
+      dc_low         — Donchian low (support)
+      dc_mid         — Donchian midpoint
+      vwap           — rolling VWAP value
+      ok             — True if computation succeeded
+    """
+    features = {'ok': False, 'error': None}
+    try:
+        candles = exchange.fetch_ohlcv(symbol, FEATURE_CANDLE_TF, limit=FEATURE_CANDLE_LIMIT)
+        if not candles or len(candles) < FEATURE_DC_PERIOD + 1:
+            features['error'] = f'insufficient candles ({len(candles) if candles else 0})'
+            return features
+
+        # Extract OHLCV arrays
+        opens   = [c[1] for c in candles]
+        highs   = [c[2] for c in candles]
+        lows    = [c[3] for c in candles]
+        closes  = [c[4] for c in candles]
+        volumes = [c[5] for c in candles]
+
+        close = closes[-1]
+        if close <= 0:
+            features['error'] = 'zero close price'
+            return features
+
+        # RSI (14-period)
+        rsi = _calc_rsi(closes, FEATURE_RSI_PERIOD)
+
+        # Rolling VWAP (20-period): sum(typical_price * volume) / sum(volume)
+        vwap_window = min(FEATURE_VWAP_PERIOD, len(candles))
+        tp_vol_sum = 0.0
+        vol_sum = 0.0
+        for i in range(-vwap_window, 0):
+            typical = (highs[i] + lows[i] + closes[i]) / 3.0
+            tp_vol_sum += typical * volumes[i]
+            vol_sum += volumes[i]
+        vwap = tp_vol_sum / vol_sum if vol_sum > 0 else close
+        vwap_dev_pct = (close - vwap) / vwap * 100.0 if vwap > 0 else 0.0
+
+        # Donchian channel (20-period, excluding current bar)
+        dc_window = min(FEATURE_DC_PERIOD, len(candles) - 1)
+        dc_lows  = lows[-dc_window - 1:-1]
+        dc_highs = highs[-dc_window - 1:-1]
+        dc_low  = min(dc_lows)  if dc_lows  else close
+        dc_high = max(dc_highs) if dc_highs else close
+        dc_mid  = (dc_high + dc_low) / 2.0
+
+        dist_support_pct = (close - dc_low) / close * 100.0 if close > 0 else 0.0
+        dist_dc_mid_pct  = (close - dc_mid) / close * 100.0 if close > 0 else 0.0
+
+        # Volume ratio (current bar / 20-bar avg)
+        vol_avg_window = min(FEATURE_VOL_AVG_PERIOD, len(candles) - 1)
+        avg_vol = sum(volumes[-vol_avg_window - 1:-1]) / vol_avg_window if vol_avg_window > 0 else 1.0
+        vol_ratio = volumes[-1] / avg_vol if avg_vol > 0 else 1.0
+
+        features.update({
+            'ok': True,
+            'vwap_dev_pct': round(vwap_dev_pct, 2),
+            'rsi_14': round(rsi, 1),
+            'dist_support_pct': round(dist_support_pct, 2),
+            'dist_dc_mid_pct': round(dist_dc_mid_pct, 2),
+            'vol_ratio': round(vol_ratio, 2),
+            'close': close,
+            'dc_low': dc_low,
+            'dc_mid': round(dc_mid, 8),
+            'vwap': round(vwap, 8),
+        })
+
+    except Exception as e:
+        features['error'] = str(e)[:200]
+        if logger:
+            logger.warning(f"[FEATURES] {symbol}: {e}")
+
+    return features
+
+
+def passes_signal_gate(features: dict) -> bool:
+    """Check if entry features pass the signal gate (mode=signal).
+
+    Conditions (all must be True):
+      1. vwap_dev_pct <= SIGNAL_VWAP_DEV_MIN (price below VWAP)
+      2. rsi_14 <= SIGNAL_RSI_MAX (oversold)
+    """
+    if not features.get('ok'):
+        return False
+    if features.get('vwap_dev_pct', 0) > SIGNAL_VWAP_DEV_MIN:
+        return False
+    if features.get('rsi_14', 50) > SIGNAL_RSI_MAX:
+        return False
+    return True
+
+
+def format_features_short(features: dict) -> str:
+    """Format features as compact one-liner for logs/Telegram."""
+    if not features.get('ok'):
+        return f"features=ERR({features.get('error', '?')[:30]})"
+    return (f"vwap={features['vwap_dev_pct']:+.1f}% "
+            f"RSI={features['rsi_14']:.0f} "
+            f"sup={features['dist_support_pct']:+.1f}% "
+            f"mid={features['dist_dc_mid_pct']:+.1f}% "
+            f"vol={features['vol_ratio']:.1f}x")
 
 
 # ─── Exchange Setup ─────────────────────────────────────────
@@ -696,6 +855,9 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
                 'warning': sell_result.get('WARNING', ''),
             },
             'counterfactual': counterfactual,
+            # ── Entry context (A/B tracking) ──
+            'entry_reason': pos.get('entry_reason', 'control_roundrobin'),
+            'entry_features': pos.get('entry_features', {}),
         }
 
         # ── Sanity checks ──
@@ -1119,7 +1281,7 @@ def update_state(state: dict, result: dict, mode: str = 'paper'):
     # Micro mode: record position on fill
     if mode == 'micro' and result.get('micro_held') and sym:
         positions = state.setdefault('micro_positions', {})
-        positions[sym] = {
+        pos_entry = {
             'position_id': str(uuid.uuid4())[:12],  # short unique ID for cross-ref
             'entry_price': result.get('fill_price', 0),
             'qty': result.get('fill_qty', 0),
@@ -1127,7 +1289,19 @@ def update_state(state: dict, result: dict, mode: str = 'paper'):
             'order_id': result.get('order_id', ''),
             'notional': result.get('fill_notional', 0),
             'price_snapshots': [],  # populated by check_micro_exits() each round
+            'entry_reason': result.get('entry_reason', 'control_roundrobin'),
         }
+        # Store entry features snapshot (compact — only key values)
+        ef = result.get('entry_features', {})
+        if ef.get('ok'):
+            pos_entry['entry_features'] = {
+                'vwap_dev_pct': ef.get('vwap_dev_pct'),
+                'rsi_14': ef.get('rsi_14'),
+                'dist_support_pct': ef.get('dist_support_pct'),
+                'dist_dc_mid_pct': ef.get('dist_dc_mid_pct'),
+                'vol_ratio': ef.get('vol_ratio'),
+            }
+        positions[sym] = pos_entry
 
 
 # ─── Report ─────────────────────────────────────────────────
@@ -1264,11 +1438,14 @@ def main():
                         help=f'Take profit %% for micro mode (default: {MICRO_TP_PCT})')
     parser.add_argument('--sl', type=float, default=MICRO_SL_PCT,
                         help=f'Stop loss %% for micro mode (default: {MICRO_SL_PCT})')
+    parser.add_argument('--entry-mode', choices=['control', 'signal'], default='control',
+                        help='Entry logic: control (round-robin) or signal (VWAP+RSI gated)')
     args = parser.parse_args()
 
     mode = args.mode
     tp_pct = args.tp
     sl_pct = args.sl
+    entry_mode = args.entry_mode
 
     # Determine state file and active tag based on mode
     global STATE_FILE
@@ -1346,6 +1523,10 @@ def main():
     # Fee model verification
     logger.info(f"Fee model: entry=MAKER(0bps) exit=TAKER({MICRO_EXIT_FEE_BPS:.0f}bps)")
     logger.info(f"Exit config: TP=+{tp_pct}% SL=-{sl_pct}% TIME={MICRO_MAX_HOLD_HOURS}h")
+    git_hash = _get_git_hash()
+    logger.info(f"Entry mode: {entry_mode}" + (
+        f" (VWAP≤{SIGNAL_VWAP_DEV_MIN}% AND RSI≤{SIGNAL_RSI_MAX})" if entry_mode == 'signal' else " (round-robin)"))
+    logger.info(f"Version: {git_hash} | gate: VWAP≤{SIGNAL_VWAP_DEV_MIN}% RSI≤{SIGNAL_RSI_MAX}")
     logger.info(f"Exit check: trigger_price=BID (conservative for sell-side)")
     logger.info(f"Sell method: market_sell via safe_sell_back (3 retries)")
     if mode == 'micro':
@@ -1365,7 +1546,10 @@ def main():
     # Telegram: start alert
     if mode == 'micro':
         positions = state.get('micro_positions', {})
+        entry_label = f"SIGNAL (VWAP≤{SIGNAL_VWAP_DEV_MIN}% RSI≤{SIGNAL_RSI_MAX})" if entry_mode == 'signal' else "CONTROL (round-robin)"
         tg_send(tg, f"🚀 MX-MICRO-TP5SL3 STARTED\n"
+                     f"Version: {git_hash} | {entry_label}\n"
+                     f"Gate: VWAP≤{SIGNAL_VWAP_DEV_MIN}% RSI≤{SIGNAL_RSI_MAX}\n"
                      f"Coins: {', '.join(coins)}\n"
                      f"Order: ${order_usd}\n"
                      f"TP: +{tp_pct}% | SL: -{sl_pct}% | TIME: {MICRO_MAX_HOLD_HOURS}h\n"
@@ -1499,9 +1683,32 @@ def main():
                 time.sleep(5)
             continue
 
+        # ── Compute entry features (micro mode) ──
+        features = {}
+        entry_reason = 'control_roundrobin'
+        if mode == 'micro':
+            features = compute_entry_features(exchange, symbol, logger)
+            feat_str = format_features_short(features)
+
+            # Signal gate check (mode=signal only)
+            if entry_mode == 'signal':
+                if not passes_signal_gate(features):
+                    logger.info(f"[SIGNAL_SKIP] {symbol} — {feat_str}")
+                    state.setdefault('signal_skips', 0)
+                    state['signal_skips'] += 1
+                    time.sleep(2.0 + random.uniform(0, 1.0))
+                    continue
+                entry_reason = 'signal_gated'
+                logger.info(f"[SIGNAL_PASS] {symbol} — {feat_str}")
+
         # ── Run round ──
         logger.info(f"[round {state['total_rounds'] + 1}] {symbol} — ${order_usd} ({mode})")
         result = run_single_round(exchange, symbol, order_usd, logger, mode=mode)
+
+        # Attach features + entry_reason to result
+        if mode == 'micro' and features:
+            result['entry_features'] = features
+            result['entry_reason'] = entry_reason
 
         # Log result
         status = result.get('status', '?')
@@ -1510,6 +1717,8 @@ def main():
         rt_pnl = result.get('roundtrip_pnl', 0)
         logger.info(f"  Status: {status} | Spread: {spread:.1f}bps | "
                     f"Slip: {slip:+.1f}bps | RT P&L: ${rt_pnl:.4f}")
+        if mode == 'micro' and features.get('ok'):
+            logger.info(f"  Features: {format_features_short(features)}")
 
         # Log error details (previously swallowed — see ADR-HF-040)
         if status.startswith('ERROR') and result.get('error'):
@@ -1525,11 +1734,13 @@ def main():
                 pos_info = state.get('micro_positions', {}).get(symbol, {})
                 tp_lvl = result.get('fill_price', 0) * (1 + tp_pct / 100)
                 sl_lvl = result.get('fill_price', 0) * (1 - sl_pct / 100)
-                tg_send(tg, f"✅ FILL {symbol}\n"
+                feat_line = format_features_short(features) if features.get('ok') else ''
+                reason_tag = entry_reason.upper().replace('_', ' ')
+                tg_send(tg, f"✅ FILL {symbol} [{reason_tag}]\n"
                              f"entry {result.get('fill_price', 0):.6f} | "
                              f"qty {result.get('fill_qty', 0)} | ${result.get('fill_notional', 0):.2f}\n"
                              f"TP={tp_lvl:.4f}(+{tp_pct}%) SL={sl_lvl:.4f}(-{sl_pct}%)\n"
-                             f"buy={result.get('order_id', '?')[:25]}\n"
+                             f"{feat_line}\n"
                              f"pos={pos_info.get('position_id', '?')} | "
                              f"{len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}",
                         level='success')

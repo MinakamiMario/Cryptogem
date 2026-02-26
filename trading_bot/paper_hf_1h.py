@@ -318,12 +318,30 @@ def format_features_short(features: dict) -> str:
 # ─── Exchange Setup ─────────────────────────────────────────
 
 def create_exchange():
-    """Create MEXC SPOT exchange via CCXT."""
+    """Create MEXC SPOT exchange via CCXT.
+
+    Env-var contract (fail-fast):
+      MEXC_API_KEY     — required
+      MEXC_SECRET_KEY  — required (canonical)
+      MEXC_SECRET      — accepted as fallback alias
+    Crashes immediately with actionable error if credentials missing.
+    """
     import ccxt
-    api_key = os.environ.get('MEXC_API_KEY', '')
-    secret = os.environ.get('MEXC_SECRET_KEY', '') or os.environ.get('MEXC_SECRET', '')
-    if not api_key or not secret:
-        raise ValueError("MEXC_API_KEY and MEXC_SECRET must be set in .env")
+    api_key = os.environ.get('MEXC_API_KEY', '').strip()
+    secret = (os.environ.get('MEXC_SECRET_KEY', '') or
+              os.environ.get('MEXC_SECRET', '')).strip()
+
+    missing = []
+    if not api_key:
+        missing.append('MEXC_API_KEY')
+    if not secret:
+        missing.append('MEXC_SECRET_KEY (or MEXC_SECRET)')
+    if missing:
+        raise SystemExit(
+            f"FATAL: Missing env-vars: {', '.join(missing)}. "
+            f"Set them in {BASE_DIR / '.env'} and restart."
+        )
+
     exchange = ccxt.mexc({
         'apiKey': api_key,
         'secret': secret,
@@ -746,7 +764,7 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
                     f"entry_price=${entry_price:.8f} | entry_qty={qty} | "
                     f"check_price=bid (${current_bid:.8f})")
 
-        sell_result = safe_sell_back(exchange, sym, qty, entry_price)
+        sell_result = safe_sell_back(exchange, sym, qty, entry_price, logger=logger)
 
         # Compute actual exit price and fees
         actual_sell_price = sell_result.get('sell_price', current_bid)
@@ -928,46 +946,145 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
     return closes
 
 
+# ─── Sell Helpers ──────────────────────────────────────────
+
+
+def floor_to_step(value: float, step: float) -> float:
+    """Floor *value* to the nearest multiple of *step*.
+
+    Uses Decimal arithmetic to avoid floating-point rounding errors
+    (e.g. 0.031774 / 1e-6 = 31773.999... in float, but 31774 in Decimal).
+
+    Handles both integer-precision (step=1e-2 → 2 decimals) and
+    fixed-step (step=0.01) conventions used by different CCXT exchanges.
+    Returns *value* unchanged if step is invalid.
+    """
+    if not step or step <= 0:
+        return value
+    from decimal import Decimal, ROUND_DOWN
+    d_val = Decimal(str(value))
+    d_step = Decimal(str(step))
+    return float((d_val / d_step).to_integral_value(rounding=ROUND_DOWN) * d_step)
+
+
+def extract_fill_price(order_resp: dict, fallback_bid: float = 0.0) -> float:
+    """Extract fill price from CCXT order response with robust fallback.
+
+    Fallback chain: average → price → trades[0].price → fallback_bid.
+    CCXT populates different fields per exchange; this handles MEXC quirks
+    where 'average' can be None on immediate market fills.
+    """
+    # 1. average (most reliable for fills)
+    avg = order_resp.get('average')
+    if avg is not None and float(avg) > 0:
+        return float(avg)
+
+    # 2. price (limit orders, or single-fill market)
+    px = order_resp.get('price')
+    if px is not None and float(px) > 0:
+        return float(px)
+
+    # 3. trades array (CCXT sometimes populates this)
+    trades = order_resp.get('trades') or []
+    if trades and isinstance(trades, list):
+        tp = trades[0].get('price')
+        if tp is not None and float(tp) > 0:
+            return float(tp)
+
+    # 4. fallback (bid we observed before selling)
+    return fallback_bid
+
+
 # ─── Safe Sell Back ─────────────────────────────────────────
 
-def safe_sell_back(exchange, symbol: str, qty: float, fill_price: float) -> dict:
-    """Sell back filled position with retries and dust handling.
+def safe_sell_back(exchange, symbol: str, qty: float, fill_price: float,
+                   *, logger=None) -> dict:
+    """Sell back filled position with retries, rounding, and dust handling.
 
-    Reuses pattern from live_fill_test._safe_sell_back().
+    Improvements over original:
+      - floor_to_step() prevents "Oversold" from rounding mismatch
+      - Checks actual free balance to cap sell qty
+      - Dust policy: skips sell below minNotional, logs as dust
+      - extract_fill_price() for robust price extraction
     """
     result = {}
     market_info = exchange.markets.get(symbol, {})
 
-    # Apply precision
+    # ── Step precision ──────────────────────────────────────
+    step = None
     try:
         qty = float(exchange.amount_to_precision(symbol, qty))
     except Exception:
         prec = market_info.get('precision', {}).get('amount')
         if prec is not None:
-            if isinstance(prec, int):
-                qty = math.floor(qty * 10**prec) / 10**prec
-            else:
-                qty = math.floor(qty / prec) * prec
+            if isinstance(prec, (int, float)) and prec < 1:
+                step = prec
+            elif isinstance(prec, int):
+                step = 10 ** (-prec)
+            if step:
+                qty = floor_to_step(qty, step)
 
-    # Check minimums
-    min_amount = market_info.get('limits', {}).get('amount', {}).get('min')
-    min_cost = market_info.get('limits', {}).get('cost', {}).get('min')
-    notional = qty * fill_price
+    # ── Cap to actual free balance (prevents "Oversold") ──
+    base = symbol.split('/')[0]
+    try:
+        bal = exchange.fetch_balance()
+        free = float(bal.get(base, {}).get('free', 0))
+        if free < qty:
+            if logger:
+                logger.warning(f"[SELL] {symbol}: qty={qty} > free={free} — capping to free")
+            qty = free
+            # Re-apply step precision after capping
+            if step:
+                qty = floor_to_step(qty, step)
+    except Exception as e:
+        if logger:
+            logger.warning(f"[SELL] {symbol}: balance check failed ({e}) — using original qty")
+
+    # ── Dust policy ─────────────────────────────────────────
+    min_amount = market_info.get('limits', {}).get('amount', {}).get('min') or 0
+    min_cost = market_info.get('limits', {}).get('cost', {}).get('min') or 0
+    notional = qty * fill_price if fill_price > 0 else 0
 
     if qty <= 0:
         result['dust_remaining'] = True
-        result['dust_reason'] = 'zero_qty'
+        result['dust_reason'] = 'zero_qty_after_rounding'
+        if logger:
+            logger.info(f"[DUST] {symbol}: qty=0 after rounding — skipping sell")
         return result
 
-    if (min_amount and qty < min_amount) or \
-       (min_cost and notional < min_cost) or \
-       notional <= DUST_CAP_USD:
+    if qty < min_amount:
         result['dust_remaining'] = True
         result['dust_notional'] = round(notional, 4)
-        result['dust_reason'] = 'below_minimum'
+        result['dust_reason'] = f'below_min_amount({min_amount})'
+        if logger:
+            logger.info(f"[DUST] {symbol}: qty={qty} < minAmount={min_amount} — skipping sell")
         return result
 
-    # Retry loop
+    if min_cost and notional < min_cost:
+        result['dust_remaining'] = True
+        result['dust_notional'] = round(notional, 4)
+        result['dust_reason'] = f'below_min_notional(${min_cost})'
+        if logger:
+            logger.info(f"[DUST] {symbol}: notional=${notional:.2f} < minCost=${min_cost} — skipping sell")
+        return result
+
+    if notional <= DUST_CAP_USD:
+        result['dust_remaining'] = True
+        result['dust_notional'] = round(notional, 4)
+        result['dust_reason'] = f'below_dust_cap(${DUST_CAP_USD})'
+        if logger:
+            logger.info(f"[DUST] {symbol}: notional=${notional:.2f} ≤ dustCap=${DUST_CAP_USD} — skipping sell")
+        return result
+
+    # ── Get current bid for fill_price fallback ─────────────
+    fallback_bid = 0.0
+    try:
+        ticker = exchange.fetch_ticker(symbol)
+        fallback_bid = float(ticker.get('bid', 0) or 0)
+    except Exception:
+        pass
+
+    # ── Retry loop ──────────────────────────────────────────
     for attempt in range(3):
         try:
             wait = 0.5 + attempt * 1.5 + random.uniform(0, 0.5)
@@ -980,20 +1097,39 @@ def safe_sell_back(exchange, symbol: str, qty: float, fill_price: float) -> dict
             time.sleep(2.0)
             try:
                 sell_status = exchange.fetch_order(sell_id, symbol)
-                result['sell_price'] = float(sell_status.get('average', 0) or
-                                             sell_status.get('price', 0) or 0)
+                result['sell_price'] = extract_fill_price(sell_status, fallback_bid)
                 result['sell_qty'] = float(sell_status.get('filled', 0) or 0)
                 sell_fees = sell_status.get('fee', {})
                 if sell_fees and sell_fees.get('cost'):
                     result['sell_fee_cost'] = float(sell_fees['cost'])
             except Exception as e:
+                # Order went through but status check failed — use order response
+                result['sell_price'] = extract_fill_price(sell_order, fallback_bid)
+                result['sell_qty'] = float(sell_order.get('filled', 0) or qty)
                 result['sell_check_error'] = str(e)
 
             return result
 
         except Exception as e:
+            err_str = str(e).lower()
             result['sell_error'] = str(e)
             result['sell_attempts'] = attempt + 1
+
+            # Oversold: reduce qty and retry
+            if 'oversold' in err_str or 'insufficient' in err_str:
+                try:
+                    bal = exchange.fetch_balance()
+                    free = float(bal.get(base, {}).get('free', 0))
+                    if step:
+                        free = floor_to_step(free, step)
+                    if free > 0 and free < qty:
+                        if logger:
+                            logger.warning(f"[SELL] {symbol}: oversold, retrying with free={free}")
+                        qty = free
+                    else:
+                        break  # no balance left
+                except Exception:
+                    break  # can't recover
 
     result['WARNING'] = 'POSITION OPEN — manual close needed!'
     return result
@@ -1094,7 +1230,7 @@ def run_single_round(exchange, symbol: str, order_usd: float, logger,
             status = exchange.fetch_order(order_id, symbol)
             fill_status = status.get('status', 'open')
             fill_qty = float(status.get('filled', 0) or 0)
-            fill_price_avg = float(status.get('average', 0) or status.get('price', 0) or 0)
+            fill_price_avg = extract_fill_price(status, fallback_bid=price)
             if fill_status in ('closed', 'filled'):
                 break
         except Exception:
@@ -1116,7 +1252,7 @@ def run_single_round(exchange, symbol: str, order_usd: float, logger,
             result['micro_held'] = True
         else:
             # Paper mode: sell back immediately
-            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg)
+            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg, logger=logger)
             result.update(sell_result)
             if 'sell_price' in sell_result and fill_price_avg:
                 result['roundtrip_pnl'] = round(
@@ -1140,7 +1276,7 @@ def run_single_round(exchange, symbol: str, order_usd: float, logger,
             result['micro_held'] = True
         else:
             # Paper mode: sell partial back
-            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg)
+            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg, logger=logger)
             result.update(sell_result)
             if 'sell_price' in sell_result and fill_price_avg:
                 result['roundtrip_pnl'] = round(

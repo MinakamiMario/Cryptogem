@@ -21,6 +21,8 @@ from trading_bot.paper_hf_1h import (
     save_state,
     load_universe,
     print_report,
+    floor_to_step,
+    extract_fill_price,
     DUST_CAP_USD,
     ORDER_TTL_SECONDS,
     SPREAD_CAP_BPS,
@@ -61,6 +63,12 @@ def _mock_exchange(price_precision=8, amount_precision=8):
     }
     ex.price_to_precision.side_effect = lambda sym, p: str(round(p, price_precision))
     ex.amount_to_precision.side_effect = lambda sym, q: str(round(q, amount_precision))
+    # Default balance: more than enough (prevents oversold guard from interfering)
+    ex.fetch_balance.return_value = {
+        'ADA': {'free': 10000.0, 'used': 0, 'total': 10000.0},
+        'XRP': {'free': 10000.0, 'used': 0, 'total': 10000.0},
+    }
+    ex.fetch_ticker.return_value = {'bid': 1.0, 'ask': 1.01}
     return ex
 
 
@@ -178,15 +186,15 @@ class TestSafeSellBack:
         ex = _mock_exchange()
         result = safe_sell_back(ex, 'ADA/USDT', 0.0, 1.0)
         assert result.get('dust_remaining') is True
-        assert result.get('dust_reason') == 'zero_qty'
+        assert 'zero_qty' in result.get('dust_reason', '')
 
     def test_dust_below_minimum(self):
         """Notional below DUST_CAP → dust_remaining."""
         ex = _mock_exchange()
         # qty=0.1, price=1.0, notional=$0.10 < $0.50 dust cap
+        # But first min_amount triggers: 0.1 < 1.0
         result = safe_sell_back(ex, 'ADA/USDT', 0.1, 1.0)
         assert result.get('dust_remaining') is True
-        assert result.get('dust_reason') == 'below_minimum'
 
     def test_dust_below_min_amount(self):
         """Quantity below market min_amount → dust_remaining."""
@@ -195,6 +203,7 @@ class TestSafeSellBack:
         # However min_amount check triggers first
         result = safe_sell_back(ex, 'ADA/USDT', 0.5, 10.0)
         assert result.get('dust_remaining') is True
+        assert 'min_amount' in result.get('dust_reason', '')
 
     def test_successful_sell(self):
         """Successful market sell → sell_order_id in result."""
@@ -233,6 +242,110 @@ class TestSafeSellBack:
         assert 'WARNING' in result
         assert 'POSITION OPEN' in result['WARNING']
         assert result.get('sell_attempts') == 3
+
+    def test_oversold_caps_to_free_balance(self):
+        """If qty > free balance, caps sell to free amount."""
+        ex = _mock_exchange()
+        ex.fetch_balance.return_value = {
+            'ADA': {'free': 3.0, 'used': 0, 'total': 3.0},
+        }
+        ex.create_market_sell_order.return_value = {'id': 'sell_cap'}
+        ex.fetch_order.return_value = {
+            'average': 1.0, 'filled': 3.0, 'fee': {'cost': 0.001}
+        }
+        # Request 5.0 but only 3.0 free
+        result = safe_sell_back(ex, 'ADA/USDT', 5.0, 1.0)
+        assert result.get('sell_order_id') == 'sell_cap'
+        # Verify the sell was for the capped amount
+        call_args = ex.create_market_sell_order.call_args
+        assert call_args[0][1] <= 3.0
+
+    def test_dust_below_min_notional(self):
+        """Notional below min_cost → dust with specific reason."""
+        ex = _mock_exchange()
+        # min_cost=1.0 in mock, qty=2.0 but price=0.3 → notional=0.60 < 1.0
+        # But min_amount=1.0 and qty=2.0 passes that check
+        # Override to have high min_cost
+        ex.markets['ADA/USDT']['limits']['cost']['min'] = 5.0
+        result = safe_sell_back(ex, 'ADA/USDT', 2.0, 1.0)
+        assert result.get('dust_remaining') is True
+        assert 'min_notional' in result.get('dust_reason', '')
+
+    def test_dust_below_dust_cap(self):
+        """Notional below DUST_CAP_USD → dust."""
+        ex = _mock_exchange()
+        # min_amount=1.0, qty=2.0 OK; min_cost=1.0, notional=2*0.2=0.4 < 1.0
+        # Actually min_cost triggers first. Let's make min_cost low.
+        ex.markets['ADA/USDT']['limits']['cost']['min'] = 0.1
+        ex.markets['ADA/USDT']['limits']['amount']['min'] = 0.1
+        # qty=1.0 * price=0.3 = notional $0.30 < DUST_CAP($0.50)
+        result = safe_sell_back(ex, 'ADA/USDT', 1.0, 0.3)
+        assert result.get('dust_remaining') is True
+        assert 'dust_cap' in result.get('dust_reason', '')
+
+
+# ---------------------------------------------------------------------------
+# floor_to_step
+# ---------------------------------------------------------------------------
+
+class TestFloorToStep:
+    """Tests for floor_to_step helper."""
+
+    def test_basic_step(self):
+        assert floor_to_step(314.729, 0.01) == 314.72
+
+    def test_integer_step(self):
+        assert floor_to_step(5.7, 1.0) == 5.0
+
+    def test_small_step(self):
+        assert floor_to_step(0.031774, 0.000001) == 0.031774
+
+    def test_zero_step_returns_value(self):
+        assert floor_to_step(5.5, 0) == 5.5
+
+    def test_negative_step_returns_value(self):
+        assert floor_to_step(5.5, -0.01) == 5.5
+
+    def test_floors_down(self):
+        """Never rounds up."""
+        assert floor_to_step(9.999, 0.01) == 9.99
+
+
+# ---------------------------------------------------------------------------
+# extract_fill_price
+# ---------------------------------------------------------------------------
+
+class TestExtractFillPrice:
+    """Tests for robust fill price extraction."""
+
+    def test_average_first(self):
+        assert extract_fill_price({'average': 1.5, 'price': 1.4}) == 1.5
+
+    def test_price_fallback(self):
+        assert extract_fill_price({'average': None, 'price': 1.4}) == 1.4
+
+    def test_trades_fallback(self):
+        order = {'average': None, 'price': None, 'trades': [{'price': 1.3}]}
+        assert extract_fill_price(order) == 1.3
+
+    def test_bid_fallback(self):
+        order = {'average': None, 'price': None, 'trades': []}
+        assert extract_fill_price(order, fallback_bid=1.2) == 1.2
+
+    def test_zero_average_skipped(self):
+        """average=0 should be treated as missing."""
+        assert extract_fill_price({'average': 0, 'price': 1.1}) == 1.1
+
+    def test_none_trades_handled(self):
+        order = {'average': None, 'price': None, 'trades': None}
+        assert extract_fill_price(order, fallback_bid=0.9) == 0.9
+
+    def test_empty_order(self):
+        assert extract_fill_price({}, fallback_bid=0.5) == 0.5
+
+    def test_no_fallback(self):
+        """No fallback bid → returns 0.0."""
+        assert extract_fill_price({}) == 0.0
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,150 @@
+"""Heartbeat loop — sequential agent execution with stagger."""
+from __future__ import annotations
+
+import logging
+import signal
+import time
+from typing import Optional
+
+from lab.agents.base import BaseAgent
+from lab.config import HEARTBEAT_INTERVAL_S, HEARTBEAT_STAGGER_S
+from lab.db import LabDB
+from lab.notifier import LabNotifier
+
+logger = logging.getLogger('lab.heartbeat')
+
+
+class HeartbeatLoop:
+    """Runs agents sequentially on a timer."""
+
+    def __init__(self, db: LabDB, notifier: LabNotifier,
+                 agents: list[BaseAgent]):
+        self.db = db
+        self.notifier = notifier
+        self.agents = agents
+        self._running = True
+        self._cycle = 0
+        self._current_agent: str | None = None
+
+        # Graceful shutdown
+        signal.signal(signal.SIGTERM, self._handle_signal)
+        signal.signal(signal.SIGINT, self._handle_signal)
+
+    def _handle_signal(self, signum: int, frame) -> None:
+        logger.info(
+            f"Received signal {signum}, shutting down gracefully... "
+            f"cycle={self._cycle}, current_agent={self._current_agent or 'none'}"
+        )
+        self._running = False
+
+    def shutdown(self) -> None:
+        """Explicit shutdown — log state and stop."""
+        logger.info(f"Shutdown requested. Cycle={self._cycle}, "
+                    f"current_agent={self._current_agent or 'none'}")
+        self._running = False
+
+    def run_once(self) -> dict:
+        """Run one heartbeat cycle across all agents."""
+        self._cycle += 1
+        cycle_stats = {
+            'cycle': self._cycle,
+            'reviews': 0,
+            'tasks': 0,
+            'promotions': 0,
+            'errors': 0,
+        }
+
+        logger.info(f"=== Heartbeat cycle {self._cycle} ===")
+
+        for i, agent in enumerate(self.agents):
+            if not self._running:
+                break
+
+            # Stagger: 1 min between agents
+            if i > 0:
+                time.sleep(HEARTBEAT_STAGGER_S)
+
+            try:
+                self._current_agent = agent.name
+                logger.info(f"  [{agent.name}] starting heartbeat")
+                stats = agent.heartbeat()
+                cycle_stats['reviews'] += stats.get('reviews', 0)
+                cycle_stats['tasks'] += stats.get('tasks', 0)
+                cycle_stats['promotions'] += stats.get('promotions', 0)
+                cycle_stats['errors'] += stats.get('errors', 0)
+                self._current_agent = None
+                logger.info(
+                    f"  [{agent.name}] done: "
+                    f"reviews={stats.get('reviews', 0)} "
+                    f"tasks={stats.get('tasks', 0)} "
+                    f"errors={stats.get('errors', 0)}"
+                )
+            except Exception as e:
+                self._current_agent = None
+                logger.error(f"  [{agent.name}] CRASHED: {e}")
+                cycle_stats['errors'] += 1
+                self.notifier.agent_error(agent.name, str(e))
+                # Skip agent, continue with next
+                try:
+                    self.db.set_status(agent.name, 'error',
+                                       note=str(e)[:200])
+                except Exception:
+                    pass
+
+        # Send summary (only if something happened)
+        self.notifier.heartbeat_summary(
+            self._cycle,
+            cycle_stats['reviews'],
+            cycle_stats['tasks'],
+            cycle_stats['promotions'],
+        )
+
+        logger.info(
+            f"=== Cycle {self._cycle} done: "
+            f"reviews={cycle_stats['reviews']} "
+            f"tasks={cycle_stats['tasks']} "
+            f"promotions={cycle_stats['promotions']} "
+            f"errors={cycle_stats['errors']} ==="
+        )
+
+        return cycle_stats
+
+    def run(self, max_hours: Optional[float] = None,
+            dry_run: bool = False) -> None:
+        """Run heartbeat loop. max_hours=None → infinite."""
+        start_time = time.time()
+        max_seconds = max_hours * 3600 if max_hours else float('inf')
+
+        logger.info(
+            f"Heartbeat loop started. "
+            f"Interval: {HEARTBEAT_INTERVAL_S}s, "
+            f"Agents: {len(self.agents)}, "
+            f"Max hours: {max_hours or 'infinite'}"
+        )
+
+        while self._running:
+            self.run_once()
+
+            if dry_run:
+                logger.info("Dry run: stopping after 1 cycle")
+                break
+
+            elapsed = time.time() - start_time
+            if elapsed >= max_seconds:
+                logger.info(f"Max runtime reached ({max_hours}h)")
+                break
+
+            # Sleep until next heartbeat
+            remaining = HEARTBEAT_INTERVAL_S - (time.time() - start_time) % HEARTBEAT_INTERVAL_S
+            logger.info(f"Sleeping {remaining:.0f}s until next heartbeat...")
+
+            # Interruptible sleep
+            sleep_end = time.time() + remaining
+            while time.time() < sleep_end and self._running:
+                time.sleep(1)
+
+        logger.info(
+            f"Heartbeat loop stopped. "
+            f"Completed {self._cycle} cycles, "
+            f"last_agent={self._current_agent or 'none'}"
+        )

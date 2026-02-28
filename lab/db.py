@@ -172,6 +172,18 @@ class LabDB:
         ).fetchall()
         return [self._row_to_task(r) for r in rows]
 
+    def get_my_rejected_tasks(self, agent: str) -> list[Task]:
+        """Get tasks assigned to agent in peer_review with needs_changes."""
+        rows = self.conn.execute(
+            """SELECT DISTINCT t.* FROM tasks t
+               JOIN task_reviews tr ON tr.task_id = t.id
+               WHERE t.assigned_to = ? AND t.status = 'peer_review'
+                 AND tr.verdict = 'needs_changes'
+               ORDER BY t.priority ASC, t.created_at ASC""",
+            (agent,),
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
     def get_tasks_by_status(self, status: str) -> list[Task]:
         rows = self.conn.execute(
             "SELECT * FROM tasks WHERE status = ? ORDER BY priority ASC",

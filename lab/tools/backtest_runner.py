@@ -29,7 +29,7 @@ def _load_engine():
     try:
         from agent_team_v3 import (
             BASELINE_CFG,
-            GRID_BEST,
+            BEST_KNOWN,
             INITIAL_CAPITAL,
             KRAKEN_FEE,
             PARAMS_BY_EXIT,
@@ -47,7 +47,7 @@ def _load_engine():
             'normalize_cfg': normalize_cfg,
             'PARAMS_BY_EXIT': PARAMS_BY_EXIT,
             'BASELINE_CFG': BASELINE_CFG,
-            'GRID_BEST': GRID_BEST,
+            'BEST_KNOWN': BEST_KNOWN,
             'INITIAL_CAPITAL': INITIAL_CAPITAL,
             'KRAKEN_FEE': KRAKEN_FEE,
         }
@@ -145,9 +145,9 @@ def get_baseline_cfg() -> dict:
     return dict(_load_engine()['BASELINE_CFG'])
 
 
-def get_grid_best() -> dict:
-    """Get GRID_BEST config."""
-    return dict(_load_engine()['GRID_BEST'])
+def get_best_known() -> dict:
+    """Get BEST_KNOWN config."""
+    return dict(_load_engine()['BEST_KNOWN'])
 
 
 def get_champion() -> Optional[dict]:

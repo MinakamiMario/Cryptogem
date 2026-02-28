@@ -89,12 +89,12 @@ class EdgeAnalyst(BaseAgent):
     # ── Private task implementations ──────────────────────
 
     def _get_champion_cfg(self) -> dict:
-        """Load champion config, falling back to grid_best."""
-        from lab.tools.backtest_runner import get_champion, get_grid_best
+        """Load champion config, falling back to best_known."""
+        from lab.tools.backtest_runner import get_champion, get_best_known
         champion = get_champion()
         if champion and 'cfg' in champion:
             return dict(champion['cfg'])
-        return get_grid_best()
+        return get_best_known()
 
     def _exit_attribution(self, task: Task) -> TaskResult:
         """Run backtest on champion, analyze exit class breakdown."""
@@ -111,8 +111,8 @@ class EdgeAnalyst(BaseAgent):
 
         # Analyze exit classes
         exit_classes = result.get('exit_classes', {})
-        trades = result.get('trades', [])
-        total_trades = result.get('n_trades', len(trades))
+        trade_list = result.get('trade_list', [])
+        total_trades = result.get('trades', len(trade_list))
 
         # Compute A vs B class breakdown
         class_a = exit_classes.get('A', {})

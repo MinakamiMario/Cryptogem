@@ -36,7 +36,7 @@ def _make_fake_engine():
         'normalize_cfg': FAKE_NORMALIZE,
         'PARAMS_BY_EXIT': {'A': ['rsi_period'], 'B': ['time_max_bars']},
         'BASELINE_CFG': {'rsi_period': 14, 'time_max_bars': 100},
-        'GRID_BEST': {'rsi_period': 12, 'time_max_bars': 80},
+        'BEST_KNOWN': {'rsi_period': 12, 'time_max_bars': 80},
         'INITIAL_CAPITAL': 2000.0,
         'KRAKEN_FEE': 0.0026,
     }

@@ -59,11 +59,23 @@ class BaseAgent(ABC):
                     except Exception as e:
                         self.logger.error(f"Promotion failed for #{task.id}: {e}")
 
-            # Step 3: Work on own tasks
-            my_tasks = self.db.get_my_tasks(self.name, status='todo')
+            # Step 2.5: Pick up tasks that got needs_changes reviews
+            rejected = self.db.get_my_rejected_tasks(self.name)
+            for task in rejected:
+                try:
+                    self.db.transition(task.id, 'in_progress', actor=self.name)
+                    self.logger.info(f"Reworking #{task.id} after needs_changes")
+                except ValueError:
+                    pass  # Already moved
+
+            # Step 3: Work on own tasks (rework first, then new)
+            rework = self.db.get_my_tasks(self.name, status='in_progress')
+            new_tasks = self.db.get_my_tasks(self.name, status='todo')
+            my_tasks = rework + new_tasks
             if my_tasks:
-                task = my_tasks[0]  # oldest first
-                self.db.transition(task.id, 'in_progress', actor=self.name)
+                task = my_tasks[0]  # rework or oldest first
+                if task.status == 'todo':
+                    self.db.transition(task.id, 'in_progress', actor=self.name)
                 self.db.set_status(self.name, 'working', task_id=task.id,
                                    note=task.title)
 

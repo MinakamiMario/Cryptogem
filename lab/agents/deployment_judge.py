@@ -146,12 +146,12 @@ class DeploymentJudge(BaseAgent):
     # ── Private task implementations ──────────────────────
 
     def _get_champion_cfg(self) -> dict:
-        """Load champion config, falling back to grid_best."""
-        from lab.tools.backtest_runner import get_champion, get_grid_best
+        """Load champion config, falling back to best_known."""
+        from lab.tools.backtest_runner import get_champion, get_best_known
         champion = get_champion()
         if champion and 'cfg' in champion:
             return dict(champion['cfg'])
-        return get_grid_best()
+        return get_best_known()
 
     def _gate_check(self, task: Task) -> TaskResult:
         """Run full run_candidate(), extract gates, produce GO/NO-GO verdict."""

@@ -1,0 +1,3421 @@
+{
+  "summary": {
+    "total_configs": 30,
+    "strong_leads": [
+      "sweep_v1_004_sv1a04_rsi35_p8_atr1.5",
+      "sweep_v1_005_sv1a05_rsi40_p8_atr1.0_volhigh",
+      "sweep_v1_002_sv1a02_rsi40_p5_atr1.5",
+      "sweep_v1_018_sv1c06_hh1_sw5_tol2.0_rsi45",
+      "sweep_v1_006_sv1a06_rsi45_p8_atr2.0",
+      "sweep_v1_003_sv1a03_rsi45_p5_atr2.0"
+    ],
+    "weak_leads": [
+      "sweep_v1_016_sv1c04_hh1_sw8_tol1.5"
+    ],
+    "negative": [
+      "sweep_v1_008_sv1b02_dclow_rsi35_vol2.0_sw0.5",
+      "sweep_v1_007_sv1b01_dclow_rsi40_vol1.5_sw0.3",
+      "sweep_v1_025_sv1e01_pctile5_gap10",
+      "sweep_v1_030_sv1e06_pctile5_gap15_rsi35",
+      "sweep_v1_011_sv1b05_dclow_rsi45_vol1.0_sw0.3",
+      "sweep_v1_028_sv1e04_pctile10_gap5_rsi35",
+      "sweep_v1_026_sv1e02_pctile10_gap10",
+      "sweep_v1_029_sv1e05_pctile20_gap5_volhigh",
+      "sweep_v1_012_sv1b06_pivot8_rsi35_vol3.0_sw0.5",
+      "sweep_v1_027_sv1e03_pctile15_gap15",
+      "sweep_v1_017_sv1c05_hh2_sw8_tol1.0_rsi35",
+      "sweep_v1_009_sv1b03_pivot_rsi40_vol1.5_sw0.3",
+      "sweep_v1_015_sv1c03_hh3_sw5_tol2.0",
+      "sweep_v1_001_sv1a01_rsi35_p5_atr1.0",
+      "sweep_v1_010_sv1b04_both_rsi40_vol2.0_sw0.5",
+      "sweep_v1_013_sv1c01_hh1_sw5_tol1.0",
+      "sweep_v1_014_sv1c02_hh2_sw5_tol1.5",
+      "sweep_v1_022_sv1d04_pctile20_sq8_rsi35",
+      "sweep_v1_024_sv1d06_pctile30_sq3_volhigh",
+      "sweep_v1_021_sv1d03_pctile40_sq3_expand",
+      "sweep_v1_019_sv1d01_pctile20_sq3",
+      "sweep_v1_020_sv1d02_pctile30_sq5",
+      "sweep_v1_023_sv1d05_pctile30_sq5_expand_rsi45"
+    ],
+    "insufficient": []
+  },
+  "decompositions": {
+    "sweep_v1_008_sv1b02_dclow_rsi35_vol2.0_sw0.5": {
+      "config_id": "sweep_v1_008_sv1b02_dclow_rsi35_vol2.0_sw0.5",
+      "class_a_pnl": 2107.5833550764833,
+      "class_b_pnl": -3147.7752253255653,
+      "class_a_count": 124,
+      "class_b_count": 61,
+      "class_a_wr": 74.19354838709677,
+      "class_b_wr": 1.639344262295082,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 27,
+          "pnl": -2014.47,
+          "wr": 0.0,
+          "avg_pnl": -74.61,
+          "avg_bars": 8.2
+        },
+        "TIME MAX": {
+          "count": 32,
+          "pnl": -1092.01,
+          "wr": 3.1,
+          "avg_pnl": -34.13,
+          "avg_bars": 15.0
+        },
+        "RSI RECOVERY": {
+          "count": 81,
+          "pnl": 1535.35,
+          "wr": 71.6,
+          "avg_pnl": 18.95,
+          "avg_bars": 7.4
+        },
+        "DC TARGET": {
+          "count": 35,
+          "pnl": 455.57,
+          "wr": 80.0,
+          "avg_pnl": 13.02,
+          "avg_bars": 5.1
+        },
+        "BB TARGET": {
+          "count": 8,
+          "pnl": 116.66,
+          "wr": 75.0,
+          "avg_pnl": 14.58,
+          "avg_bars": 6.9
+        },
+        "END": {
+          "count": 2,
+          "pnl": -41.29,
+          "wr": 0.0,
+          "avg_pnl": -20.65,
+          "avg_bars": 5.5
+        }
+      },
+      "stopout_ratio": 0.14594594594594595,
+      "stopout_cost": -2014.473,
+      "stopout_avg_loss": -74.61011111111111,
+      "gross_pnl": -616.36,
+      "fee_cost": 423.83,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 5.978494623655914,
+      "avg_bars_loser": 10.782608695652174,
+      "avg_bars_class_a": 6.741935483870968,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.69 < 0.90",
+        "Best exit: RSI RECOVERY ($1535, 81 trades, 72% WR)",
+        "Worst exit: FIXED STOP ($-2014, 27 trades)",
+        "LOW STOPOUT: 15% -- entries have good geometric placement"
+      ],
+      "total_trades": 185,
+      "total_pnl": -1040.19,
+      "pf": 0.685,
+      "wr": 50.27,
+      "dd": 53.01
+    },
+    "sweep_v1_007_sv1b01_dclow_rsi40_vol1.5_sw0.3": {
+      "config_id": "sweep_v1_007_sv1b01_dclow_rsi40_vol1.5_sw0.3",
+      "class_a_pnl": 4685.50292405465,
+      "class_b_pnl": -5488.815824404341,
+      "class_a_count": 142,
+      "class_b_count": 89,
+      "class_a_wr": 86.61971830985915,
+      "class_b_wr": 3.3707865168539324,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 92,
+          "pnl": 3125.24,
+          "wr": 85.9,
+          "avg_pnl": 33.97,
+          "avg_bars": 7.8
+        },
+        "BB TARGET": {
+          "count": 6,
+          "pnl": 493.51,
+          "wr": 100.0,
+          "avg_pnl": 82.25,
+          "avg_bars": 6.5
+        },
+        "DC TARGET": {
+          "count": 44,
+          "pnl": 1066.76,
+          "wr": 86.4,
+          "avg_pnl": 24.24,
+          "avg_bars": 4.3
+        },
+        "FIXED STOP": {
+          "count": 38,
+          "pnl": -3871.25,
+          "wr": 0.0,
+          "avg_pnl": -101.87,
+          "avg_bars": 7.0
+        },
+        "TIME MAX": {
+          "count": 48,
+          "pnl": -1603.71,
+          "wr": 4.2,
+          "avg_pnl": -33.41,
+          "avg_bars": 15.0
+        },
+        "END": {
+          "count": 3,
+          "pnl": -13.85,
+          "wr": 33.3,
+          "avg_pnl": -4.62,
+          "avg_bars": 7.7
+        }
+      },
+      "stopout_ratio": 0.1645021645021645,
+      "stopout_cost": -3871.2481,
+      "stopout_avg_loss": -101.87495,
+      "gross_pnl": -55.98,
+      "fee_cost": 747.33,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 6.349206349206349,
+      "avg_bars_loser": 11.00952380952381,
+      "avg_bars_class_a": 6.676056338028169,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.86 < 0.90",
+        "Best exit: RSI RECOVERY ($3125, 92 trades, 86% WR)",
+        "Worst exit: FIXED STOP ($-3871, 38 trades)",
+        "LOW STOPOUT: 16% -- entries have good geometric placement"
+      ],
+      "total_trades": 231,
+      "total_pnl": -803.31,
+      "pf": 0.8646,
+      "wr": 54.55,
+      "dd": 63.27
+    },
+    "sweep_v1_025_sv1e01_pctile5_gap10": {
+      "config_id": "sweep_v1_025_sv1e01_pctile5_gap10",
+      "class_a_pnl": 2489.938683230375,
+      "class_b_pnl": -3648.7086026311213,
+      "class_a_count": 110,
+      "class_b_count": 95,
+      "class_a_wr": 77.27272727272727,
+      "class_b_wr": 3.1578947368421053,
+      "class_a_share": 0.9937071684586481,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 38,
+          "pnl": -2281.88,
+          "wr": 0.0,
+          "avg_pnl": -60.05,
+          "avg_bars": 6.2
+        },
+        "RSI RECOVERY": {
+          "count": 82,
+          "pnl": 1587.85,
+          "wr": 74.4,
+          "avg_pnl": 19.36,
+          "avg_bars": 9.5
+        },
+        "TIME MAX": {
+          "count": 54,
+          "pnl": -1382.6,
+          "wr": 1.9,
+          "avg_pnl": -25.6,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 24,
+          "pnl": 843.34,
+          "wr": 87.5,
+          "avg_pnl": 35.14,
+          "avg_bars": 5.2
+        },
+        "BB TARGET": {
+          "count": 4,
+          "pnl": 58.75,
+          "wr": 75.0,
+          "avg_pnl": 14.69,
+          "avg_bars": 7.5
+        },
+        "END": {
+          "count": 3,
+          "pnl": 15.77,
+          "wr": 66.7,
+          "avg_pnl": 5.26,
+          "avg_bars": 5.7
+        }
+      },
+      "stopout_ratio": 0.18536585365853658,
+      "stopout_cost": -2281.877,
+      "stopout_avg_loss": -60.0493947368421,
+      "gross_pnl": -774.48,
+      "fee_cost": 384.29,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 7.5,
+      "avg_bars_loser": 11.435897435897436,
+      "avg_bars_class_a": 8.50909090909091,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.69 < 0.90",
+        "Best exit: RSI RECOVERY ($1588, 82 trades, 74% WR)",
+        "Worst exit: FIXED STOP ($-2282, 38 trades)",
+        "LOW STOPOUT: 19% -- entries have good geometric placement"
+      ],
+      "total_trades": 205,
+      "total_pnl": -1460.63,
+      "pf": 0.6914,
+      "wr": 42.93,
+      "dd": 75.0
+    },
+    "sweep_v1_030_sv1e06_pctile5_gap15_rsi35": {
+      "config_id": "sweep_v1_030_sv1e06_pctile5_gap15_rsi35",
+      "class_a_pnl": 2489.938683230375,
+      "class_b_pnl": -3648.7086026311213,
+      "class_a_count": 110,
+      "class_b_count": 95,
+      "class_a_wr": 77.27272727272727,
+      "class_b_wr": 3.1578947368421053,
+      "class_a_share": 0.9937071684586481,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 38,
+          "pnl": -2281.88,
+          "wr": 0.0,
+          "avg_pnl": -60.05,
+          "avg_bars": 6.2
+        },
+        "RSI RECOVERY": {
+          "count": 82,
+          "pnl": 1587.85,
+          "wr": 74.4,
+          "avg_pnl": 19.36,
+          "avg_bars": 9.5
+        },
+        "TIME MAX": {
+          "count": 54,
+          "pnl": -1382.6,
+          "wr": 1.9,
+          "avg_pnl": -25.6,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 24,
+          "pnl": 843.34,
+          "wr": 87.5,
+          "avg_pnl": 35.14,
+          "avg_bars": 5.2
+        },
+        "BB TARGET": {
+          "count": 4,
+          "pnl": 58.75,
+          "wr": 75.0,
+          "avg_pnl": 14.69,
+          "avg_bars": 7.5
+        },
+        "END": {
+          "count": 3,
+          "pnl": 15.77,
+          "wr": 66.7,
+          "avg_pnl": 5.26,
+          "avg_bars": 5.7
+        }
+      },
+      "stopout_ratio": 0.18536585365853658,
+      "stopout_cost": -2281.877,
+      "stopout_avg_loss": -60.0493947368421,
+      "gross_pnl": -774.48,
+      "fee_cost": 384.29,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 7.5,
+      "avg_bars_loser": 11.435897435897436,
+      "avg_bars_class_a": 8.50909090909091,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.69 < 0.90",
+        "Best exit: RSI RECOVERY ($1588, 82 trades, 74% WR)",
+        "Worst exit: FIXED STOP ($-2282, 38 trades)",
+        "LOW STOPOUT: 19% -- entries have good geometric placement"
+      ],
+      "total_trades": 205,
+      "total_pnl": -1460.63,
+      "pf": 0.6914,
+      "wr": 42.93,
+      "dd": 75.0
+    },
+    "sweep_v1_011_sv1b05_dclow_rsi45_vol1.0_sw0.3": {
+      "config_id": "sweep_v1_011_sv1b05_dclow_rsi45_vol1.0_sw0.3",
+      "class_a_pnl": 3930.0516007483834,
+      "class_b_pnl": -4850.628494071971,
+      "class_a_count": 157,
+      "class_b_count": 88,
+      "class_a_wr": 84.71337579617835,
+      "class_b_wr": 1.1363636363636365,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 112,
+          "pnl": 2122.47,
+          "wr": 83.0,
+          "avg_pnl": 18.95,
+          "avg_bars": 7.1
+        },
+        "BB TARGET": {
+          "count": 7,
+          "pnl": 780.41,
+          "wr": 100.0,
+          "avg_pnl": 111.49,
+          "avg_bars": 9.1
+        },
+        "FIXED STOP": {
+          "count": 40,
+          "pnl": -3321.83,
+          "wr": 0.0,
+          "avg_pnl": -83.05,
+          "avg_bars": 7.1
+        },
+        "TIME MAX": {
+          "count": 45,
+          "pnl": -1500.05,
+          "wr": 2.2,
+          "avg_pnl": -33.33,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 38,
+          "pnl": 1027.17,
+          "wr": 86.8,
+          "avg_pnl": 27.03,
+          "avg_bars": 3.6
+        },
+        "END": {
+          "count": 3,
+          "pnl": -28.75,
+          "wr": 0.0,
+          "avg_pnl": -9.58,
+          "avg_bars": 5.7
+        }
+      },
+      "stopout_ratio": 0.16326530612244897,
+      "stopout_cost": -3321.8264,
+      "stopout_avg_loss": -83.04566,
+      "gross_pnl": -268.36,
+      "fee_cost": 652.22,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 6.052238805970149,
+      "avg_bars_loser": 10.45945945945946,
+      "avg_bars_class_a": 6.343949044585988,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.82 < 0.90",
+        "Best exit: RSI RECOVERY ($2122, 112 trades, 83% WR)",
+        "Worst exit: FIXED STOP ($-3322, 40 trades)",
+        "LOW STOPOUT: 16% -- entries have good geometric placement"
+      ],
+      "total_trades": 245,
+      "total_pnl": -920.58,
+      "pf": 0.8182,
+      "wr": 54.69,
+      "dd": 61.21
+    },
+    "sweep_v1_028_sv1e04_pctile10_gap5_rsi35": {
+      "config_id": "sweep_v1_028_sv1e04_pctile10_gap5_rsi35",
+      "class_a_pnl": 2127.4078958388727,
+      "class_b_pnl": -3508.5017052204307,
+      "class_a_count": 100,
+      "class_b_count": 102,
+      "class_a_wr": 82.0,
+      "class_b_wr": 2.941176470588235,
+      "class_a_share": 0.9963221682583064,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 40,
+          "pnl": -2183.27,
+          "wr": 0.0,
+          "avg_pnl": -54.58,
+          "avg_bars": 6.5
+        },
+        "RSI RECOVERY": {
+          "count": 73,
+          "pnl": 1289.95,
+          "wr": 79.5,
+          "avg_pnl": 17.67,
+          "avg_bars": 9.2
+        },
+        "TIME MAX": {
+          "count": 59,
+          "pnl": -1333.09,
+          "wr": 1.7,
+          "avg_pnl": -22.59,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 23,
+          "pnl": 808.12,
+          "wr": 95.7,
+          "avg_pnl": 35.14,
+          "avg_bars": 5.3
+        },
+        "BB TARGET": {
+          "count": 4,
+          "pnl": 29.34,
+          "wr": 50.0,
+          "avg_pnl": 7.33,
+          "avg_bars": 8.5
+        },
+        "END": {
+          "count": 3,
+          "pnl": 7.85,
+          "wr": 66.7,
+          "avg_pnl": 2.62,
+          "avg_bars": 5.7
+        }
+      },
+      "stopout_ratio": 0.19801980198019803,
+      "stopout_cost": -2183.2666,
+      "stopout_avg_loss": -54.581665,
+      "gross_pnl": -1047.82,
+      "fee_cost": 333.27,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 7.294117647058823,
+      "avg_bars_loser": 11.726495726495726,
+      "avg_bars_class_a": 8.3,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.61 < 0.90",
+        "Best exit: RSI RECOVERY ($1290, 73 trades, 80% WR)",
+        "Worst exit: FIXED STOP ($-2183, 40 trades)",
+        "LOW STOPOUT: 20% -- entries have good geometric placement"
+      ],
+      "total_trades": 202,
+      "total_pnl": -1602.37,
+      "pf": 0.6147,
+      "wr": 42.08,
+      "dd": 81.32
+    },
+    "sweep_v1_026_sv1e02_pctile10_gap10": {
+      "config_id": "sweep_v1_026_sv1e02_pctile10_gap10",
+      "class_a_pnl": 2127.6447603705788,
+      "class_b_pnl": -3496.0628145476276,
+      "class_a_count": 101,
+      "class_b_count": 101,
+      "class_a_wr": 81.1881188118812,
+      "class_b_wr": 1.9801980198019802,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 39,
+          "pnl": -2161.48,
+          "wr": 0.0,
+          "avg_pnl": -55.42,
+          "avg_bars": 6.8
+        },
+        "RSI RECOVERY": {
+          "count": 75,
+          "pnl": 1298.46,
+          "wr": 78.7,
+          "avg_pnl": 17.31,
+          "avg_bars": 9.1
+        },
+        "TIME MAX": {
+          "count": 59,
+          "pnl": -1332.66,
+          "wr": 1.7,
+          "avg_pnl": -22.59,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 22,
+          "pnl": 799.77,
+          "wr": 95.5,
+          "avg_pnl": 36.35,
+          "avg_bars": 5.5
+        },
+        "BB TARGET": {
+          "count": 4,
+          "pnl": 29.42,
+          "wr": 50.0,
+          "avg_pnl": 7.35,
+          "avg_bars": 8.5
+        },
+        "END": {
+          "count": 3,
+          "pnl": -1.92,
+          "wr": 33.3,
+          "avg_pnl": -0.64,
+          "avg_bars": 3.3
+        }
+      },
+      "stopout_ratio": 0.19306930693069307,
+      "stopout_cost": -2161.4805,
+      "stopout_avg_loss": -55.422576923076925,
+      "gross_pnl": -1034.86,
+      "fee_cost": 333.56,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 7.273809523809524,
+      "avg_bars_loser": 11.703389830508474,
+      "avg_bars_class_a": 8.247524752475247,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.62 < 0.90",
+        "Best exit: RSI RECOVERY ($1298, 75 trades, 79% WR)",
+        "Worst exit: FIXED STOP ($-2161, 39 trades)",
+        "LOW STOPOUT: 19% -- entries have good geometric placement"
+      ],
+      "total_trades": 202,
+      "total_pnl": -1589.69,
+      "pf": 0.6172,
+      "wr": 41.58,
+      "dd": 81.55
+    },
+    "sweep_v1_029_sv1e05_pctile20_gap5_volhigh": {
+      "config_id": "sweep_v1_029_sv1e05_pctile20_gap5_volhigh",
+      "class_a_pnl": 1455.4577369350563,
+      "class_b_pnl": -3068.3749646218535,
+      "class_a_count": 98,
+      "class_b_count": 105,
+      "class_a_wr": 82.6530612244898,
+      "class_b_wr": 2.857142857142857,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 43,
+          "pnl": -1973.73,
+          "wr": 0.0,
+          "avg_pnl": -45.9,
+          "avg_bars": 6.3
+        },
+        "RSI RECOVERY": {
+          "count": 76,
+          "pnl": 957.52,
+          "wr": 82.9,
+          "avg_pnl": 12.6,
+          "avg_bars": 9.1
+        },
+        "TIME MAX": {
+          "count": 59,
+          "pnl": -1081.53,
+          "wr": 3.4,
+          "avg_pnl": -18.33,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 16,
+          "pnl": 465.39,
+          "wr": 81.2,
+          "avg_pnl": 29.09,
+          "avg_bars": 5.8
+        },
+        "BB TARGET": {
+          "count": 6,
+          "pnl": 32.55,
+          "wr": 83.3,
+          "avg_pnl": 5.42,
+          "avg_bars": 9.5
+        },
+        "END": {
+          "count": 3,
+          "pnl": -13.11,
+          "wr": 33.3,
+          "avg_pnl": -4.37,
+          "avg_bars": 5.3
+        }
+      },
+      "stopout_ratio": 0.21182266009852216,
+      "stopout_cost": -1973.7303,
+      "stopout_avg_loss": -45.90070465116279,
+      "gross_pnl": -1352.45,
+      "fee_cost": 260.47,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 7.964285714285714,
+      "avg_bars_loser": 11.252100840336135,
+      "avg_bars_class_a": 8.540816326530612,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.49 < 0.90",
+        "Best exit: RSI RECOVERY ($958, 76 trades, 83% WR)",
+        "Worst exit: FIXED STOP ($-1974, 43 trades)"
+      ],
+      "total_trades": 203,
+      "total_pnl": -1612.92,
+      "pf": 0.4941,
+      "wr": 41.38,
+      "dd": 80.8
+    },
+    "sweep_v1_012_sv1b06_pivot8_rsi35_vol3.0_sw0.5": {
+      "config_id": "sweep_v1_012_sv1b06_pivot8_rsi35_vol3.0_sw0.5",
+      "class_a_pnl": 917.2199209019213,
+      "class_b_pnl": -2142.624597563361,
+      "class_a_count": 75,
+      "class_b_count": 43,
+      "class_a_wr": 76.0,
+      "class_b_wr": 0.0,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 51,
+          "pnl": 735.48,
+          "wr": 76.5,
+          "avg_pnl": 14.42,
+          "avg_bars": 5.6
+        },
+        "TIME MAX": {
+          "count": 21,
+          "pnl": -661.3,
+          "wr": 0.0,
+          "avg_pnl": -31.49,
+          "avg_bars": 15.0
+        },
+        "FIXED STOP": {
+          "count": 20,
+          "pnl": -1438.56,
+          "wr": 0.0,
+          "avg_pnl": -71.93,
+          "avg_bars": 6.8
+        },
+        "DC TARGET": {
+          "count": 20,
+          "pnl": 127.44,
+          "wr": 75.0,
+          "avg_pnl": 6.37,
+          "avg_bars": 4.8
+        },
+        "BB TARGET": {
+          "count": 4,
+          "pnl": 54.3,
+          "wr": 75.0,
+          "avg_pnl": 13.57,
+          "avg_bars": 7.0
+        },
+        "END": {
+          "count": 2,
+          "pnl": -42.77,
+          "wr": 0.0,
+          "avg_pnl": -21.38,
+          "avg_bars": 3.5
+        }
+      },
+      "stopout_ratio": 0.1694915254237288,
+      "stopout_cost": -1438.5609,
+      "stopout_avg_loss": -71.928045,
+      "gross_pnl": -967.31,
+      "fee_cost": 258.11,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 4.631578947368421,
+      "avg_bars_loser": 9.852459016393443,
+      "avg_bars_class_a": 5.44,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.45 < 0.90",
+        "Best exit: RSI RECOVERY ($735, 51 trades, 76% WR)",
+        "Worst exit: FIXED STOP ($-1439, 20 trades)",
+        "LOW STOPOUT: 17% -- entries have good geometric placement"
+      ],
+      "total_trades": 118,
+      "total_pnl": -1225.4,
+      "pf": 0.4537,
+      "wr": 48.31,
+      "dd": 62.04
+    },
+    "sweep_v1_027_sv1e03_pctile15_gap15": {
+      "config_id": "sweep_v1_027_sv1e03_pctile15_gap15",
+      "class_a_pnl": 2127.6447603705788,
+      "class_b_pnl": -3496.0628145476276,
+      "class_a_count": 101,
+      "class_b_count": 101,
+      "class_a_wr": 81.1881188118812,
+      "class_b_wr": 1.9801980198019802,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 39,
+          "pnl": -2161.48,
+          "wr": 0.0,
+          "avg_pnl": -55.42,
+          "avg_bars": 6.8
+        },
+        "RSI RECOVERY": {
+          "count": 75,
+          "pnl": 1298.46,
+          "wr": 78.7,
+          "avg_pnl": 17.31,
+          "avg_bars": 9.1
+        },
+        "TIME MAX": {
+          "count": 59,
+          "pnl": -1332.66,
+          "wr": 1.7,
+          "avg_pnl": -22.59,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 22,
+          "pnl": 799.77,
+          "wr": 95.5,
+          "avg_pnl": 36.35,
+          "avg_bars": 5.5
+        },
+        "BB TARGET": {
+          "count": 4,
+          "pnl": 29.42,
+          "wr": 50.0,
+          "avg_pnl": 7.35,
+          "avg_bars": 8.5
+        },
+        "END": {
+          "count": 3,
+          "pnl": -1.92,
+          "wr": 33.3,
+          "avg_pnl": -0.64,
+          "avg_bars": 3.3
+        }
+      },
+      "stopout_ratio": 0.19306930693069307,
+      "stopout_cost": -2161.4805,
+      "stopout_avg_loss": -55.422576923076925,
+      "gross_pnl": -1034.86,
+      "fee_cost": 333.56,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 7.273809523809524,
+      "avg_bars_loser": 11.703389830508474,
+      "avg_bars_class_a": 8.247524752475247,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.62 < 0.90",
+        "Best exit: RSI RECOVERY ($1298, 75 trades, 79% WR)",
+        "Worst exit: FIXED STOP ($-2161, 39 trades)",
+        "LOW STOPOUT: 19% -- entries have good geometric placement"
+      ],
+      "total_trades": 202,
+      "total_pnl": -1589.69,
+      "pf": 0.6172,
+      "wr": 41.58,
+      "dd": 81.55
+    },
+    "sweep_v1_017_sv1c05_hh2_sw8_tol1.0_rsi35": {
+      "config_id": "sweep_v1_017_sv1c05_hh2_sw8_tol1.0_rsi35",
+      "class_a_pnl": 1637.985389515597,
+      "class_b_pnl": -2245.919715026594,
+      "class_a_count": 80,
+      "class_b_count": 43,
+      "class_a_wr": 77.5,
+      "class_b_wr": 2.3255813953488373,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 68,
+          "pnl": 1221.3,
+          "wr": 73.5,
+          "avg_pnl": 17.96,
+          "avg_bars": 6.9
+        },
+        "FIXED STOP": {
+          "count": 16,
+          "pnl": -1389.29,
+          "wr": 0.0,
+          "avg_pnl": -86.83,
+          "avg_bars": 9.6
+        },
+        "TIME MAX": {
+          "count": 27,
+          "pnl": -856.63,
+          "wr": 3.7,
+          "avg_pnl": -31.73,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 8,
+          "pnl": 158.44,
+          "wr": 100.0,
+          "avg_pnl": 19.8,
+          "avg_bars": 3.8
+        },
+        "BB TARGET": {
+          "count": 4,
+          "pnl": 258.25,
+          "wr": 100.0,
+          "avg_pnl": 64.56,
+          "avg_bars": 3.5
+        }
+      },
+      "stopout_ratio": 0.13008130081300814,
+      "stopout_cost": -1389.2876,
+      "stopout_avg_loss": -86.830475,
+      "gross_pnl": -250.14,
+      "fee_cost": 357.8,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 6.253968253968254,
+      "avg_bars_loser": 11.3,
+      "avg_bars_class_a": 6.425,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.75 < 0.90",
+        "Best exit: RSI RECOVERY ($1221, 68 trades, 74% WR)",
+        "Worst exit: FIXED STOP ($-1389, 16 trades)",
+        "LOW STOPOUT: 13% -- entries have good geometric placement"
+      ],
+      "total_trades": 123,
+      "total_pnl": -1087.34,
+      "pf": 0.7533,
+      "wr": 51.22,
+      "dd": 55.36
+    },
+    "sweep_v1_009_sv1b03_pivot_rsi40_vol1.5_sw0.3": {
+      "config_id": "sweep_v1_009_sv1b03_pivot_rsi40_vol1.5_sw0.3",
+      "class_a_pnl": 3188.2460536881695,
+      "class_b_pnl": -4180.543732901326,
+      "class_a_count": 195,
+      "class_b_count": 82,
+      "class_a_wr": 77.43589743589745,
+      "class_b_wr": 2.4390243902439024,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 127,
+          "pnl": 1801.01,
+          "wr": 76.4,
+          "avg_pnl": 14.18,
+          "avg_bars": 6.2
+        },
+        "DC TARGET": {
+          "count": 57,
+          "pnl": 1120.18,
+          "wr": 80.7,
+          "avg_pnl": 19.65,
+          "avg_bars": 3.0
+        },
+        "FIXED STOP": {
+          "count": 41,
+          "pnl": -3140.67,
+          "wr": 0.0,
+          "avg_pnl": -76.6,
+          "avg_bars": 7.8
+        },
+        "TIME MAX": {
+          "count": 39,
+          "pnl": -1027.19,
+          "wr": 2.6,
+          "avg_pnl": -26.34,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 11,
+          "pnl": 267.05,
+          "wr": 72.7,
+          "avg_pnl": 24.28,
+          "avg_bars": 5.0
+        },
+        "END": {
+          "count": 2,
+          "pnl": -12.68,
+          "wr": 50.0,
+          "avg_pnl": -6.34,
+          "avg_bars": 5.0
+        }
+      },
+      "stopout_ratio": 0.148014440433213,
+      "stopout_cost": -3140.6677,
+      "stopout_avg_loss": -76.60165121951219,
+      "gross_pnl": -335.68,
+      "fee_cost": 656.62,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 4.647058823529412,
+      "avg_bars_loser": 9.806451612903226,
+      "avg_bars_class_a": 5.184615384615385,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.78 < 0.90",
+        "Best exit: RSI RECOVERY ($1801, 127 trades, 76% WR)",
+        "Worst exit: FIXED STOP ($-3141, 41 trades)",
+        "LOW STOPOUT: 15% -- entries have good geometric placement"
+      ],
+      "total_trades": 277,
+      "total_pnl": -992.3,
+      "pf": 0.7811,
+      "wr": 55.23,
+      "dd": 57.97
+    },
+    "sweep_v1_015_sv1c03_hh3_sw5_tol2.0": {
+      "config_id": "sweep_v1_015_sv1c03_hh3_sw5_tol2.0",
+      "class_a_pnl": 727.3656149733953,
+      "class_b_pnl": -1164.9079368166963,
+      "class_a_count": 44,
+      "class_b_count": 17,
+      "class_a_wr": 77.27272727272727,
+      "class_b_wr": 0.0,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "FIXED STOP": {
+          "count": 8,
+          "pnl": -777.19,
+          "wr": 0.0,
+          "avg_pnl": -97.15,
+          "avg_bars": 9.4
+        },
+        "RSI RECOVERY": {
+          "count": 35,
+          "pnl": 569.66,
+          "wr": 74.3,
+          "avg_pnl": 16.28,
+          "avg_bars": 6.4
+        },
+        "DC TARGET": {
+          "count": 6,
+          "pnl": 88.24,
+          "wr": 83.3,
+          "avg_pnl": 14.71,
+          "avg_bars": 3.5
+        },
+        "TIME MAX": {
+          "count": 9,
+          "pnl": -387.72,
+          "wr": 0.0,
+          "avg_pnl": -43.08,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 3,
+          "pnl": 69.47,
+          "wr": 100.0,
+          "avg_pnl": 23.16,
+          "avg_bars": 8.3
+        }
+      },
+      "stopout_ratio": 0.13114754098360656,
+      "stopout_cost": -777.1888,
+      "stopout_avg_loss": -97.1486,
+      "gross_pnl": -247.02,
+      "fee_cost": 190.52,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 6.147058823529412,
+      "avg_bars_loser": 10.074074074074074,
+      "avg_bars_class_a": 6.159090909090909,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.65 < 0.90",
+        "Best exit: RSI RECOVERY ($570, 35 trades, 74% WR)",
+        "Worst exit: FIXED STOP ($-777, 8 trades)",
+        "LOW STOPOUT: 13% -- entries have good geometric placement"
+      ],
+      "total_trades": 61,
+      "total_pnl": -437.54,
+      "pf": 0.6498,
+      "wr": 55.74,
+      "dd": 24.28
+    },
+    "sweep_v1_001_sv1a01_rsi35_p5_atr1.0": {
+      "config_id": "sweep_v1_001_sv1a01_rsi35_p5_atr1.0",
+      "class_a_pnl": 3294.315727038755,
+      "class_b_pnl": -4053.132625849616,
+      "class_a_count": 201,
+      "class_b_count": 83,
+      "class_a_wr": 78.1094527363184,
+      "class_b_wr": 3.614457831325301,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 165,
+          "pnl": 2645.04,
+          "wr": 76.4,
+          "avg_pnl": 16.03,
+          "avg_bars": 5.5
+        },
+        "FIXED STOP": {
+          "count": 39,
+          "pnl": -3005.04,
+          "wr": 0.0,
+          "avg_pnl": -77.05,
+          "avg_bars": 7.2
+        },
+        "DC TARGET": {
+          "count": 26,
+          "pnl": 388.32,
+          "wr": 84.6,
+          "avg_pnl": 14.94,
+          "avg_bars": 4.4
+        },
+        "TIME MAX": {
+          "count": 41,
+          "pnl": -992.54,
+          "wr": 4.9,
+          "avg_pnl": -24.21,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 10,
+          "pnl": 260.95,
+          "wr": 90.0,
+          "avg_pnl": 26.09,
+          "avg_bars": 3.6
+        },
+        "END": {
+          "count": 3,
+          "pnl": -55.55,
+          "wr": 33.3,
+          "avg_pnl": -18.52,
+          "avg_bars": 5.3
+        }
+      },
+      "stopout_ratio": 0.13732394366197184,
+      "stopout_cost": -3005.0427,
+      "stopout_avg_loss": -77.05237692307692,
+      "gross_pnl": -128.11,
+      "fee_cost": 630.71,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 5.05,
+      "avg_bars_loser": 9.387096774193548,
+      "avg_bars_class_a": 5.278606965174129,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.83 < 0.90",
+        "Best exit: RSI RECOVERY ($2645, 165 trades, 76% WR)",
+        "Worst exit: FIXED STOP ($-3005, 39 trades)",
+        "LOW STOPOUT: 14% -- entries have good geometric placement"
+      ],
+      "total_trades": 284,
+      "total_pnl": -1186.11,
+      "pf": 0.8255,
+      "wr": 56.34,
+      "dd": 67.27
+    },
+    "sweep_v1_010_sv1b04_both_rsi40_vol2.0_sw0.5": {
+      "config_id": "sweep_v1_010_sv1b04_both_rsi40_vol2.0_sw0.5",
+      "class_a_pnl": 1523.434309997066,
+      "class_b_pnl": -2740.5624066091514,
+      "class_a_count": 156,
+      "class_b_count": 54,
+      "class_a_wr": 65.38461538461539,
+      "class_b_wr": 0.0,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 116,
+          "pnl": 1138.03,
+          "wr": 62.1,
+          "avg_pnl": 9.81,
+          "avg_bars": 5.2
+        },
+        "FIXED STOP": {
+          "count": 20,
+          "pnl": -1363.77,
+          "wr": 0.0,
+          "avg_pnl": -68.19,
+          "avg_bars": 8.0
+        },
+        "TIME MAX": {
+          "count": 31,
+          "pnl": -1326.07,
+          "wr": 0.0,
+          "avg_pnl": -42.78,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 33,
+          "pnl": 330.25,
+          "wr": 75.8,
+          "avg_pnl": 10.01,
+          "avg_bars": 3.7
+        },
+        "BB TARGET": {
+          "count": 7,
+          "pnl": 55.16,
+          "wr": 71.4,
+          "avg_pnl": 7.88,
+          "avg_bars": 6.1
+        },
+        "END": {
+          "count": 3,
+          "pnl": -50.73,
+          "wr": 0.0,
+          "avg_pnl": -16.91,
+          "avg_bars": 3.3
+        }
+      },
+      "stopout_ratio": 0.09523809523809523,
+      "stopout_cost": -1363.7662,
+      "stopout_avg_loss": -68.18831,
+      "gross_pnl": -726.39,
+      "fee_cost": 490.73,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 4.235294117647059,
+      "avg_bars_loser": 9.027777777777779,
+      "avg_bars_class_a": 4.955128205128205,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.59 < 0.90",
+        "Best exit: RSI RECOVERY ($1138, 116 trades, 62% WR)",
+        "Worst exit: FIXED STOP ($-1364, 20 trades)",
+        "LOW STOPOUT: 10% -- entries have good geometric placement"
+      ],
+      "total_trades": 210,
+      "total_pnl": -1217.13,
+      "pf": 0.5948,
+      "wr": 48.57,
+      "dd": 60.99
+    },
+    "sweep_v1_004_sv1a04_rsi35_p8_atr1.5": {
+      "config_id": "sweep_v1_004_sv1a04_rsi35_p8_atr1.5",
+      "class_a_pnl": 6114.612469224828,
+      "class_b_pnl": -6036.377456130034,
+      "class_a_count": 199,
+      "class_b_count": 87,
+      "class_a_wr": 78.39195979899498,
+      "class_b_wr": 4.597701149425287,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 156,
+          "pnl": 4688.24,
+          "wr": 77.6,
+          "avg_pnl": 30.05,
+          "avg_bars": 5.0
+        },
+        "FIXED STOP": {
+          "count": 35,
+          "pnl": -3910.1,
+          "wr": 0.0,
+          "avg_pnl": -111.72,
+          "avg_bars": 6.9
+        },
+        "DC TARGET": {
+          "count": 32,
+          "pnl": 934.86,
+          "wr": 78.1,
+          "avg_pnl": 29.21,
+          "avg_bars": 4.9
+        },
+        "TIME MAX": {
+          "count": 50,
+          "pnl": -2117.43,
+          "wr": 8.0,
+          "avg_pnl": -42.35,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 11,
+          "pnl": 491.52,
+          "wr": 90.9,
+          "avg_pnl": 44.68,
+          "avg_bars": 3.8
+        },
+        "END": {
+          "count": 2,
+          "pnl": -8.85,
+          "wr": 0.0,
+          "avg_pnl": -4.42,
+          "avg_bars": 4.5
+        }
+      },
+      "stopout_ratio": 0.12237762237762238,
+      "stopout_cost": -3910.0981,
+      "stopout_avg_loss": -111.71708857142858,
+      "gross_pnl": 1130.01,
+      "fee_cost": 1051.77,
+      "fee_ratio": 0.9308,
+      "breakeven_fee_bps": 27.9,
+      "avg_bars_winner": 4.84375,
+      "avg_bars_loser": 9.579365079365079,
+      "avg_bars_class_a": 4.924623115577889,
+      "research_grade": "STRONG_LEAD",
+      "research_notes": [
+        "STRONG LEAD: PF=1.01, Class A share=100%, stopout ratio=12%",
+        "Best exit: RSI RECOVERY ($4688, 156 trades, 78% WR)",
+        "Worst exit: FIXED STOP ($-3910, 35 trades)",
+        "Breakeven fee: 27.9 bps per side",
+        "TIGHT: barely profitable at Kraken fees, consider MEXC (10 bps)",
+        "LOW STOPOUT: 12% -- entries have good geometric placement"
+      ],
+      "total_trades": 286,
+      "total_pnl": -685.19,
+      "pf": 1.0121,
+      "wr": 55.94,
+      "dd": 68.66
+    },
+    "sweep_v1_005_sv1a05_rsi40_p8_atr1.0_volhigh": {
+      "config_id": "sweep_v1_005_sv1a05_rsi40_p8_atr1.0_volhigh",
+      "class_a_pnl": 13996.444958217395,
+      "class_b_pnl": -11148.762988356424,
+      "class_a_count": 227,
+      "class_b_count": 86,
+      "class_a_wr": 73.568281938326,
+      "class_b_wr": 0.0,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 175,
+          "pnl": 9813.68,
+          "wr": 68.6,
+          "avg_pnl": 56.08,
+          "avg_bars": 5.0
+        },
+        "FIXED STOP": {
+          "count": 43,
+          "pnl": -7942.14,
+          "wr": 0.0,
+          "avg_pnl": -184.7,
+          "avg_bars": 7.0
+        },
+        "DC TARGET": {
+          "count": 33,
+          "pnl": 2324.8,
+          "wr": 93.9,
+          "avg_pnl": 70.45,
+          "avg_bars": 3.0
+        },
+        "BB TARGET": {
+          "count": 19,
+          "pnl": 1857.97,
+          "wr": 84.2,
+          "avg_pnl": 97.79,
+          "avg_bars": 3.5
+        },
+        "TIME MAX": {
+          "count": 41,
+          "pnl": -3192.2,
+          "wr": 0.0,
+          "avg_pnl": -77.86,
+          "avg_bars": 15.0
+        },
+        "END": {
+          "count": 2,
+          "pnl": -14.43,
+          "wr": 0.0,
+          "avg_pnl": -7.21,
+          "avg_bars": 5.0
+        }
+      },
+      "stopout_ratio": 0.13738019169329074,
+      "stopout_cost": -7942.1392,
+      "stopout_avg_loss": -184.70091162790698,
+      "gross_pnl": 4705.29,
+      "fee_cost": 1857.46,
+      "fee_ratio": 0.3948,
+      "breakeven_fee_bps": 50.0,
+      "avg_bars_winner": 3.808383233532934,
+      "avg_bars_loser": 9.116438356164384,
+      "avg_bars_class_a": 4.594713656387666,
+      "research_grade": "STRONG_LEAD",
+      "research_notes": [
+        "STRONG LEAD: PF=1.24, Class A share=100%, stopout ratio=14%",
+        "Best exit: RSI RECOVERY ($9814, 175 trades, 69% WR)",
+        "Worst exit: FIXED STOP ($-7942, 43 trades)",
+        "Breakeven fee: 50.0 bps per side",
+        "LOW STOPOUT: 14% -- entries have good geometric placement"
+      ],
+      "total_trades": 313,
+      "total_pnl": 2847.68,
+      "pf": 1.2362,
+      "wr": 53.35,
+      "dd": 41.86
+    },
+    "sweep_v1_013_sv1c01_hh1_sw5_tol1.0": {
+      "config_id": "sweep_v1_013_sv1c01_hh1_sw5_tol1.0",
+      "class_a_pnl": 3927.4177793960735,
+      "class_b_pnl": -4576.147218479501,
+      "class_a_count": 156,
+      "class_b_count": 82,
+      "class_a_wr": 80.12820512820514,
+      "class_b_wr": 2.4390243902439024,
+      "class_a_share": 0.9993112072200484,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 127,
+          "pnl": 2446.32,
+          "wr": 78.0,
+          "avg_pnl": 19.26,
+          "avg_bars": 6.9
+        },
+        "TIME MAX": {
+          "count": 39,
+          "pnl": -1447.55,
+          "wr": 0.0,
+          "avg_pnl": -37.12,
+          "avg_bars": 15.0
+        },
+        "DC TARGET": {
+          "count": 14,
+          "pnl": 712.16,
+          "wr": 92.9,
+          "avg_pnl": 50.87,
+          "avg_bars": 6.7
+        },
+        "FIXED STOP": {
+          "count": 40,
+          "pnl": -3131.3,
+          "wr": 0.0,
+          "avg_pnl": -78.28,
+          "avg_bars": 7.4
+        },
+        "BB TARGET": {
+          "count": 15,
+          "pnl": 768.94,
+          "wr": 86.7,
+          "avg_pnl": 51.26,
+          "avg_bars": 7.1
+        },
+        "END": {
+          "count": 3,
+          "pnl": 2.71,
+          "wr": 66.7,
+          "avg_pnl": 0.9,
+          "avg_bars": 6.7
+        }
+      },
+      "stopout_ratio": 0.16806722689075632,
+      "stopout_cost": -3131.3039,
+      "stopout_avg_loss": -78.2825975,
+      "gross_pnl": -18.68,
+      "fee_cost": 630.05,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 6.543307086614173,
+      "avg_bars_loser": 10.36036036036036,
+      "avg_bars_class_a": 6.916666666666667,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.87 < 0.90",
+        "Best exit: RSI RECOVERY ($2446, 127 trades, 78% WR)",
+        "Worst exit: FIXED STOP ($-3131, 40 trades)",
+        "LOW STOPOUT: 17% -- entries have good geometric placement"
+      ],
+      "total_trades": 238,
+      "total_pnl": -1465.88,
+      "pf": 0.8661,
+      "wr": 53.36,
+      "dd": 79.01
+    },
+    "sweep_v1_014_sv1c02_hh2_sw5_tol1.5": {
+      "config_id": "sweep_v1_014_sv1c02_hh2_sw5_tol1.5",
+      "class_a_pnl": 1917.8086286988062,
+      "class_b_pnl": -2674.864526789902,
+      "class_a_count": 127,
+      "class_b_count": 56,
+      "class_a_wr": 78.74015748031496,
+      "class_b_wr": 1.7857142857142856,
+      "class_a_share": 0.9982449771371462,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 106,
+          "pnl": 1371.67,
+          "wr": 75.5,
+          "avg_pnl": 12.94,
+          "avg_bars": 6.4
+        },
+        "TIME MAX": {
+          "count": 29,
+          "pnl": -914.63,
+          "wr": 0.0,
+          "avg_pnl": -31.54,
+          "avg_bars": 15.0
+        },
+        "FIXED STOP": {
+          "count": 25,
+          "pnl": -1763.6,
+          "wr": 0.0,
+          "avg_pnl": -70.54,
+          "avg_bars": 7.8
+        },
+        "BB TARGET": {
+          "count": 8,
+          "pnl": 152.41,
+          "wr": 100.0,
+          "avg_pnl": 19.05,
+          "avg_bars": 5.9
+        },
+        "DC TARGET": {
+          "count": 13,
+          "pnl": 393.72,
+          "wr": 92.3,
+          "avg_pnl": 30.29,
+          "avg_bars": 3.4
+        },
+        "END": {
+          "count": 2,
+          "pnl": 3.37,
+          "wr": 50.0,
+          "avg_pnl": 1.69,
+          "avg_bars": 4.5
+        }
+      },
+      "stopout_ratio": 0.1366120218579235,
+      "stopout_cost": -1763.6039,
+      "stopout_avg_loss": -70.544156,
+      "gross_pnl": -373.52,
+      "fee_cost": 383.54,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 5.99009900990099,
+      "avg_bars_loser": 9.78048780487805,
+      "avg_bars_class_a": 6.039370078740157,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.73 < 0.90",
+        "Best exit: RSI RECOVERY ($1372, 106 trades, 76% WR)",
+        "Worst exit: FIXED STOP ($-1764, 25 trades)",
+        "LOW STOPOUT: 14% -- entries have good geometric placement"
+      ],
+      "total_trades": 183,
+      "total_pnl": -757.06,
+      "pf": 0.7327,
+      "wr": 55.19,
+      "dd": 58.97
+    },
+    "sweep_v1_002_sv1a02_rsi40_p5_atr1.5": {
+      "config_id": "sweep_v1_002_sv1a02_rsi40_p5_atr1.5",
+      "class_a_pnl": 10533.267753303235,
+      "class_b_pnl": -7591.157375634267,
+      "class_a_count": 232,
+      "class_b_count": 74,
+      "class_a_wr": 76.29310344827587,
+      "class_b_wr": 0.0,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 197,
+          "pnl": 8927.41,
+          "wr": 74.6,
+          "avg_pnl": 45.32,
+          "avg_bars": 5.4
+        },
+        "FIXED STOP": {
+          "count": 34,
+          "pnl": -4623.17,
+          "wr": 0.0,
+          "avg_pnl": -135.98,
+          "avg_bars": 6.8
+        },
+        "TIME MAX": {
+          "count": 38,
+          "pnl": -2851.31,
+          "wr": 0.0,
+          "avg_pnl": -75.03,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 13,
+          "pnl": 873.37,
+          "wr": 100.0,
+          "avg_pnl": 67.18,
+          "avg_bars": 2.6
+        },
+        "DC TARGET": {
+          "count": 22,
+          "pnl": 732.49,
+          "wr": 77.3,
+          "avg_pnl": 33.29,
+          "avg_bars": 4.3
+        },
+        "END": {
+          "count": 2,
+          "pnl": -116.68,
+          "wr": 0.0,
+          "avg_pnl": -58.34,
+          "avg_bars": 3.0
+        }
+      },
+      "stopout_ratio": 0.1111111111111111,
+      "stopout_cost": -4623.1683,
+      "stopout_avg_loss": -135.97553823529412,
+      "gross_pnl": 4563.03,
+      "fee_cost": 1621.08,
+      "fee_ratio": 0.3553,
+      "breakeven_fee_bps": 50.0,
+      "avg_bars_winner": 4.785310734463277,
+      "avg_bars_loser": 8.875968992248062,
+      "avg_bars_class_a": 5.103448275862069,
+      "research_grade": "STRONG_LEAD",
+      "research_notes": [
+        "STRONG LEAD: PF=1.35, Class A share=100%, stopout ratio=11%",
+        "Best exit: RSI RECOVERY ($8927, 197 trades, 75% WR)",
+        "Worst exit: FIXED STOP ($-4623, 34 trades)",
+        "Breakeven fee: 50.0 bps per side",
+        "LOW STOPOUT: 11% -- entries have good geometric placement"
+      ],
+      "total_trades": 306,
+      "total_pnl": 744.52,
+      "pf": 1.3549,
+      "wr": 57.84,
+      "dd": 56.84
+    },
+    "sweep_v1_016_sv1c04_hh1_sw8_tol1.5": {
+      "config_id": "sweep_v1_016_sv1c04_hh1_sw8_tol1.5",
+      "class_a_pnl": 4234.994481937169,
+      "class_b_pnl": -4498.993829167686,
+      "class_a_count": 163,
+      "class_b_count": 76,
+      "class_a_wr": 77.30061349693251,
+      "class_b_wr": 1.3157894736842104,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "BB TARGET": {
+          "count": 16,
+          "pnl": 295.24,
+          "wr": 87.5,
+          "avg_pnl": 18.45,
+          "avg_bars": 6.8
+        },
+        "RSI RECOVERY": {
+          "count": 130,
+          "pnl": 3070.05,
+          "wr": 75.4,
+          "avg_pnl": 23.62,
+          "avg_bars": 6.9
+        },
+        "DC TARGET": {
+          "count": 17,
+          "pnl": 869.7,
+          "wr": 82.4,
+          "avg_pnl": 51.16,
+          "avg_bars": 5.1
+        },
+        "TIME MAX": {
+          "count": 43,
+          "pnl": -1858.47,
+          "wr": 2.3,
+          "avg_pnl": -43.22,
+          "avg_bars": 15.0
+        },
+        "FIXED STOP": {
+          "count": 30,
+          "pnl": -2635.59,
+          "wr": 0.0,
+          "avg_pnl": -87.85,
+          "avg_bars": 7.8
+        },
+        "END": {
+          "count": 3,
+          "pnl": -4.94,
+          "wr": 0.0,
+          "avg_pnl": -1.65,
+          "avg_bars": 5.7
+        }
+      },
+      "stopout_ratio": 0.12552301255230125,
+      "stopout_cost": -2635.5858,
+      "stopout_avg_loss": -87.85285999999999,
+      "gross_pnl": 481.72,
+      "fee_cost": 745.72,
+      "fee_ratio": 1.548,
+      "breakeven_fee_bps": 16.8,
+      "avg_bars_winner": 6.417322834645669,
+      "avg_bars_loser": 10.482142857142858,
+      "avg_bars_class_a": 6.699386503067485,
+      "research_grade": "WEAK_LEAD",
+      "research_notes": [
+        "WEAK LEAD: PF=0.95, needs improvement (A share=100%, stopout=13%)",
+        "Best exit: RSI RECOVERY ($3070, 130 trades, 75% WR)",
+        "Worst exit: FIXED STOP ($-2636, 30 trades)",
+        "Breakeven fee: 16.8 bps per side",
+        "WARNING: unprofitable at Kraken fees (26 bps)",
+        "LOW STOPOUT: 13% -- entries have good geometric placement"
+      ],
+      "total_trades": 239,
+      "total_pnl": -926.9,
+      "pf": 0.9462,
+      "wr": 53.14,
+      "dd": 63.93
+    },
+    "sweep_v1_022_sv1d04_pctile20_sq8_rsi35": {
+      "config_id": "sweep_v1_022_sv1d04_pctile20_sq8_rsi35",
+      "class_a_pnl": 1281.599296178869,
+      "class_b_pnl": -2583.2582709448006,
+      "class_a_count": 119,
+      "class_b_count": 78,
+      "class_a_wr": 75.63025210084034,
+      "class_b_wr": 3.8461538461538463,
+      "class_a_share": 0.9969647255454408,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 80,
+          "pnl": 1052.07,
+          "wr": 76.2,
+          "avg_pnl": 13.15,
+          "avg_bars": 5.7
+        },
+        "DC TARGET": {
+          "count": 31,
+          "pnl": 154.76,
+          "wr": 67.7,
+          "avg_pnl": 4.99,
+          "avg_bars": 5.1
+        },
+        "TIME MAX": {
+          "count": 46,
+          "pnl": -1087.38,
+          "wr": 2.2,
+          "avg_pnl": -23.64,
+          "avg_bars": 15.0
+        },
+        "FIXED STOP": {
+          "count": 29,
+          "pnl": -1499.78,
+          "wr": 0.0,
+          "avg_pnl": -51.72,
+          "avg_bars": 8.5
+        },
+        "BB TARGET": {
+          "count": 8,
+          "pnl": 74.77,
+          "wr": 100.0,
+          "avg_pnl": 9.35,
+          "avg_bars": 4.2
+        },
+        "END": {
+          "count": 3,
+          "pnl": 3.9,
+          "wr": 66.7,
+          "avg_pnl": 1.3,
+          "avg_bars": 6.7
+        }
+      },
+      "stopout_ratio": 0.14720812182741116,
+      "stopout_cost": -1499.7781,
+      "stopout_avg_loss": -51.716486206896555,
+      "gross_pnl": -962.27,
+      "fee_cost": 339.39,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 4.89247311827957,
+      "avg_bars_loser": 11.038461538461538,
+      "avg_bars_class_a": 5.428571428571429,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.52 < 0.90",
+        "Best exit: RSI RECOVERY ($1052, 80 trades, 76% WR)",
+        "Worst exit: FIXED STOP ($-1500, 29 trades)",
+        "LOW STOPOUT: 15% -- entries have good geometric placement"
+      ],
+      "total_trades": 197,
+      "total_pnl": -1657.33,
+      "pf": 0.5194,
+      "wr": 47.21,
+      "dd": 84.82
+    },
+    "sweep_v1_018_sv1c06_hh1_sw5_tol2.0_rsi45": {
+      "config_id": "sweep_v1_018_sv1c06_hh1_sw5_tol2.0_rsi45",
+      "class_a_pnl": 7192.5700793640435,
+      "class_b_pnl": -6590.080569426559,
+      "class_a_count": 180,
+      "class_b_count": 79,
+      "class_a_wr": 83.33333333333334,
+      "class_b_wr": 3.79746835443038,
+      "class_a_share": 0.9972633849364967,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 149,
+          "pnl": 4894.09,
+          "wr": 81.2,
+          "avg_pnl": 32.85,
+          "avg_bars": 6.5
+        },
+        "BB TARGET": {
+          "count": 18,
+          "pnl": 1176.12,
+          "wr": 94.4,
+          "avg_pnl": 65.34,
+          "avg_bars": 6.6
+        },
+        "DC TARGET": {
+          "count": 13,
+          "pnl": 1122.36,
+          "wr": 92.3,
+          "avg_pnl": 86.34,
+          "avg_bars": 4.4
+        },
+        "TIME MAX": {
+          "count": 40,
+          "pnl": -2097.1,
+          "wr": 0.0,
+          "avg_pnl": -52.43,
+          "avg_bars": 15.0
+        },
+        "FIXED STOP": {
+          "count": 36,
+          "pnl": -4512.71,
+          "wr": 0.0,
+          "avg_pnl": -125.35,
+          "avg_bars": 6.7
+        },
+        "END": {
+          "count": 3,
+          "pnl": 19.74,
+          "wr": 100.0,
+          "avg_pnl": 6.58,
+          "avg_bars": 4.0
+        }
+      },
+      "stopout_ratio": 0.138996138996139,
+      "stopout_cost": -4512.7135,
+      "stopout_avg_loss": -125.35315277777778,
+      "gross_pnl": 1632.2,
+      "fee_cost": 1029.71,
+      "fee_ratio": 0.6309,
+      "breakeven_fee_bps": 41.2,
+      "avg_bars_winner": 6.026143790849673,
+      "avg_bars_loser": 10.141509433962264,
+      "avg_bars_class_a": 6.361111111111111,
+      "research_grade": "STRONG_LEAD",
+      "research_notes": [
+        "STRONG LEAD: PF=1.09, Class A share=100%, stopout ratio=14%",
+        "Best exit: RSI RECOVERY ($4894, 149 trades, 81% WR)",
+        "Worst exit: FIXED STOP ($-4513, 36 trades)",
+        "Breakeven fee: 41.2 bps per side",
+        "LOW STOPOUT: 14% -- entries have good geometric placement"
+      ],
+      "total_trades": 259,
+      "total_pnl": -367.57,
+      "pf": 1.0874,
+      "wr": 59.07,
+      "dd": 55.88
+    },
+    "sweep_v1_024_sv1d06_pctile30_sq3_volhigh": {
+      "config_id": "sweep_v1_024_sv1d06_pctile30_sq3_volhigh",
+      "class_a_pnl": 1966.3811650575747,
+      "class_b_pnl": -2931.1105713513334,
+      "class_a_count": 173,
+      "class_b_count": 75,
+      "class_a_wr": 76.878612716763,
+      "class_b_wr": 1.3333333333333335,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 123,
+          "pnl": 1405.92,
+          "wr": 74.0,
+          "avg_pnl": 11.43,
+          "avg_bars": 5.6
+        },
+        "DC TARGET": {
+          "count": 39,
+          "pnl": 446.97,
+          "wr": 79.5,
+          "avg_pnl": 11.46,
+          "avg_bars": 4.1
+        },
+        "TIME MAX": {
+          "count": 40,
+          "pnl": -1029.54,
+          "wr": 0.0,
+          "avg_pnl": -25.74,
+          "avg_bars": 15.0
+        },
+        "FIXED STOP": {
+          "count": 32,
+          "pnl": -1898.74,
+          "wr": 0.0,
+          "avg_pnl": -59.34,
+          "avg_bars": 8.4
+        },
+        "BB TARGET": {
+          "count": 11,
+          "pnl": 113.49,
+          "wr": 100.0,
+          "avg_pnl": 10.32,
+          "avg_bars": 3.0
+        },
+        "END": {
+          "count": 3,
+          "pnl": -2.83,
+          "wr": 33.3,
+          "avg_pnl": -0.94,
+          "avg_bars": 10.0
+        }
+      },
+      "stopout_ratio": 0.12903225806451613,
+      "stopout_cost": -1898.7404000000001,
+      "stopout_avg_loss": -59.335637500000004,
+      "gross_pnl": -462.83,
+      "fee_cost": 501.9,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 4.888059701492537,
+      "avg_bars_loser": 9.859649122807017,
+      "avg_bars_class_a": 5.086705202312139,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.70 < 0.90",
+        "Best exit: RSI RECOVERY ($1406, 123 trades, 74% WR)",
+        "Worst exit: FIXED STOP ($-1899, 32 trades)",
+        "LOW STOPOUT: 13% -- entries have good geometric placement"
+      ],
+      "total_trades": 248,
+      "total_pnl": -1655.64,
+      "pf": 0.6968,
+      "wr": 54.03,
+      "dd": 84.31
+    },
+    "sweep_v1_021_sv1d03_pctile40_sq3_expand": {
+      "config_id": "sweep_v1_021_sv1d03_pctile40_sq3_expand",
+      "class_a_pnl": 2445.1893637004005,
+      "class_b_pnl": -3462.649393266439,
+      "class_a_count": 162,
+      "class_b_count": 81,
+      "class_a_wr": 80.24691358024691,
+      "class_b_wr": 0.0,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 111,
+          "pnl": 1660.58,
+          "wr": 79.3,
+          "avg_pnl": 14.96,
+          "avg_bars": 5.8
+        },
+        "DC TARGET": {
+          "count": 39,
+          "pnl": 595.79,
+          "wr": 76.9,
+          "avg_pnl": 15.28,
+          "avg_bars": 4.2
+        },
+        "TIME MAX": {
+          "count": 45,
+          "pnl": -1292.24,
+          "wr": 0.0,
+          "avg_pnl": -28.72,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 12,
+          "pnl": 188.82,
+          "wr": 100.0,
+          "avg_pnl": 15.74,
+          "avg_bars": 5.7
+        },
+        "FIXED STOP": {
+          "count": 33,
+          "pnl": -2130.94,
+          "wr": 0.0,
+          "avg_pnl": -64.57,
+          "avg_bars": 8.7
+        },
+        "END": {
+          "count": 3,
+          "pnl": -39.46,
+          "wr": 0.0,
+          "avg_pnl": -13.15,
+          "avg_bars": 6.7
+        }
+      },
+      "stopout_ratio": 0.13580246913580246,
+      "stopout_cost": -2130.9442,
+      "stopout_avg_loss": -64.57406666666667,
+      "gross_pnl": -518.62,
+      "fee_cost": 498.84,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 5.207692307692308,
+      "avg_bars_loser": 10.47787610619469,
+      "avg_bars_class_a": 5.419753086419753,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.72 < 0.90",
+        "Best exit: RSI RECOVERY ($1661, 111 trades, 79% WR)",
+        "Worst exit: FIXED STOP ($-2131, 33 trades)",
+        "LOW STOPOUT: 14% -- entries have good geometric placement"
+      ],
+      "total_trades": 243,
+      "total_pnl": -1289.71,
+      "pf": 0.7169,
+      "wr": 53.5,
+      "dd": 79.79
+    },
+    "sweep_v1_006_sv1a06_rsi45_p8_atr2.0": {
+      "config_id": "sweep_v1_006_sv1a06_rsi45_p8_atr2.0",
+      "class_a_pnl": 16815.644818834266,
+      "class_b_pnl": -10782.111413784212,
+      "class_a_count": 264,
+      "class_b_count": 83,
+      "class_a_wr": 76.89393939393939,
+      "class_b_wr": 1.2048192771084338,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 218,
+          "pnl": 12759.71,
+          "wr": 74.3,
+          "avg_pnl": 58.53,
+          "avg_bars": 4.3
+        },
+        "FIXED STOP": {
+          "count": 36,
+          "pnl": -6961.38,
+          "wr": 0.0,
+          "avg_pnl": -193.37,
+          "avg_bars": 6.1
+        },
+        "DC TARGET": {
+          "count": 26,
+          "pnl": 2459.12,
+          "wr": 88.5,
+          "avg_pnl": 94.58,
+          "avg_bars": 3.5
+        },
+        "TIME MAX": {
+          "count": 44,
+          "pnl": -3798.79,
+          "wr": 2.3,
+          "avg_pnl": -86.34,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 20,
+          "pnl": 1596.82,
+          "wr": 90.0,
+          "avg_pnl": 79.84,
+          "avg_bars": 3.7
+        },
+        "END": {
+          "count": 3,
+          "pnl": -21.94,
+          "wr": 0.0,
+          "avg_pnl": -7.31,
+          "avg_bars": 1.7
+        }
+      },
+      "stopout_ratio": 0.1037463976945245,
+      "stopout_cost": -6961.3786,
+      "stopout_avg_loss": -193.37162777777777,
+      "gross_pnl": 8339.24,
+      "fee_cost": 2305.71,
+      "fee_ratio": 0.2765,
+      "breakeven_fee_bps": 50.0,
+      "avg_bars_winner": 4.142156862745098,
+      "avg_bars_loser": 8.020979020979022,
+      "avg_bars_class_a": 4.193181818181818,
+      "research_grade": "STRONG_LEAD",
+      "research_notes": [
+        "STRONG LEAD: PF=1.52, Class A share=100%, stopout ratio=10%",
+        "Best exit: RSI RECOVERY ($12760, 218 trades, 74% WR)",
+        "Worst exit: FIXED STOP ($-6961, 36 trades)",
+        "Breakeven fee: 50.0 bps per side",
+        "LOW STOPOUT: 10% -- entries have good geometric placement"
+      ],
+      "total_trades": 347,
+      "total_pnl": 3425.19,
+      "pf": 1.5215,
+      "wr": 58.79,
+      "dd": 63.12
+    },
+    "sweep_v1_003_sv1a03_rsi45_p5_atr2.0": {
+      "config_id": "sweep_v1_003_sv1a03_rsi45_p5_atr2.0",
+      "class_a_pnl": 8081.079664530763,
+      "class_b_pnl": -7562.11962771585,
+      "class_a_count": 226,
+      "class_b_count": 82,
+      "class_a_wr": 76.54867256637168,
+      "class_b_wr": 2.4390243902439024,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 189,
+          "pnl": 6574.36,
+          "wr": 74.6,
+          "avg_pnl": 34.78,
+          "avg_bars": 5.2
+        },
+        "FIXED STOP": {
+          "count": 40,
+          "pnl": -5115.88,
+          "wr": 0.0,
+          "avg_pnl": -127.9,
+          "avg_bars": 6.6
+        },
+        "DC TARGET": {
+          "count": 24,
+          "pnl": 1035.7,
+          "wr": 83.3,
+          "avg_pnl": 43.15,
+          "avg_bars": 4.1
+        },
+        "TIME MAX": {
+          "count": 39,
+          "pnl": -2308.06,
+          "wr": 2.6,
+          "avg_pnl": -59.18,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 13,
+          "pnl": 471.02,
+          "wr": 92.3,
+          "avg_pnl": 36.23,
+          "avg_bars": 2.8
+        },
+        "END": {
+          "count": 3,
+          "pnl": -138.18,
+          "wr": 33.3,
+          "avg_pnl": -46.06,
+          "avg_bars": 6.0
+        }
+      },
+      "stopout_ratio": 0.12987012987012986,
+      "stopout_cost": -5115.8765,
+      "stopout_avg_loss": -127.89691250000001,
+      "gross_pnl": 1842.42,
+      "fee_cost": 1323.46,
+      "fee_ratio": 0.7183,
+      "breakeven_fee_bps": 36.3,
+      "avg_bars_winner": 4.662857142857143,
+      "avg_bars_loser": 8.849624060150376,
+      "avg_bars_class_a": 4.982300884955753,
+      "research_grade": "STRONG_LEAD",
+      "research_notes": [
+        "STRONG LEAD: PF=1.06, Class A share=100%, stopout ratio=13%",
+        "Best exit: RSI RECOVERY ($6574, 189 trades, 75% WR)",
+        "Worst exit: FIXED STOP ($-5116, 40 trades)",
+        "Breakeven fee: 36.3 bps per side",
+        "LOW STOPOUT: 13% -- entries have good geometric placement"
+      ],
+      "total_trades": 308,
+      "total_pnl": -171.42,
+      "pf": 1.065,
+      "wr": 56.82,
+      "dd": 55.26
+    },
+    "sweep_v1_019_sv1d01_pctile20_sq3": {
+      "config_id": "sweep_v1_019_sv1d01_pctile20_sq3",
+      "class_a_pnl": 1584.058181367845,
+      "class_b_pnl": -2950.845155455452,
+      "class_a_count": 168,
+      "class_b_count": 85,
+      "class_a_wr": 75.0,
+      "class_b_wr": 1.1764705882352942,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 117,
+          "pnl": 1232.76,
+          "wr": 74.4,
+          "avg_pnl": 10.54,
+          "avg_bars": 5.2
+        },
+        "DC TARGET": {
+          "count": 37,
+          "pnl": 270.09,
+          "wr": 75.7,
+          "avg_pnl": 7.3,
+          "avg_bars": 4.4
+        },
+        "FIXED STOP": {
+          "count": 28,
+          "pnl": -1718.18,
+          "wr": 0.0,
+          "avg_pnl": -61.36,
+          "avg_bars": 8.1
+        },
+        "TIME MAX": {
+          "count": 54,
+          "pnl": -1225.06,
+          "wr": 0.0,
+          "avg_pnl": -22.69,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 14,
+          "pnl": 81.21,
+          "wr": 78.6,
+          "avg_pnl": 5.8,
+          "avg_bars": 4.3
+        },
+        "END": {
+          "count": 3,
+          "pnl": -7.61,
+          "wr": 33.3,
+          "avg_pnl": -2.54,
+          "avg_bars": 10.0
+        }
+      },
+      "stopout_ratio": 0.11067193675889328,
+      "stopout_cost": -1718.178,
+      "stopout_avg_loss": -61.3635,
+      "gross_pnl": -938.93,
+      "fee_cost": 427.85,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 4.377952755905512,
+      "avg_bars_loser": 10.658730158730158,
+      "avg_bars_class_a": 4.958333333333333,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.56 < 0.90",
+        "Best exit: RSI RECOVERY ($1233, 117 trades, 74% WR)",
+        "Worst exit: FIXED STOP ($-1718, 28 trades)",
+        "LOW STOPOUT: 11% -- entries have good geometric placement"
+      ],
+      "total_trades": 253,
+      "total_pnl": -1800.5,
+      "pf": 0.5629,
+      "wr": 50.2,
+      "dd": 91.21
+    },
+    "sweep_v1_020_sv1d02_pctile30_sq5": {
+      "config_id": "sweep_v1_020_sv1d02_pctile30_sq5",
+      "class_a_pnl": 1855.4782571756714,
+      "class_b_pnl": -3084.3697117749475,
+      "class_a_count": 177,
+      "class_b_count": 86,
+      "class_a_wr": 77.40112994350282,
+      "class_b_wr": 0.0,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 119,
+          "pnl": 1284.49,
+          "wr": 75.6,
+          "avg_pnl": 10.79,
+          "avg_bars": 5.2
+        },
+        "DC TARGET": {
+          "count": 42,
+          "pnl": 418.33,
+          "wr": 81.0,
+          "avg_pnl": 9.96,
+          "avg_bars": 4.5
+        },
+        "FIXED STOP": {
+          "count": 33,
+          "pnl": -1936.46,
+          "wr": 0.0,
+          "avg_pnl": -58.68,
+          "avg_bars": 7.7
+        },
+        "TIME MAX": {
+          "count": 50,
+          "pnl": -1139.04,
+          "wr": 0.0,
+          "avg_pnl": -22.78,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 16,
+          "pnl": 152.66,
+          "wr": 81.2,
+          "avg_pnl": 9.54,
+          "avg_bars": 4.0
+        },
+        "END": {
+          "count": 3,
+          "pnl": -8.87,
+          "wr": 0.0,
+          "avg_pnl": -2.96,
+          "avg_bars": 6.7
+        }
+      },
+      "stopout_ratio": 0.12547528517110265,
+      "stopout_cost": -1936.4563,
+      "stopout_avg_loss": -58.68049393939394,
+      "gross_pnl": -760.19,
+      "fee_cost": 468.7,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 4.306569343065694,
+      "avg_bars_loser": 10.357142857142858,
+      "avg_bars_class_a": 4.9209039548022595,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.62 < 0.90",
+        "Best exit: RSI RECOVERY ($1284, 119 trades, 76% WR)",
+        "Worst exit: FIXED STOP ($-1936, 33 trades)",
+        "LOW STOPOUT: 13% -- entries have good geometric placement"
+      ],
+      "total_trades": 263,
+      "total_pnl": -1743.54,
+      "pf": 0.6193,
+      "wr": 52.09,
+      "dd": 88.17
+    },
+    "sweep_v1_023_sv1d05_pctile30_sq5_expand_rsi45": {
+      "config_id": "sweep_v1_023_sv1d05_pctile30_sq5_expand_rsi45",
+      "class_a_pnl": 3728.216240592637,
+      "class_b_pnl": -4803.008486823664,
+      "class_a_count": 177,
+      "class_b_count": 84,
+      "class_a_wr": 82.48587570621469,
+      "class_b_wr": 0.0,
+      "class_a_share": 1.0,
+      "exit_breakdown": {
+        "RSI RECOVERY": {
+          "count": 116,
+          "pnl": 1494.32,
+          "wr": 78.4,
+          "avg_pnl": 12.88,
+          "avg_bars": 5.6
+        },
+        "DC TARGET": {
+          "count": 43,
+          "pnl": 1914.81,
+          "wr": 86.0,
+          "avg_pnl": 44.53,
+          "avg_bars": 4.1
+        },
+        "TIME MAX": {
+          "count": 46,
+          "pnl": -1889.62,
+          "wr": 0.0,
+          "avg_pnl": -41.08,
+          "avg_bars": 15.0
+        },
+        "BB TARGET": {
+          "count": 18,
+          "pnl": 319.09,
+          "wr": 100.0,
+          "avg_pnl": 17.73,
+          "avg_bars": 3.8
+        },
+        "FIXED STOP": {
+          "count": 35,
+          "pnl": -2889.15,
+          "wr": 0.0,
+          "avg_pnl": -82.55,
+          "avg_bars": 7.1
+        },
+        "END": {
+          "count": 3,
+          "pnl": -24.24,
+          "wr": 0.0,
+          "avg_pnl": -8.08,
+          "avg_bars": 5.0
+        }
+      },
+      "stopout_ratio": 0.13409961685823754,
+      "stopout_cost": -2889.1466,
+      "stopout_avg_loss": -82.54704571428572,
+      "gross_pnl": -375.3,
+      "fee_cost": 699.5,
+      "fee_ratio": 0.0,
+      "breakeven_fee_bps": 0.0,
+      "avg_bars_winner": 4.7534246575342465,
+      "avg_bars_loser": 10.008695652173913,
+      "avg_bars_class_a": 5.03954802259887,
+      "research_grade": "NEGATIVE",
+      "research_notes": [
+        "NEGATIVE: PF=0.78 < 0.90",
+        "Best exit: DC TARGET ($1915, 43 trades, 86% WR)",
+        "Worst exit: FIXED STOP ($-2889, 35 trades)",
+        "LOW STOPOUT: 13% -- entries have good geometric placement"
+      ],
+      "total_trades": 261,
+      "total_pnl": -1460.32,
+      "pf": 0.7812,
+      "wr": 55.94,
+      "dd": 83.08
+    }
+  },
+  "fee_sensitivity": {
+    "sweep_v1_008_sv1b02_dclow_rsi35_vol2.0_sw0.5": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.8012,
+        0.7546,
+        0.7323,
+        0.7105,
+        0.685,
+        0.6685,
+        0.6289,
+        0.5916
+      ],
+      "pnls": [
+        -616.36,
+        -779.38,
+        -860.88,
+        -942.39,
+        -1040.19,
+        -1105.4,
+        -1268.41,
+        -1431.42
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.685
+    },
+    "sweep_v1_007_sv1b01_dclow_rsi40_vol1.5_sw0.3": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.99,
+        0.9401,
+        0.9159,
+        0.8923,
+        0.8646,
+        0.8465,
+        0.8028,
+        0.7609
+      ],
+      "pnls": [
+        -55.98,
+        -343.42,
+        -487.13,
+        -630.85,
+        -803.31,
+        -918.29,
+        -1205.72,
+        -1493.16
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.8646
+    },
+    "sweep_v1_025_sv1e01_pctile5_gap10": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.7811,
+        0.7453,
+        0.728,
+        0.7111,
+        0.6914,
+        0.6786,
+        0.6476,
+        0.6181
+      ],
+      "pnls": [
+        -774.48,
+        -922.29,
+        -996.19,
+        -1070.09,
+        -1158.77,
+        -1217.89,
+        -1365.69,
+        -1513.5
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.6914
+    },
+    "sweep_v1_030_sv1e06_pctile5_gap15_rsi35": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.7811,
+        0.7453,
+        0.728,
+        0.7111,
+        0.6914,
+        0.6786,
+        0.6476,
+        0.6181
+      ],
+      "pnls": [
+        -774.48,
+        -922.29,
+        -996.19,
+        -1070.09,
+        -1158.77,
+        -1217.89,
+        -1365.69,
+        -1513.5
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.6914
+    },
+    "sweep_v1_011_sv1b05_dclow_rsi45_vol1.0_sw0.3": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.944,
+        0.8939,
+        0.8696,
+        0.846,
+        0.8182,
+        0.8002,
+        0.7565,
+        0.7148
+      ],
+      "pnls": [
+        -268.36,
+        -519.21,
+        -644.64,
+        -770.07,
+        -920.58,
+        -1020.92,
+        -1271.77,
+        -1522.62
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.8182
+    },
+    "sweep_v1_028_sv1e04_pctile10_gap5_rsi35": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.6908,
+        0.6604,
+        0.6458,
+        0.6315,
+        0.6147,
+        0.6038,
+        0.5773,
+        0.5519
+      ],
+      "pnls": [
+        -1047.82,
+        -1176.0,
+        -1240.09,
+        -1304.18,
+        -1381.09,
+        -1432.37,
+        -1560.55,
+        -1688.73
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.6147
+    },
+    "sweep_v1_026_sv1e02_pctile10_gap10": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.6937,
+        0.6631,
+        0.6484,
+        0.634,
+        0.6172,
+        0.6062,
+        0.5796,
+        0.5541
+      ],
+      "pnls": [
+        -1034.86,
+        -1163.15,
+        -1227.3,
+        -1291.44,
+        -1368.42,
+        -1419.74,
+        -1548.03,
+        -1676.32
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.6172
+    },
+    "sweep_v1_029_sv1e05_pctile20_gap5_volhigh": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.5533,
+        0.5297,
+        0.5183,
+        0.5072,
+        0.4941,
+        0.4856,
+        0.4649,
+        0.4451
+      ],
+      "pnls": [
+        -1352.45,
+        -1452.63,
+        -1502.72,
+        -1552.81,
+        -1612.92,
+        -1652.99,
+        -1753.17,
+        -1853.35
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.4941
+    },
+    "sweep_v1_012_sv1b06_pivot8_rsi35_vol3.0_sw0.5": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.5432,
+        0.5073,
+        0.49,
+        0.4733,
+        0.4537,
+        0.4412,
+        0.4114,
+        0.383
+      ],
+      "pnls": [
+        -967.31,
+        -1066.58,
+        -1116.22,
+        -1165.86,
+        -1225.42,
+        -1265.13,
+        -1364.41,
+        -1463.68
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.4537
+    },
+    "sweep_v1_027_sv1e03_pctile15_gap15": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.6937,
+        0.6631,
+        0.6484,
+        0.634,
+        0.6172,
+        0.6062,
+        0.5796,
+        0.5541
+      ],
+      "pnls": [
+        -1034.86,
+        -1163.15,
+        -1227.3,
+        -1291.44,
+        -1368.42,
+        -1419.74,
+        -1548.03,
+        -1676.32
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.6172
+    },
+    "sweep_v1_017_sv1c05_hh2_sw8_tol1.0_rsi35": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.8912,
+        0.8357,
+        0.8092,
+        0.7833,
+        0.7533,
+        0.7338,
+        0.687,
+        0.6431
+      ],
+      "pnls": [
+        -250.14,
+        -387.75,
+        -456.56,
+        -525.37,
+        -607.93,
+        -662.98,
+        -800.59,
+        -938.21
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.7533
+    },
+    "sweep_v1_009_sv1b03_pivot_rsi40_vol1.5_sw0.3": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.9212,
+        0.8652,
+        0.8381,
+        0.8118,
+        0.7811,
+        0.7611,
+        0.7131,
+        0.6677
+      ],
+      "pnls": [
+        -335.68,
+        -588.22,
+        -714.5,
+        -840.77,
+        -992.3,
+        -1093.32,
+        -1345.86,
+        -1598.41
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.7811
+    },
+    "sweep_v1_015_sv1c03_hh3_sw5_tol2.0": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.7892,
+        0.7334,
+        0.7065,
+        0.6803,
+        0.6498,
+        0.6301,
+        0.5825,
+        0.5377
+      ],
+      "pnls": [
+        -247.02,
+        -320.3,
+        -356.94,
+        -393.58,
+        -437.54,
+        -466.85,
+        -540.13,
+        -613.4
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.6498
+    },
+    "sweep_v1_001_sv1a01_rsi35_p5_atr1.0": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.9686,
+        0.9114,
+        0.8838,
+        0.8569,
+        0.8255,
+        0.8052,
+        0.7561,
+        0.7095
+      ],
+      "pnls": [
+        -128.11,
+        -370.69,
+        -491.98,
+        -613.27,
+        -758.82,
+        -855.85,
+        -1098.43,
+        -1341.01
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.8255
+    },
+    "sweep_v1_010_sv1b04_both_rsi40_vol2.0_sw0.5": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.7377,
+        0.6794,
+        0.6519,
+        0.6254,
+        0.5948,
+        0.5751,
+        0.5285,
+        0.4855
+      ],
+      "pnls": [
+        -726.39,
+        -915.14,
+        -1009.51,
+        -1103.88,
+        -1217.13,
+        -1292.63,
+        -1481.37,
+        -1670.11
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.5948
+    },
+    "sweep_v1_004_sv1a04_rsi35_p8_atr1.5": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        1.1877,
+        1.1174,
+        1.0835,
+        1.0506,
+        1.0121,
+        0.9872,
+        0.9272,
+        0.8705
+      ],
+      "pnls": [
+        1130.01,
+        725.48,
+        523.21,
+        320.95,
+        78.24,
+        -83.58,
+        -488.1,
+        -892.63
+      ],
+      "breakeven_bps": 27.9,
+      "current_pf": 1.0121
+    },
+    "sweep_v1_005_sv1a05_rsi40_p8_atr1.0_volhigh": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        1.418,
+        1.3453,
+        1.3103,
+        1.2761,
+        1.2362,
+        1.2103,
+        1.1476,
+        1.0881
+      ],
+      "pnls": [
+        4705.29,
+        3990.88,
+        3633.67,
+        3276.47,
+        2847.82,
+        2562.06,
+        1847.65,
+        1133.24
+      ],
+      "breakeven_bps": 50.0,
+      "current_pf": 1.2362
+    },
+    "sweep_v1_013_sv1c01_hh1_sw5_tol1.0": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.9959,
+        0.9441,
+        0.9191,
+        0.8946,
+        0.8661,
+        0.8475,
+        0.8024,
+        0.7594
+      ],
+      "pnls": [
+        -18.68,
+        -261.0,
+        -382.17,
+        -503.33,
+        -648.73,
+        -745.66,
+        -987.99,
+        -1230.32
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.8661
+    },
+    "sweep_v1_014_sv1c02_hh2_sw5_tol1.5": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.86,
+        0.8091,
+        0.7846,
+        0.7606,
+        0.7327,
+        0.7145,
+        0.6707,
+        0.6292
+      ],
+      "pnls": [
+        -373.52,
+        -521.03,
+        -594.79,
+        -668.55,
+        -757.06,
+        -816.06,
+        -963.58,
+        -1111.09
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.7327
+    },
+    "sweep_v1_002_sv1a02_rsi40_p5_atr1.5": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        1.5927,
+        1.4979,
+        1.452,
+        1.4071,
+        1.3548,
+        1.3209,
+        1.2391,
+        1.1619
+      ],
+      "pnls": [
+        4563.03,
+        3939.54,
+        3627.79,
+        3316.05,
+        2941.95,
+        2692.55,
+        2069.06,
+        1445.56
+      ],
+      "breakeven_bps": 50.0,
+      "current_pf": 1.3548
+    },
+    "sweep_v1_016_sv1c04_hh1_sw8_tol1.5": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        1.105,
+        1.0414,
+        1.0108,
+        0.981,
+        0.9462,
+        0.9237,
+        0.8694,
+        0.8181
+      ],
+      "pnls": [
+        481.72,
+        194.9,
+        51.5,
+        -91.91,
+        -264.0,
+        -378.73,
+        -665.54,
+        -952.35
+      ],
+      "breakeven_bps": 16.8,
+      "current_pf": 0.9462
+    },
+    "sweep_v1_022_sv1d04_pctile20_sq8_rsi35": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.6216,
+        0.5805,
+        0.5607,
+        0.5415,
+        0.5194,
+        0.5052,
+        0.4709,
+        0.4388
+      ],
+      "pnls": [
+        -962.27,
+        -1092.8,
+        -1158.07,
+        -1223.34,
+        -1301.66,
+        -1353.87,
+        -1484.41,
+        -1614.94
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.5194
+    },
+    "sweep_v1_018_sv1c06_hh1_sw5_tol2.0_rsi45": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        1.2514,
+        1.1861,
+        1.1546,
+        1.1236,
+        1.0874,
+        1.0638,
+        1.0067,
+        0.9523
+      ],
+      "pnls": [
+        1632.2,
+        1236.16,
+        1038.13,
+        840.11,
+        602.49,
+        444.07,
+        48.03,
+        -348.01
+      ],
+      "breakeven_bps": 41.2,
+      "current_pf": 1.0874
+    },
+    "sweep_v1_024_sv1d06_pctile30_sq3_volhigh": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.8438,
+        0.7847,
+        0.7564,
+        0.7289,
+        0.6968,
+        0.6761,
+        0.6268,
+        0.5808
+      ],
+      "pnls": [
+        -462.83,
+        -655.87,
+        -752.39,
+        -848.91,
+        -964.73,
+        -1041.95,
+        -1234.98,
+        -1428.02
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.6968
+    },
+    "sweep_v1_021_sv1d03_pctile40_sq3_expand": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.8465,
+        0.7946,
+        0.7697,
+        0.7453,
+        0.7169,
+        0.6985,
+        0.6545,
+        0.6132
+      ],
+      "pnls": [
+        -518.62,
+        -710.48,
+        -806.41,
+        -902.34,
+        -1017.46,
+        -1094.2,
+        -1286.07,
+        -1477.93
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.7169
+    },
+    "sweep_v1_006_sv1a06_rsi45_p8_atr2.0": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        1.7795,
+        1.6768,
+        1.6269,
+        1.5782,
+        1.5215,
+        1.4847,
+        1.396,
+        1.3123
+      ],
+      "pnls": [
+        8339.24,
+        7452.43,
+        7009.03,
+        6565.62,
+        6033.53,
+        5678.81,
+        4792.0,
+        3905.19
+      ],
+      "breakeven_bps": 50.0,
+      "current_pf": 1.5215
+    },
+    "sweep_v1_003_sv1a03_rsi45_p5_atr2.0": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        1.2466,
+        1.174,
+        1.139,
+        1.1048,
+        1.065,
+        1.0391,
+        0.9766,
+        0.9174
+      ],
+      "pnls": [
+        1842.42,
+        1333.39,
+        1078.88,
+        824.37,
+        518.96,
+        315.35,
+        -193.67,
+        -702.69
+      ],
+      "breakeven_bps": 36.3,
+      "current_pf": 1.065
+    },
+    "sweep_v1_019_sv1d01_pctile20_sq3": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.6802,
+        0.6329,
+        0.6102,
+        0.5883,
+        0.5629,
+        0.5466,
+        0.5076,
+        0.4712
+      ],
+      "pnls": [
+        -938.93,
+        -1103.49,
+        -1185.77,
+        -1268.05,
+        -1366.79,
+        -1432.61,
+        -1597.17,
+        -1761.73
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.5629
+    },
+    "sweep_v1_020_sv1d02_pctile30_sq5": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.7486,
+        0.6965,
+        0.6715,
+        0.6473,
+        0.6193,
+        0.6012,
+        0.558,
+        0.5177
+      ],
+      "pnls": [
+        -760.19,
+        -940.46,
+        -1030.59,
+        -1120.73,
+        -1228.89,
+        -1301.0,
+        -1481.27,
+        -1661.54
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.6193
+    },
+    "sweep_v1_023_sv1d05_pctile30_sq5_expand_rsi45": {
+      "levels": [
+        0.0,
+        0.001,
+        0.0015,
+        0.002,
+        0.0026,
+        0.003,
+        0.004,
+        0.005
+      ],
+      "pfs": [
+        0.9191,
+        0.8641,
+        0.8375,
+        0.8115,
+        0.7812,
+        0.7614,
+        0.714,
+        0.6692
+      ],
+      "pnls": [
+        -375.3,
+        -644.33,
+        -778.85,
+        -913.37,
+        -1074.79,
+        -1182.41,
+        -1451.44,
+        -1720.48
+      ],
+      "breakeven_bps": 0.0,
+      "current_pf": 0.7812
+    }
+  },
+  "family_analysis": {
+    "WickSweepReclaim": {
+      "avg_pf": 0.6996,
+      "avg_stopout_ratio": 0.1477,
+      "avg_class_a_share": 1.0,
+      "best_config": "sweep_v1_007_sv1b01_dclow_rsi40_vol1.5_sw0.3",
+      "research_grade": "NEGATIVE",
+      "n_configs": 6
+    },
+    "CrossRSIExtreme": {
+      "avg_pf": 0.621,
+      "avg_stopout_ratio": 0.1945,
+      "avg_class_a_share": 0.9973,
+      "best_config": "sweep_v1_025_sv1e01_pctile5_gap10",
+      "research_grade": "NEGATIVE",
+      "n_configs": 6
+    },
+    "TrendPullback": {
+      "avg_pf": 0.8392,
+      "avg_stopout_ratio": 0.1384,
+      "avg_class_a_share": 0.9991,
+      "best_config": "sweep_v1_018_sv1c06_hh1_sw5_tol2.0_rsi45",
+      "research_grade": "STRONG_LEAD",
+      "n_configs": 6
+    },
+    "SwingFractalBounce": {
+      "avg_pf": 1.1692,
+      "avg_stopout_ratio": 0.1236,
+      "avg_class_a_share": 1.0,
+      "best_config": "sweep_v1_006_sv1a06_rsi45_p8_atr2.0",
+      "research_grade": "STRONG_LEAD",
+      "n_configs": 6
+    },
+    "ATRExhaustion": {
+      "avg_pf": 0.6494,
+      "avg_stopout_ratio": 0.1304,
+      "avg_class_a_share": 0.9995,
+      "best_config": "sweep_v1_023_sv1d05_pctile30_sq5_expand_rsi45",
+      "research_grade": "NEGATIVE",
+      "n_configs": 6
+    }
+  },
+  "exit_intelligence": {
+    "best_exit_reason": "RSI RECOVERY",
+    "worst_exit_reason": "FIXED STOP",
+    "class_a_dominance": 1.0,
+    "global_exit_stats": {
+      "FIXED STOP": {
+        "total_pnl": -86034.91,
+        "total_count": 995
+      },
+      "TIME MAX": {
+        "total_pnl": -45540.78,
+        "total_count": 1281
+      },
+      "RSI RECOVERY": {
+        "total_pnl": 85589.34,
+        "total_count": 3423
+      },
+      "DC TARGET": {
+        "total_pnl": 23707.76,
+        "total_count": 823
+      },
+      "BB TARGET": {
+        "total_pnl": 11207.44,
+        "total_count": 298
+      },
+      "END": {
+        "total_pnl": -581.49,
+        "total_count": 77
+      }
+    }
+  },
+  "recommendations": [
+    "6 STRONG LEAD(s) found: sweep_v1_004_sv1a04_rsi35_p8_atr1.5, sweep_v1_005_sv1a05_rsi40_p8_atr1.0_volhigh, sweep_v1_002_sv1a02_rsi40_p5_atr1.5, sweep_v1_018_sv1c06_hh1_sw5_tol2.0_rsi45, sweep_v1_006_sv1a06_rsi45_p8_atr2.0 -- advance to truth-pass (agent_team_v3.py full validation)",
+    "Family 'SwingFractalBounce' has best avg PF (1.17) -- focus further tuning here",
+    "Family 'SwingFractalBounce' has lowest stopout ratio (12%) -- entries have good geometric merit",
+    "RSI RECOVERY generates most profit across all configs ($85589 total, 3423 exits) -- entries should maximize probability of this exit firing",
+    "Class A exits dominate in 100% of configs -- DC exit intelligence is working, focus on entry quality",
+    "1 config(s) profitable at lower fees but not Kraken (26 bps) -- consider MEXC (10 bps) for these"
+  ]
+}

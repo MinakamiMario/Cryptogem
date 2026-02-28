@@ -1,0 +1,468 @@
+"""Lab SQLite database — schema, CRUD, state machine enforcement."""
+from __future__ import annotations
+
+import json
+import sqlite3
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Optional
+
+from lab.config import (
+    AGENT_NAMES, ALL_STATUSES, DB_PATH, REVIEW_VERDICTS, VALID_TRANSITIONS,
+)
+from lab.models import (
+    AgentStatus, Comment, Goal, Task, TaskResult, TaskReview,
+)
+
+SCHEMA_SQL = """
+CREATE TABLE IF NOT EXISTS goals (
+    id          INTEGER PRIMARY KEY,
+    title       TEXT NOT NULL,
+    description TEXT DEFAULT '',
+    agents      TEXT NOT NULL,
+    tasks_per_day INTEGER DEFAULT 2,
+    status      TEXT DEFAULT 'active',
+    created_at  TEXT DEFAULT (datetime('now')),
+    updated_at  TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+    id              INTEGER PRIMARY KEY,
+    goal_id         INTEGER REFERENCES goals(id),
+    title           TEXT NOT NULL,
+    description     TEXT DEFAULT '',
+    assigned_to     TEXT NOT NULL,
+    status          TEXT DEFAULT 'backlog',
+    priority        INTEGER DEFAULT 5,
+    created_by      TEXT NOT NULL,
+    created_at      TEXT DEFAULT (datetime('now')),
+    updated_at      TEXT DEFAULT (datetime('now')),
+    blocked_since   TEXT,
+    artifact_path   TEXT,
+    artifact_sha256 TEXT,
+    artifact_git_hash TEXT,
+    artifact_cmd    TEXT
+);
+
+CREATE TABLE IF NOT EXISTS task_reviews (
+    id          INTEGER PRIMARY KEY,
+    task_id     INTEGER NOT NULL REFERENCES tasks(id),
+    reviewer    TEXT NOT NULL,
+    verdict     TEXT NOT NULL DEFAULT 'pending',
+    comment_id  INTEGER REFERENCES comments(id),
+    created_at  TEXT DEFAULT (datetime('now')),
+    updated_at  TEXT DEFAULT (datetime('now')),
+    UNIQUE(task_id, reviewer)
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+    id           INTEGER PRIMARY KEY,
+    task_id      INTEGER REFERENCES tasks(id),
+    agent        TEXT NOT NULL,
+    body         TEXT NOT NULL,
+    comment_type TEXT DEFAULT 'comment',
+    created_at   TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS agent_status (
+    agent           TEXT PRIMARY KEY,
+    status          TEXT DEFAULT 'idle',
+    last_heartbeat  TEXT,
+    current_task_id INTEGER,
+    progress_note   TEXT
+);
+
+CREATE TABLE IF NOT EXISTS activity_log (
+    id          INTEGER PRIMARY KEY,
+    agent       TEXT NOT NULL,
+    action      TEXT NOT NULL,
+    task_id     INTEGER,
+    details     TEXT,
+    created_at  TEXT DEFAULT (datetime('now'))
+);
+"""
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
+
+
+class LabDB:
+    """SQLite database with WAL mode, state machine, and write safety."""
+
+    def __init__(self, db_path: Path | str = DB_PATH):
+        self.db_path = Path(db_path)
+        self.conn = sqlite3.connect(
+            str(self.db_path),
+            check_same_thread=False,
+        )
+        self.conn.row_factory = sqlite3.Row
+        # Pragmas
+        self.conn.execute("PRAGMA journal_mode=WAL")
+        self.conn.execute("PRAGMA busy_timeout=5000")
+        self.conn.execute("PRAGMA foreign_keys=ON")
+
+    def init_schema(self) -> None:
+        """Create tables + seed agent_status rows."""
+        self.conn.executescript(SCHEMA_SQL)
+        for name in AGENT_NAMES:
+            self.conn.execute(
+                "INSERT OR IGNORE INTO agent_status (agent) VALUES (?)",
+                (name,),
+            )
+        self.conn.commit()
+
+    def close(self) -> None:
+        self.conn.close()
+
+    # ── Goals ─────────────────────────────────────────────
+
+    def create_goal(self, title: str, agents: list[str],
+                    description: str = '', tasks_per_day: int = 2) -> int:
+        cur = self.conn.execute(
+            "INSERT INTO goals (title, description, agents, tasks_per_day) "
+            "VALUES (?, ?, ?, ?)",
+            (title, description, json.dumps(agents), tasks_per_day),
+        )
+        self.conn.commit()
+        return cur.lastrowid
+
+    def get_goals(self, status: str = 'active') -> list[Goal]:
+        rows = self.conn.execute(
+            "SELECT * FROM goals WHERE status = ?", (status,)
+        ).fetchall()
+        return [self._row_to_goal(r) for r in rows]
+
+    def get_goal(self, goal_id: int) -> Optional[Goal]:
+        row = self.conn.execute(
+            "SELECT * FROM goals WHERE id = ?", (goal_id,)
+        ).fetchone()
+        return self._row_to_goal(row) if row else None
+
+    def get_goal_agents(self, goal_id: int) -> list[str]:
+        goal = self.get_goal(goal_id)
+        return goal.agents if goal else []
+
+    # ── Tasks ─────────────────────────────────────────────
+
+    def create_task(self, goal_id: int, title: str, assigned_to: str,
+                    created_by: str, description: str = '',
+                    priority: int = 5) -> int:
+        cur = self.conn.execute(
+            "INSERT INTO tasks (goal_id, title, description, assigned_to, "
+            "created_by, priority) VALUES (?, ?, ?, ?, ?, ?)",
+            (goal_id, title, description, assigned_to, created_by, priority),
+        )
+        self.conn.commit()
+        self.log_activity(created_by, 'task_created', cur.lastrowid,
+                          {'title': title, 'assigned_to': assigned_to})
+        return cur.lastrowid
+
+    def get_task(self, task_id: int) -> Optional[Task]:
+        row = self.conn.execute(
+            "SELECT * FROM tasks WHERE id = ?", (task_id,)
+        ).fetchone()
+        return self._row_to_task(row) if row else None
+
+    def get_my_tasks(self, agent: str, status: str = 'todo') -> list[Task]:
+        rows = self.conn.execute(
+            "SELECT * FROM tasks WHERE assigned_to = ? AND status = ? "
+            "ORDER BY priority ASC, created_at ASC",
+            (agent, status),
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
+    def get_tasks_by_status(self, status: str) -> list[Task]:
+        rows = self.conn.execute(
+            "SELECT * FROM tasks WHERE status = ? ORDER BY priority ASC",
+            (status,),
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
+    def get_tasks_by_goal(self, goal_id: int) -> list[Task]:
+        rows = self.conn.execute(
+            "SELECT * FROM tasks WHERE goal_id = ? ORDER BY created_at DESC",
+            (goal_id,),
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
+    def count_tasks_today(self, goal_id: int) -> int:
+        row = self.conn.execute(
+            "SELECT COUNT(*) FROM tasks WHERE goal_id = ? "
+            "AND date(created_at) = date('now')",
+            (goal_id,),
+        ).fetchone()
+        return row[0]
+
+    def transition(self, task_id: int, new_status: str, actor: str) -> None:
+        """Enforce state machine. Raises ValueError on invalid transition."""
+        task = self.get_task(task_id)
+        if task is None:
+            raise ValueError(f"Task {task_id} not found")
+
+        allowed = VALID_TRANSITIONS.get(task.status, [])
+        if new_status not in allowed:
+            raise ValueError(
+                f"Invalid transition: {task.status} -> {new_status} "
+                f"(allowed: {allowed})"
+            )
+
+        # Boss promotie check
+        if task.status == 'peer_review' and new_status == 'review':
+            pending = self.get_pending_reviews(task_id)
+            if pending:
+                raise ValueError(
+                    f"Cannot promote: {len(pending)} reviews pending: "
+                    f"{[r.reviewer for r in pending]}"
+                )
+
+        now = _now()
+        blocked_since = now if new_status == 'blocked' else None
+
+        self.conn.execute(
+            "UPDATE tasks SET status = ?, updated_at = ?, blocked_since = ? "
+            "WHERE id = ?",
+            (new_status, now, blocked_since, task_id),
+        )
+        self.conn.commit()
+        self.log_activity(actor, 'status_changed', task_id,
+                          {'from': task.status, 'to': new_status})
+
+    def set_artifact(self, task_id: int, path: str,
+                     sha256: Optional[str] = None,
+                     git_hash: Optional[str] = None,
+                     cmd: Optional[str] = None) -> None:
+        self.conn.execute(
+            "UPDATE tasks SET artifact_path = ?, artifact_sha256 = ?, "
+            "artifact_git_hash = ?, artifact_cmd = ?, updated_at = ? "
+            "WHERE id = ?",
+            (path, sha256, git_hash, cmd, _now(), task_id),
+        )
+        self.conn.commit()
+
+    # ── Reviews ───────────────────────────────────────────
+
+    def create_review(self, task_id: int, reviewer: str) -> int:
+        cur = self.conn.execute(
+            "INSERT OR IGNORE INTO task_reviews (task_id, reviewer, verdict) "
+            "VALUES (?, ?, 'pending')",
+            (task_id, reviewer),
+        )
+        self.conn.commit()
+        return cur.lastrowid
+
+    def update_review(self, task_id: int, reviewer: str, verdict: str,
+                      comment_id: Optional[int] = None) -> None:
+        if verdict not in REVIEW_VERDICTS:
+            raise ValueError(f"Invalid verdict: {verdict}")
+        self.conn.execute(
+            "UPDATE task_reviews SET verdict = ?, comment_id = ?, "
+            "updated_at = ? WHERE task_id = ? AND reviewer = ?",
+            (verdict, comment_id, _now(), task_id, reviewer),
+        )
+        self.conn.commit()
+
+    def get_pending_reviews(self, task_id: int) -> list[TaskReview]:
+        rows = self.conn.execute(
+            "SELECT * FROM task_reviews WHERE task_id = ? "
+            "AND verdict = 'pending'",
+            (task_id,),
+        ).fetchall()
+        return [self._row_to_review(r) for r in rows]
+
+    def get_reviews_for_task(self, task_id: int) -> list[TaskReview]:
+        rows = self.conn.execute(
+            "SELECT * FROM task_reviews WHERE task_id = ?",
+            (task_id,),
+        ).fetchall()
+        return [self._row_to_review(r) for r in rows]
+
+    def get_tasks_needing_my_review(self, agent: str) -> list[Task]:
+        """Tasks in peer_review where I have a pending review."""
+        rows = self.conn.execute(
+            "SELECT t.* FROM tasks t "
+            "JOIN task_reviews r ON t.id = r.task_id "
+            "WHERE r.reviewer = ? AND r.verdict = 'pending' "
+            "AND t.status = 'peer_review' "
+            "ORDER BY t.priority ASC",
+            (agent,),
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
+    def get_fully_reviewed_tasks(self) -> list[Task]:
+        """Tasks in peer_review where ALL reviews are approved."""
+        rows = self.conn.execute(
+            "SELECT t.* FROM tasks t "
+            "WHERE t.status = 'peer_review' "
+            "AND NOT EXISTS ("
+            "  SELECT 1 FROM task_reviews r "
+            "  WHERE r.task_id = t.id AND r.verdict != 'approved'"
+            ") "
+            "AND EXISTS ("
+            "  SELECT 1 FROM task_reviews r WHERE r.task_id = t.id"
+            ")",
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
+    # ── Comments ──────────────────────────────────────────
+
+    def add_comment(self, task_id: int, agent: str, body: str,
+                    comment_type: str = 'comment') -> int:
+        cur = self.conn.execute(
+            "INSERT INTO comments (task_id, agent, body, comment_type) "
+            "VALUES (?, ?, ?, ?)",
+            (task_id, agent, body, comment_type),
+        )
+        self.conn.commit()
+        self.log_activity(agent, 'comment_posted', task_id,
+                          {'type': comment_type})
+        return cur.lastrowid
+
+    def get_comments(self, task_id: int) -> list[Comment]:
+        rows = self.conn.execute(
+            "SELECT * FROM comments WHERE task_id = ? ORDER BY created_at ASC",
+            (task_id,),
+        ).fetchall()
+        return [self._row_to_comment(r) for r in rows]
+
+    # ── Agent Status ──────────────────────────────────────
+
+    def set_status(self, agent: str, status: str,
+                   task_id: Optional[int] = None,
+                   note: Optional[str] = None) -> None:
+        self.conn.execute(
+            "UPDATE agent_status SET status = ?, last_heartbeat = ?, "
+            "current_task_id = ?, progress_note = ? WHERE agent = ?",
+            (status, _now(), task_id, note, agent),
+        )
+        self.conn.commit()
+
+    def get_agent_status(self, agent: str) -> Optional[AgentStatus]:
+        row = self.conn.execute(
+            "SELECT * FROM agent_status WHERE agent = ?", (agent,)
+        ).fetchone()
+        return self._row_to_agent_status(row) if row else None
+
+    def get_all_agent_statuses(self) -> list[AgentStatus]:
+        rows = self.conn.execute(
+            "SELECT * FROM agent_status ORDER BY agent"
+        ).fetchall()
+        return [self._row_to_agent_status(r) for r in rows]
+
+    # ── Activity Log ──────────────────────────────────────
+
+    def log_activity(self, agent: str, action: str,
+                     task_id: Optional[int] = None,
+                     details: Optional[dict] = None) -> None:
+        self.conn.execute(
+            "INSERT INTO activity_log (agent, action, task_id, details) "
+            "VALUES (?, ?, ?, ?)",
+            (agent, action, task_id,
+             json.dumps(details) if details else None),
+        )
+        self.conn.commit()
+
+    def get_recent_activity(self, limit: int = 50) -> list[dict]:
+        rows = self.conn.execute(
+            "SELECT * FROM activity_log ORDER BY created_at DESC LIMIT ?",
+            (limit,),
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    # ── Stuck detection ───────────────────────────────────
+
+    def get_stuck_tasks(self, hours: int = 24) -> list[Task]:
+        """Tasks blocked or in_progress for more than N hours."""
+        rows = self.conn.execute(
+            "SELECT * FROM tasks WHERE status IN ('in_progress', 'blocked') "
+            "AND updated_at < datetime('now', ? || ' hours')",
+            (f'-{hours}',),
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
+    # ── Summary ───────────────────────────────────────────
+
+    def get_status_summary(self) -> dict:
+        """Dashboard summary: task counts by status, agent statuses."""
+        summary = {'tasks': {}, 'agents': {}, 'goals': []}
+        for status in ALL_STATUSES:
+            row = self.conn.execute(
+                "SELECT COUNT(*) FROM tasks WHERE status = ?", (status,)
+            ).fetchone()
+            summary['tasks'][status] = row[0]
+
+        for agent_st in self.get_all_agent_statuses():
+            summary['agents'][agent_st.agent] = {
+                'status': agent_st.status,
+                'last_heartbeat': agent_st.last_heartbeat,
+            }
+
+        for goal in self.get_goals():
+            tasks = self.get_tasks_by_goal(goal.id)
+            done = sum(1 for t in tasks if t.status == 'done')
+            summary['goals'].append({
+                'id': goal.id,
+                'title': goal.title,
+                'total_tasks': len(tasks),
+                'done': done,
+            })
+
+        return summary
+
+    # ── Row converters ────────────────────────────────────
+
+    @staticmethod
+    def _row_to_goal(row: sqlite3.Row) -> Goal:
+        return Goal(
+            id=row['id'], title=row['title'],
+            description=row['description'] or '',
+            agents=json.loads(row['agents']),
+            tasks_per_day=row['tasks_per_day'],
+            status=row['status'],
+            created_at=row['created_at'] or '',
+            updated_at=row['updated_at'] or '',
+        )
+
+    @staticmethod
+    def _row_to_task(row: sqlite3.Row) -> Task:
+        return Task(
+            id=row['id'], goal_id=row['goal_id'],
+            title=row['title'], description=row['description'] or '',
+            assigned_to=row['assigned_to'], status=row['status'],
+            priority=row['priority'], created_by=row['created_by'],
+            created_at=row['created_at'] or '',
+            updated_at=row['updated_at'] or '',
+            blocked_since=row['blocked_since'],
+            artifact_path=row['artifact_path'],
+            artifact_sha256=row['artifact_sha256'],
+            artifact_git_hash=row['artifact_git_hash'],
+            artifact_cmd=row['artifact_cmd'],
+        )
+
+    @staticmethod
+    def _row_to_comment(row: sqlite3.Row) -> Comment:
+        return Comment(
+            id=row['id'], task_id=row['task_id'],
+            agent=row['agent'], body=row['body'],
+            comment_type=row['comment_type'],
+            created_at=row['created_at'] or '',
+        )
+
+    @staticmethod
+    def _row_to_review(row: sqlite3.Row) -> TaskReview:
+        return TaskReview(
+            id=row['id'], task_id=row['task_id'],
+            reviewer=row['reviewer'], verdict=row['verdict'],
+            comment_id=row['comment_id'],
+            created_at=row['created_at'] or '',
+            updated_at=row['updated_at'] or '',
+        )
+
+    @staticmethod
+    def _row_to_agent_status(row: sqlite3.Row) -> AgentStatus:
+        return AgentStatus(
+            agent=row['agent'], status=row['status'],
+            last_heartbeat=row['last_heartbeat'],
+            current_task_id=row['current_task_id'],
+            progress_note=row['progress_note'],
+        )

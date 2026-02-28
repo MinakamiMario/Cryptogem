@@ -1,7 +1,7 @@
 {
-  "version": "v2",
-  "generated": "2026-02-18",
-  "git_hash": "42b2e94",
+  "version": "v3",
+  "generated": "2026-02-26",
+  "git_hash": "57a688e3",
   "experiments": [
     {
       "id": "v1",
@@ -449,6 +449,50 @@
       },
       "report": "reports/4h/mexc_dd_microsweep_010.json",
       "script": "scripts/run_mexc_dd_microsweep.py"
+    },
+    {
+      "id": "sweep_v1",
+      "name": "Sweep v1 — New Signal Family Screening",
+      "adr": "4H-016",
+      "dataset_id": "ohlcv_4h_kraken_spot_usd_526",
+      "universe_id": "universe_sprint1",
+      "fee_model": "kraken_spot_26bps",
+      "git_hash": "57a688e3",
+      "configs": 30,
+      "families": 5,
+      "strong_leads": 6,
+      "verified": 1,
+      "conditional": 1,
+      "failed": 1,
+      "scoreboard": "reports/4h/sweep_v1/sweep_v1_scoreboard.json",
+      "edge_analysis": "reports/4h/sweep_v1/sweep_v1_edge_analysis.json",
+      "compat_scores": "reports/4h/sweep_v1/sweep_v1_compat_scores.json",
+      "results_dir": "reports/4h/sweep_v1/sweep_v1_*_57a688e3/",
+      "truthpass_summary": "reports/4h/sweep_v1/truthpass/sweep_v1_truthpass_summary.json",
+      "ddfix_report": "reports/4h/sweep_v1/ddfix/sweep_v1_ddfix_a06_001.json",
+      "engine": "strategies/4h/sprint3/engine.py",
+      "hypotheses": "strategies/4h/sweep_v1/hypotheses.py",
+      "indicators": "strategies/4h/sweep_v1/indicators.py",
+      "exit_mode": "dc",
+      "scripts": [
+        "scripts/run_sweep_v1.py",
+        "scripts/run_sweep_v1_truthpass.py",
+        "scripts/run_sweep_v1_ddfix.py"
+      ],
+      "tests": "tests/test_sweep_v1.py",
+      "winner": {
+        "config_id": "sweep_v1_006_sv1a06_rsi45_p8_atr2.0",
+        "family": "SwingFractalBounce",
+        "raw": {"pf": 1.52, "trades": 347, "dd": 63.1, "pnl": 3425},
+        "wrapped": {
+          "wrapper": "dd_throttle(10%/0.25x) + adaptive_maxpos(2/1/1)",
+          "pf": 2.09, "trades": 224, "dd": 13.2, "pnl": 3641,
+          "boot_p5": 1.20, "boot_prof_pct": 98.8,
+          "truth_pass": "VERIFIED (2/2)",
+          "gates": "6/6 PASS"
+        }
+      },
+      "note": "5 families (SwingFractalBounce, WickSweepReclaim, TrendPullback, ATRExhaustion, CrossRSIExtreme). SwingFractalBounce = winner (avg PF=1.17). A06 VERIFIED raw + VERIFIED wrapped. DD reduced 63%→13% with wrappers. Second verified DC-compatible signal family after Vol Capitulation."
     }
   ]
 }

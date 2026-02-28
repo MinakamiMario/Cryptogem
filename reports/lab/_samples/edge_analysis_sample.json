@@ -1,0 +1,22 @@
+{
+  "report_type": "edge_analysis",
+  "agent": "edge_analyst",
+  "title": "Exit attribution analysis — GRID_BEST config",
+  "_meta": {
+    "agent": "edge_analyst",
+    "git_hash": "fd0895b",
+    "timestamp": "2026-02-28T12:00:00+00:00"
+  },
+  "config_hash": "grid_best_abc123",
+  "total_trades": 312,
+  "exit_class_breakdown": {
+    "TP_NORMAL": {"count": 187, "pct": 59.9, "avg_pnl_pct": 4.21},
+    "SL_NORMAL": {"count": 68, "pct": 21.8, "avg_pnl_pct": -2.95},
+    "TIME_MAX": {"count": 34, "pct": 10.9, "avg_pnl_pct": 0.42},
+    "RSI_RECOVERY": {"count": 23, "pct": 7.4, "avg_pnl_pct": 1.87}
+  },
+  "pf": 1.52,
+  "max_dd_pct": 14.8,
+  "win_rate_pct": 67.3,
+  "notes": "Sample artifact — representative of Edge Analyst output format."
+}

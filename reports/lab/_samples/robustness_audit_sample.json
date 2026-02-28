@@ -1,0 +1,31 @@
+{
+  "report_type": "robustness_audit",
+  "agent": "robustness_auditor",
+  "title": "Window sweep + Walk-Forward validation",
+  "_meta": {
+    "agent": "robustness_auditor",
+    "git_hash": "fd0895b",
+    "timestamp": "2026-02-28T12:15:00+00:00"
+  },
+  "config_hash": "grid_best_abc123",
+  "window_sweep": {
+    "windows_tested": 5,
+    "windows_passed": 4,
+    "pass_rate": 0.80,
+    "worst_window": {"start": "2024-06", "end": "2024-09", "pf": 0.91}
+  },
+  "walk_forward": {
+    "splits": 4,
+    "oos_pf_mean": 1.38,
+    "oos_pf_min": 1.02,
+    "is_vs_oos_degradation_pct": 12.4
+  },
+  "monte_carlo": {
+    "simulations": 1000,
+    "p5_return_pct": 3.2,
+    "ruin_probability_pct": 0.8,
+    "median_return_pct": 18.7
+  },
+  "verdict": "PASS — 4/5 windows, WF degradation <15%, MC ruin <2%",
+  "notes": "Sample artifact — representative of Robustness Auditor output format."
+}

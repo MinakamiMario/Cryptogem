@@ -19,6 +19,12 @@ cache/
 *.xlsx
 trading_bot/trades/
 
+# Lab — runtime database + generated reports
+lab/lab.db
+reports/lab/**
+!reports/lab/_samples/
+!reports/lab/_samples/**
+
 # OS
 .DS_Store
 Thumbs.db

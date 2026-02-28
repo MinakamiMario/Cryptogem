@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
 """
-Paper Trade — HF 1H MEXC Maker Execution Validation
-=====================================================
-Execution validation for near_ask maker limit orders on MEXC SPOT.
+Paper Trade — MEXC Maker Execution & Micro-Live Validation
+============================================================
+Two modes:
+  --mode paper : Execution validation for near_ask maker limit orders (fill-rate, slippage)
+  --mode micro : MX-MICRO-TP5SL3 alpha/edge validation (TP +5% / SL -3% / TIME 24h)
 
-This is NOT alpha/PnL validation. Purpose:
+Paper mode (HF-P2-LIVE-FILL):
   - Fill-rate stability in continuous trading loop
   - Slippage/fees burn under continuous operation
   - Execution path correctness (no stuck positions, no taker incidents)
   - Infrastructure reliability (no API errors, no kill-switch triggers)
+
+Micro mode (MX-MICRO-TP5SL3):
+  - Alpha/PnL validation via micro-live on MEXC
+  - Separate from HF-P2-LIVE-FILL (fill-rate only) and MEXC-4H-PAPER (4H paper trader)
+  - ADR: ADR-MX-001
 
 Strategy: near_ask (ask - spread × 0.10)
 Universe: papertrade_universe_v1.json (17 coins, curated from expansion test)
 TTL: 120s per order
 Order size: $5-15 (configurable)
 
-ADR: HF-038 Iteration 8 — GO paper trading (execution validation)
+ADR: HF-038 (paper mode), ADR-MX-001 (micro mode)
 Separate from: MEXC-4H-PAPER (trading_bot/paper_mexc_4h.py, ADR-4H-015)
 
 Usage:
@@ -61,6 +68,7 @@ except ImportError:
 
 # ─── Constants ──────────────────────────────────────────────
 TAG = 'hf_1h_paper'
+MICRO_TAG = 'mx_micro_tp5sl3'
 STATE_FILE = BASE_DIR / f'paper_state_{TAG}.json'
 LOG_DIR = BASE_DIR / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
@@ -110,11 +118,23 @@ MICRO_MAX_HOLD_HOURS = 24         # failsafe time exit
 MICRO_COUNTERFACTUAL_HOURS = [12, 24]  # snapshot intervals for counterfactual log
 MICRO_EXIT_FEE_BPS = 5.0         # MEXC taker fee for market sell (5bps = 0.05%, verified via API)
 
+# ─── Entry Feature / Signal Gate Constants ─────────────────
+FEATURE_CANDLE_TF = '1h'
+FEATURE_CANDLE_LIMIT = 50         # bars to fetch for indicator computation
+FEATURE_RSI_PERIOD = 14
+FEATURE_VWAP_PERIOD = 20          # rolling VWAP window
+FEATURE_DC_PERIOD = 20            # Donchian channel lookback
+FEATURE_VOL_AVG_PERIOD = 20       # volume average lookback
+
+# Signal gate thresholds (mode=signal only)
+SIGNAL_VWAP_DEV_MIN = -1.5        # price must be ≤ -1.5% below VWAP
+SIGNAL_RSI_MAX = 40               # RSI must be ≤ 40 (oversold zone)
+
 
 # ─── Logging ────────────────────────────────────────────────
 
-def setup_logging():
-    log_file = LOG_DIR / f"paper_{TAG}_{datetime.now().strftime('%Y%m%d_%H%M')}.log"
+def setup_logging(active_tag: str = TAG):
+    log_file = LOG_DIR / f"{active_tag}_{datetime.now().strftime('%Y%m%d_%H%M')}.log"
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s [%(levelname)s] %(message)s',
@@ -124,10 +144,24 @@ def setup_logging():
             logging.StreamHandler(),
         ]
     )
-    return logging.getLogger(TAG)
+    return logging.getLogger(active_tag)
 
 
 # ─── Telegram Helper ──────────────────────────────────────
+
+def _get_git_hash() -> str:
+    """Return short git commit hash, or 'unknown' if not in a git repo."""
+    try:
+        import subprocess
+        result = subprocess.run(
+            ['git', 'rev-parse', '--short', 'HEAD'],
+            capture_output=True, text=True, timeout=5,
+            cwd=os.path.dirname(os.path.abspath(__file__))
+        )
+        return result.stdout.strip() if result.returncode == 0 else 'unknown'
+    except Exception:
+        return 'unknown'
+
 
 def tg_send(tg, text: str, level: str = 'info'):
     """Send telegram message. Fails silently if tg is None or send fails."""
@@ -148,15 +182,166 @@ def tg_send(tg, text: str, level: str = 'info'):
         pass  # never let TG failure crash the trader
 
 
+# ─── Entry Feature Computation ─────────────────────────────
+
+def _calc_rsi(closes: list, period: int = FEATURE_RSI_PERIOD) -> float:
+    """Compute RSI from a list of close prices. Returns 50.0 on insufficient data."""
+    if len(closes) < period + 1:
+        return 50.0
+    gains, losses = [], []
+    for i in range(1, len(closes)):
+        delta = closes[i] - closes[i - 1]
+        gains.append(max(0, delta))
+        losses.append(max(0, -delta))
+    if len(gains) < period:
+        return 50.0
+    avg_gain = sum(gains[-period:]) / period
+    avg_loss = sum(losses[-period:]) / period
+    if avg_loss == 0:
+        return 100.0
+    rs = avg_gain / avg_loss
+    return 100.0 - (100.0 / (1.0 + rs))
+
+
+def compute_entry_features(exchange, symbol: str, logger=None) -> dict:
+    """Fetch 1H candles and compute entry features for signal gating.
+
+    Returns dict with:
+      vwap_dev_pct   — (close - rolling_vwap) / rolling_vwap * 100
+      rsi_14         — 14-period RSI
+      dist_support_pct — (close - dc_low) / close * 100 (positive = above support)
+      dist_dc_mid_pct  — (close - dc_mid) / close * 100 (negative = below midpoint)
+      vol_ratio      — last bar volume / 20-bar avg volume
+      close          — latest close price
+      dc_low         — Donchian low (support)
+      dc_mid         — Donchian midpoint
+      vwap           — rolling VWAP value
+      ok             — True if computation succeeded
+    """
+    features = {'ok': False, 'error': None}
+    try:
+        candles = exchange.fetch_ohlcv(symbol, FEATURE_CANDLE_TF, limit=FEATURE_CANDLE_LIMIT)
+        if not candles or len(candles) < FEATURE_DC_PERIOD + 1:
+            features['error'] = f'insufficient candles ({len(candles) if candles else 0})'
+            return features
+
+        # Extract OHLCV arrays
+        opens   = [c[1] for c in candles]
+        highs   = [c[2] for c in candles]
+        lows    = [c[3] for c in candles]
+        closes  = [c[4] for c in candles]
+        volumes = [c[5] for c in candles]
+
+        close = closes[-1]
+        if close <= 0:
+            features['error'] = 'zero close price'
+            return features
+
+        # RSI (14-period)
+        rsi = _calc_rsi(closes, FEATURE_RSI_PERIOD)
+
+        # Rolling VWAP (20-period): sum(typical_price * volume) / sum(volume)
+        vwap_window = min(FEATURE_VWAP_PERIOD, len(candles))
+        tp_vol_sum = 0.0
+        vol_sum = 0.0
+        for i in range(-vwap_window, 0):
+            typical = (highs[i] + lows[i] + closes[i]) / 3.0
+            tp_vol_sum += typical * volumes[i]
+            vol_sum += volumes[i]
+        vwap = tp_vol_sum / vol_sum if vol_sum > 0 else close
+        vwap_dev_pct = (close - vwap) / vwap * 100.0 if vwap > 0 else 0.0
+
+        # Donchian channel (20-period, excluding current bar)
+        dc_window = min(FEATURE_DC_PERIOD, len(candles) - 1)
+        dc_lows  = lows[-dc_window - 1:-1]
+        dc_highs = highs[-dc_window - 1:-1]
+        dc_low  = min(dc_lows)  if dc_lows  else close
+        dc_high = max(dc_highs) if dc_highs else close
+        dc_mid  = (dc_high + dc_low) / 2.0
+
+        dist_support_pct = (close - dc_low) / close * 100.0 if close > 0 else 0.0
+        dist_dc_mid_pct  = (close - dc_mid) / close * 100.0 if close > 0 else 0.0
+
+        # Volume ratio (current bar / 20-bar avg)
+        vol_avg_window = min(FEATURE_VOL_AVG_PERIOD, len(candles) - 1)
+        avg_vol = sum(volumes[-vol_avg_window - 1:-1]) / vol_avg_window if vol_avg_window > 0 else 1.0
+        vol_ratio = volumes[-1] / avg_vol if avg_vol > 0 else 1.0
+
+        features.update({
+            'ok': True,
+            'vwap_dev_pct': round(vwap_dev_pct, 2),
+            'rsi_14': round(rsi, 1),
+            'dist_support_pct': round(dist_support_pct, 2),
+            'dist_dc_mid_pct': round(dist_dc_mid_pct, 2),
+            'vol_ratio': round(vol_ratio, 2),
+            'close': close,
+            'dc_low': dc_low,
+            'dc_mid': round(dc_mid, 8),
+            'vwap': round(vwap, 8),
+        })
+
+    except Exception as e:
+        features['error'] = str(e)[:200]
+        if logger:
+            logger.warning(f"[FEATURES] {symbol}: {e}")
+
+    return features
+
+
+def passes_signal_gate(features: dict) -> bool:
+    """Check if entry features pass the signal gate (mode=signal).
+
+    Conditions (all must be True):
+      1. vwap_dev_pct <= SIGNAL_VWAP_DEV_MIN (price below VWAP)
+      2. rsi_14 <= SIGNAL_RSI_MAX (oversold)
+    """
+    if not features.get('ok'):
+        return False
+    if features.get('vwap_dev_pct', 0) > SIGNAL_VWAP_DEV_MIN:
+        return False
+    if features.get('rsi_14', 50) > SIGNAL_RSI_MAX:
+        return False
+    return True
+
+
+def format_features_short(features: dict) -> str:
+    """Format features as compact one-liner for logs/Telegram."""
+    if not features.get('ok'):
+        return f"features=ERR({features.get('error', '?')[:30]})"
+    return (f"vwap={features['vwap_dev_pct']:+.1f}% "
+            f"RSI={features['rsi_14']:.0f} "
+            f"sup={features['dist_support_pct']:+.1f}% "
+            f"mid={features['dist_dc_mid_pct']:+.1f}% "
+            f"vol={features['vol_ratio']:.1f}x")
+
+
 # ─── Exchange Setup ─────────────────────────────────────────
 
 def create_exchange():
-    """Create MEXC SPOT exchange via CCXT."""
+    """Create MEXC SPOT exchange via CCXT.
+
+    Env-var contract (fail-fast):
+      MEXC_API_KEY     — required
+      MEXC_SECRET_KEY  — required (canonical)
+      MEXC_SECRET      — accepted as fallback alias
+    Crashes immediately with actionable error if credentials missing.
+    """
     import ccxt
-    api_key = os.environ.get('MEXC_API_KEY', '')
-    secret = os.environ.get('MEXC_SECRET_KEY', '') or os.environ.get('MEXC_SECRET', '')
-    if not api_key or not secret:
-        raise ValueError("MEXC_API_KEY and MEXC_SECRET must be set in .env")
+    api_key = os.environ.get('MEXC_API_KEY', '').strip()
+    secret = (os.environ.get('MEXC_SECRET_KEY', '') or
+              os.environ.get('MEXC_SECRET', '')).strip()
+
+    missing = []
+    if not api_key:
+        missing.append('MEXC_API_KEY')
+    if not secret:
+        missing.append('MEXC_SECRET_KEY (or MEXC_SECRET)')
+    if missing:
+        raise SystemExit(
+            f"FATAL: Missing env-vars: {', '.join(missing)}. "
+            f"Set them in {BASE_DIR / '.env'} and restart."
+        )
+
     exchange = ccxt.mexc({
         'apiKey': api_key,
         'secret': secret,
@@ -488,7 +673,7 @@ def write_micro_dashboard(state: dict, exchange, mode: str):
         'closed_summary': _build_closed_summary(state.get('micro_closed', [])),
     }
 
-    dashboard_path = BASE_DIR / 'dashboard_hf_micro.json'
+    dashboard_path = BASE_DIR / f'dashboard_{MICRO_TAG}.json'
     try:
         with open(dashboard_path, 'w') as f:
             json.dump(dashboard, f, indent=2, default=str)
@@ -579,7 +764,7 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
                     f"entry_price=${entry_price:.8f} | entry_qty={qty} | "
                     f"check_price=bid (${current_bid:.8f})")
 
-        sell_result = safe_sell_back(exchange, sym, qty, entry_price)
+        sell_result = safe_sell_back(exchange, sym, qty, entry_price, logger=logger)
 
         # Compute actual exit price and fees
         actual_sell_price = sell_result.get('sell_price', current_bid)
@@ -688,6 +873,9 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
                 'warning': sell_result.get('WARNING', ''),
             },
             'counterfactual': counterfactual,
+            # ── Entry context (A/B tracking) ──
+            'entry_reason': pos.get('entry_reason', 'control_roundrobin'),
+            'entry_features': pos.get('entry_features', {}),
         }
 
         # ── Sanity checks ──
@@ -758,46 +946,145 @@ def check_micro_exits(state: dict, exchange, logger, tg=None,
     return closes
 
 
+# ─── Sell Helpers ──────────────────────────────────────────
+
+
+def floor_to_step(value: float, step: float) -> float:
+    """Floor *value* to the nearest multiple of *step*.
+
+    Uses Decimal arithmetic to avoid floating-point rounding errors
+    (e.g. 0.031774 / 1e-6 = 31773.999... in float, but 31774 in Decimal).
+
+    Handles both integer-precision (step=1e-2 → 2 decimals) and
+    fixed-step (step=0.01) conventions used by different CCXT exchanges.
+    Returns *value* unchanged if step is invalid.
+    """
+    if not step or step <= 0:
+        return value
+    from decimal import Decimal, ROUND_DOWN
+    d_val = Decimal(str(value))
+    d_step = Decimal(str(step))
+    return float((d_val / d_step).to_integral_value(rounding=ROUND_DOWN) * d_step)
+
+
+def extract_fill_price(order_resp: dict, fallback_bid: float = 0.0) -> float:
+    """Extract fill price from CCXT order response with robust fallback.
+
+    Fallback chain: average → price → trades[0].price → fallback_bid.
+    CCXT populates different fields per exchange; this handles MEXC quirks
+    where 'average' can be None on immediate market fills.
+    """
+    # 1. average (most reliable for fills)
+    avg = order_resp.get('average')
+    if avg is not None and float(avg) > 0:
+        return float(avg)
+
+    # 2. price (limit orders, or single-fill market)
+    px = order_resp.get('price')
+    if px is not None and float(px) > 0:
+        return float(px)
+
+    # 3. trades array (CCXT sometimes populates this)
+    trades = order_resp.get('trades') or []
+    if trades and isinstance(trades, list):
+        tp = trades[0].get('price')
+        if tp is not None and float(tp) > 0:
+            return float(tp)
+
+    # 4. fallback (bid we observed before selling)
+    return fallback_bid
+
+
 # ─── Safe Sell Back ─────────────────────────────────────────
 
-def safe_sell_back(exchange, symbol: str, qty: float, fill_price: float) -> dict:
-    """Sell back filled position with retries and dust handling.
+def safe_sell_back(exchange, symbol: str, qty: float, fill_price: float,
+                   *, logger=None) -> dict:
+    """Sell back filled position with retries, rounding, and dust handling.
 
-    Reuses pattern from live_fill_test._safe_sell_back().
+    Improvements over original:
+      - floor_to_step() prevents "Oversold" from rounding mismatch
+      - Checks actual free balance to cap sell qty
+      - Dust policy: skips sell below minNotional, logs as dust
+      - extract_fill_price() for robust price extraction
     """
     result = {}
     market_info = exchange.markets.get(symbol, {})
 
-    # Apply precision
+    # ── Step precision ──────────────────────────────────────
+    step = None
     try:
         qty = float(exchange.amount_to_precision(symbol, qty))
     except Exception:
         prec = market_info.get('precision', {}).get('amount')
         if prec is not None:
-            if isinstance(prec, int):
-                qty = math.floor(qty * 10**prec) / 10**prec
-            else:
-                qty = math.floor(qty / prec) * prec
+            if isinstance(prec, (int, float)) and prec < 1:
+                step = prec
+            elif isinstance(prec, int):
+                step = 10 ** (-prec)
+            if step:
+                qty = floor_to_step(qty, step)
 
-    # Check minimums
-    min_amount = market_info.get('limits', {}).get('amount', {}).get('min')
-    min_cost = market_info.get('limits', {}).get('cost', {}).get('min')
-    notional = qty * fill_price
+    # ── Cap to actual free balance (prevents "Oversold") ──
+    base = symbol.split('/')[0]
+    try:
+        bal = exchange.fetch_balance()
+        free = float(bal.get(base, {}).get('free', 0))
+        if free < qty:
+            if logger:
+                logger.warning(f"[SELL] {symbol}: qty={qty} > free={free} — capping to free")
+            qty = free
+            # Re-apply step precision after capping
+            if step:
+                qty = floor_to_step(qty, step)
+    except Exception as e:
+        if logger:
+            logger.warning(f"[SELL] {symbol}: balance check failed ({e}) — using original qty")
+
+    # ── Dust policy ─────────────────────────────────────────
+    min_amount = market_info.get('limits', {}).get('amount', {}).get('min') or 0
+    min_cost = market_info.get('limits', {}).get('cost', {}).get('min') or 0
+    notional = qty * fill_price if fill_price > 0 else 0
 
     if qty <= 0:
         result['dust_remaining'] = True
-        result['dust_reason'] = 'zero_qty'
+        result['dust_reason'] = 'zero_qty_after_rounding'
+        if logger:
+            logger.info(f"[DUST] {symbol}: qty=0 after rounding — skipping sell")
         return result
 
-    if (min_amount and qty < min_amount) or \
-       (min_cost and notional < min_cost) or \
-       notional <= DUST_CAP_USD:
+    if qty < min_amount:
         result['dust_remaining'] = True
         result['dust_notional'] = round(notional, 4)
-        result['dust_reason'] = 'below_minimum'
+        result['dust_reason'] = f'below_min_amount({min_amount})'
+        if logger:
+            logger.info(f"[DUST] {symbol}: qty={qty} < minAmount={min_amount} — skipping sell")
         return result
 
-    # Retry loop
+    if min_cost and notional < min_cost:
+        result['dust_remaining'] = True
+        result['dust_notional'] = round(notional, 4)
+        result['dust_reason'] = f'below_min_notional(${min_cost})'
+        if logger:
+            logger.info(f"[DUST] {symbol}: notional=${notional:.2f} < minCost=${min_cost} — skipping sell")
+        return result
+
+    if notional <= DUST_CAP_USD:
+        result['dust_remaining'] = True
+        result['dust_notional'] = round(notional, 4)
+        result['dust_reason'] = f'below_dust_cap(${DUST_CAP_USD})'
+        if logger:
+            logger.info(f"[DUST] {symbol}: notional=${notional:.2f} ≤ dustCap=${DUST_CAP_USD} — skipping sell")
+        return result
+
+    # ── Get current bid for fill_price fallback ─────────────
+    fallback_bid = 0.0
+    try:
+        ticker = exchange.fetch_ticker(symbol)
+        fallback_bid = float(ticker.get('bid', 0) or 0)
+    except Exception:
+        pass
+
+    # ── Retry loop ──────────────────────────────────────────
     for attempt in range(3):
         try:
             wait = 0.5 + attempt * 1.5 + random.uniform(0, 0.5)
@@ -810,20 +1097,39 @@ def safe_sell_back(exchange, symbol: str, qty: float, fill_price: float) -> dict
             time.sleep(2.0)
             try:
                 sell_status = exchange.fetch_order(sell_id, symbol)
-                result['sell_price'] = float(sell_status.get('average', 0) or
-                                             sell_status.get('price', 0) or 0)
+                result['sell_price'] = extract_fill_price(sell_status, fallback_bid)
                 result['sell_qty'] = float(sell_status.get('filled', 0) or 0)
                 sell_fees = sell_status.get('fee', {})
                 if sell_fees and sell_fees.get('cost'):
                     result['sell_fee_cost'] = float(sell_fees['cost'])
             except Exception as e:
+                # Order went through but status check failed — use order response
+                result['sell_price'] = extract_fill_price(sell_order, fallback_bid)
+                result['sell_qty'] = float(sell_order.get('filled', 0) or qty)
                 result['sell_check_error'] = str(e)
 
             return result
 
         except Exception as e:
+            err_str = str(e).lower()
             result['sell_error'] = str(e)
             result['sell_attempts'] = attempt + 1
+
+            # Oversold: reduce qty and retry
+            if 'oversold' in err_str or 'insufficient' in err_str:
+                try:
+                    bal = exchange.fetch_balance()
+                    free = float(bal.get(base, {}).get('free', 0))
+                    if step:
+                        free = floor_to_step(free, step)
+                    if free > 0 and free < qty:
+                        if logger:
+                            logger.warning(f"[SELL] {symbol}: oversold, retrying with free={free}")
+                        qty = free
+                    else:
+                        break  # no balance left
+                except Exception:
+                    break  # can't recover
 
     result['WARNING'] = 'POSITION OPEN — manual close needed!'
     return result
@@ -924,7 +1230,7 @@ def run_single_round(exchange, symbol: str, order_usd: float, logger,
             status = exchange.fetch_order(order_id, symbol)
             fill_status = status.get('status', 'open')
             fill_qty = float(status.get('filled', 0) or 0)
-            fill_price_avg = float(status.get('average', 0) or status.get('price', 0) or 0)
+            fill_price_avg = extract_fill_price(status, fallback_bid=price)
             if fill_status in ('closed', 'filled'):
                 break
         except Exception:
@@ -946,7 +1252,7 @@ def run_single_round(exchange, symbol: str, order_usd: float, logger,
             result['micro_held'] = True
         else:
             # Paper mode: sell back immediately
-            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg)
+            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg, logger=logger)
             result.update(sell_result)
             if 'sell_price' in sell_result and fill_price_avg:
                 result['roundtrip_pnl'] = round(
@@ -970,7 +1276,7 @@ def run_single_round(exchange, symbol: str, order_usd: float, logger,
             result['micro_held'] = True
         else:
             # Paper mode: sell partial back
-            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg)
+            sell_result = safe_sell_back(exchange, symbol, fill_qty, fill_price_avg, logger=logger)
             result.update(sell_result)
             if 'sell_price' in sell_result and fill_price_avg:
                 result['roundtrip_pnl'] = round(
@@ -1111,7 +1417,7 @@ def update_state(state: dict, result: dict, mode: str = 'paper'):
     # Micro mode: record position on fill
     if mode == 'micro' and result.get('micro_held') and sym:
         positions = state.setdefault('micro_positions', {})
-        positions[sym] = {
+        pos_entry = {
             'position_id': str(uuid.uuid4())[:12],  # short unique ID for cross-ref
             'entry_price': result.get('fill_price', 0),
             'qty': result.get('fill_qty', 0),
@@ -1119,7 +1425,19 @@ def update_state(state: dict, result: dict, mode: str = 'paper'):
             'order_id': result.get('order_id', ''),
             'notional': result.get('fill_notional', 0),
             'price_snapshots': [],  # populated by check_micro_exits() each round
+            'entry_reason': result.get('entry_reason', 'control_roundrobin'),
         }
+        # Store entry features snapshot (compact — only key values)
+        ef = result.get('entry_features', {})
+        if ef.get('ok'):
+            pos_entry['entry_features'] = {
+                'vwap_dev_pct': ef.get('vwap_dev_pct'),
+                'rsi_14': ef.get('rsi_14'),
+                'dist_support_pct': ef.get('dist_support_pct'),
+                'dist_dc_mid_pct': ef.get('dist_dc_mid_pct'),
+                'vol_ratio': ef.get('vol_ratio'),
+            }
+        positions[sym] = pos_entry
 
 
 # ─── Report ─────────────────────────────────────────────────
@@ -1131,7 +1449,7 @@ def print_report(state: dict):
     mode = state.get('mode', 'paper')
 
     print("\n" + "=" * 60)
-    title = "HF 1H MICRO TRADER REPORT" if mode == 'micro' else "HF 1H PAPER TRADER — EXECUTION VALIDATION REPORT"
+    title = "MX-MICRO-TP5SL3 TRADER REPORT" if mode == 'micro' else "HF 1H PAPER TRADER — EXECUTION VALIDATION REPORT"
     print(title)
     print("=" * 60)
     print(f"  Mode:         {mode}")
@@ -1243,7 +1561,7 @@ def print_report(state: dict):
 # ─── Main Loop ──────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description='HF 1H MEXC Paper/Micro Trader')
+    parser = argparse.ArgumentParser(description='MEXC Paper/Micro Trader (micro = MX-MICRO-TP5SL3)')
     parser.add_argument('--mode', choices=['paper', 'micro'], default='paper',
                         help='Trading mode: paper (roundtrip validation) or micro (live hold)')
     parser.add_argument('--hours', type=float, default=0, help='Run for N hours (0=infinite)')
@@ -1256,16 +1574,21 @@ def main():
                         help=f'Take profit %% for micro mode (default: {MICRO_TP_PCT})')
     parser.add_argument('--sl', type=float, default=MICRO_SL_PCT,
                         help=f'Stop loss %% for micro mode (default: {MICRO_SL_PCT})')
+    parser.add_argument('--entry-mode', choices=['control', 'signal'], default='control',
+                        help='Entry logic: control (round-robin) or signal (VWAP+RSI gated)')
     args = parser.parse_args()
 
     mode = args.mode
     tp_pct = args.tp
     sl_pct = args.sl
+    entry_mode = args.entry_mode
 
-    # Determine state file based on mode
+    # Determine state file and active tag based on mode
     global STATE_FILE
+    active_tag = TAG
     if mode == 'micro':
-        STATE_FILE = BASE_DIR / f'paper_state_{TAG}_micro.json'
+        active_tag = MICRO_TAG
+        STATE_FILE = BASE_DIR / f'paper_state_{MICRO_TAG}.json'
 
     # Report mode
     if args.report:
@@ -1273,8 +1596,8 @@ def main():
         print_report(state)
         return
 
-    logger = setup_logging()
-    logger.info(f"HF 1H {'MICRO' if mode == 'micro' else 'Paper'} Trader starting — tag={TAG} mode={mode}")
+    logger = setup_logging(active_tag)
+    logger.info(f"{'MX-MICRO-TP5SL3' if mode == 'micro' else 'HF 1H Paper'} Trader starting — tag={active_tag} mode={mode}")
 
     # Telegram (micro mode always, paper mode never)
     tg = None
@@ -1336,6 +1659,10 @@ def main():
     # Fee model verification
     logger.info(f"Fee model: entry=MAKER(0bps) exit=TAKER({MICRO_EXIT_FEE_BPS:.0f}bps)")
     logger.info(f"Exit config: TP=+{tp_pct}% SL=-{sl_pct}% TIME={MICRO_MAX_HOLD_HOURS}h")
+    git_hash = _get_git_hash()
+    logger.info(f"Entry mode: {entry_mode}" + (
+        f" (VWAP≤{SIGNAL_VWAP_DEV_MIN}% AND RSI≤{SIGNAL_RSI_MAX})" if entry_mode == 'signal' else " (round-robin)"))
+    logger.info(f"Version: {git_hash} | gate: VWAP≤{SIGNAL_VWAP_DEV_MIN}% RSI≤{SIGNAL_RSI_MAX}")
     logger.info(f"Exit check: trigger_price=BID (conservative for sell-side)")
     logger.info(f"Sell method: market_sell via safe_sell_back (3 retries)")
     if mode == 'micro':
@@ -1355,8 +1682,10 @@ def main():
     # Telegram: start alert
     if mode == 'micro':
         positions = state.get('micro_positions', {})
-        tg_send(tg, f"🚀 HF MICRO TRADER STARTED\n"
-                     f"Mode: {mode}\n"
+        entry_label = f"SIGNAL (VWAP≤{SIGNAL_VWAP_DEV_MIN}% RSI≤{SIGNAL_RSI_MAX})" if entry_mode == 'signal' else "CONTROL (round-robin)"
+        tg_send(tg, f"🚀 MX-MICRO-TP5SL3 STARTED\n"
+                     f"Version: {git_hash} | {entry_label}\n"
+                     f"Gate: VWAP≤{SIGNAL_VWAP_DEV_MIN}% RSI≤{SIGNAL_RSI_MAX}\n"
                      f"Coins: {', '.join(coins)}\n"
                      f"Order: ${order_usd}\n"
                      f"TP: +{tp_pct}% | SL: -{sl_pct}% | TIME: {MICRO_MAX_HOLD_HOURS}h\n"
@@ -1397,10 +1726,14 @@ def main():
     coin_cooldowns = {}            # {symbol: cooldown_until_timestamp}
     miss_counter = 0               # for telegram miss alert throttling
 
-    # Clear stale rollback from previous run (allows resume after outage stop)
+    # Clear stale rollback + error counters from previous run (allows clean resume)
     if state.get('rollback_triggered') == 'consecutive_errors':
         logger.info("[RESUME] Clearing stale consecutive_errors rollback from previous run")
         state['rollback_triggered'] = None
+        state['consecutive_errors'] = 0
+        save_state(state)
+    elif state.get('consecutive_errors', 0) > 0:
+        logger.info(f"[RESUME] Resetting consecutive_errors from {state['consecutive_errors']} → 0 on restart")
         state['consecutive_errors'] = 0
         save_state(state)
 
@@ -1439,12 +1772,12 @@ def main():
         # ── Micro mode: cap checks before round ──
         if mode == 'micro':
             if not check_micro_caps(state, exchange, logger):
-                # Caps hit — only send TG alert once per 30 min to avoid spam
+                # Caps hit — only send TG alert once per 100 rounds to avoid spam
                 caps_hit_count = state.get('micro_caps_hit', 0)
-                if caps_hit_count == 1 or caps_hit_count % 30 == 0:
-                    tg_send(tg, f"🚨 MICRO CAP HIT\n"
+                if caps_hit_count == 1 or caps_hit_count % 100 == 0:
+                    tg_send(tg, f"🔒 MX-MICRO-TP5SL3 CAP HIT (#{caps_hit_count})\n"
                                  f"Positions: {len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}\n"
-                                 f"Entries blocked. (alert every 30 min)", level='warning')
+                                 f"Entries blocked.", level='info')
                 time.sleep(60)
                 continue
 
@@ -1486,9 +1819,32 @@ def main():
                 time.sleep(5)
             continue
 
+        # ── Compute entry features (micro mode) ──
+        features = {}
+        entry_reason = 'control_roundrobin'
+        if mode == 'micro':
+            features = compute_entry_features(exchange, symbol, logger)
+            feat_str = format_features_short(features)
+
+            # Signal gate check (mode=signal only)
+            if entry_mode == 'signal':
+                if not passes_signal_gate(features):
+                    logger.info(f"[SIGNAL_SKIP] {symbol} — {feat_str}")
+                    state.setdefault('signal_skips', 0)
+                    state['signal_skips'] += 1
+                    time.sleep(2.0 + random.uniform(0, 1.0))
+                    continue
+                entry_reason = 'signal_gated'
+                logger.info(f"[SIGNAL_PASS] {symbol} — {feat_str}")
+
         # ── Run round ──
         logger.info(f"[round {state['total_rounds'] + 1}] {symbol} — ${order_usd} ({mode})")
         result = run_single_round(exchange, symbol, order_usd, logger, mode=mode)
+
+        # Attach features + entry_reason to result
+        if mode == 'micro' and features:
+            result['entry_features'] = features
+            result['entry_reason'] = entry_reason
 
         # Log result
         status = result.get('status', '?')
@@ -1497,6 +1853,12 @@ def main():
         rt_pnl = result.get('roundtrip_pnl', 0)
         logger.info(f"  Status: {status} | Spread: {spread:.1f}bps | "
                     f"Slip: {slip:+.1f}bps | RT P&L: ${rt_pnl:.4f}")
+        if mode == 'micro' and features.get('ok'):
+            logger.info(f"  Features: {format_features_short(features)}")
+
+        # Log error details (previously swallowed — see ADR-HF-040)
+        if status.startswith('ERROR') and result.get('error'):
+            logger.warning(f"  [ERR_DETAIL] {symbol}: {result['error']}")
 
         # Update state
         update_state(state, result, mode=mode)
@@ -1508,11 +1870,13 @@ def main():
                 pos_info = state.get('micro_positions', {}).get(symbol, {})
                 tp_lvl = result.get('fill_price', 0) * (1 + tp_pct / 100)
                 sl_lvl = result.get('fill_price', 0) * (1 - sl_pct / 100)
-                tg_send(tg, f"✅ FILL {symbol}\n"
+                feat_line = format_features_short(features) if features.get('ok') else ''
+                reason_tag = entry_reason.upper().replace('_', ' ')
+                tg_send(tg, f"✅ FILL {symbol} [{reason_tag}]\n"
                              f"entry {result.get('fill_price', 0):.6f} | "
                              f"qty {result.get('fill_qty', 0)} | ${result.get('fill_notional', 0):.2f}\n"
                              f"TP={tp_lvl:.4f}(+{tp_pct}%) SL={sl_lvl:.4f}(-{sl_pct}%)\n"
-                             f"buy={result.get('order_id', '?')[:25]}\n"
+                             f"{feat_line}\n"
                              f"pos={pos_info.get('position_id', '?')} | "
                              f"{len(state.get('micro_positions', {}))}/{MAX_MICRO_POSITIONS}",
                         level='success')
@@ -1521,13 +1885,21 @@ def main():
                 if miss_counter % 50 == 0:
                     tg_send(tg, f"⚠️ MISS #{miss_counter}\n{symbol}\n"
                                  f"Spread: {spread:.1f}bps", level='warning')
+            elif status.startswith('ERROR'):
+                # Throttled error alert: first error + every 50th per coin
+                cs = state.get('coin_stats', {}).get(symbol, {})
+                coin_err_count = cs.get('errors', 0)
+                if coin_err_count == 1 or coin_err_count % 50 == 0:
+                    tg_send(tg, f"🚨 {status} #{coin_err_count} | {symbol}\n"
+                                 f"{result.get('error', '?')[:120]}",
+                            level='error')
 
             # Status update every 100 rounds
             if state['total_rounds'] % 100 == 0 and state['total_rounds'] > 0:
                 total_acts = state['filled'] + state.get('partial', 0) + state['missed']
                 fr = state['filled'] / total_acts if total_acts > 0 else 0
                 positions = state.get('micro_positions', {})
-                tg_send(tg, f"📊 STATUS (round {state['total_rounds']})\n"
+                tg_send(tg, f"📊 MX-MICRO-TP5SL3 (round {state['total_rounds']})\n"
                              f"Fill rate: {fr:.1%}\n"
                              f"Positions: {len(positions)}/{MAX_MICRO_POSITIONS}\n"
                              f"Filled: {state['filled']} | Missed: {state['missed']}",
@@ -1543,23 +1915,24 @@ def main():
             logger.error(f"[ROLLBACK] Trigger: {trigger}. Stopping.")
             state['rollback_triggered'] = trigger
             save_state(state)
-            tg_send(tg, f"🚨 ROLLBACK TRIGGERED\nReason: {trigger}\nTrader stopped.",
+            tg_send(tg, f"🚨 MX-MICRO-TP5SL3 ROLLBACK\nReason: {trigger}\nTrader stopped.",
                     level='error')
             break
 
         # ── Outage-aware error handling ──
-        if status == 'ERROR_ORDERBOOK':
-            # Per-coin error tracking
+        if status.startswith('ERROR'):
+            # Per-coin error tracking (handles ERROR_ORDERBOOK + ERROR_ORDER + any future error types)
             coin_errors = coin_error_counts.setdefault(symbol, [])
             coin_errors.append(now_ts)
             # Keep only errors in last hour
             coin_errors[:] = [t for t in coin_errors if now_ts - t < COIN_COOLDOWN_SECONDS]
             if len(coin_errors) >= COIN_COOLDOWN_ERRORS:
                 coin_cooldowns[symbol] = now_ts + COIN_COOLDOWN_SECONDS
-                logger.warning(f"[COOLDOWN] {symbol}: {len(coin_errors)} errors in 1h → blacklisted for 60 min")
+                logger.warning(f"[COOLDOWN] {symbol}: {len(coin_errors)} {status} errors in 1h "
+                               f"→ blacklisted for {COIN_COOLDOWN_SECONDS // 60} min")
                 coin_error_counts[symbol] = []
 
-            # Consecutive OB error burst detection
+            # Consecutive error burst detection (multi-coin = exchange/network issue)
             if state['consecutive_errors'] >= OB_ERROR_BURST_THRESHOLD:
                 # Check if this is a network issue first
                 if not network_ok():
@@ -1626,8 +1999,8 @@ def main():
 
     # Final report
     print_report(state)
-    logger.info(f"{'Micro' if mode == 'micro' else 'Paper'} trader stopped.")
-    tg_send(tg, f"🛑 HF {'MICRO' if mode == 'micro' else 'PAPER'} TRADER STOPPED\n"
+    logger.info(f"{'MX-MICRO-TP5SL3' if mode == 'micro' else 'Paper'} trader stopped.")
+    tg_send(tg, f"🛑 {'MX-MICRO-TP5SL3' if mode == 'micro' else 'HF PAPER'} STOPPED\n"
                  f"Rounds: {state.get('total_rounds', 0)}\n"
                  f"Filled: {state.get('filled', 0)}",
             level='warning')

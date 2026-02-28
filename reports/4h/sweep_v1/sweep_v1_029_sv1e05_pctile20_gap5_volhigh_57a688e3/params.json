@@ -1,0 +1,18 @@
+{
+  "_provenance": {
+    "dataset_id": "ohlcv_4h_kraken_spot_usd_526",
+    "fee_bps": 26.0,
+    "git_hash": "57a688e3",
+    "timestamp": "2026-02-26T05:04:43.419121+00:00"
+  },
+  "max_pos": 3,
+  "max_rsi_pctile": 20,
+  "max_stop_pct": 15.0,
+  "min_rsi_gap": 5,
+  "rsi_max": 40,
+  "rsi_rec_min_bars": 2,
+  "rsi_rec_target": 45,
+  "rsi_recovery": true,
+  "time_max_bars": 15,
+  "vol_floor": 1.5
+}

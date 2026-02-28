@@ -47,6 +47,22 @@
       "scoreboard": "reports/superhf/sprint2b_norsi.json",
       "runner": "scripts/run_superhf_sprint2b_norsi.py",
       "status": "NO-GO"
+    },
+    {
+      "id": "mx_micro_tp5sl3",
+      "name": "MX-MICRO-TP5SL3 — Micro-live alpha validation",
+      "adr": "ADR-MX-001",
+      "date": "2026-02-26",
+      "exchange": "MEXC SPOT",
+      "fee_model": "mexc_spot_maker0_taker5bps",
+      "config": "TP +5% / SL -3% / TIME 24h / near_ask maker limit",
+      "entrypoint": "trading_bot/paper_hf_1h.py --mode micro",
+      "state_file": "trading_bot/paper_state_mx_micro_tp5sl3.json",
+      "dashboard": "trading_bot/dashboard_mx_micro_tp5sl3.json",
+      "logs": "trading_bot/logs/mx_micro_tp5sl3_*.log",
+      "reports": "reports/mx_micro_tp5sl3/",
+      "separate_from": ["HF-P2-LIVE-FILL (fill-rate only)", "MEXC-4H-PAPER (4H paper trader)"],
+      "status": "ACTIVE"
     }
   ]
 }

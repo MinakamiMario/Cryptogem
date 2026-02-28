@@ -1,0 +1,17 @@
+[Unit]
+Description=Cryptogem Quant Research Lab
+After=network.target
+
+[Service]
+Type=simple
+User=oussama
+WorkingDirectory=/home/oussama/Cryptogem
+ExecStart=/usr/bin/python3 -m lab.main run --hours 24
+Restart=on-failure
+RestartSec=60
+StandardOutput=append:/home/oussama/Cryptogem/lab/logs/lab.stdout.log
+StandardError=append:/home/oussama/Cryptogem/lab/logs/lab.stderr.log
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+
+[Install]
+WantedBy=multi-user.target

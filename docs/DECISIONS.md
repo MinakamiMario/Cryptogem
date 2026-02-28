@@ -56,3 +56,64 @@
   - Paper mode (`--mode paper`) unchanged — still uses `hf_1h_paper` TAG for fill-rate validation
   - Old state files (`paper_state_hf_1h_paper_micro.json`, `dashboard_hf_micro.json`) are orphaned — not auto-migrated
   - New runs create new state under `mx_micro_tp5sl3` naming
+
+## ADR-LAB-001: SQLite + Hybrid Intelligence + Read-Only Safety + Gate System
+
+**Status**: Accepted
+**Date**: 2026-02-28
+**Authors**: Oussama, Claude
+
+### Context
+
+We needed a self-coordinating quant research lab that:
+- Runs autonomously on a 10-minute heartbeat cycle
+- Manages 10 specialized agents (7 rule-based, 3 LLM-assisted)
+- Tracks tasks through a state machine with peer review gates
+- Operates safely alongside a live micro-trader (PID-protected)
+- Requires zero new dependencies beyond stdlib + pytest
+
+### Decision
+
+**Database: SQLite with WAL mode**
+- WAL mode enables concurrent reads during agent heartbeats
+- `busy_timeout=5000` prevents lock contention
+- Single-file deployment, no server process
+- Schema enforces foreign keys and state machine transitions
+
+**Intelligence: Hybrid (7 rule-based + 3 LLM)**
+- Boss, Meta-Research, Hypothesis Generator use Claude API via `lab/llm.py`
+- Remaining 7 agents use deterministic rule-based logic
+- LLM wrapper uses urllib only (zero external dependencies)
+- All LLM agents fall back to rule-based behavior on API failure
+
+**Safety: Write Allowlist + Read-Only Access**
+- `WRITE_ALLOWLIST` restricts all writes to `lab/lab.db` and `reports/lab/`
+- `safe_write_check()` enforced before every file write
+- Live trader state (`paper_state_*.json`) is READ-ONLY
+- `trading_bot/` directory is never modified by lab agents
+- Soul files contain VERBODEN sections as prompt-level guardrails
+
+**Quality: Peer Review Gate System**
+- Tasks follow: backlog -> todo -> in_progress -> peer_review -> review -> approved -> done
+- `transition()` enforces valid state machine transitions
+- Boss cannot promote without all peer reviews approved
+- Each agent reviews others' work before doing own tasks
+
+### Consequences
+
+**Positive**:
+- Zero new dependencies (stdlib + pytest only)
+- Safe co-existence with live trader
+- Transparent audit trail in SQLite
+- Graceful degradation when LLM unavailable
+- 148+ tests validate all invariants
+
+**Negative**:
+- SQLite limits concurrent write throughput (acceptable for 10-min cycles)
+- LLM costs for 3 agents (~$0.01-0.05 per cycle)
+- Single-machine deployment (no distributed agents)
+
+**Trade-offs accepted**:
+- Simplicity over scalability (10 agents, not 100)
+- Safety over speed (allowlist checks on every write)
+- Determinism over creativity (7/10 agents rule-based)

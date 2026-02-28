@@ -1,4 +1,4 @@
-.PHONY: check schema tests capsule robustness robustness-tests last60d last60d-all last60d-tests compare-universe compare-universe-all compare-universe-tests build-unfiltered-cache build-research-cache compare-caches compare-caches-smoke compare-caches-tests grid_best-check grid_best-robustness hf-check hf-robustness ci-guard superhf-data superhf-sweep superhf-check
+.PHONY: check schema tests capsule robustness robustness-tests last60d last60d-all last60d-tests compare-universe compare-universe-all compare-universe-tests build-unfiltered-cache build-research-cache compare-caches compare-caches-smoke compare-caches-tests grid_best-check grid_best-robustness hf-check hf-robustness ci-guard superhf-data superhf-sweep superhf-check lab-tests lab-smoke lab-check lab-status lab-report
 
 # Full validation (schema + tests + data) — run before any PR
 check: schema tests context data-verify
@@ -178,3 +178,29 @@ superhf-check:
 	PYTHONPATH=. python3 strategies/superhf/indicators.py
 	PYTHONPATH=. python3 strategies/superhf/hypotheses.py
 	@echo "✅ SuperHF tests passed"
+
+# ── Lab targets ─────────────────────────────────────────
+
+# Lab test suite (148 tests)
+lab-tests:
+	@echo "=== Lab Tests ==="
+	python3 -m pytest tests/test_lab/ -q
+
+# Lab smoke test (init + dry-run 1 cycle)
+lab-smoke:
+	@echo "=== Lab Smoke Test ==="
+	python3 -m lab.main init
+	python3 -m lab.main run --dry-run -q
+
+# Full lab validation (tests + smoke)
+lab-check: lab-tests lab-smoke
+	@echo ""
+	@echo "✅ Lab checks passed"
+
+# Lab status dashboard
+lab-status:
+	python3 -m lab.main status
+
+# Lab full report
+lab-report:
+	python3 -m lab.main report

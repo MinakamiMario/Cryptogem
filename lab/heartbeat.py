@@ -56,6 +56,17 @@ class HeartbeatLoop:
 
         logger.info(f"=== Heartbeat cycle {self._cycle} ===")
 
+        # Process any pending Telegram updates (approvals + messages)
+        try:
+            tg_actions, tg_messages = self.notifier.poll_telegram(self.db)
+            if tg_actions:
+                logger.info(f"  [telegram] {tg_actions} approval(s) processed")
+            for msg in tg_messages:
+                logger.info(f"  [telegram] 💬 Bericht: {msg}")
+                print(f"\n💬 [Telegram] {msg}\n")
+        except Exception as e:
+            logger.warning(f"  [telegram] poll failed: {e}")
+
         for i, agent in enumerate(self.agents):
             if not self._running:
                 break
@@ -138,10 +149,21 @@ class HeartbeatLoop:
             remaining = HEARTBEAT_INTERVAL_S - (time.time() - start_time) % HEARTBEAT_INTERVAL_S
             logger.info(f"Sleeping {remaining:.0f}s until next heartbeat...")
 
-            # Interruptible sleep
+            # Interruptible sleep — poll Telegram every 10s for approvals + messages
             sleep_end = time.time() + remaining
+            poll_interval = 10  # seconds between Telegram polls
+            next_poll = time.time() + poll_interval
             while time.time() < sleep_end and self._running:
                 time.sleep(1)
+                if time.time() >= next_poll:
+                    try:
+                        _, tg_messages = self.notifier.poll_telegram(self.db)
+                        for msg in tg_messages:
+                            logger.info(f"  [telegram] 💬 Bericht: {msg}")
+                            print(f"\n💬 [Telegram] {msg}\n")
+                    except Exception:
+                        pass  # Non-critical
+                    next_poll = time.time() + poll_interval
 
         logger.info(
             f"Heartbeat loop stopped. "

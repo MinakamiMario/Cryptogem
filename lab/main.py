@@ -8,7 +8,13 @@ Usage:
     python -m lab.main goal list                         # List goals
     python -m lab.main tasks [--status S]                # List tasks
     python -m lab.main task approve ID                   # Approve task (user)
+    python -m lab.main task reject ID                    # Reject task (user)
     python -m lab.main task move ID STATUS               # Move task (user)
+    python -m lab.main dashboard                         # Send dashboard to Telegram
+    python -m lab.main listen                            # Listen for Telegram messages
+    python -m lab.main status --tg                       # Dashboard + send to Telegram
+    python -m lab.main tasks --tg                        # Tasks + send to Telegram
+    python -m lab.main report --tg                       # Report + send to Telegram
     python -m lab.main report                            # Full report
 """
 from __future__ import annotations
@@ -36,6 +42,23 @@ def setup_logging(verbose: bool = False) -> None:
         format='%(asctime)s [%(name)s] %(levelname)s: %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S',
     )
+
+
+import io
+
+def _capture_output(func, *args, **kwargs) -> str:
+    """Capture print output from a function into a string."""
+    buf = io.StringIO()
+    import contextlib
+    with contextlib.redirect_stdout(buf):
+        func(*args, **kwargs)
+    return buf.getvalue()
+
+
+def _tee_to_telegram(text: str) -> None:
+    """Send captured output to Telegram."""
+    notifier = LabNotifier(enabled=True)
+    notifier.send_output(text)
 
 
 def get_agents(db: LabDB, notifier: LabNotifier) -> list:
@@ -105,35 +128,40 @@ def cmd_run(args: argparse.Namespace) -> None:
 
 
 def cmd_status(args: argparse.Namespace) -> None:
-    """Show dashboard."""
+    """Show dashboard. With --tg also sends to Telegram."""
     db = LabDB()
     summary = db.get_status_summary()
-    db.close()
 
-    print("\n=== CRYPTOGEM LAB STATUS ===\n")
-
-    print("Tasks:")
+    lines = ["\n=== CRYPTOGEM LAB STATUS ===\n"]
+    lines.append("Tasks:")
     for status, count in summary['tasks'].items():
         if count > 0:
-            print(f"  {status:15s} {count}")
+            lines.append(f"  {status:15s} {count}")
 
-    print("\nAgents:")
+    lines.append("\nAgents:")
     for agent, info in summary['agents'].items():
         status = info['status']
         hb = info.get('last_heartbeat', 'never')
         icon = {'idle': '💤', 'working': '🔄', 'error': '🚨'}.get(status, '⚪')
-        print(f"  {icon} {agent:25s} {status:8s} (last: {hb})")
+        lines.append(f"  {icon} {agent:25s} {status:8s} (last: {hb})")
 
     if summary['goals']:
-        print("\nGoals:")
+        lines.append("\nGoals:")
         for g in summary['goals']:
             done = g['done']
             total = g['total_tasks']
             pct = (done / total * 100) if total else 0
-            print(f"  [{g['id']}] {g['title'][:50]:50s} "
-                  f"{done}/{total} ({pct:.0f}%)")
+            lines.append(f"  [{g['id']}] {g['title'][:50]:50s} "
+                         f"{done}/{total} ({pct:.0f}%)")
 
-    print()
+    lines.append("")
+    output = '\n'.join(lines)
+    print(output)
+
+    if getattr(args, 'tg', False):
+        notifier = LabNotifier(enabled=True)
+        notifier.send_dashboard(db)
+    db.close()
 
 
 def cmd_goal_add(args: argparse.Namespace) -> None:
@@ -176,7 +204,7 @@ def cmd_goal_list(args: argparse.Namespace) -> None:
 
 
 def cmd_tasks(args: argparse.Namespace) -> None:
-    """List tasks."""
+    """List tasks. With --tg also sends to Telegram."""
     db = LabDB()
     if args.status:
         tasks = db.get_tasks_by_status(args.status)
@@ -184,22 +212,29 @@ def cmd_tasks(args: argparse.Namespace) -> None:
         tasks = []
         for s in ['in_progress', 'peer_review', 'review', 'todo', 'backlog']:
             tasks.extend(db.get_tasks_by_status(s))
-    db.close()
 
     if not tasks:
         print("No tasks found.")
+        db.close()
         return
 
-    print(f"\n{'ID':>4} {'Status':>13} {'Agent':>22} {'Title'}")
-    print("-" * 80)
+    lines = [f"\n{'ID':>4} {'Status':>13} {'Agent':>22} {'Title'}"]
+    lines.append("-" * 80)
     for t in tasks:
-        print(f"  {t.id:>3} {t.status:>13} {t.assigned_to:>22} {t.title[:40]}")
-    print()
+        lines.append(f"  {t.id:>3} {t.status:>13} {t.assigned_to:>22} {t.title[:40]}")
+    lines.append("")
+    output = '\n'.join(lines)
+    print(output)
+
+    if getattr(args, 'tg', False):
+        _tee_to_telegram(output)
+    db.close()
 
 
 def cmd_task_approve(args: argparse.Namespace) -> None:
-    """Approve a task (user action)."""
+    """Approve a task (user action). Syncs status to Telegram."""
     db = LabDB()
+    notifier = LabNotifier(enabled=True)
     task = db.get_task(args.id)
     if not task:
         print(f"Task #{args.id} not found")
@@ -210,12 +245,42 @@ def cmd_task_approve(args: argparse.Namespace) -> None:
             db.transition(args.id, 'approved', actor='user')
             db.transition(args.id, 'done', actor='user')
             print(f"Task #{args.id} approved and done: {task.title}")
+            # Sync to Telegram — edit original message to remove buttons
+            notifier.notify_task_done(args.id, task.title, via='cli')
         elif task.status == 'backlog':
             db.transition(args.id, 'todo', actor='user')
             print(f"Task #{args.id} moved to todo: {task.title}")
         else:
             print(f"Task #{args.id} is in '{task.status}', "
                   f"expected 'review' or 'backlog'")
+    except ValueError as e:
+        print(f"Error: {e}")
+    finally:
+        db.close()
+
+
+def cmd_task_reject(args: argparse.Namespace) -> None:
+    """Reject a task (user action). Sends back to in_progress, syncs to Telegram."""
+    db = LabDB()
+    notifier = LabNotifier(enabled=True)
+    task = db.get_task(args.id)
+    if not task:
+        print(f"Task #{args.id} not found")
+        return
+
+    try:
+        if task.status == 'review':
+            db.transition(args.id, 'in_progress', actor='user')
+            db.add_comment(
+                args.id, 'user',
+                '❌ Afgekeurd via CLI — terug naar in_progress',
+                'rejection'
+            )
+            print(f"Task #{args.id} rejected → in_progress: {task.title}")
+            # Sync to Telegram — edit original message to remove buttons
+            notifier.notify_task_rejected(args.id, task.title, via='cli')
+        else:
+            print(f"Task #{args.id} is in '{task.status}', expected 'review'")
     except ValueError as e:
         print(f"Error: {e}")
     finally:
@@ -232,6 +297,42 @@ def cmd_task_move(args: argparse.Namespace) -> None:
         print(f"Error: {e}")
     finally:
         db.close()
+
+
+def cmd_listen(args: argparse.Namespace) -> None:
+    """Listen for Telegram messages and print them to console."""
+    import time as _time
+    db = LabDB()
+    db.init_schema()
+    notifier = LabNotifier(enabled=True)
+    if not notifier.enabled:
+        print("Telegram notifier not active — check LAB_TELEGRAM_BOT_TOKEN")
+        return
+
+    print("Luisteren naar Telegram... (Ctrl+C om te stoppen)\n")
+    notifier.send_output("🔗 CLI luistert mee — berichten worden hier opgepakt")
+
+    try:
+        while True:
+            actions, messages = notifier.poll_telegram(db)
+            if actions:
+                print(f"  [{actions} actie(s) verwerkt]")
+            for msg in messages:
+                print(f"💬 [Telegram] {msg}")
+            _time.sleep(3)
+    except KeyboardInterrupt:
+        print("\nGestopt.")
+    finally:
+        db.close()
+
+
+def cmd_dashboard_tg(args: argparse.Namespace) -> None:
+    """Send full dashboard to Telegram."""
+    db = LabDB()
+    notifier = LabNotifier(enabled=True)
+    notifier.send_dashboard(db)
+    db.close()
+    print("Dashboard verstuurd naar Telegram.")
 
 
 def cmd_report(args: argparse.Namespace) -> None:
@@ -293,9 +394,15 @@ def cmd_report(args: argparse.Namespace) -> None:
 
     # Output format
     if getattr(args, 'json_output', False):
-        print(json.dumps(report, indent=2, default=str))
+        output = json.dumps(report, indent=2, default=str)
+        print(output)
+        if getattr(args, 'tg', False):
+            _tee_to_telegram(output)
     else:
-        _print_report_markdown(report)
+        output = _capture_output(_print_report_markdown, report)
+        print(output, end='')
+        if getattr(args, 'tg', False):
+            _tee_to_telegram(output)
 
 
 def _print_report_markdown(report: dict) -> None:
@@ -374,7 +481,15 @@ def build_parser() -> argparse.ArgumentParser:
     run_p.add_argument('--dry-run', action='store_true')
 
     # status
-    sub.add_parser('status', help='Show dashboard')
+    status_p = sub.add_parser('status', help='Show dashboard')
+    status_p.add_argument('--tg', action='store_true',
+                          help='Also send output to Telegram')
+
+    # dashboard (send to Telegram)
+    sub.add_parser('dashboard', help='Send dashboard to Telegram')
+
+    # listen
+    sub.add_parser('listen', help='Listen for Telegram messages')
 
     # goal
     goal_p = sub.add_parser('goal', help='Goal management')
@@ -390,6 +505,8 @@ def build_parser() -> argparse.ArgumentParser:
     # tasks
     tasks_p = sub.add_parser('tasks', help='List tasks')
     tasks_p.add_argument('--status', type=str, default=None)
+    tasks_p.add_argument('--tg', action='store_true',
+                         help='Also send output to Telegram')
 
     # task
     task_p = sub.add_parser('task', help='Task actions')
@@ -397,6 +514,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     task_approve = task_sub.add_parser('approve', help='Approve task')
     task_approve.add_argument('id', type=int)
+
+    task_reject = task_sub.add_parser('reject', help='Reject task')
+    task_reject.add_argument('id', type=int)
 
     task_move = task_sub.add_parser('move', help='Move task')
     task_move.add_argument('id', type=int)
@@ -406,6 +526,8 @@ def build_parser() -> argparse.ArgumentParser:
     report_p = sub.add_parser('report', help='Full report')
     report_p.add_argument('--json', dest='json_output', action='store_true',
                           help='Output as JSON')
+    report_p.add_argument('--tg', action='store_true',
+                          help='Also send output to Telegram')
 
     return parser
 
@@ -422,6 +544,10 @@ def main() -> None:
         cmd_run(args)
     elif args.command == 'status':
         cmd_status(args)
+    elif args.command == 'dashboard':
+        cmd_dashboard_tg(args)
+    elif args.command == 'listen':
+        cmd_listen(args)
     elif args.command == 'goal':
         if args.goal_cmd == 'add':
             cmd_goal_add(args)
@@ -434,6 +560,8 @@ def main() -> None:
     elif args.command == 'task':
         if args.task_cmd == 'approve':
             cmd_task_approve(args)
+        elif args.task_cmd == 'reject':
+            cmd_task_reject(args)
         elif args.task_cmd == 'move':
             cmd_task_move(args)
         else:

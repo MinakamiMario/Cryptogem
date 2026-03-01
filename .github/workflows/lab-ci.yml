@@ -2,10 +2,6 @@ name: Lab Tests
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'lab/**'
-      - 'tests/test_lab/**'
   pull_request:
     paths:
       - 'lab/**'

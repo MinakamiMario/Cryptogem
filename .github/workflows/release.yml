@@ -1,40 +1,63 @@
-name: Release
+name: Lab Release
 
 on:
   push:
-    tags:
-      - 'lab-v*'
+    branches: [master]
+    paths:
+      - 'lab/**'
+      - 'tests/test_lab/**'
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Tag to release (e.g. lab-v1.0.3)'
-        required: true
 
 permissions:
   contents: write
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install pytest
+        run: pip install pytest
+
+      - name: Run lab tests
+        run: python -m pytest tests/test_lab/ -x -q
+
   release:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Determine tag
-        id: tag
+      - name: Determine next version
+        id: version
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "tag=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          LATEST=$(git tag --sort=-v:refname | grep '^lab-v' | head -1)
+          if [ -z "$LATEST" ]; then
+            NEXT="lab-v1.0.0"
           else
-            echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+            VERSION=${LATEST#lab-v}
+            MAJOR=$(echo "$VERSION" | cut -d. -f1)
+            MINOR=$(echo "$VERSION" | cut -d. -f2)
+            PATCH=$(echo "$VERSION" | cut -d. -f3)
+            NEXT="lab-v${MAJOR}.${MINOR}.$((PATCH + 1))"
           fi
+          echo "tag=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "prev=$LATEST" >> "$GITHUB_OUTPUT"
+          echo "Next version: $NEXT (prev: ${LATEST:-none})"
 
       - name: Generate release notes
         id: notes
         run: |
-          TAG="${{ steps.tag.outputs.tag }}"
-          PREV=$(git tag --sort=-v:refname | grep '^lab-v' | sed -n '2p' || echo "")
+          TAG="${{ steps.version.outputs.tag }}"
+          PREV="${{ steps.version.outputs.prev }}"
           if [ -z "$PREV" ]; then
             RANGE="HEAD"
           else
@@ -51,11 +74,17 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
+      - name: Create tag
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          git tag "$TAG"
+          git push origin "$TAG"
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          name: ${{ steps.tag.outputs.tag }}
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.tag }}
           body: ${{ steps.notes.outputs.notes }}
           draft: false
           prerelease: false

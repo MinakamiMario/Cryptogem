@@ -43,6 +43,22 @@ class HeartbeatLoop:
                     f"current_agent={self._current_agent or 'none'}")
         self._running = False
 
+    def _interruptible_sleep(self, seconds: float) -> None:
+        """Sleep with Telegram polling every 10s for responsive callbacks."""
+        end = time.time() + seconds
+        poll_interval = 10
+        next_poll = time.time() + poll_interval
+        while time.time() < end and self._running:
+            time.sleep(1)
+            if time.time() >= next_poll:
+                try:
+                    _, tg_messages = self.notifier.poll_telegram(self.db)
+                    for msg in tg_messages:
+                        logger.info(f"  [telegram] 💬 Bericht: {msg}")
+                except Exception:
+                    pass  # Non-critical
+                next_poll = time.time() + poll_interval
+
     def run_once(self) -> dict:
         """Run one heartbeat cycle across all agents."""
         self._cycle += 1
@@ -71,9 +87,9 @@ class HeartbeatLoop:
             if not self._running:
                 break
 
-            # Stagger: 1 min between agents
+            # Stagger: 1 min between agents, poll TG every 10s
             if i > 0:
-                time.sleep(HEARTBEAT_STAGGER_S)
+                self._interruptible_sleep(HEARTBEAT_STAGGER_S)
 
             try:
                 self._current_agent = agent.name
@@ -145,25 +161,10 @@ class HeartbeatLoop:
                 logger.info(f"Max runtime reached ({max_hours}h)")
                 break
 
-            # Sleep until next heartbeat
+            # Sleep until next heartbeat — poll TG every 10s
             remaining = HEARTBEAT_INTERVAL_S - (time.time() - start_time) % HEARTBEAT_INTERVAL_S
             logger.info(f"Sleeping {remaining:.0f}s until next heartbeat...")
-
-            # Interruptible sleep — poll Telegram every 10s for approvals + messages
-            sleep_end = time.time() + remaining
-            poll_interval = 10  # seconds between Telegram polls
-            next_poll = time.time() + poll_interval
-            while time.time() < sleep_end and self._running:
-                time.sleep(1)
-                if time.time() >= next_poll:
-                    try:
-                        _, tg_messages = self.notifier.poll_telegram(self.db)
-                        for msg in tg_messages:
-                            logger.info(f"  [telegram] 💬 Bericht: {msg}")
-                            print(f"\n💬 [Telegram] {msg}\n")
-                    except Exception:
-                        pass  # Non-critical
-                    next_poll = time.time() + poll_interval
+            self._interruptible_sleep(remaining)
 
         logger.info(
             f"Heartbeat loop stopped. "

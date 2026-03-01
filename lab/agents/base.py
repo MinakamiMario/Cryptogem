@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import hashlib
 import logging
-import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Optional
@@ -139,14 +138,13 @@ class BaseAgent(ABC):
     # ── Helpers ───────────────────────────────────────────
 
     def _git_hash(self) -> str:
-        """Get current short git hash."""
+        """Get current short git hash (no subprocess)."""
         try:
-            result = subprocess.run(
-                ['git', 'rev-parse', '--short', 'HEAD'],
-                capture_output=True, text=True, cwd=str(REPO_ROOT),
-                timeout=5,
-            )
-            return result.stdout.strip()
+            head = (REPO_ROOT / '.git' / 'HEAD').read_text().strip()
+            if head.startswith('ref:'):
+                ref_path = REPO_ROOT / '.git' / head.split(' ', 1)[1]
+                return ref_path.read_text().strip()[:7]
+            return head[:7]
         except Exception:
             return 'unknown'
 

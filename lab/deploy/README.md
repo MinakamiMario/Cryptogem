@@ -50,3 +50,27 @@ sudo systemctl enable cryptogem-lab
 sudo systemctl start cryptogem-lab
 sudo systemctl status cryptogem-lab
 ```
+
+## Remote Access (noodpad)
+
+Als de Mac onbereikbaar is (WiFi weg, lid dicht, etc.):
+
+1. **Tailscale** — zero-config mesh VPN
+   - Install: `brew install tailscale` op Mac + Android/Linux remote
+   - `tailscale up` op beide devices → direct SSH/screen-sharing
+   - Werkt door NAT heen, geen port forwarding nodig
+
+2. **RustDesk / AnyDesk** — remote desktop als backup
+   - RustDesk (open source): `brew install --cask rustdesk`
+   - AnyDesk (commercial): `brew install --cask anydesk`
+   - Beide werken zonder router config
+
+### Aanbevolen setup
+```
+Tailscale (altijd aan) → SSH voor CLI access
+RustDesk (standby)     → GUI voor noodgevallen
+```
+
+**Let op**: dit is puur een noodpad. De lab draait autonoom via launchd
+en is volledig bestuurbaar via Telegram (✅ ❌ 📊). Remote access is
+alleen nodig voor systeembeheer (OS updates, crash recovery, etc.).

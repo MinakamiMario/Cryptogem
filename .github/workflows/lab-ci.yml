@@ -1,6 +1,7 @@
 name: Lab Tests
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'lab/**'

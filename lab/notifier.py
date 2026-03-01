@@ -567,6 +567,15 @@ class LabNotifier:
     def agent_error(self, agent: str, error: str) -> None:
         self._send(f"⚠️ Agent <b>{agent}</b> error:\n{error[:500]}")
 
+    def shell_violation(self, binary: str, agent: str) -> None:
+        """Alert: a blocked shell command was attempted."""
+        self._send(
+            f"🚨 <b>SHELL VIOLATION</b>\n"
+            f"Agent: {agent}\n"
+            f"Blocked: <code>{binary}</code>\n"
+            f"Actie: PermissionError raised"
+        )
+
     def heartbeat_summary(self, cycle: int, tasks_reviewed: int,
                           tasks_worked: int, tasks_promoted: int) -> None:
         if tasks_reviewed + tasks_worked + tasks_promoted == 0:

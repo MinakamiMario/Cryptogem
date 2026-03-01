@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 import signal
+import sys
 import time
 from typing import Optional
 
@@ -11,6 +12,7 @@ from lab.config import HEARTBEAT_INTERVAL_S, HEARTBEAT_STAGGER_S
 from lab.db import LabDB
 from lab.notifier import LabNotifier
 from lab.shell_guard import install as install_shell_guard
+from lab.shell_guard import set_violation_callback
 
 logger = logging.getLogger('lab.heartbeat')
 
@@ -28,7 +30,21 @@ class HeartbeatLoop:
         self._current_agent: str | None = None
 
         # Hard kill-switch: block gh, git, pytest, etc.
-        install_shell_guard()
+        # Fail-closed: if guard can't install → exit(1).
+        try:
+            install_shell_guard()
+        except Exception as e:
+            logger.critical(f"Shell guard install FAILED: {e}")
+            sys.exit(1)
+
+        # TG alert on every blocked shell attempt
+        def _on_violation(binary: str) -> None:
+            agent = self._current_agent or 'unknown'
+            try:
+                self.notifier.shell_violation(binary, agent)
+            except Exception:
+                pass  # never crash the guard path
+        set_violation_callback(_on_violation)
 
         # Graceful shutdown
         signal.signal(signal.SIGTERM, self._handle_signal)

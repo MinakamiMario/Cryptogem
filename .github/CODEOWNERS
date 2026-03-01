@@ -1,0 +1,23 @@
+# CODEOWNERS — Cryptogem
+#
+# Bestanden hier vereisen review van @MinakamiMario voordat merge.
+# Dit is de "nee, kan niet" guardrail — niet "hopelijk".
+#
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ── CI/CD pipelines ──────────────────────────
+.github/workflows/**    @MinakamiMario
+
+# ── Lab governance & safety ──────────────────
+lab/config.py           @MinakamiMario
+lab/db.py               @MinakamiMario
+lab/shell_guard.py      @MinakamiMario
+lab/notifier.py         @MinakamiMario
+
+# ── Deployment & infra ───────────────────────
+lab/deploy/**           @MinakamiMario
+
+# ── Project policy ───────────────────────────
+CLAUDE.md               @MinakamiMario
+CONTRIBUTING.md         @MinakamiMario
+.github/CODEOWNERS      @MinakamiMario

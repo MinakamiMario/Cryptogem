@@ -1,12 +1,101 @@
-# Project: Cryptogem Trading Bot
+# Project: Cryptogem
 
-## Permissions
+## ═══════════════════════════════════════════════
+## LAB — Autonomous Research Governance
+## ═══════════════════════════════════════════════
+
+### Hard Policy (niet te negeren)
+
+#### Scope Lock
+- **Lab code**: alleen `lab/`, `.github/workflows/`, `docs/`, `tests/test_lab/` wijzigen
+- **Trading bot**: `trading_bot/` strategie code is VERBODEN voor lab agents
+- **Geen feature creep**: één thema per PR, strict scope
+
+#### Shell Guard (fail-closed)
+- `lab/shell_guard.py` monkey-patches `subprocess.run`, `Popen`, `os.system`
+- **Blocked binaries**: `gh`, `git`, `pytest`, `make`, `which`, `sleep`, `reboot`, `shutdown`, `halt`
+- Config: `ALLOW_LOCAL_SHELL = False` in `lab/config.py` (kill-switch)
+- **Fail-closed**: als install() faalt → `sys.exit(1)`
+- Agents mogen NOOIT lokale shell/CLI calls doen
+
+#### Telegram-Only UI
+- `LabNotifier` is de enige user interface
+- Alle interactie via TG inline knoppen: ✅ Approve / ❌ Reject / 📊 Status / CI / 🖥 Remote Hands
+- Agents communiceren NOOIT buiten Telegram om
+
+#### CI is Canonical
+- Build/test/release/tagging uitsluitend via GitHub Actions
+- `lab-ci.yml` → tests op PR/merge → ✅/❌ naar Telegram
+- `release.yml` → auto-tag + release op merge naar master → 🚀 naar Telegram
+- Lokaal testen mag, maar is nooit required of blocking
+
+### Governance Invarianten
+
+#### Task State Machine
+```
+proposal → todo          (gate: BOTH gatekeepers approved)
+todo → in_progress       (agent picks up)
+in_progress → peer_review (agent auto-promote after execute)
+in_progress → blocked     (on error)
+peer_review → review      (gate: ALL peer reviews approved)
+peer_review → in_progress (needs_changes → rework loop)
+review → approved         (boss auto-promote)
+approved → done           (USER ONLY — TG ✅)
+approved → in_progress    (USER ONLY — TG ❌ reject)
+blocked → in_progress|todo (retry/escalate)
+```
+
+#### Gatekeepers & Quorum
+- Gatekeepers: `risk_governor`, `robustness_auditor`
+- Quorum: **2/2** — BEIDE moeten proposals goedkeuren
+- Gates afgedwongen in `db.transition()` — niet te omzeilen
+- `approved → done` en `approved → in_progress` zijn **user-only** gates
+
+#### Agents (10)
+| Agent | Rol | LLM |
+|-------|-----|-----|
+| boss | Research Lead / Workflow Governor | ja |
+| risk_governor | Drawdown Surgeon / Gatekeeper | nee |
+| robustness_auditor | Anti-Overfit Inquisitor / Gatekeeper | nee |
+| deployment_judge | GO/NO-GO Gatekeeper | nee |
+| edge_analyst | Exit Attribution Specialist | nee |
+| live_monitor | Live Drift Detector | nee |
+| portfolio_architect | Capital Allocation Designer | nee |
+| hypothesis_gen | Hypothesis Designer | ja |
+| meta_research | Pattern Miner / Synthesizer | ja |
+| infra_guardian | Repo Integrity Enforcer | nee |
+
+#### Write Safety
+- `WRITE_ALLOWLIST = ['lab/lab.db', 'reports/lab/']`
+- Agents schrijven ALLEEN naar allowed paths
+- DB WAL mode, graceful SIGTERM/SIGINT handling
+
+#### Reboot Discipline
+- Agents mogen NOOIT een reboot initiëren of suggereren
+- Shell guard blokkeert `reboot`, `shutdown`, `halt` binaries
+- Reboot = expliciete taak met owner (user), maintenance window vereist
+- Zie `docs/ops/remote-hands.md` voor procedure
+
+### Gevoelige Bestanden (CODEOWNERS beschermd)
+Wijzigingen aan deze bestanden vereisen review van @MinakamiMario:
+- `.github/workflows/**` — CI/CD pipelines
+- `lab/config.py` — governance config + kill-switches
+- `lab/db.py` — state machine + quorum gates
+- `lab/shell_guard.py` — security enforcement
+- `lab/notifier.py` — Telegram UI
+- `lab/deploy/**` — deployment scripts
+
+## ═══════════════════════════════════════════════
+## TRADING BOT — Strategy Research
+## ═══════════════════════════════════════════════
+
+### Permissions
 - All bash commands related to running Python scripts, backtests, and analysis are pre-approved
 - Creating, editing, and writing Python scripts in the trading_bot/ directory is pre-approved
 - Running overnight optimization scripts that may take hours is pre-approved
 - No manual confirmation needed for test runs, parameter sweeps, or Monte Carlo simulations
 
-## Documentation Structure
+### Documentation Structure
 - `docs/CONTEXT_CAPSULE.md` — schema, invariants, root causes, fixes, validation status
 - `docs/PROJECT_MEMORY.md` — project knowledge, architecture, winning configs, learnings
 - `docs/VALIDATION_SUMMARY.md` — all 6 robustness tests with commands + verdicts

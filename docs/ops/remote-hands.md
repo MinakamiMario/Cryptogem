@@ -123,11 +123,21 @@ Na een (geplande) reboot, check vanuit je telefoon:
 
 ## Controlled Reboot Runbook
 
+### HARD RULE
+
+> **Nooit rebooten zonder maintenance window + lokale login beschikbaar.**
+>
+> - Reboot is een **expliciete taak** met owner (jij, de user)
+> - Agents mogen NOOIT een reboot initiëren of suggereren
+> - Geen `sudo reboot`, `shutdown`, of `restart` in agent code
+> - Shell guard blokkeert `reboot` en `shutdown` binaries
+
 ### Wanneer rebooten
 
 - macOS systeemupdates die reboot vereisen
 - Kernel panics of onherstelbare freezes
 - Gepland onderhoud (maintenance window)
+- **Altijd**: fysieke toegang of RustDesk-verbinding bevestigd vóór reboot
 
 ### Stappen
 

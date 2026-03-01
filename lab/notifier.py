@@ -239,6 +239,9 @@ class LabNotifier:
                 elif data.startswith('ci:'):
                     self._handle_ci(callback_id)
                     actions += 1
+                elif data.startswith('rh:'):
+                    self._handle_remote_hands(callback_id)
+                    actions += 1
                 continue
 
             # ── Handle text messages from user ──
@@ -411,6 +414,33 @@ class LabNotifier:
 
         self._send_html('\n'.join(lines))
 
+    def _handle_remote_hands(self, callback_id: str) -> None:
+        """Run Remote Hands healthcheck and send output to Telegram."""
+        self._answer_callback(callback_id, 'Healthcheck wordt uitgevoerd...')
+        try:
+            from lab.tools.remote_hands_healthcheck import (
+                check_tailscale_running, check_rustdesk_listening,
+                check_pf_enabled,
+            )
+            checks = [
+                ('Tailscale', check_tailscale_running),
+                ('RustDesk', check_rustdesk_listening),
+                ('Firewall', check_pf_enabled),
+            ]
+            lines = ['🖥 <b>Remote Hands Healthcheck</b>\n']
+            all_ok = True
+            for name, fn in checks:
+                ok, detail = fn()
+                icon = '✅' if ok else '❌'
+                lines.append(f'{icon} <b>{name}</b>: {detail}')
+                if not ok:
+                    all_ok = False
+            verdict = '✅ ALL PASS' if all_ok else '❌ FAIL'
+            lines.append(f'\n<b>{verdict}</b>')
+            self._send_html('\n'.join(lines))
+        except Exception as e:
+            self._send(f'Remote Hands healthcheck fout: {e}')
+
     def send_dashboard(self, db) -> None:
         """Send compact dashboard to Telegram."""
         summary = db.get_status_summary()
@@ -474,7 +504,10 @@ class LabNotifier:
                 lines.append(f'  {bar} {pct}% — {g["title"][:30]}')
 
         self._send_with_buttons('\n'.join(lines), buttons=[
-            [{'text': '📊 CI Status', 'callback_data': 'ci:0'}],
+            [
+                {'text': '📊 CI Status', 'callback_data': 'ci:0'},
+                {'text': '🖥 Remote Hands', 'callback_data': 'rh:0'},
+            ],
         ])
 
     # ── CLI → Telegram mirroring ─────────────────────────

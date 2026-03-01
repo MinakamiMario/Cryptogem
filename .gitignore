@@ -23,6 +23,8 @@ trading_bot/trades/
 
 # Lab — runtime database + generated reports
 lab/lab.db
+lab/lab.db-shm
+lab/lab.db-wal
 reports/**
 !reports/lab/_samples/
 !reports/lab/_samples/**

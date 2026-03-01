@@ -1,5 +1,9 @@
 """Lab configuration — constants, paths, safety."""
+from __future__ import annotations
+
 from pathlib import Path
+
+LAB_VERSION = "1.0.3"
 
 # ── Paths ──────────────────────────────────────────────────
 REPO_ROOT = Path(__file__).resolve().parent.parent

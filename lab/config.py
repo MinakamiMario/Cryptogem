@@ -8,6 +8,11 @@ LAB_VERSION = "1.0.3"
 # ── GitHub ────────────────────────────────────────────────
 GITHUB_REPO = 'MinakamiMario/Cryptogem'
 
+# ── Shell guard ──────────────────────────────────────────
+# Hard kill-switch: blocks subprocess calls to gh, git, pytest, etc.
+# InfraGuardian system commands (df, uptime) are unaffected.
+ALLOW_LOCAL_SHELL = False
+
 # ── Paths ──────────────────────────────────────────────────
 REPO_ROOT = Path(__file__).resolve().parent.parent
 LAB_DIR = REPO_ROOT / 'lab'

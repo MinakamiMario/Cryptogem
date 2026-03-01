@@ -94,6 +94,86 @@ def get_agents(db: LabDB, notifier: LabNotifier) -> list:
     return agents
 
 
+# ── Self-Test ─────────────────────────────────────────────
+
+logger = logging.getLogger('lab.main')
+
+
+def self_test(db: LabDB, notifier: LabNotifier) -> bool:
+    """E2E self-test bij startup. Rapporteert naar TG.
+
+    Twee check-levels:
+    - HARD: BotToken, DB, Agents, Telegram → False = exit(1)
+    - SOFT: Goals → warn only, daemon draait door
+    """
+    hard_checks: list[tuple[str, bool, str]] = []
+    soft_checks: list[tuple[str, bool, str]] = []
+
+    # HARD 1: Bot token aanwezig (notifier laadt .env zelf)
+    hard_checks.append(('BotToken', notifier.enabled, 'ok' if notifier.enabled else 'MISSING'))
+
+    # HARD 2: DB writable
+    try:
+        db.get_status_summary()
+        hard_checks.append(('DB', True, ''))
+    except Exception as e:
+        hard_checks.append(('DB', False, str(e)[:80]))
+
+    # HARD 3: Agents laden
+    try:
+        agents = get_agents(db, notifier)
+        hard_checks.append(('Agents', True, f'{len(agents)} geladen'))
+    except Exception as e:
+        hard_checks.append(('Agents', False, str(e)[:80]))
+
+    # HARD 4: Telegram bereikbaar
+    try:
+        notifier.send_output('🧪 Self-test gestart...')
+        hard_checks.append(('Telegram', True, ''))
+    except Exception as e:
+        hard_checks.append(('Telegram', False, str(e)[:80]))
+
+    # SOFT: Goals actief (0 goals = OK maar warn)
+    try:
+        goals = db.get_goals()
+        if goals:
+            soft_checks.append(('Goals', True, f'{len(goals)} actief'))
+        else:
+            soft_checks.append(('Goals', True, '0 actief'))
+    except Exception as e:
+        soft_checks.append(('Goals', False, str(e)[:80]))
+
+    # Rapport
+    hard_ok = all(ok for _, ok, _ in hard_checks)
+    no_goals = any(detail == '0 actief' for _, _, detail in soft_checks)
+
+    if hard_ok and not no_goals:
+        header = '✅ Lab self-test PASS'
+    elif hard_ok:
+        header = '⚠️ Lab self-test PASS (degraded — 0 goals)'
+    else:
+        header = '❌ Lab self-test FAIL'
+
+    lines = [header]
+    for name, ok, detail in hard_checks + soft_checks:
+        if not ok:
+            s = '❌'
+        elif detail == '0 actief':
+            s = '⚠️'
+        else:
+            s = '✅'
+        lines.append(f'  {s} {name} {detail}')
+
+    msg = '\n'.join(lines)
+    logger.info(msg)
+    try:
+        notifier.send_output(msg)
+    except Exception:
+        pass
+
+    return hard_ok  # alleen hard fails killen de daemon
+
+
 # ── Commands ──────────────────────────────────────────────
 
 def cmd_init(args: argparse.Namespace) -> None:
@@ -110,10 +190,17 @@ def cmd_init(args: argparse.Namespace) -> None:
 
 
 def cmd_run(args: argparse.Namespace) -> None:
-    """Start heartbeat loop."""
+    """Start heartbeat loop with self-test at startup."""
     db = LabDB()
     db.init_schema()
     notifier = LabNotifier(enabled=not args.quiet)
+
+    # Self-test bij startup — hard fails → exit(1)
+    if not self_test(db, notifier):
+        logger.error("Self-test FAILED — aborting")
+        db.close()
+        sys.exit(1)
+
     agents = get_agents(db, notifier)
 
     print(f"Starting lab with {len(agents)} agents:")

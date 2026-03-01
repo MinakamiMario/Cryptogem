@@ -51,26 +51,42 @@ sudo systemctl start cryptogem-lab
 sudo systemctl status cryptogem-lab
 ```
 
-## Remote Access (noodpad)
+## Remote Hands (Android)
 
-Als de Mac onbereikbaar is (WiFi weg, lid dicht, etc.):
+Volledige remote GUI-toegang via Tailscale + RustDesk.
+Zie **[docs/ops/remote-hands.md](../../docs/ops/remote-hands.md)** voor het complete runbook.
 
-1. **Tailscale** — zero-config mesh VPN
-   - Install: `brew install tailscale` op Mac + Android/Linux remote
-   - `tailscale up` op beide devices → direct SSH/screen-sharing
-   - Werkt door NAT heen, geen port forwarding nodig
+### Verbinding
 
-2. **RustDesk / AnyDesk** — remote desktop als backup
-   - RustDesk (open source): `brew install --cask rustdesk`
-   - AnyDesk (commercial): `brew install --cask anydesk`
-   - Beide werken zonder router config
-
-### Aanbevolen setup
 ```
-Tailscale (altijd aan) → SSH voor CLI access
-RustDesk (standby)     → GUI voor noodgevallen
+Adres:  100.67.19.108:21118  (Tailscale IP, direct TCP)
+Auth:   Permanent wachtwoord (RustDesk GUI → Settings → Security)
 ```
 
-**Let op**: dit is puur een noodpad. De lab draait autonoom via launchd
-en is volledig bestuurbaar via Telegram (✅ ❌ 📊). Remote access is
-alleen nodig voor systeembeheer (OS updates, crash recovery, etc.).
+### Policy
+
+- **Auto-login: UIT** — reboot vereist lokale login voordat RustDesk werkt
+- **Firewall**: RustDesk poorten alleen via Tailscale (pf anchor actief)
+- **Geen relay**: `direct-server = 'Y'`, `enable-tunnel = 'N'`
+
+> **Waarschuwing**: zet auto-login NIET aan. FileVault encryptie en
+> Keychain security vereisen login bij boot. Focus op uptime en
+> gecontroleerde reboots.
+
+### Quick check
+
+```bash
+# Healthcheck
+python3 lab/tools/remote_hands_healthcheck.py
+
+# Handmatig
+tailscale status                          # Tailscale online?
+lsof -nP -iTCP:21118 -sTCP:LISTEN        # RustDesk luistert?
+sudo pfctl -a com.rustdesk.tailscale-only -sr  # Firewall actief?
+```
+
+### Setup (eenmalig)
+
+```bash
+sudo bash lab/deploy/setup-remote-hands.sh
+```

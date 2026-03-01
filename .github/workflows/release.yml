@@ -28,6 +28,17 @@ jobs:
       - name: Run lab tests
         run: python -m pytest tests/test_lab/ -x -q
 
+      - name: Notify Telegram on failure
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          [ -z "$TELEGRAM_BOT_TOKEN" ] && exit 0
+          curl -sf -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="${TELEGRAM_CHAT_ID}" \
+            -d text="[LAB] ❌ Tests FAIL — release afgebroken" || true
+
   release:
     needs: test
     runs-on: ubuntu-latest
@@ -88,3 +99,20 @@ jobs:
           body: ${{ steps.notes.outputs.notes }}
           draft: false
           prerelease: false
+
+      - name: Notify Telegram
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          [ -z "$TELEGRAM_BOT_TOKEN" ] && exit 0
+          TAG="${{ steps.version.outputs.tag }}"
+          if [ "${{ job.status }}" = "success" ]; then
+            TEXT="🚀 Release ${TAG} gepubliceerd"
+          else
+            TEXT="❌ Release ${TAG} FAIL"
+          fi
+          curl -sf -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="${TELEGRAM_CHAT_ID}" \
+            -d text="[LAB] ${TEXT}" || true

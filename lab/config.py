@@ -5,6 +5,9 @@ from pathlib import Path
 
 LAB_VERSION = "1.0.3"
 
+# ── GitHub ────────────────────────────────────────────────
+GITHUB_REPO = 'MinakamiMario/Cryptogem'
+
 # ── Paths ──────────────────────────────────────────────────
 REPO_ROOT = Path(__file__).resolve().parent.parent
 LAB_DIR = REPO_ROOT / 'lab'

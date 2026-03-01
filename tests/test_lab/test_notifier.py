@@ -1,7 +1,8 @@
 """Tests for lab.notifier callback handlers and dashboard output."""
 from __future__ import annotations
 
-from unittest.mock import MagicMock
+import json
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -37,6 +38,8 @@ def _make_notifier() -> LabNotifier:
     n._last_update_id = 0
     n._pending_messages = {}
     n._send = MagicMock(return_value=123)
+    n._send_html = MagicMock(return_value=124)
+    n._send_with_buttons = MagicMock(return_value=125)
     n._edit_message = MagicMock()
     n._answer_callback = MagicMock()
     return n
@@ -157,7 +160,7 @@ class TestReject:
 class TestDashboard:
 
     def test_status_dashboard_contains_all_statuses(self, db, goal_id):
-        """Dashboard output includes all 8 status counts."""
+        """Dashboard output includes all 8 status counts + CI button."""
         n = _make_notifier()
         # Create a task so there's something in the DB
         db.create_task(goal_id, 'T1', 'edge_analyst', 'boss',
@@ -165,8 +168,61 @@ class TestDashboard:
 
         n.send_dashboard(db)
 
-        n._send.assert_called_once()
-        text = n._send.call_args[0][0]
+        n._send_with_buttons.assert_called_once()
+        text = n._send_with_buttons.call_args[0][0]
         for status in ['proposal', 'todo', 'in_progress', 'peer_review',
                         'review', 'approved', 'done', 'blocked']:
             assert status in text, f"'{status}' missing from dashboard"
+        # CI button present
+        buttons = n._send_with_buttons.call_args.kwargs['buttons']
+        assert any('ci:' in b.get('callback_data', '')
+                   for row in buttons for b in row)
+
+
+# ── CI callback test ─────────────────────────────────────
+
+class TestCICallback:
+
+    def test_handle_ci_shows_workflow_runs(self):
+        """📊 CI button fetches GitHub Actions runs and sends summary."""
+        n = _make_notifier()
+
+        # Mock GitHub API response
+        fake_response = json.dumps({
+            'workflow_runs': [
+                {'name': 'Lab Tests', 'head_branch': 'master',
+                 'conclusion': 'success', 'status': 'completed'},
+                {'name': 'Lab Release', 'head_branch': 'master',
+                 'conclusion': 'success', 'status': 'completed'},
+                {'name': 'Lab Tests', 'head_branch': 'feat/x',
+                 'conclusion': 'failure', 'status': 'completed'},
+            ],
+        }).encode('utf-8')
+
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = fake_response
+        mock_resp.__enter__ = MagicMock(return_value=mock_resp)
+        mock_resp.__exit__ = MagicMock(return_value=False)
+
+        with patch('urllib.request.urlopen', return_value=mock_resp):
+            n._handle_ci('cb_ci')
+
+        n._answer_callback.assert_called_once()
+        n._send_html.assert_called_once()
+        text = n._send_html.call_args[0][0]
+        assert 'CI/CD Status' in text
+        assert 'Lab Tests' in text
+        assert '✅' in text
+        assert '❌' in text
+
+    def test_handle_ci_api_error(self):
+        """GitHub API failure → error message, no crash."""
+        n = _make_notifier()
+
+        with patch('urllib.request.urlopen',
+                   side_effect=Exception('timeout')):
+            n._handle_ci('cb_ci')
+
+        n._answer_callback.assert_called_once()
+        n._send.assert_called_once()
+        assert 'fout' in n._send.call_args[0][0].lower()

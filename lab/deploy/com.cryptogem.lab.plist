@@ -10,11 +10,9 @@
         <string>-m</string>
         <string>lab.main</string>
         <string>run</string>
-        <string>--hours</string>
-        <string>24</string>
     </array>
     <key>WorkingDirectory</key>
-    <string>/Users/oussama/Cryptogem</string>
+    <string>__REPO__</string>
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
@@ -23,14 +21,13 @@
     <key>RunAtLoad</key>
     <true/>
     <key>KeepAlive</key>
-    <dict>
-        <key>SuccessfulExit</key>
-        <false/>
-    </dict>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
     <key>StandardOutPath</key>
-    <string>/Users/oussama/Cryptogem/lab/logs/lab.stdout.log</string>
+    <string>__HOME__/Library/Logs/cryptogem-lab.out.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/oussama/Cryptogem/lab/logs/lab.stderr.log</string>
+    <string>__HOME__/Library/Logs/cryptogem-lab.err.log</string>
     <key>ProcessType</key>
     <string>Background</string>
 </dict>

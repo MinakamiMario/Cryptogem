@@ -1,44 +1,52 @@
 # Lab Deployment
 
-## macOS (launchd)
+## macOS (launchd) — Primary
+
+### Install (one-time)
 
 ```bash
-# Copy plist
-cp lab/deploy/com.cryptogem.lab.plist ~/Library/LaunchAgents/
-
-# Create log directory
-mkdir -p lab/logs
-
-# Load (start on boot)
-launchctl load ~/Library/LaunchAgents/com.cryptogem.lab.plist
-
-# Unload (stop)
-launchctl unload ~/Library/LaunchAgents/com.cryptogem.lab.plist
-
-# Check status
-launchctl list | grep cryptogem
+bash lab/deploy/install_launchd.sh
 ```
+
+The script:
+- Resolves `__HOME__` and `__REPO__` placeholders in the plist template
+- Copies the resolved plist to `~/Library/LaunchAgents/`
+- Loads and starts the daemon immediately
+
+### Daily Operations
+
+```bash
+# Status
+launchctl print gui/$(id -u)/com.cryptogem.lab
+
+# Stop
+launchctl bootout gui/$(id -u)/com.cryptogem.lab
+
+# Restart
+launchctl kickstart -k gui/$(id -u)/com.cryptogem.lab
+
+# Logs (live)
+tail -f ~/Library/Logs/cryptogem-lab.out.log
+tail -f ~/Library/Logs/cryptogem-lab.err.log
+
+# Healthcheck (sends dashboard to Telegram)
+python3 -m lab.main status --tg
+```
+
+### Self-Test
+
+The lab runs an automatic self-test at every startup:
+- **Hard checks** (fail = daemon aborts): BotToken, DB, Agents, Telegram
+- **Soft checks** (warn only): Active goals
+
+Results are sent to Telegram automatically.
 
 ## Linux (systemd)
 
 ```bash
-# Copy service file
 sudo cp lab/deploy/lab.service /etc/systemd/system/
-
-# Create log directory
 mkdir -p lab/logs
-
-# Enable and start
 sudo systemctl enable cryptogem-lab
 sudo systemctl start cryptogem-lab
-
-# Check status
 sudo systemctl status cryptogem-lab
-```
-
-## Crontab alternative (Linux)
-
-```bash
-# Run every 24h at 00:00 UTC
-0 0 * * * cd /home/oussama/Cryptogem && /usr/bin/python3 -m lab.main run --hours 24 >> lab/logs/lab.stdout.log 2>&1
 ```

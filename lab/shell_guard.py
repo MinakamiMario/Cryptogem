@@ -5,14 +5,21 @@ block gh, git, pytest, and other binaries that trigger macOS Allow
 prompts. InfraGuardian system commands (df, uptime) are unaffected.
 
 Controlled by config.ALLOW_LOCAL_SHELL (default: False).
+Fail-closed: if install() fails, the caller should sys.exit(1).
 """
 from __future__ import annotations
 
 import logging
 import os
 import subprocess
+import sys
+from typing import Callable, Optional
 
 logger = logging.getLogger('lab.shell_guard')
+
+# Optional callback(binary_name) fired on every blocked attempt.
+# Set via set_violation_callback(). Used by heartbeat to send TG alerts.
+_violation_callback: Optional[Callable[[str], None]] = None
 
 BLOCKED_BINARIES = frozenset([
     'gh', 'git', 'pytest', 'make', 'which', 'sleep',
@@ -44,6 +51,7 @@ def _guarded_run(*args, **kwargs):
         msg = (f"Policy violation: local shell blocked ({binary}). "
                f"Use GitHub Actions or Telegram.")
         logger.error(msg)
+        _fire_violation(binary)
         raise PermissionError(msg)
     return _original_run(*args, **kwargs)
 
@@ -55,6 +63,7 @@ def _guarded_popen_init(self, args, *a, **kw):
         msg = (f"Policy violation: local shell blocked ({binary}). "
                f"Use GitHub Actions or Telegram.")
         logger.error(msg)
+        _fire_violation(binary)
         raise PermissionError(msg)
     _original_popen_init(self, args, *a, **kw)
 
@@ -66,6 +75,7 @@ def _guarded_os_system(command):
         msg = (f"Policy violation: local shell blocked ({binary}). "
                f"Use GitHub Actions or Telegram.")
         logger.error(msg)
+        _fire_violation(binary)
         raise PermissionError(msg)
     return _original_os_system(command)
 
@@ -73,8 +83,26 @@ def _guarded_os_system(command):
 _installed = False
 
 
+def _fire_violation(binary: str) -> None:
+    """Call violation callback if set. Never raises."""
+    if _violation_callback is not None:
+        try:
+            _violation_callback(binary)
+        except Exception:
+            pass  # callback failure must never prevent the block
+
+
+def set_violation_callback(callback: Callable[[str], None]) -> None:
+    """Register callback(binary_name) fired on every blocked attempt."""
+    global _violation_callback
+    _violation_callback = callback
+
+
 def install() -> None:
-    """Install subprocess guard. Call once at lab startup."""
+    """Install subprocess guard. Call once at lab startup.
+
+    Fail-closed: raises on error so caller can sys.exit(1).
+    """
     global _installed
     if _installed:
         return
@@ -90,6 +118,12 @@ def install() -> None:
     os.system = _guarded_os_system
     _installed = True
     logger.info(f"Shell guard active: {sorted(BLOCKED_BINARIES)} blocked")
+
+    # Verify patches took effect (fail-closed)
+    if subprocess.run is not _guarded_run:
+        raise RuntimeError("Shell guard install failed: subprocess.run not patched")
+    if os.system is not _guarded_os_system:
+        raise RuntimeError("Shell guard install failed: os.system not patched")
 
 
 def uninstall() -> None:

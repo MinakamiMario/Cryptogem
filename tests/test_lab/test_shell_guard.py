@@ -1,6 +1,8 @@
 """Tests for lab.shell_guard — hard kill-switch for local CLI calls."""
 from __future__ import annotations
 
+import os
+import subprocess
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -11,6 +13,9 @@ from lab.shell_guard import (
     _guarded_os_system,
     _guarded_popen_init,
     _guarded_run,
+    install,
+    set_violation_callback,
+    uninstall,
 )
 
 
@@ -98,3 +103,74 @@ class TestAllBlockedBinaries:
         for binary in BLOCKED_BINARIES:
             with pytest.raises(PermissionError, match='Policy violation'):
                 _guarded_run([binary, '--help'])
+
+
+class TestInstallVerification:
+    """Verify that install() actually patches subprocess.run etc."""
+
+    def setup_method(self):
+        uninstall()  # start clean
+
+    def teardown_method(self):
+        uninstall()  # restore originals
+
+    @patch('lab.config.ALLOW_LOCAL_SHELL', False)
+    def test_subprocess_run_is_patched(self):
+        """After install(), subprocess.run IS the guarded wrapper."""
+        install()
+        assert subprocess.run is _guarded_run
+
+    @patch('lab.config.ALLOW_LOCAL_SHELL', False)
+    def test_os_system_is_patched(self):
+        """After install(), os.system IS the guarded wrapper."""
+        install()
+        assert os.system is _guarded_os_system
+
+    @patch('lab.config.ALLOW_LOCAL_SHELL', False)
+    def test_uninstall_restores(self):
+        """After uninstall(), subprocess.run is NOT the guarded wrapper."""
+        install()
+        assert subprocess.run is _guarded_run
+        uninstall()
+        assert subprocess.run is not _guarded_run
+
+
+class TestViolationCallback:
+    """Verify that violation callback fires on blocked attempts."""
+
+    @patch('lab.config.ALLOW_LOCAL_SHELL', False)
+    def test_callback_fires_on_block(self):
+        """Violation callback receives the blocked binary name."""
+        fired = []
+        set_violation_callback(lambda binary: fired.append(binary))
+        try:
+            with pytest.raises(PermissionError):
+                _guarded_run(['gh', 'pr', 'view'])
+            assert fired == ['gh']
+        finally:
+            set_violation_callback(None)
+
+    @patch('lab.config.ALLOW_LOCAL_SHELL', False)
+    def test_callback_exception_does_not_prevent_block(self):
+        """Even if callback raises, the PermissionError still fires."""
+        def bad_callback(binary):
+            raise RuntimeError("callback crashed")
+        set_violation_callback(bad_callback)
+        try:
+            with pytest.raises(PermissionError, match='Policy violation'):
+                _guarded_run(['git', 'status'])
+        finally:
+            set_violation_callback(None)
+
+    @patch('lab.config.ALLOW_LOCAL_SHELL', False)
+    def test_no_callback_on_allowed(self):
+        """Callback does NOT fire for allowed binaries."""
+        fired = []
+        set_violation_callback(lambda binary: fired.append(binary))
+        try:
+            with patch('lab.shell_guard._original_run',
+                       return_value=MagicMock(returncode=0)):
+                _guarded_run(['df', '-h'])
+            assert fired == []
+        finally:
+            set_violation_callback(None)

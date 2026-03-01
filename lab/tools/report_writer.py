@@ -13,13 +13,28 @@ from lab.config import REPO_ROOT, REPORTS_DIR, safe_write_check
 
 
 def _git_hash() -> str:
-    """Get current short git hash (no subprocess)."""
+    """Get current short git hash (no subprocess).
+
+    Handles: loose refs, packed-refs (after git gc), detached HEAD.
+    """
     try:
         head = (REPO_ROOT / '.git' / 'HEAD').read_text().strip()
         if head.startswith('ref:'):
-            ref_path = REPO_ROOT / '.git' / head.split(' ', 1)[1]
-            return ref_path.read_text().strip()[:7]
-        return head[:7]
+            ref = head.split(' ', 1)[1]
+            loose = REPO_ROOT / '.git' / ref
+            if loose.exists():
+                return loose.read_text().strip()[:7]
+            # After git gc: ref lives in packed-refs
+            packed = REPO_ROOT / '.git' / 'packed-refs'
+            if packed.exists():
+                for line in packed.read_text().splitlines():
+                    if line.startswith('#'):
+                        continue
+                    parts = line.split()
+                    if len(parts) >= 2 and parts[1] == ref:
+                        return parts[0][:7]
+            return 'unknown'
+        return head[:7]  # detached HEAD
     except Exception:
         return 'unknown'
 

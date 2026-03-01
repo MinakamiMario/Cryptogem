@@ -1,0 +1,90 @@
+name: Tag Management
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - create-tag
+          - delete-tag
+          - retag
+      tag:
+        description: 'Tag name (e.g. lab-v1.0.3)'
+        required: true
+      commit:
+        description: 'Commit SHA (for create-tag/retag, default: HEAD)'
+        required: false
+        default: 'HEAD'
+      delete_tag:
+        description: 'Tag to delete (only for retag action)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  manage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate tag format
+        run: |
+          TAG="${{ inputs.tag }}"
+          if [[ ! "$TAG" =~ ^lab-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Tag '$TAG' does not match lab-vX.Y.Z format"
+            exit 1
+          fi
+          echo "✅ Tag format valid: $TAG"
+
+      - name: Delete tag + release
+        if: inputs.action == 'delete-tag' || inputs.action == 'retag'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ inputs.action }}" = "retag" ]; then
+            DEL_TAG="${{ inputs.delete_tag }}"
+          else
+            DEL_TAG="${{ inputs.tag }}"
+          fi
+
+          if [ -z "$DEL_TAG" ]; then
+            echo "❌ No tag specified for deletion"
+            exit 1
+          fi
+
+          echo "Deleting release for $DEL_TAG..."
+          gh release delete "$DEL_TAG" --yes 2>/dev/null || echo "  (no release found)"
+
+          echo "Deleting tag $DEL_TAG..."
+          git push origin ":refs/tags/$DEL_TAG" 2>/dev/null || echo "  (no remote tag found)"
+          git tag -d "$DEL_TAG" 2>/dev/null || echo "  (no local tag found)"
+
+          echo "✅ Cleaned up $DEL_TAG"
+
+      - name: Create tag
+        if: inputs.action == 'create-tag' || inputs.action == 'retag'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ inputs.tag }}"
+          COMMIT="${{ inputs.commit }}"
+
+          # Resolve HEAD if default
+          if [ "$COMMIT" = "HEAD" ]; then
+            COMMIT=$(git rev-parse HEAD)
+          fi
+          SHORT=$(echo "$COMMIT" | cut -c1-7)
+
+          echo "Creating tag $TAG on commit $SHORT..."
+          git tag "$TAG" "$COMMIT"
+          git push origin "$TAG"
+
+          echo "✅ Tag $TAG created on $SHORT"
+          echo ""
+          echo "Release workflow will auto-generate the release."

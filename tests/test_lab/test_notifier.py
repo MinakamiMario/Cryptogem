@@ -226,3 +226,55 @@ class TestCICallback:
         n._answer_callback.assert_called_once()
         n._send.assert_called_once()
         assert 'fout' in n._send.call_args[0][0].lower()
+
+
+# ── Remote Hands healthcheck callback test ───────────
+
+class TestRemoteHandsCallback:
+
+    def test_handle_remote_hands_sends_output(self):
+        """🖥 Remote Hands button runs healthcheck and sends result."""
+        n = _make_notifier()
+
+        with patch('lab.tools.remote_hands_healthcheck.check_tailscale_running',
+                   return_value=(True, 'Tailscale IP: 100.67.19.108')), \
+             patch('lab.tools.remote_hands_healthcheck.check_rustdesk_listening',
+                   return_value=(True, 'RustDesk listening on port 21118')), \
+             patch('lab.tools.remote_hands_healthcheck.check_pf_enabled',
+                   return_value=(True, 'pf: Status: Enabled')):
+            n._handle_remote_hands('cb_rh')
+
+        n._answer_callback.assert_called_once()
+        n._send_html.assert_called_once()
+        text = n._send_html.call_args[0][0]
+        assert 'Remote Hands' in text
+        assert 'ALL PASS' in text
+        assert 'Tailscale' in text
+
+    def test_handle_remote_hands_shows_failures(self):
+        """Healthcheck with failures shows FAIL verdict."""
+        n = _make_notifier()
+
+        with patch('lab.tools.remote_hands_healthcheck.check_tailscale_running',
+                   return_value=(True, 'Tailscale IP: 100.67.19.108')), \
+             patch('lab.tools.remote_hands_healthcheck.check_rustdesk_listening',
+                   return_value=(False, 'RustDesk NOT listening')), \
+             patch('lab.tools.remote_hands_healthcheck.check_pf_enabled',
+                   return_value=(True, 'pf: Status: Enabled')):
+            n._handle_remote_hands('cb_rh')
+
+        text = n._send_html.call_args[0][0]
+        assert 'FAIL' in text
+        assert '❌' in text
+
+    def test_handle_remote_hands_import_error(self):
+        """Healthcheck import failure → error message, no crash."""
+        n = _make_notifier()
+
+        with patch.dict('sys.modules',
+                        {'lab.tools.remote_hands_healthcheck': None}):
+            n._handle_remote_hands('cb_rh')
+
+        n._answer_callback.assert_called_once()
+        n._send.assert_called_once()
+        assert 'fout' in n._send.call_args[0][0].lower()

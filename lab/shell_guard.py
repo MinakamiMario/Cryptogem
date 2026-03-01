@@ -23,6 +23,7 @@ _violation_callback: Optional[Callable[[str], None]] = None
 
 BLOCKED_BINARIES = frozenset([
     'gh', 'git', 'pytest', 'make', 'which', 'sleep',
+    'reboot', 'shutdown', 'halt',
 ])
 
 # Save originals before patching

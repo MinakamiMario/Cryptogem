@@ -59,18 +59,26 @@ AGENT_NAMES = [
 
 LLM_AGENTS = {'boss', 'meta_research', 'hypothesis_gen'}
 
+# ── Governance ────────────────────────────────────────────
+# Gatekeepers: ALLEEN deze agents mogen proposals reviewen.
+# Hardcoded — niet via DB of goal membership af te leiden.
+GATEKEEPERS = ['risk_governor', 'robustness_auditor']
+GATEKEEPER_QUORUM = 2  # len(GATEKEEPERS), beide moeten approved
+
 # ── Task states ───────────────────────────────────────────
 VALID_TRANSITIONS = {
-    'backlog':      ['todo'],
+    'proposal':     ['todo'],              # quorum gate in DB
+    'backlog':      ['todo'],              # deprecated, user only
     'todo':         ['in_progress'],
     'in_progress':  ['peer_review', 'blocked'],
     'peer_review':  ['review', 'in_progress'],
-    'review':       ['approved', 'in_progress'],
-    'approved':     ['done'],
+    'review':       ['approved'],          # boss auto-promote
+    'approved':     ['done', 'in_progress'],  # user approve of reject
+    'done':         [],                    # terminal, expliciet
     'blocked':      ['in_progress', 'todo'],
 }
 
-ALL_STATUSES = list(VALID_TRANSITIONS.keys()) + ['done']
+ALL_STATUSES = list(VALID_TRANSITIONS.keys())  # done zit er nu in
 
 # ── Review verdicts ───────────────────────────────────────
 REVIEW_VERDICTS = ['pending', 'approved', 'rejected', 'needs_changes']

@@ -210,7 +210,8 @@ def cmd_tasks(args: argparse.Namespace) -> None:
         tasks = db.get_tasks_by_status(args.status)
     else:
         tasks = []
-        for s in ['in_progress', 'peer_review', 'review', 'todo', 'backlog']:
+        for s in ['in_progress', 'peer_review', 'review', 'approved',
+                  'todo', 'proposal', 'backlog']:
             tasks.extend(db.get_tasks_by_status(s))
 
     if not tasks:
@@ -232,7 +233,10 @@ def cmd_tasks(args: argparse.Namespace) -> None:
 
 
 def cmd_task_approve(args: argparse.Namespace) -> None:
-    """Approve a task (user action). Syncs status to Telegram."""
+    """Approve a task (user action). Syncs status to Telegram.
+
+    Handles: approved → done (executive signoff), backlog → todo (deprecated).
+    """
     db = LabDB()
     notifier = LabNotifier(enabled=True)
     task = db.get_task(args.id)
@@ -241,18 +245,16 @@ def cmd_task_approve(args: argparse.Namespace) -> None:
         return
 
     try:
-        if task.status == 'review':
-            db.transition(args.id, 'approved', actor='user')
+        if task.status == 'approved':
             db.transition(args.id, 'done', actor='user')
             print(f"Task #{args.id} approved and done: {task.title}")
-            # Sync to Telegram — edit original message to remove buttons
             notifier.notify_task_done(args.id, task.title, via='cli')
         elif task.status == 'backlog':
             db.transition(args.id, 'todo', actor='user')
             print(f"Task #{args.id} moved to todo: {task.title}")
         else:
             print(f"Task #{args.id} is in '{task.status}', "
-                  f"expected 'review' or 'backlog'")
+                  f"expected 'approved' or 'backlog'")
     except ValueError as e:
         print(f"Error: {e}")
     finally:
@@ -260,7 +262,10 @@ def cmd_task_approve(args: argparse.Namespace) -> None:
 
 
 def cmd_task_reject(args: argparse.Namespace) -> None:
-    """Reject a task (user action). Sends back to in_progress, syncs to Telegram."""
+    """Reject a task (user action). Sends back to in_progress, syncs to Telegram.
+
+    Handles: approved → in_progress (user reject).
+    """
     db = LabDB()
     notifier = LabNotifier(enabled=True)
     task = db.get_task(args.id)
@@ -269,7 +274,7 @@ def cmd_task_reject(args: argparse.Namespace) -> None:
         return
 
     try:
-        if task.status == 'review':
+        if task.status == 'approved':
             db.transition(args.id, 'in_progress', actor='user')
             db.add_comment(
                 args.id, 'user',
@@ -277,10 +282,9 @@ def cmd_task_reject(args: argparse.Namespace) -> None:
                 'rejection'
             )
             print(f"Task #{args.id} rejected → in_progress: {task.title}")
-            # Sync to Telegram — edit original message to remove buttons
             notifier.notify_task_rejected(args.id, task.title, via='cli')
         else:
-            print(f"Task #{args.id} is in '{task.status}', expected 'review'")
+            print(f"Task #{args.id} is in '{task.status}', expected 'approved'")
     except ValueError as e:
         print(f"Error: {e}")
     finally:

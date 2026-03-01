@@ -220,15 +220,17 @@ class LabNotifier:
 
     def _handle_approve(self, db, task_id: int,
                         callback_id: str, message_id: int) -> int:
-        """Process task approval from Telegram button."""
+        """Process task approval from Telegram button.
+
+        TG buttons appear at 'approved' state — user confirms → done.
+        """
         task = db.get_task(task_id)
         if not task:
             self._answer_callback(callback_id, f'Taak #{task_id} niet gevonden')
             return 0
 
         try:
-            if task.status == 'review':
-                db.transition(task_id, 'approved', actor='user')
+            if task.status == 'approved':
                 db.transition(task_id, 'done', actor='user')
                 self._answer_callback(callback_id, f'✅ Taak #{task_id} goedgekeurd!')
                 self._pending_messages.pop(task_id, None)
@@ -252,23 +254,22 @@ class LabNotifier:
                     )
                 logger.info(f"Telegram approval: task #{task_id} → todo")
                 return 1
-            elif task.status in ('done', 'approved'):
-                # Already approved (e.g. via CLI) — just update the message
+            elif task.status == 'done':
                 self._answer_callback(
                     callback_id,
-                    f'Taak #{task_id} al goedgekeurd (via CLI)')
+                    f'Taak #{task_id} al goedgekeurd')
                 self._pending_messages.pop(task_id, None)
                 if message_id:
                     self._edit_message(
                         message_id,
-                        f"✅ <b>GOEDGEKEURD</b> (via CLI) — Taak #{task_id}: "
-                        f"{task.title}\n\nStatus: {task.status}"
+                        f"✅ <b>GOEDGEKEURD</b> — Taak #{task_id}: "
+                        f"{task.title}\n\nStatus: done"
                     )
                 return 0
             else:
                 self._answer_callback(
                     callback_id,
-                    f"Taak #{task_id} is '{task.status}', verwacht 'review'")
+                    f"Taak #{task_id} is '{task.status}', verwacht 'approved'")
                 return 0
         except ValueError as e:
             self._answer_callback(callback_id, f'Fout: {str(e)[:100]}')
@@ -277,14 +278,17 @@ class LabNotifier:
 
     def _handle_reject(self, db, task_id: int,
                        callback_id: str, message_id: int) -> int:
-        """Process task rejection from Telegram button."""
+        """Process task rejection from Telegram button.
+
+        TG buttons appear at 'approved' state — user rejects → in_progress.
+        """
         task = db.get_task(task_id)
         if not task:
             self._answer_callback(callback_id, f'Taak #{task_id} niet gevonden')
             return 0
 
         try:
-            if task.status == 'review':
+            if task.status == 'approved':
                 db.transition(task_id, 'in_progress', actor='user')
                 db.add_comment(
                     task_id, 'user',
@@ -301,21 +305,19 @@ class LabNotifier:
                     )
                 logger.info(f"Telegram rejection: task #{task_id} → in_progress")
                 return 1
-            elif task.status in ('done', 'approved'):
-                # Already approved via other channel — inform user
+            elif task.status == 'done':
                 self._answer_callback(
                     callback_id,
-                    f'Taak #{task_id} al goedgekeurd (via CLI)')
+                    f'Taak #{task_id} al goedgekeurd')
                 self._pending_messages.pop(task_id, None)
                 if message_id:
                     self._edit_message(
                         message_id,
-                        f"✅ <b>GOEDGEKEURD</b> (via CLI) — Taak #{task_id}: "
-                        f"{task.title}\n\nStatus: {task.status}"
+                        f"✅ <b>GOEDGEKEURD</b> — Taak #{task_id}: "
+                        f"{task.title}\n\nStatus: done"
                     )
                 return 0
             elif task.status == 'in_progress':
-                # Already rejected via other channel
                 self._answer_callback(
                     callback_id,
                     f'Taak #{task_id} al afgekeurd')
@@ -323,14 +325,14 @@ class LabNotifier:
                 if message_id:
                     self._edit_message(
                         message_id,
-                        f"❌ <b>AFGEKEURD</b> (via CLI) — Taak #{task_id}: "
+                        f"❌ <b>AFGEKEURD</b> — Taak #{task_id}: "
                         f"{task.title}\n\nStatus: in_progress (retry)"
                     )
                 return 0
             else:
                 self._answer_callback(
                     callback_id,
-                    f"Taak #{task_id} is '{task.status}', verwacht 'review'")
+                    f"Taak #{task_id} is '{task.status}', verwacht 'approved'")
                 return 0
         except ValueError as e:
             self._answer_callback(callback_id, f'Fout: {str(e)[:100]}')
@@ -443,9 +445,9 @@ class LabNotifier:
         )
 
     def task_promoted(self, task_id: int, title: str) -> None:
-        """Task promoted to review — send with approve/reject buttons."""
+        """Task promoted to approved — send with approve/reject buttons."""
         msg_id = self._send_with_buttons(
-            f"📈 Taak #{task_id} klaar voor jouw review:\n"
+            f"📈 Taak #{task_id} klaar voor jouw goedkeuring:\n"
             f"<b>{title}</b>",
             buttons=[
                 [

@@ -18,9 +18,8 @@ logger = logging.getLogger('lab.agent')
 
 class BaseAgent(ABC):
     """Every agent follows the same heartbeat protocol:
-    1. Review others' work (highest priority)
-    2. Boss: promote fully-reviewed tasks
-    3. Work on own tasks
+    1. Review others' work (peer reviews + proposal reviews)
+    2. Work on own tasks (rework first, then new)
     """
 
     name: str = ''
@@ -38,9 +37,9 @@ class BaseAgent(ABC):
         self.db.set_status(self.name, 'working')
 
         try:
-            # Step 1: Review others' work (HIGHEST PRIORITY)
-            pending = self.db.get_tasks_needing_my_review(self.name)
-            for task in pending:
+            # Step 1a: Peer reviews (alle agents)
+            peer_reviews = self.db.get_peer_reviews_needing_review(self.name)
+            for task in peer_reviews:
                 try:
                     self.review_task(task)
                     stats['reviews'] += 1
@@ -48,18 +47,19 @@ class BaseAgent(ABC):
                     self.logger.error(f"Review failed for task #{task.id}: {e}")
                     stats['errors'] += 1
 
-            # Step 2: Boss-specific — promote fully-reviewed tasks
-            if self.name == 'boss':
-                promotable = self.db.get_fully_reviewed_tasks()
-                for task in promotable:
-                    try:
-                        self.db.transition(task.id, 'review', actor='boss')
-                        self.notifier.task_promoted(task.id, task.title)
-                        stats['promotions'] += 1
-                    except Exception as e:
-                        self.logger.error(f"Promotion failed for #{task.id}: {e}")
+            # Step 1b: Proposal reviews (alleen gatekeepers, query filtert)
+            proposals = self.db.get_proposals_needing_gatekeeper_review(
+                self.name)
+            for task in proposals:
+                try:
+                    self.review_proposal(task)
+                    stats['reviews'] += 1
+                except Exception as e:
+                    self.logger.error(
+                        f"Proposal review failed for #{task.id}: {e}")
+                    stats['errors'] += 1
 
-            # Step 2.5: Pick up tasks that got needs_changes reviews
+            # Step 2: Pick up tasks that got needs_changes reviews
             rejected = self.db.get_my_rejected_tasks(self.name)
             for task in rejected:
                 try:
@@ -131,6 +131,10 @@ class BaseAgent(ABC):
     def review_task(self, task: Task) -> None:
         """Review another agent's work. Must post comment + update review."""
         ...
+
+    def review_proposal(self, task: Task) -> None:
+        """Review a boss proposal. Default: no-op. Gatekeepers override."""
+        pass
 
     # ── Helpers ───────────────────────────────────────────
 

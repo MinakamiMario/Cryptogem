@@ -29,6 +29,8 @@ class RiskGovernor(BaseAgent):
         try:
             if 'adaptive_maxpos' in title_lower or 'maxpos' in title_lower:
                 return self._maxpos_variants(task)
+            elif 'tp/sl grid' in title_lower or 'tp_sl grid' in title_lower:
+                return self._tpsl_grid_sweep(task)
             elif 'dd_throttle' in title_lower or 'microsweep' in title_lower:
                 return self._dd_throttle_sweep(task)
             elif 'dd attribution' in title_lower or 'drawdown' in title_lower:
@@ -109,6 +111,59 @@ class RiskGovernor(BaseAgent):
             )
             self.db.update_review(task.id, self.name, 'approved', comment_id)
 
+    def review_proposal(self, task: Task) -> None:
+        """Gatekeeper review: validate proposal before it becomes todo.
+
+        Checks: agent available, no duplicate title, agent in goal.
+        Atomisch: comment + verdict + blocked_since in één call.
+        """
+        issues = []
+
+        # Check: assigned agent not overloaded (2+ taken)
+        in_progress = self.db.get_my_tasks(task.assigned_to, 'in_progress')
+        todo = self.db.get_my_tasks(task.assigned_to, 'todo')
+        if len(in_progress) + len(todo) >= 2:
+            issues.append(
+                f"Agent '{task.assigned_to}' heeft al "
+                f"{len(in_progress) + len(todo)} actieve taken"
+            )
+
+        # Check: no duplicate title in existing tasks
+        if task.goal_id:
+            existing = self.db.get_tasks_by_goal(task.goal_id)
+            existing_active = [
+                t for t in existing
+                if t.id != task.id
+                and t.status not in ('done', 'proposal')
+            ]
+            if any(t.title == task.title for t in existing_active):
+                issues.append(f"Duplicaat titel in actieve taken: '{task.title}'")
+
+        # Check: assigned agent belongs to goal
+        if task.goal_id:
+            goal = self.db.get_goal(task.goal_id)
+            if goal and task.assigned_to not in goal.agents:
+                issues.append(
+                    f"Agent '{task.assigned_to}' niet in goal agents "
+                    f"{goal.agents}"
+                )
+
+        if issues:
+            # Atomisch: comment + verdict + blocked_since
+            body = "RISK GOVERNOR PROPOSAL REVIEW — needs_changes:\n" + \
+                "\n".join(f"- {i}" for i in issues)
+            cid = self.db.add_comment(task.id, self.name, body, 'review')
+            self.db.update_review(task.id, self.name, 'needs_changes', cid)
+            self.db.set_proposal_blocked(task.id)
+        else:
+            cid = self.db.add_comment(
+                task.id, self.name,
+                "RISK GOVERNOR PROPOSAL REVIEW — approved. "
+                "Agent beschikbaar, geen duplicaat, goal match OK.",
+                'approval',
+            )
+            self.db.update_review(task.id, self.name, 'approved', cid)
+
     # ── Private task implementations ──────────────────────
 
     def _get_champion_cfg(self) -> dict:
@@ -132,14 +187,17 @@ class RiskGovernor(BaseAgent):
                 summary="Backtest returned None (gate fail) on champion config.",
             )
 
-        max_dd = result.get('max_dd_pct', 0.0)
-        total_pnl = result.get('total_pnl_pct', 0.0)
-        n_trades = result.get('n_trades', 0)
-        equity_curve = result.get('equity_curve', [])
+        max_dd = result.get('dd', 0.0)
+        total_pnl = result.get('pnl', 0.0)
+        n_trades = result.get('trades', 0)
+        trade_list = result.get('trade_list', [])
+
+        # Build equity curve from trade_list for DD period analysis
+        equity_curve = [t.get('equity_after', 0) for t in trade_list
+                        if isinstance(t, dict)]
 
         # Analyze DD periods from equity curve
         dd_periods = self._find_dd_periods(equity_curve)
-        worst_dd = dd_periods[0] if dd_periods else {}
 
         # Calmar-style ratio: PnL / max DD
         calmar = abs(total_pnl / max_dd) if max_dd != 0 else 0.0
@@ -150,7 +208,7 @@ class RiskGovernor(BaseAgent):
         report_data = {
             'cfg_hash': cfg_hash(cfg),
             'max_dd_pct': max_dd,
-            'total_pnl_pct': total_pnl,
+            'total_pnl': total_pnl,
             'n_trades': n_trades,
             'calmar_ratio': round(calmar, 3),
             'dd_within_ceiling': dd_ok,
@@ -162,7 +220,7 @@ class RiskGovernor(BaseAgent):
             f"# DD Attribution Analysis\n\n"
             f"**Config**: `{cfg_hash(cfg)}`\n"
             f"**Max DD**: {max_dd:.2f}%\n"
-            f"**Total PnL**: {total_pnl:.2f}%\n"
+            f"**Total PnL**: ${total_pnl:.2f}\n"
             f"**Trades**: {n_trades}\n"
             f"**Calmar ratio**: {calmar:.3f}\n"
             f"**DD within ceiling** ({DD_HARD_CEILING_PCT}%): "
@@ -186,7 +244,7 @@ class RiskGovernor(BaseAgent):
 
         summary = (
             f"DD attribution complete. Max DD={max_dd:.2f}%, "
-            f"PnL={total_pnl:.2f}%, Calmar={calmar:.3f}. "
+            f"PnL=${total_pnl:.2f}, Calmar={calmar:.3f}. "
             f"DD ceiling {'OK' if dd_ok else 'BREACHED'}."
         )
 
@@ -213,14 +271,14 @@ class RiskGovernor(BaseAgent):
             bt = backtest(test_cfg)
             if bt is not None:
                 results[mp] = {
-                    'pnl_pct': bt.get('total_pnl_pct', 0.0),
-                    'max_dd_pct': bt.get('max_dd_pct', 0.0),
-                    'n_trades': bt.get('n_trades', 0),
-                    'win_rate': bt.get('win_rate', 0.0),
-                    'sharpe': bt.get('sharpe', 0.0),
+                    'pnl': bt.get('pnl', 0.0),
+                    'dd': bt.get('dd', 0.0),
+                    'trades': bt.get('trades', 0),
+                    'wr': bt.get('wr', 0.0),
+                    'pf': bt.get('pf', 0.0),
                 }
             else:
-                results[mp] = {'pnl_pct': 0.0, 'error': 'gate_fail'}
+                results[mp] = {'pnl': 0.0, 'error': 'gate_fail'}
 
         valid = {k: v for k, v in results.items() if 'error' not in v}
 
@@ -228,8 +286,8 @@ class RiskGovernor(BaseAgent):
         best_mp = None
         best_score = float('-inf')
         for mp, r in valid.items():
-            dd = abs(r['max_dd_pct']) if r['max_dd_pct'] != 0 else 0.01
-            score = r['pnl_pct'] / dd  # Calmar-like score
+            dd = abs(r['dd']) if r['dd'] != 0 else 0.01
+            score = r['pnl'] / dd  # Calmar-like score
             if score > best_score:
                 best_score = score
                 best_mp = mp
@@ -247,8 +305,8 @@ class RiskGovernor(BaseAgent):
             f"# Max Position Variant Analysis\n\n"
             f"**Base config**: `{cfg_hash(cfg)}`\n\n"
             f"## Results\n\n"
-            f"| max_pos | PnL % | Max DD % | Trades | Win Rate | Sharpe |\n"
-            f"|---------|--------|----------|--------|----------|--------|\n"
+            f"| max_pos | PnL $ | DD % | Trades | WR % | PF |\n"
+            f"|---------|-------|------|--------|------|----|\n"
         )
         for mp in max_pos_values:
             r = results[mp]
@@ -257,9 +315,9 @@ class RiskGovernor(BaseAgent):
             else:
                 marker = " **" if mp == best_mp else ""
                 md += (
-                    f"| {mp}{marker} | {r['pnl_pct']:.2f}% "
-                    f"| {r['max_dd_pct']:.2f}% | {r['n_trades']} "
-                    f"| {r['win_rate']:.2%} | {r['sharpe']:.3f} |\n"
+                    f"| {mp}{marker} | ${r['pnl']:.0f} "
+                    f"| {r['dd']:.2f}% | {r['trades']} "
+                    f"| {r['wr']:.1f}% | {r['pf']:.2f} |\n"
                 )
         if best_mp is not None:
             md += f"\n**Best DD/return tradeoff**: max_pos={best_mp}\n"
@@ -296,14 +354,14 @@ class RiskGovernor(BaseAgent):
             bt = backtest(test_cfg)
             if bt is not None:
                 results[stop_pct] = {
-                    'pnl_pct': bt.get('total_pnl_pct', 0.0),
-                    'max_dd_pct': bt.get('max_dd_pct', 0.0),
-                    'n_trades': bt.get('n_trades', 0),
-                    'win_rate': bt.get('win_rate', 0.0),
-                    'sharpe': bt.get('sharpe', 0.0),
+                    'pnl': bt.get('pnl', 0.0),
+                    'dd': bt.get('dd', 0.0),
+                    'trades': bt.get('trades', 0),
+                    'wr': bt.get('wr', 0.0),
+                    'pf': bt.get('pf', 0.0),
                 }
             else:
-                results[stop_pct] = {'pnl_pct': 0.0, 'error': 'gate_fail'}
+                results[stop_pct] = {'pnl': 0.0, 'error': 'gate_fail'}
 
         valid = {k: v for k, v in results.items() if 'error' not in v}
 
@@ -311,8 +369,8 @@ class RiskGovernor(BaseAgent):
         optimal = None
         for stop_pct in sorted(valid.keys()):
             r = valid[stop_pct]
-            if abs(r['max_dd_pct']) <= DD_HARD_CEILING_PCT:
-                if optimal is None or r['pnl_pct'] > valid[optimal]['pnl_pct']:
+            if abs(r['dd']) <= DD_HARD_CEILING_PCT:
+                if optimal is None or r['pnl'] > valid[optimal]['pnl']:
                     optimal = stop_pct
 
         report_data = {
@@ -329,19 +387,19 @@ class RiskGovernor(BaseAgent):
             f"**Base config**: `{cfg_hash(cfg)}`\n"
             f"**DD ceiling**: {DD_HARD_CEILING_PCT}%\n\n"
             f"## Results\n\n"
-            f"| max_stop_pct | PnL % | Max DD % | Trades | Win Rate | Sharpe |\n"
-            f"|--------------|--------|----------|--------|----------|--------|\n"
+            f"| max_stop_pct | PnL $ | DD % | Trades | WR % | PF |\n"
+            f"|--------------|-------|------|--------|------|----|\n"
         )
         for stop_pct in stop_values:
             r = results[stop_pct]
             if 'error' in r:
                 md += f"| {stop_pct} | FAIL | - | - | - | - |\n"
             else:
-                dd_flag = " !!" if abs(r['max_dd_pct']) > DD_HARD_CEILING_PCT else ""
+                dd_flag = " !!" if abs(r['dd']) > DD_HARD_CEILING_PCT else ""
                 md += (
-                    f"| {stop_pct} | {r['pnl_pct']:.2f}% "
-                    f"| {r['max_dd_pct']:.2f}%{dd_flag} | {r['n_trades']} "
-                    f"| {r['win_rate']:.2%} | {r['sharpe']:.3f} |\n"
+                    f"| {stop_pct} | ${r['pnl']:.0f} "
+                    f"| {r['dd']:.2f}%{dd_flag} | {r['trades']} "
+                    f"| {r['wr']:.1f}% | {r['pf']:.2f} |\n"
                 )
         if optimal is not None:
             md += f"\n**Optimal**: max_stop_pct={optimal} (within DD ceiling)\n"
@@ -363,6 +421,105 @@ class RiskGovernor(BaseAgent):
             sha256=self._file_sha256(json_path),
             git_hash=self._git_hash(),
             cmd=f"dd_throttle_sweep({stop_values})",
+        )
+
+    def _tpsl_grid_sweep(self, task: Task) -> TaskResult:
+        """Sweep TP/SL combinations on champion config to find DD-optimal combo."""
+        from lab.tools.backtest_runner import backtest, cfg_hash
+
+        cfg = self._get_champion_cfg()
+        tp_values = [8, 10, 12, 15]
+        sl_values = [5, 7, 10, 12]
+        results = {}
+
+        for tp in tp_values:
+            for sl in sl_values:
+                test_cfg = dict(cfg)
+                test_cfg['tp_pct'] = tp
+                test_cfg['sl_pct'] = sl
+                test_cfg['exit_type'] = 'tp_sl'
+                bt = backtest(test_cfg)
+                key = f"TP{tp}_SL{sl}"
+                if bt is not None:
+                    results[key] = {
+                        'tp_pct': tp, 'sl_pct': sl,
+                        'pnl': bt.get('pnl', 0.0),
+                        'max_dd_pct': bt.get('dd', 0.0),
+                        'n_trades': bt.get('trades', 0),
+                        'win_rate': bt.get('wr', 0.0),
+                        'pf': bt.get('pf', 0.0),
+                    }
+                else:
+                    results[key] = {'tp_pct': tp, 'sl_pct': sl, 'error': 'gate_fail'}
+
+        valid = {k: v for k, v in results.items() if 'error' not in v and v['n_trades'] > 0}
+
+        # Rank by: DD ≤ 18% AND highest PnL
+        candidates = {
+            k: v for k, v in valid.items()
+            if abs(v['max_dd_pct']) <= 18.0 and v['pf'] >= 1.4
+        }
+        if not candidates:
+            # Fallback: lowest DD with positive PnL
+            candidates = {k: v for k, v in valid.items() if v['pnl'] > 0}
+
+        best_key = None
+        if candidates:
+            best_key = max(candidates, key=lambda k: candidates[k]['pnl'])
+
+        report_data = {
+            'cfg_hash': cfg_hash(cfg),
+            'sweep': 'tp_sl_grid',
+            'tp_values': tp_values,
+            'sl_values': sl_values,
+            'results': results,
+            'best_combo': best_key,
+            'target_dd': 18.0,
+            'target_pf': 1.4,
+        }
+
+        md = (
+            f"# TP/SL Grid Sweep — DD Optimization\n\n"
+            f"**Base config**: `{cfg_hash(cfg)}`\n"
+            f"**Target**: DD ≤ 18%, PF ≥ 1.4\n\n"
+            f"## Results\n\n"
+            f"| Combo | Trades | PnL | DD% | WR% | PF |\n"
+            f"|-------|--------|-----|-----|-----|----|\n"
+        )
+        for key in sorted(results.keys()):
+            r = results[key]
+            if 'error' in r:
+                md += f"| {key} | FAIL | - | - | - | - |\n"
+            else:
+                marker = " **" if key == best_key else ""
+                md += (
+                    f"| {key}{marker} | {r['n_trades']} | ${r['pnl']:.0f} "
+                    f"| {r['max_dd_pct']:.1f}% | {r['win_rate']:.1f}% "
+                    f"| {r['pf']:.2f} |\n"
+                )
+        if best_key:
+            b = results[best_key]
+            md += (
+                f"\n**Best**: {best_key} — ${b['pnl']:.0f} PnL, "
+                f"{b['max_dd_pct']:.1f}% DD, PF {b['pf']:.2f}\n"
+            )
+
+        report_name = f"tpsl_grid_{task.id}"
+        json_path = self._write_report(report_name, report_data, md)
+
+        summary = (
+            f"TP/SL grid sweep: {len(tp_values)}x{len(sl_values)}={len(results)} combos. "
+            f"{len(valid)} valid, {len(candidates)} meet target. "
+            f"Best={best_key}."
+        )
+
+        return TaskResult(
+            success=len(valid) > 0,
+            summary=summary,
+            artifact_path=str(json_path),
+            sha256=self._file_sha256(json_path),
+            git_hash=self._git_hash(),
+            cmd=f"tpsl_grid_sweep(tp={tp_values}, sl={sl_values})",
         )
 
     @staticmethod

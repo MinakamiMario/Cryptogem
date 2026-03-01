@@ -1,7 +1,15 @@
 """Boss Agent — research lead, workflow governor.
 
-Creates tasks based on goals, promotes peer-reviewed work,
-detects stuck tasks. Phase 3: hybrid rule-based + LLM task generation.
+Creates task proposals, promotes peer-reviewed work, detects stuck tasks.
+Core operation is rule-based; LLM is an optional enhancement for smarter
+task generation.
+
+Governance rules:
+- Boss creates tasks in 'proposal' (gatekeepers must approve before todo)
+- Boss promotes: proposal→todo (DB quorum gate), peer_review→review,
+  review→approved
+- Only user can approve→done or approve→in_progress (reject)
+- DB is the canonical enforcer — boss tries, DB decides
 """
 from __future__ import annotations
 
@@ -9,7 +17,7 @@ import json
 import logging
 
 from lab.agents.base import BaseAgent
-from lab.config import LLM_AGENTS, STUCK_THRESHOLD_H
+from lab.config import GATEKEEPERS, STUCK_THRESHOLD_H
 from lab.models import Task, TaskResult
 
 logger = logging.getLogger('lab.agent.boss')
@@ -40,6 +48,17 @@ TASK_TEMPLATES = {
         ("GO/NO-GO gate check on candidate", 'deployment_judge'),
         ("Infrastructure integrity check", 'infra_guardian'),
     ],
+    'drift': [
+        ("Live state drift check vs backtest baseline", 'live_monitor'),
+        ("Regime detection on current market data", 'live_monitor'),
+    ],
+    '4h': [
+        ("Exit attribution analysis: A vs B class breakdown", 'edge_analyst'),
+        ("Window sweep stability check on champion", 'robustness_auditor'),
+        ("RSI RECOVERY parameter sensitivity sweep", 'edge_analyst'),
+        ("Full robustness harness on candidate config", 'robustness_auditor'),
+        ("GO/NO-GO gate check on candidate", 'deployment_judge'),
+    ],
     'default': [
         ("Infrastructure integrity check (make check)", 'infra_guardian'),
     ],
@@ -49,33 +68,54 @@ TASK_TEMPLATES = {
 class BossAgent(BaseAgent):
     name = 'boss'
     role = 'Research Lead / Workflow Governor'
-    is_llm = True  # Phase 3: LLM-assisted task generation
+    is_llm = False  # Core operation is rule-based
 
     def execute_task(self, task: Task) -> TaskResult:
-        """Boss doesn't do research — creates tasks and coordinates."""
+        """Boss coordinates — not assigned research tasks.
+
+        If somehow assigned a task, generate a status report instead.
+        """
+        summary = self.db.get_status_summary()
+        task_counts = summary.get('tasks', {})
+        total = sum(task_counts.values())
+        done = task_counts.get('done', 0)
+
+        report_lines = [
+            f"Boss coordination report for task #{task.id}",
+            f"Total tasks: {total}, Done: {done}",
+        ]
+        for status, count in task_counts.items():
+            if count > 0:
+                report_lines.append(f"  {status}: {count}")
+
         return TaskResult(
             success=True,
-            summary="Boss taak afgerond (coordinatie)",
+            summary='\n'.join(report_lines),
         )
 
     def review_task(self, task: Task) -> None:
-        """Boss reviews for completeness and goal alignment."""
+        """Boss reviews for completeness: artifact + substantive work comment.
+
+        No overrides — only checks objective criteria.
+        """
         comments = self.db.get_comments(task.id)
+        issues = []
 
         # Check: has artifact?
-        has_artifact = task.artifact_path is not None
+        if not task.artifact_path:
+            issues.append("Geen artifact geproduceerd")
+
+        # Check: artifact has SHA-256 provenance?
+        if task.artifact_path and not task.artifact_sha256:
+            issues.append("Artifact mist SHA-256 provenance hash")
 
         # Check: has substantive work comment?
-        work_comments = [
-            c for c in comments
-            if c.agent == task.assigned_to and len(c.body) > 30
-        ]
-
-        issues = []
-        if not has_artifact:
-            issues.append("Geen artifact geproduceerd")
-        if not work_comments:
-            issues.append("Geen substantieve work comment")
+        has_work = any(
+            c.agent == task.assigned_to and len(c.body) > 30
+            for c in comments
+        )
+        if not has_work:
+            issues.append("Geen substantieve work comment van assignee")
 
         if issues:
             body = "BOSS REVIEW — needs_changes:\n" + "\n".join(
@@ -86,16 +126,17 @@ class BossAgent(BaseAgent):
         else:
             cid = self.db.add_comment(
                 task.id, self.name,
-                "BOSS REVIEW — approved. Work complete, artifact present.",
+                "BOSS REVIEW — approved. Artifact present with provenance, "
+                "work comment substantive.",
                 'approval',
             )
             self.db.update_review(task.id, self.name, 'approved', cid)
 
     def generate_tasks(self) -> int:
-        """Generate tasks for active goals. Returns count of tasks created.
+        """Generate task proposals for active goals. Returns count created.
 
-        Strategy: try LLM first for intelligent suggestions.
-        Fallback to rule-based templates if LLM unavailable.
+        Tasks go to 'proposal' — gatekeepers must approve before todo.
+        LLM generation is attempted first; rule-based templates as fallback.
         """
         created = 0
         goals = self.db.get_goals(status='active')
@@ -112,7 +153,7 @@ class BossAgent(BaseAgent):
             existing = self.db.get_tasks_by_goal(goal.id)
             existing_titles = {t.title for t in existing}
 
-            # Try LLM-based generation first
+            # Try LLM-based generation first (optional enhancement)
             llm_tasks = self._generate_llm_tasks(goal, existing_titles,
                                                   remaining)
             if llm_tasks is not None:
@@ -124,17 +165,13 @@ class BossAgent(BaseAgent):
                     if agent not in goal.agents:
                         continue
 
-                    self.db.create_task(
-                        goal_id=goal.id,
-                        title=title,
-                        assigned_to=agent,
-                        created_by='boss',
-                        description=description,
+                    task_id = self._create_proposal(
+                        goal, title, agent, description,
                     )
-                    self.notifier.task_created(0, title, agent, goal.title)
-                    created += 1
-                    remaining -= 1
-                    existing_titles.add(title)
+                    if task_id:
+                        created += 1
+                        remaining -= 1
+                        existing_titles.add(title)
                 continue
 
             # Fallback: rule-based templates
@@ -148,23 +185,42 @@ class BossAgent(BaseAgent):
                 if agent not in goal.agents:
                     continue
 
-                self.db.create_task(
-                    goal_id=goal.id,
-                    title=title,
-                    assigned_to=agent,
-                    created_by='boss',
-                    description=f"Auto-generated for goal: {goal.title}",
+                task_id = self._create_proposal(
+                    goal, title, agent,
+                    f"Auto-generated for goal: {goal.title}",
                 )
-                self.notifier.task_created(0, title, agent, goal.title)
-                created += 1
-                remaining -= 1
+                if task_id:
+                    created += 1
+                    remaining -= 1
+                    existing_titles.add(title)
 
         return created
+
+    def _create_proposal(self, goal, title: str, agent: str,
+                         description: str) -> int | None:
+        """Create a proposal task and review entries for GATEKEEPERS."""
+        task_id = self.db.create_task(
+            goal_id=goal.id,
+            title=title,
+            assigned_to=agent,
+            created_by='boss',
+            description=description,
+            initial_status='proposal',
+        )
+        # Create review entries for GATEKEEPERS (not goal agents)
+        for gk in GATEKEEPERS:
+            self.db.create_review(task_id, reviewer=gk)
+        self.notifier.task_created(task_id, title, agent, goal.title)
+        return task_id
 
     def _generate_llm_tasks(self, goal, existing_titles: set,
                             remaining: int) -> list | None:
         """Use LLM to suggest tasks. Returns list of (title, agent, desc)
-        or None if LLM unavailable."""
+        or None if LLM unavailable.
+
+        This is an optional enhancement — boss works fully rule-based
+        if LLM is not available.
+        """
         try:
             from lab.llm import ask_json, load_soul
 
@@ -200,11 +256,12 @@ class BossAgent(BaseAgent):
                 if title and agent:
                     result.append((title, agent, desc))
 
-            logger.info(f"LLM generated {len(result)} tasks for goal '{goal.title}'")
+            logger.info(f"LLM generated {len(result)} tasks for goal "
+                        f"'{goal.title}'")
             return result if result else None
 
         except Exception as e:
-            logger.warning(f"LLM task gen failed, using templates: {e}")
+            logger.info(f"LLM unavailable, using templates: {e}")
             return None
 
     def check_stuck_tasks(self) -> int:
@@ -216,18 +273,56 @@ class BossAgent(BaseAgent):
                                      task.assigned_to)
             self.db.add_comment(
                 task.id, self.name,
-                f"⚠️ Taak vast sinds >{STUCK_THRESHOLD_H}h. "
+                f"Taak vast sinds >{STUCK_THRESHOLD_H}h. "
                 f"Escalatie naar user.",
                 'comment',
             )
         return len(stuck)
 
+    def _promote_approved_proposals(self) -> int:
+        """proposal → todo. Boss probeert, DB beslist (quorum gate)."""
+        promoted = 0
+        for task in self.db.get_approved_proposals():
+            try:
+                self.db.transition(task.id, 'todo', actor='boss')
+                promoted += 1
+                logger.info(f"Proposal #{task.id} promoted to todo")
+            except ValueError:
+                pass
+        return promoted
+
+    def _promote_peerreview_to_review(self) -> int:
+        """peer_review → review. Alle peers approved → boss promotes."""
+        promoted = 0
+        for task in self.db.get_fully_reviewed_tasks():
+            try:
+                self.db.transition(task.id, 'review', actor='boss')
+                promoted += 1
+            except ValueError:
+                pass
+        return promoted
+
+    def _promote_review_to_approved(self) -> int:
+        """review → approved. Auto-promote + TG buttons verschijnen."""
+        promoted = 0
+        for task in self.db.get_tasks_by_status('review'):
+            try:
+                self.db.transition(task.id, 'approved', actor='boss')
+                self.notifier.task_promoted(task.id, task.title)
+                promoted += 1
+            except ValueError:
+                pass
+        return promoted
+
     def heartbeat(self) -> dict:
-        """Override: boss also generates tasks and checks stuck items."""
+        """Override: boss generates proposals, promotes, checks stuck."""
         stats = super().heartbeat()
 
-        # Additional boss duties
+        # Boss governance duties
         stats['tasks_generated'] = self.generate_tasks()
+        stats['proposals_promoted'] = self._promote_approved_proposals()
+        stats['peerreview_promoted'] = self._promote_peerreview_to_review()
+        stats['review_promoted'] = self._promote_review_to_approved()
         stats['stuck_detected'] = self.check_stuck_tasks()
 
         return stats
@@ -236,7 +331,15 @@ class BossAgent(BaseAgent):
     def _get_templates(goal_title: str) -> list[tuple[str, str]]:
         """Match goal title to task templates."""
         title_lower = goal_title.lower()
+        matched = []
         for keyword, templates in TASK_TEMPLATES.items():
             if keyword in title_lower:
-                return templates
-        return TASK_TEMPLATES['default']
+                matched.extend(templates)
+        # Deduplicate while preserving order
+        seen = set()
+        result = []
+        for t in matched:
+            if t[0] not in seen:
+                seen.add(t[0])
+                result.append(t)
+        return result or TASK_TEMPLATES['default']

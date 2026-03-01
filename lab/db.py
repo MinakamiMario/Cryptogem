@@ -8,7 +8,8 @@ from pathlib import Path
 from typing import Optional
 
 from lab.config import (
-    AGENT_NAMES, ALL_STATUSES, DB_PATH, REVIEW_VERDICTS, VALID_TRANSITIONS,
+    AGENT_NAMES, ALL_STATUSES, DB_PATH, GATEKEEPERS, REVIEW_VERDICTS,
+    VALID_TRANSITIONS,
 )
 from lab.models import (
     AgentStatus, Comment, Goal, Task, TaskResult, TaskReview,
@@ -147,15 +148,24 @@ class LabDB:
 
     def create_task(self, goal_id: int, title: str, assigned_to: str,
                     created_by: str, description: str = '',
-                    priority: int = 5) -> int:
+                    priority: int = 5,
+                    initial_status: str = 'backlog') -> int:
+        """Create a task. Boss uses initial_status='proposal' for quorum gate."""
+        if initial_status not in ('backlog', 'todo', 'proposal'):
+            raise ValueError(
+                f"initial_status must be 'backlog', 'todo', or 'proposal', "
+                f"got '{initial_status}'"
+            )
         cur = self.conn.execute(
             "INSERT INTO tasks (goal_id, title, description, assigned_to, "
-            "created_by, priority) VALUES (?, ?, ?, ?, ?, ?)",
-            (goal_id, title, description, assigned_to, created_by, priority),
+            "created_by, priority, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (goal_id, title, description, assigned_to, created_by, priority,
+             initial_status),
         )
         self.conn.commit()
         self.log_activity(created_by, 'task_created', cur.lastrowid,
-                          {'title': title, 'assigned_to': assigned_to})
+                          {'title': title, 'assigned_to': assigned_to,
+                           'status': initial_status})
         return cur.lastrowid
 
     def get_task(self, task_id: int) -> Optional[Task]:
@@ -207,7 +217,14 @@ class LabDB:
         return row[0]
 
     def transition(self, task_id: int, new_status: str, actor: str) -> None:
-        """Enforce state machine. Raises ValueError on invalid transition."""
+        """Enforce state machine. Raises ValueError on invalid transition.
+
+        Gates:
+        1. peer_review → review: all peer reviews must be approved
+        2. proposal → todo: BOTH gatekeepers must have approved reviews
+        3. approved → done: only user actor allowed
+        4. approved → in_progress: only user actor allowed (reject)
+        """
         task = self.get_task(task_id)
         if task is None:
             raise ValueError(f"Task {task_id} not found")
@@ -219,7 +236,7 @@ class LabDB:
                 f"(allowed: {allowed})"
             )
 
-        # Boss promotie check
+        # Gate 1: peer_review → review requires all peer reviews approved
         if task.status == 'peer_review' and new_status == 'review':
             pending = self.get_pending_reviews(task_id)
             if pending:
@@ -227,6 +244,35 @@ class LabDB:
                     f"Cannot promote: {len(pending)} reviews pending: "
                     f"{[r.reviewer for r in pending]}"
                 )
+
+        # Gate 2: proposal → todo requires GATEKEEPER quorum
+        if task.status == 'proposal' and new_status == 'todo':
+            reviews = self.get_reviews_for_task(task_id)
+            review_map = {r.reviewer: r.verdict for r in reviews}
+            for gk in GATEKEEPERS:
+                if gk not in review_map:
+                    raise ValueError(
+                        f"Gatekeeper '{gk}' review ontbreekt"
+                    )
+                if review_map[gk] != 'approved':
+                    raise ValueError(
+                        f"Gatekeeper '{gk}' verdict is "
+                        f"'{review_map[gk]}', niet 'approved'"
+                    )
+
+        # Gate 3: approved → done ALLEEN door user
+        if new_status == 'done' and actor != 'user':
+            raise ValueError(
+                f"Alleen user mag approved → done zetten, niet '{actor}'"
+            )
+
+        # Gate 4: approved → in_progress (reject) ALLEEN door user
+        if task.status == 'approved' and new_status == 'in_progress' \
+                and actor != 'user':
+            raise ValueError(
+                f"Alleen user mag approved → in_progress zetten, "
+                f"niet '{actor}'"
+            )
 
         now = _now()
         blocked_since = now if new_status == 'blocked' else None
@@ -315,6 +361,64 @@ class LabDB:
             ")",
         ).fetchall()
         return [self._row_to_task(r) for r in rows]
+
+    def get_proposals_needing_gatekeeper_review(self, agent: str) -> list[Task]:
+        """Proposals where this gatekeeper has a pending review.
+
+        ALLEEN voor agents in GATEKEEPERS — andere agents zien proposals niet.
+        """
+        if agent not in GATEKEEPERS:
+            return []
+        rows = self.conn.execute(
+            "SELECT t.* FROM tasks t "
+            "JOIN task_reviews r ON t.id = r.task_id "
+            "WHERE r.reviewer = ? AND r.verdict = 'pending' "
+            "AND t.status = 'proposal' "
+            "ORDER BY t.priority ASC",
+            (agent,),
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
+    def get_peer_reviews_needing_review(self, agent: str) -> list[Task]:
+        """Tasks in peer_review where this agent has a pending review."""
+        rows = self.conn.execute(
+            "SELECT t.* FROM tasks t "
+            "JOIN task_reviews r ON t.id = r.task_id "
+            "WHERE r.reviewer = ? AND r.verdict = 'pending' "
+            "AND t.status = 'peer_review' "
+            "ORDER BY t.priority ASC",
+            (agent,),
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
+    def get_approved_proposals(self) -> list[Task]:
+        """Proposals where ALL GATEKEEPERS have approved reviews."""
+        # Build query: status='proposal' AND for each gatekeeper
+        # a review exists with verdict='approved'
+        placeholders = ' AND '.join(
+            "EXISTS (SELECT 1 FROM task_reviews r "
+            "WHERE r.task_id = t.id AND r.reviewer = ? "
+            "AND r.verdict = 'approved')"
+            for _ in GATEKEEPERS
+        )
+        rows = self.conn.execute(
+            f"SELECT t.* FROM tasks t "
+            f"WHERE t.status = 'proposal' AND {placeholders}",
+            tuple(GATEKEEPERS),
+        ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+
+    def set_proposal_blocked(self, task_id: int) -> None:
+        """Update blocked_since op proposal na gatekeeper needs_changes.
+
+        Dit is GEEN state transition — status blijft 'proposal'.
+        """
+        self.conn.execute(
+            "UPDATE tasks SET blocked_since = ? "
+            "WHERE id = ? AND status = 'proposal'",
+            (_now(), task_id),
+        )
+        self.conn.commit()
 
     # ── Comments ──────────────────────────────────────────
 

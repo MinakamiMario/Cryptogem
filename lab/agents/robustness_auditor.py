@@ -130,6 +130,59 @@ class RobustnessAuditor(BaseAgent):
             )
             self.db.update_review(task.id, self.name, 'approved', comment_id)
 
+    def review_proposal(self, task: Task) -> None:
+        """Gatekeeper review: validate proposal before it becomes todo.
+
+        Checks: agent available, no duplicate title, agent in goal.
+        Atomisch: comment + verdict + blocked_since in één call.
+        """
+        issues = []
+
+        # Check: assigned agent not overloaded (2+ taken)
+        in_progress = self.db.get_my_tasks(task.assigned_to, 'in_progress')
+        todo = self.db.get_my_tasks(task.assigned_to, 'todo')
+        if len(in_progress) + len(todo) >= 2:
+            issues.append(
+                f"Agent '{task.assigned_to}' heeft al "
+                f"{len(in_progress) + len(todo)} actieve taken"
+            )
+
+        # Check: no duplicate title in existing tasks
+        if task.goal_id:
+            existing = self.db.get_tasks_by_goal(task.goal_id)
+            existing_active = [
+                t for t in existing
+                if t.id != task.id
+                and t.status not in ('done', 'proposal')
+            ]
+            if any(t.title == task.title for t in existing_active):
+                issues.append(f"Duplicaat titel in actieve taken: '{task.title}'")
+
+        # Check: assigned agent belongs to goal
+        if task.goal_id:
+            goal = self.db.get_goal(task.goal_id)
+            if goal and task.assigned_to not in goal.agents:
+                issues.append(
+                    f"Agent '{task.assigned_to}' niet in goal agents "
+                    f"{goal.agents}"
+                )
+
+        if issues:
+            # Atomisch: comment + verdict + blocked_since
+            body = "ROBUSTNESS AUDITOR PROPOSAL REVIEW — needs_changes:\n" + \
+                "\n".join(f"- {i}" for i in issues)
+            cid = self.db.add_comment(task.id, self.name, body, 'review')
+            self.db.update_review(task.id, self.name, 'needs_changes', cid)
+            self.db.set_proposal_blocked(task.id)
+        else:
+            cid = self.db.add_comment(
+                task.id, self.name,
+                "ROBUSTNESS AUDITOR PROPOSAL REVIEW — approved. "
+                "Agent beschikbaar, geen duplicaat, goal match OK.",
+                'approval',
+            )
+            self.db.update_review(task.id, self.name, 'approved', cid)
+
     # ── Private task implementations ──────────────────────
 
     def _get_champion_cfg(self) -> dict:
@@ -159,11 +212,11 @@ class RobustnessAuditor(BaseAgent):
             if bt is not None:
                 results[pct] = {
                     'end_bar': end_bar or 532,
-                    'pnl_pct': bt.get('total_pnl_pct', 0.0),
-                    'max_dd_pct': bt.get('max_dd_pct', 0.0),
-                    'n_trades': bt.get('n_trades', 0),
-                    'win_rate': bt.get('win_rate', 0.0),
-                    'sharpe': bt.get('sharpe', 0.0),
+                    'pnl': bt.get('pnl', 0.0),
+                    'dd': bt.get('dd', 0.0),
+                    'trades': bt.get('trades', 0),
+                    'wr': bt.get('wr', 0.0),
+                    'pf': bt.get('pf', 0.0),
                 }
             else:
                 results[pct] = {'error': 'gate_fail'}
@@ -174,7 +227,7 @@ class RobustnessAuditor(BaseAgent):
         stable = True
         stability_issues = []
         if len(valid) >= 3:
-            pnls = [v['pnl_pct'] for v in valid.values()]
+            pnls = [v['pnl'] for v in valid.values()]
             # Check sign consistency
             positive = sum(1 for p in pnls if p > 0)
             if positive < len(pnls) * 0.6:
@@ -216,8 +269,8 @@ class RobustnessAuditor(BaseAgent):
 
         md += (
             f"## Results\n\n"
-            f"| Window % | End Bar | PnL % | Max DD % | Trades | Win Rate | Sharpe |\n"
-            f"|----------|---------|--------|----------|--------|----------|--------|\n"
+            f"| Window % | End Bar | PnL $ | DD % | Trades | WR % | PF |\n"
+            f"|----------|---------|-------|------|--------|------|----|\n"
         )
         for pct in window_pcts:
             r = results[pct]
@@ -225,9 +278,9 @@ class RobustnessAuditor(BaseAgent):
                 md += f"| {pct}% | - | FAIL | - | - | - | - |\n"
             else:
                 md += (
-                    f"| {pct}% | {r['end_bar']} | {r['pnl_pct']:.2f}% "
-                    f"| {r['max_dd_pct']:.2f}% | {r['n_trades']} "
-                    f"| {r['win_rate']:.2%} | {r['sharpe']:.3f} |\n"
+                    f"| {pct}% | {r['end_bar']} | ${r['pnl']:.0f} "
+                    f"| {r['dd']:.2f}% | {r['trades']} "
+                    f"| {r['wr']:.1f}% | {r['pf']:.2f} |\n"
                 )
 
         report_name = f"window_sweep_{task.id}"
@@ -261,12 +314,9 @@ class RobustnessAuditor(BaseAgent):
                 summary="Backtest returned None (gate fail) on champion.",
             )
 
-        trades = bt.get('trades', [])
-        trade_pnls = [t.get('pnl_pct', 0.0) for t in trades if isinstance(t, dict)]
-
-        if not trade_pnls:
-            # Try flat list
-            trade_pnls = bt.get('trade_pnl_pcts', [])
+        trade_list = bt.get('trade_list', [])
+        trade_pnls = [t.get('pnl_pct', 0.0) for t in trade_list
+                      if isinstance(t, dict)]
 
         if len(trade_pnls) < 10:
             return TaskResult(
@@ -276,17 +326,27 @@ class RobustnessAuditor(BaseAgent):
 
         mc = monte_carlo(trade_pnls, n_sims=3000, block_size=5)
 
-        p5 = mc.get('p5', 0.0)
-        p10 = mc.get('p10', 0.0)
-        p25 = mc.get('p25', 0.0)
-        p50 = mc.get('p50', 0.0)
-        p75 = mc.get('p75', 0.0)
-        p95 = mc.get('p95', 0.0)
-        mean_pnl = mc.get('mean', 0.0)
-        ruin_pct = mc.get('ruin_pct', 0.0)
+        # MC returns equity values, not percentages
+        from lab.tools.backtest_runner import get_initial_capital
+        initial = get_initial_capital()
+
+        p5_eq = mc.get('p5', 0.0)
+        p10_eq = mc.get('p10', 0.0)
+        median_eq = mc.get('median_equity', 0.0)
+        p95_eq = mc.get('p95', 0.0)
+        mean_eq = mc.get('mean_equity', 0.0)
+        ruin_pct = mc.get('broke_pct', 0.0)
+        win_pct = mc.get('win_pct', 0.0)
+
+        # Convert to PnL percentages for reporting
+        p5_pnl = ((p5_eq - initial) / initial * 100) if initial else 0
+        p10_pnl = ((p10_eq - initial) / initial * 100) if initial else 0
+        median_pnl = ((median_eq - initial) / initial * 100) if initial else 0
+        p95_pnl = ((p95_eq - initial) / initial * 100) if initial else 0
+        mean_pnl = ((mean_eq - initial) / initial * 100) if initial else 0
 
         # Assessment
-        p5_ok = p5 > -20.0  # P5 shouldn't be worse than -20%
+        p5_ok = p5_pnl > -20.0  # P5 shouldn't be worse than -20%
         ruin_ok = ruin_pct < MC_RUIN_CONCERN_PCT
 
         report_data = {
@@ -295,11 +355,13 @@ class RobustnessAuditor(BaseAgent):
             'n_sims': 3000,
             'block_size': 5,
             'percentiles': {
-                'p5': p5, 'p10': p10, 'p25': p25,
-                'p50': p50, 'p75': p75, 'p95': p95,
+                'p5_equity': p5_eq, 'p10_equity': p10_eq,
+                'median_equity': median_eq, 'p95_equity': p95_eq,
             },
-            'mean': mean_pnl,
-            'ruin_pct': ruin_pct,
+            'mean_equity': mean_eq,
+            'broke_pct': ruin_pct,
+            'win_pct': win_pct,
+            'p5_pnl_pct': round(p5_pnl, 2),
             'p5_acceptable': p5_ok,
             'ruin_acceptable': ruin_ok,
         }
@@ -309,19 +371,18 @@ class RobustnessAuditor(BaseAgent):
             f"**Config**: `{cfg_hash(cfg)}`\n"
             f"**Trades**: {len(trade_pnls)}\n"
             f"**Simulations**: 3000 (block size=5)\n\n"
-            f"## Percentile Distribution\n\n"
-            f"| Percentile | PnL % |\n"
-            f"|------------|--------|\n"
-            f"| P5 | {p5:.2f}% |\n"
-            f"| P10 | {p10:.2f}% |\n"
-            f"| P25 | {p25:.2f}% |\n"
-            f"| P50 (median) | {p50:.2f}% |\n"
-            f"| P75 | {p75:.2f}% |\n"
-            f"| P95 | {p95:.2f}% |\n\n"
-            f"**Mean PnL**: {mean_pnl:.2f}%\n"
+            f"## Equity Distribution\n\n"
+            f"| Percentile | Equity $ | PnL % |\n"
+            f"|------------|----------|--------|\n"
+            f"| P5 | ${p5_eq:.0f} | {p5_pnl:.2f}% |\n"
+            f"| P10 | ${p10_eq:.0f} | {p10_pnl:.2f}% |\n"
+            f"| Median | ${median_eq:.0f} | {median_pnl:.2f}% |\n"
+            f"| P95 | ${p95_eq:.0f} | {p95_pnl:.2f}% |\n\n"
+            f"**Mean equity**: ${mean_eq:.0f} ({mean_pnl:.2f}%)\n"
+            f"**Win rate**: {win_pct:.1f}%\n"
             f"**Ruin probability**: {ruin_pct:.2f}%\n\n"
             f"## Assessment\n\n"
-            f"- P5 > -20%: {'PASS' if p5_ok else 'FAIL'}\n"
+            f"- P5 PnL > -20%: {'PASS' if p5_ok else 'FAIL'} ({p5_pnl:.1f}%)\n"
             f"- Ruin < {MC_RUIN_CONCERN_PCT}%: {'PASS' if ruin_ok else 'FAIL'}\n"
         )
 
@@ -330,7 +391,7 @@ class RobustnessAuditor(BaseAgent):
 
         summary = (
             f"Bootstrap analysis: {len(trade_pnls)} trades, 3000 sims. "
-            f"P5={p5:.2f}%, P10={p10:.2f}%, ruin={ruin_pct:.2f}%. "
+            f"P5=${p5_eq:.0f} ({p5_pnl:.1f}%), ruin={ruin_pct:.2f}%. "
             f"P5={'OK' if p5_ok else 'CONCERN'}, ruin={'OK' if ruin_ok else 'HIGH'}."
         )
 
@@ -356,11 +417,9 @@ class RobustnessAuditor(BaseAgent):
                 summary="Backtest returned None (gate fail) on champion.",
             )
 
-        trades = bt.get('trades', [])
-        trade_pnls = [t.get('pnl_pct', 0.0) for t in trades if isinstance(t, dict)]
-
-        if not trade_pnls:
-            trade_pnls = bt.get('trade_pnl_pcts', [])
+        trade_list = bt.get('trade_list', [])
+        trade_pnls = [t.get('pnl_pct', 0.0) for t in trade_list
+                      if isinstance(t, dict)]
 
         if len(trade_pnls) < 10:
             return TaskResult(
@@ -370,27 +429,34 @@ class RobustnessAuditor(BaseAgent):
 
         mc = monte_carlo(trade_pnls, n_sims=3000, block_size=5)
 
-        ruin_pct = mc.get('ruin_pct', 0.0)
-        cvar = mc.get('cvar_5', mc.get('cvar', 0.0))
-        p5 = mc.get('p5', 0.0)
-        p50 = mc.get('p50', 0.0)
-        mean_pnl = mc.get('mean', 0.0)
-        max_dd_mc = mc.get('max_dd_pct', 0.0)
+        from lab.tools.backtest_runner import get_initial_capital
+        initial = get_initial_capital()
+
+        ruin_pct = mc.get('broke_pct', 0.0)
+        cvar95_eq = mc.get('cvar95', 0.0)
+        p5_eq = mc.get('p5', 0.0)
+        median_eq = mc.get('median_equity', 0.0)
+        mean_eq = mc.get('mean_equity', 0.0)
+
+        # Convert to PnL percentages
+        cvar95_pnl = ((cvar95_eq - initial) / initial * 100) if initial else 0
+        p5_pnl = ((p5_eq - initial) / initial * 100) if initial else 0
+        median_pnl = ((median_eq - initial) / initial * 100) if initial else 0
+        mean_pnl = ((mean_eq - initial) / initial * 100) if initial else 0
 
         # Risk assessment
         ruin_ok = ruin_pct < MC_RUIN_CONCERN_PCT
-        cvar_ok = cvar > -30.0  # CVaR shouldn't be worse than -30%
+        cvar_ok = cvar95_pnl > -30.0  # CVaR shouldn't be worse than -30%
 
         report_data = {
             'cfg_hash': cfg_hash(cfg),
             'n_trades': len(trade_pnls),
             'n_sims': 3000,
-            'ruin_pct': ruin_pct,
-            'cvar_5': cvar,
-            'p5': p5,
-            'p50': p50,
-            'mean': mean_pnl,
-            'max_dd_mc': max_dd_mc,
+            'broke_pct': ruin_pct,
+            'cvar95_equity': cvar95_eq,
+            'p5_equity': p5_eq,
+            'median_equity': median_eq,
+            'mean_equity': mean_eq,
             'ruin_acceptable': ruin_ok,
             'cvar_acceptable': cvar_ok,
         }
@@ -405,11 +471,11 @@ class RobustnessAuditor(BaseAgent):
             f"|--------|-------|-----------|--------|\n"
             f"| Ruin probability | {ruin_pct:.2f}% | <{MC_RUIN_CONCERN_PCT}% "
             f"| {'PASS' if ruin_ok else 'FAIL'} |\n"
-            f"| CVaR (5%) | {cvar:.2f}% | >-30% | {'PASS' if cvar_ok else 'FAIL'} |\n"
-            f"| P5 | {p5:.2f}% | - | - |\n"
-            f"| Median PnL | {p50:.2f}% | - | - |\n"
-            f"| Mean PnL | {mean_pnl:.2f}% | - | - |\n"
-            f"| MC Max DD | {max_dd_mc:.2f}% | - | - |\n"
+            f"| CVaR (5%) | ${cvar95_eq:.0f} ({cvar95_pnl:.1f}%) | >-30% "
+            f"| {'PASS' if cvar_ok else 'FAIL'} |\n"
+            f"| P5 equity | ${p5_eq:.0f} ({p5_pnl:.1f}%) | - | - |\n"
+            f"| Median equity | ${median_eq:.0f} ({median_pnl:.1f}%) | - | - |\n"
+            f"| Mean equity | ${mean_eq:.0f} ({mean_pnl:.1f}%) | - | - |\n"
         )
 
         report_name = f"monte_carlo_ruin_{task.id}"
@@ -418,8 +484,8 @@ class RobustnessAuditor(BaseAgent):
         summary = (
             f"MC ruin analysis: {len(trade_pnls)} trades, 3000 sims. "
             f"Ruin={ruin_pct:.2f}% ({'OK' if ruin_ok else 'HIGH'}), "
-            f"CVaR={cvar:.2f}% ({'OK' if cvar_ok else 'CONCERN'}), "
-            f"P5={p5:.2f}%."
+            f"CVaR=${cvar95_eq:.0f} ({'OK' if cvar_ok else 'CONCERN'}), "
+            f"P5=${p5_eq:.0f}."
         )
 
         return TaskResult(
@@ -457,13 +523,13 @@ class RobustnessAuditor(BaseAgent):
             'verdict': verdict,
             'gates': gates,
             'fails': fails,
-            'baseline_pnl': baseline.get('total_pnl_pct', 0.0),
-            'baseline_dd': baseline.get('max_dd_pct', 0.0),
-            'baseline_trades': baseline.get('n_trades', 0),
-            'wf_positive': wf.get('n_positive', 0),
+            'baseline_pnl': baseline.get('pnl', 0.0),
+            'baseline_dd': baseline.get('dd', 0.0),
+            'baseline_trades': baseline.get('trades', 0),
+            'wf_positive': wf.get('passed_folds', 0),
             'wf_total': wf.get('n_folds', 5),
-            'mc_ruin': mc.get('ruin_pct', 0.0),
-            'jitter_positive_pct': jitter.get('pct_positive', 0.0),
+            'mc_ruin': mc.get('ruin_prob_pct', 0.0),
+            'jitter_positive_pct': jitter.get('positive_pct', 0.0),
         }
 
         md = (
@@ -487,11 +553,11 @@ class RobustnessAuditor(BaseAgent):
 
         md += (
             f"\n## Baseline Metrics\n\n"
-            f"- PnL: {baseline.get('total_pnl_pct', 0):.2f}%\n"
-            f"- Max DD: {baseline.get('max_dd_pct', 0):.2f}%\n"
-            f"- Trades: {baseline.get('n_trades', 0)}\n"
-            f"- WF positive: {wf.get('n_positive', 0)}/{wf.get('n_folds', 5)}\n"
-            f"- MC ruin: {mc.get('ruin_pct', 0):.2f}%\n"
+            f"- PnL: ${baseline.get('pnl', 0):.2f}\n"
+            f"- DD: {baseline.get('dd', 0):.2f}%\n"
+            f"- Trades: {baseline.get('trades', 0)}\n"
+            f"- WF positive: {wf.get('passed_folds', 0)}/{wf.get('n_folds', 5)}\n"
+            f"- MC ruin: {mc.get('ruin_prob_pct', 0):.2f}%\n"
         )
 
         report_name = f"robustness_harness_{task.id}"
@@ -499,9 +565,9 @@ class RobustnessAuditor(BaseAgent):
 
         summary = (
             f"Full robustness harness: verdict={verdict}. "
-            f"WF={wf.get('n_positive', 0)}/{wf.get('n_folds', 5)}, "
-            f"MC ruin={mc.get('ruin_pct', 0):.2f}%, "
-            f"trades={baseline.get('n_trades', 0)}. "
+            f"WF={wf.get('passed_folds', 0)}/{wf.get('n_folds', 5)}, "
+            f"MC ruin={mc.get('ruin_prob_pct', 0):.2f}%, "
+            f"trades={baseline.get('trades', 0)}. "
             f"Fails: {len(fails)}."
         )
 

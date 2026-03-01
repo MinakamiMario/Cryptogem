@@ -3,6 +3,7 @@ import json
 import os
 import sys
 import tempfile
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -231,11 +232,11 @@ class TestTransitions:
         db.transition(tid, 'review', actor='boss')
         assert db.get_task(tid).status == 'review'
 
-        # review → approved
-        db.transition(tid, 'approved', actor='user')
+        # review → approved (boss auto-promote)
+        db.transition(tid, 'approved', actor='boss')
         assert db.get_task(tid).status == 'approved'
 
-        # approved → done
+        # approved → done (user only)
         db.transition(tid, 'done', actor='user')
         assert db.get_task(tid).status == 'done'
 
@@ -253,7 +254,7 @@ class TestTransitions:
             db.transition(tid, 'peer_review', actor='edge_analyst')
 
     def test_invalid_reverse_done_to_review(self, db, goal_id):
-        """Cannot go backwards from done."""
+        """Cannot go backwards from done (terminal state)."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss')
         db.transition(tid, 'todo', actor='user')
         db.transition(tid, 'in_progress', actor='edge_analyst')
@@ -261,7 +262,7 @@ class TestTransitions:
         db.create_review(tid, 'risk_governor')
         db.update_review(tid, 'risk_governor', 'approved')
         db.transition(tid, 'review', actor='boss')
-        db.transition(tid, 'approved', actor='user')
+        db.transition(tid, 'approved', actor='boss')
         db.transition(tid, 'done', actor='user')
         with pytest.raises(ValueError, match="Invalid transition"):
             db.transition(tid, 'review', actor='user')
@@ -296,6 +297,7 @@ class TestTransitions:
 
     def test_all_valid_transitions_covered(self):
         """Verify VALID_TRANSITIONS matrix completeness."""
+        assert 'proposal' in VALID_TRANSITIONS
         assert 'backlog' in VALID_TRANSITIONS
         assert 'todo' in VALID_TRANSITIONS
         assert 'in_progress' in VALID_TRANSITIONS
@@ -303,8 +305,9 @@ class TestTransitions:
         assert 'review' in VALID_TRANSITIONS
         assert 'approved' in VALID_TRANSITIONS
         assert 'blocked' in VALID_TRANSITIONS
-        # done is terminal — not in transitions
-        assert 'done' not in VALID_TRANSITIONS
+        # done is terminal — explicitly in transitions with empty list
+        assert 'done' in VALID_TRANSITIONS
+        assert VALID_TRANSITIONS['done'] == []
 
 
 class TestBossPromotionGate:
@@ -532,6 +535,251 @@ class TestWriteAllowlist:
     def test_blocked_outside_repo(self):
         with pytest.raises(PermissionError):
             safe_write_check('/tmp/evil.py')
+
+
+class TestInitialStatus:
+    """Task creation with different initial statuses."""
+
+    def test_default_creates_backlog(self, db, goal_id):
+        """Default create_task still creates in backlog."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss')
+        task = db.get_task(tid)
+        assert task.status == 'backlog'
+
+    def test_create_with_todo_status(self, db, goal_id):
+        """Can create tasks directly in 'todo'."""
+        tid = db.create_task(
+            goal_id, "T1", 'edge_analyst', 'boss',
+            initial_status='todo',
+        )
+        task = db.get_task(tid)
+        assert task.status == 'todo'
+
+    def test_create_with_proposal_status(self, db, goal_id):
+        """Boss creates proposals for gatekeeper review."""
+        tid = db.create_task(
+            goal_id, "T1", 'edge_analyst', 'boss',
+            initial_status='proposal',
+        )
+        task = db.get_task(tid)
+        assert task.status == 'proposal'
+
+    def test_invalid_initial_status_rejected(self, db, goal_id):
+        """Only 'backlog', 'todo', and 'proposal' are valid."""
+        with pytest.raises(ValueError, match="initial_status"):
+            db.create_task(
+                goal_id, "T1", 'edge_analyst', 'boss',
+                initial_status='in_progress',
+            )
+
+    def test_initial_status_logged_in_activity(self, db, goal_id):
+        """Activity log captures the initial status."""
+        db.create_task(
+            goal_id, "T1", 'edge_analyst', 'boss',
+            initial_status='proposal',
+        )
+        activity = db.get_recent_activity(limit=5)
+        task_created = [a for a in activity if a['action'] == 'task_created']
+        assert len(task_created) >= 1
+        details = json.loads(task_created[0]['details'])
+        assert details['status'] == 'proposal'
+
+
+class TestProposalQuorum:
+    """Governance: proposal → todo requires BOTH gatekeepers approved."""
+
+    def test_proposal_to_todo_blocked_without_reviews(self, db, goal_id):
+        """proposal → todo BLOCKED zonder reviews."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='proposal')
+        with pytest.raises(ValueError, match="review ontbreekt"):
+            db.transition(tid, 'todo', actor='boss')
+
+    def test_proposal_to_todo_blocked_one_gatekeeper(self, db, goal_id):
+        """proposal → todo BLOCKED met 1/2 gatekeepers approved."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='proposal')
+        db.create_review(tid, 'risk_governor')
+        db.update_review(tid, 'risk_governor', 'approved')
+        # robustness_auditor review ontbreekt
+        with pytest.raises(ValueError, match="review ontbreekt"):
+            db.transition(tid, 'todo', actor='boss')
+
+    def test_proposal_to_todo_blocked_not_approved(self, db, goal_id):
+        """proposal → todo BLOCKED als gatekeeper niet approved."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='proposal')
+        db.create_review(tid, 'risk_governor')
+        db.create_review(tid, 'robustness_auditor')
+        db.update_review(tid, 'risk_governor', 'approved')
+        db.update_review(tid, 'robustness_auditor', 'needs_changes')
+        with pytest.raises(ValueError, match="niet 'approved'"):
+            db.transition(tid, 'todo', actor='boss')
+
+    def test_proposal_to_todo_ok_both_approved(self, db, goal_id):
+        """proposal → todo OK met 2/2 gatekeepers approved."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='proposal')
+        db.create_review(tid, 'risk_governor')
+        db.create_review(tid, 'robustness_auditor')
+        db.update_review(tid, 'risk_governor', 'approved')
+        db.update_review(tid, 'robustness_auditor', 'approved')
+        db.transition(tid, 'todo', actor='boss')
+        assert db.get_task(tid).status == 'todo'
+
+    def test_approved_to_done_blocked_if_not_user(self, db, goal_id):
+        """approved → done BLOCKED als actor != 'user'."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='todo')
+        db.transition(tid, 'in_progress', actor='edge_analyst')
+        db.transition(tid, 'peer_review', actor='edge_analyst')
+        db.create_review(tid, 'risk_governor')
+        db.update_review(tid, 'risk_governor', 'approved')
+        db.transition(tid, 'review', actor='boss')
+        db.transition(tid, 'approved', actor='boss')
+        with pytest.raises(ValueError, match="Alleen user"):
+            db.transition(tid, 'done', actor='boss')
+
+    def test_approved_to_done_ok_user(self, db, goal_id):
+        """approved → done OK als actor == 'user'."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='todo')
+        db.transition(tid, 'in_progress', actor='edge_analyst')
+        db.transition(tid, 'peer_review', actor='edge_analyst')
+        db.create_review(tid, 'risk_governor')
+        db.update_review(tid, 'risk_governor', 'approved')
+        db.transition(tid, 'review', actor='boss')
+        db.transition(tid, 'approved', actor='boss')
+        db.transition(tid, 'done', actor='user')
+        assert db.get_task(tid).status == 'done'
+
+    def test_done_is_terminal(self, db, goal_id):
+        """done is terminal: geen transitions uit."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='todo')
+        db.transition(tid, 'in_progress', actor='edge_analyst')
+        db.transition(tid, 'peer_review', actor='edge_analyst')
+        db.create_review(tid, 'risk_governor')
+        db.update_review(tid, 'risk_governor', 'approved')
+        db.transition(tid, 'review', actor='boss')
+        db.transition(tid, 'approved', actor='boss')
+        db.transition(tid, 'done', actor='user')
+        with pytest.raises(ValueError, match="Invalid transition"):
+            db.transition(tid, 'in_progress', actor='user')
+
+    def test_review_to_approved_ok_boss(self, db, goal_id):
+        """review → approved OK (boss auto-promote)."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='todo')
+        db.transition(tid, 'in_progress', actor='edge_analyst')
+        db.transition(tid, 'peer_review', actor='edge_analyst')
+        db.create_review(tid, 'risk_governor')
+        db.update_review(tid, 'risk_governor', 'approved')
+        db.transition(tid, 'review', actor='boss')
+        db.transition(tid, 'approved', actor='boss')
+        assert db.get_task(tid).status == 'approved'
+
+    def test_approved_to_in_progress_user_reject(self, db, goal_id):
+        """approved → in_progress OK (user reject)."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='todo')
+        db.transition(tid, 'in_progress', actor='edge_analyst')
+        db.transition(tid, 'peer_review', actor='edge_analyst')
+        db.create_review(tid, 'risk_governor')
+        db.update_review(tid, 'risk_governor', 'approved')
+        db.transition(tid, 'review', actor='boss')
+        db.transition(tid, 'approved', actor='boss')
+        db.transition(tid, 'in_progress', actor='user')
+        assert db.get_task(tid).status == 'in_progress'
+
+    def test_approved_to_in_progress_blocked_not_user(self, db, goal_id):
+        """approved → in_progress BLOCKED als actor != 'user'."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='todo')
+        db.transition(tid, 'in_progress', actor='edge_analyst')
+        db.transition(tid, 'peer_review', actor='edge_analyst')
+        db.create_review(tid, 'risk_governor')
+        db.update_review(tid, 'risk_governor', 'approved')
+        db.transition(tid, 'review', actor='boss')
+        db.transition(tid, 'approved', actor='boss')
+        with pytest.raises(ValueError, match="Alleen user"):
+            db.transition(tid, 'in_progress', actor='boss')
+
+    def test_proposals_needing_gatekeeper_review_only_gatekeepers(self, db, goal_id):
+        """ALLEEN gatekeepers zien proposals."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='proposal')
+        db.create_review(tid, 'risk_governor')
+        db.create_review(tid, 'robustness_auditor')
+        # Gatekeeper sees proposals
+        assert len(db.get_proposals_needing_gatekeeper_review('risk_governor')) == 1
+        assert len(db.get_proposals_needing_gatekeeper_review('robustness_auditor')) == 1
+        # Non-gatekeeper sees nothing
+        assert db.get_proposals_needing_gatekeeper_review('edge_analyst') == []
+        assert db.get_proposals_needing_gatekeeper_review('boss') == []
+
+    def test_get_approved_proposals(self, db, goal_id):
+        """get_approved_proposals returns only fully-approved proposals."""
+        t1 = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                            initial_status='proposal')
+        t2 = db.create_task(goal_id, "T2", 'risk_governor', 'boss',
+                            initial_status='proposal')
+        # Approve T1 fully
+        db.create_review(t1, 'risk_governor')
+        db.create_review(t1, 'robustness_auditor')
+        db.update_review(t1, 'risk_governor', 'approved')
+        db.update_review(t1, 'robustness_auditor', 'approved')
+        # T2 only partially approved
+        db.create_review(t2, 'risk_governor')
+        db.create_review(t2, 'robustness_auditor')
+        db.update_review(t2, 'risk_governor', 'approved')
+        # Only T1 should appear
+        approved = db.get_approved_proposals()
+        assert len(approved) == 1
+        assert approved[0].id == t1
+
+    def test_set_proposal_blocked(self, db, goal_id):
+        """set_proposal_blocked updates blocked_since without state change."""
+        tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
+                             initial_status='proposal')
+        assert db.get_task(tid).blocked_since is None
+        db.set_proposal_blocked(tid)
+        task = db.get_task(tid)
+        assert task.status == 'proposal'  # status unchanged
+        assert task.blocked_since is not None
+
+    def test_boss_generates_proposals(self, db, goal_id):
+        """Boss generates tasks in 'proposal', not 'todo'."""
+        from lab.agents.boss import BossAgent
+        notifier = MagicMock()
+        notifier.enabled = False
+        agent = BossAgent(db, notifier)
+
+        created = agent.generate_tasks()
+        assert created > 0
+
+        tasks = db.get_tasks_by_goal(goal_id)
+        for task in tasks:
+            assert task.status == 'proposal', (
+                f"Task '{task.title}' should be 'proposal', got '{task.status}'"
+            )
+
+    def test_boss_creates_gatekeeper_reviews(self, db, goal_id):
+        """Boss creates review entries for GATEKEEPERS on proposals."""
+        from lab.agents.boss import BossAgent
+        notifier = MagicMock()
+        notifier.enabled = False
+        agent = BossAgent(db, notifier)
+
+        agent.generate_tasks()
+        tasks = db.get_tasks_by_goal(goal_id)
+        assert len(tasks) > 0
+
+        for task in tasks:
+            reviews = db.get_reviews_for_task(task.id)
+            reviewers = {r.reviewer for r in reviews}
+            assert 'risk_governor' in reviewers
+            assert 'robustness_auditor' in reviewers
 
 
 if __name__ == '__main__':

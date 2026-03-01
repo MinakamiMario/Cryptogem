@@ -123,18 +123,22 @@ class EdgeAnalyst(BaseAgent):
         class_b_pnl = class_b.get('pnl', 0.0)
         class_a_ratio = class_a_count / max(total_trades, 1)
 
-        # Exit reason breakdown
-        exit_reasons = result.get('exit_reasons', {})
+        # Exit reason breakdown (computed from trade_list)
+        exit_reasons = {}
+        for t in trade_list:
+            if isinstance(t, dict):
+                reason = t.get('reason', 'unknown')
+                exit_reasons[reason] = exit_reasons.get(reason, 0) + 1
         dominant_exit = max(exit_reasons, key=exit_reasons.get) if exit_reasons else 'unknown'
 
         # Core metrics
-        total_pnl = result.get('total_pnl_pct', 0.0)
-        max_dd = result.get('max_dd_pct', 0.0)
+        total_pnl = result.get('pnl', 0.0)
+        max_dd = result.get('dd', 0.0)
 
         report_data = {
             'cfg_hash': cfg_hash(cfg),
             'total_trades': total_trades,
-            'total_pnl_pct': total_pnl,
+            'total_pnl': total_pnl,
             'max_dd_pct': max_dd,
             'exit_classes': exit_classes,
             'class_a_count': class_a_count,
@@ -150,7 +154,7 @@ class EdgeAnalyst(BaseAgent):
             f"# Exit Attribution Analysis\n\n"
             f"**Config**: `{cfg_hash(cfg)}`\n"
             f"**Total trades**: {total_trades}\n"
-            f"**Total PnL**: {total_pnl:.2f}%\n"
+            f"**Total PnL**: ${total_pnl:.2f}\n"
             f"**Max DD**: {max_dd:.2f}%\n\n"
             f"## Exit Class Breakdown\n\n"
             f"| Class | Count | PnL % |\n"
@@ -170,7 +174,7 @@ class EdgeAnalyst(BaseAgent):
 
         summary = (
             f"Exit attribution complete. {total_trades} trades, "
-            f"PnL={total_pnl:.2f}%, DD={max_dd:.2f}%. "
+            f"PnL=${total_pnl:.2f}, DD={max_dd:.2f}%. "
             f"Class A ratio={class_a_ratio:.2%}, dominant exit={dominant_exit}."
         )
 
@@ -197,19 +201,19 @@ class EdgeAnalyst(BaseAgent):
             bt = backtest(test_cfg)
             if bt is not None:
                 results[rsi_val] = {
-                    'pnl_pct': bt.get('total_pnl_pct', 0.0),
-                    'max_dd_pct': bt.get('max_dd_pct', 0.0),
-                    'n_trades': bt.get('n_trades', 0),
-                    'win_rate': bt.get('win_rate', 0.0),
-                    'sharpe': bt.get('sharpe', 0.0),
+                    'pnl': bt.get('pnl', 0.0),
+                    'dd': bt.get('dd', 0.0),
+                    'trades': bt.get('trades', 0),
+                    'wr': bt.get('wr', 0.0),
+                    'pf': bt.get('pf', 0.0),
                 }
             else:
-                results[rsi_val] = {'pnl_pct': 0.0, 'error': 'gate_fail'}
+                results[rsi_val] = {'pnl': 0.0, 'error': 'gate_fail'}
 
         # Find optimal
         valid = {k: v for k, v in results.items() if 'error' not in v}
         if valid:
-            optimal = max(valid, key=lambda k: valid[k]['pnl_pct'])
+            optimal = max(valid, key=lambda k: valid[k]['pnl'])
             optimal_data = valid[optimal]
         else:
             optimal = None
@@ -228,8 +232,8 @@ class EdgeAnalyst(BaseAgent):
             f"# RSI Recovery Target Sweep\n\n"
             f"**Base config**: `{cfg_hash(cfg)}`\n\n"
             f"## Results\n\n"
-            f"| rsi_rec_target | PnL % | Max DD % | Trades | Win Rate | Sharpe |\n"
-            f"|----------------|--------|----------|--------|----------|--------|\n"
+            f"| rsi_rec_target | PnL $ | DD % | Trades | WR % | PF |\n"
+            f"|----------------|-------|------|--------|------|----|\n"
         )
         for val in rsi_values:
             r = results[val]
@@ -237,18 +241,18 @@ class EdgeAnalyst(BaseAgent):
                 md += f"| {val} | FAIL | - | - | - | - |\n"
             else:
                 md += (
-                    f"| {val} | {r['pnl_pct']:.2f}% | {r['max_dd_pct']:.2f}% "
-                    f"| {r['n_trades']} | {r['win_rate']:.2%} | {r['sharpe']:.3f} |\n"
+                    f"| {val} | ${r['pnl']:.0f} | {r['dd']:.2f}% "
+                    f"| {r['trades']} | {r['wr']:.1f}% | {r['pf']:.2f} |\n"
                 )
         if optimal is not None:
-            md += f"\n**Optimal**: rsi_rec_target={optimal} (PnL={optimal_data['pnl_pct']:.2f}%)\n"
+            md += f"\n**Optimal**: rsi_rec_target={optimal} (PnL=${optimal_data['pnl']:.0f})\n"
 
         report_name = f"rsi_recovery_sweep_{task.id}"
         json_path = self._write_report(report_name, report_data, md)
 
         summary = (
             f"RSI recovery sweep: tested {rsi_values}. "
-            f"Optimal={optimal} with PnL={optimal_data.get('pnl_pct', 0):.2f}%. "
+            f"Optimal={optimal} with PnL=${optimal_data.get('pnl', 0):.0f}. "
             f"{len(valid)}/{len(rsi_values)} configs valid."
         )
 
@@ -274,22 +278,25 @@ class EdgeAnalyst(BaseAgent):
             test_cfg['time_max_bars'] = tm_val
             bt = backtest(test_cfg)
             if bt is not None:
-                # Extract TIME MAX specific metrics
-                exit_reasons = bt.get('exit_reasons', {})
-                time_max_exits = exit_reasons.get('TIME_MAX', exit_reasons.get('time_max', 0))
-                total_exits = sum(exit_reasons.values()) if exit_reasons else 1
+                # Extract TIME MAX specific metrics from trade_list
+                trade_list = bt.get('trade_list', [])
+                time_max_exits = sum(
+                    1 for t in trade_list
+                    if isinstance(t, dict) and t.get('reason', '').upper() == 'TIME MAX'
+                )
+                total_exits = len(trade_list) or 1
                 time_max_freq = time_max_exits / max(total_exits, 1)
 
                 results[tm_val] = {
-                    'pnl_pct': bt.get('total_pnl_pct', 0.0),
-                    'max_dd_pct': bt.get('max_dd_pct', 0.0),
-                    'n_trades': bt.get('n_trades', 0),
+                    'pnl': bt.get('pnl', 0.0),
+                    'dd': bt.get('dd', 0.0),
+                    'trades': bt.get('trades', 0),
                     'time_max_exits': time_max_exits,
                     'time_max_freq': round(time_max_freq, 4),
-                    'win_rate': bt.get('win_rate', 0.0),
+                    'wr': bt.get('wr', 0.0),
                 }
             else:
-                results[tm_val] = {'pnl_pct': 0.0, 'error': 'gate_fail'}
+                results[tm_val] = {'pnl': 0.0, 'error': 'gate_fail'}
 
         valid = {k: v for k, v in results.items() if 'error' not in v}
 
@@ -316,8 +323,8 @@ class EdgeAnalyst(BaseAgent):
 
         md += (
             f"## Results\n\n"
-            f"| time_max_bars | PnL % | Max DD % | Trades | TM Exits | TM Freq |\n"
-            f"|---------------|--------|----------|--------|----------|----------|\n"
+            f"| time_max_bars | PnL $ | DD % | Trades | TM Exits | TM Freq |\n"
+            f"|---------------|-------|------|--------|----------|----------|\n"
         )
         for val in tm_values:
             r = results[val]
@@ -325,8 +332,8 @@ class EdgeAnalyst(BaseAgent):
                 md += f"| {val} | FAIL | - | - | - | - |\n"
             else:
                 md += (
-                    f"| {val} | {r['pnl_pct']:.2f}% | {r['max_dd_pct']:.2f}% "
-                    f"| {r['n_trades']} | {r['time_max_exits']} "
+                    f"| {val} | ${r['pnl']:.0f} | {r['dd']:.2f}% "
+                    f"| {r['trades']} | {r['time_max_exits']} "
                     f"| {r['time_max_freq']:.1%} |\n"
                 )
 

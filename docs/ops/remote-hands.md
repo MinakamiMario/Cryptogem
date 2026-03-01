@@ -1,5 +1,24 @@
 # Remote Hands — Tailscale + RustDesk
 
+## 30-Seconden Sanity Check
+
+> Voer dit uit wanneer je twijfelt of alles goed staat.
+
+| # | Check | Commando | Verwacht |
+|---|-------|---------|----------|
+| 1 | Tailscale up | `tailscale status` | `100.67.19.108` online |
+| 2 | Key expiry off | Tailscale admin console | No expiry |
+| 3 | RustDesk luistert | `lsof -nP -iTCP:21118 -sTCP:LISTEN` | `rustdesk` PID |
+| 4 | RustDesk direct-only | RustDesk GUI → Settings | Direct IP, geen relay |
+| 5 | pf actief | `sudo pfctl -s info \| grep Status` | `Status: Enabled` |
+| 6 | pf rules geladen | `sudo pfctl -a com.rustdesk.tailscale-only -sr` | pass + block regels |
+| 7 | Lab daemon running | `launchctl print gui/$(id -u)/com.cryptogem.lab` | PID + state = running |
+| 8 | TG dashboard werkt | Druk 📊 knop in Telegram | Dashboard verschijnt |
+
+Of automatisch: `python3 -m lab.tools.remote_hands_healthcheck`
+
+---
+
 ## Doel
 
 Remote GUI-toegang tot de Mac vanuit Android (of elk ander device)
@@ -54,11 +73,18 @@ Alle andere bronnen (LAN, WiFi, internet) worden geblokkeerd door pf.
 
 ```
 # /etc/pf.anchors/com.rustdesk.tailscale-only
-block in quick proto tcp from ! 100.64.0.0/10 to any port 21115:21119
-block in quick proto udp from ! 100.64.0.0/10 to any port 21116
+# Let op: pass+block patroon — "block from !" werkt niet op macOS utun interfaces
+pass in quick proto tcp from 100.64.0.0/10 to any port 21115:21119
+pass in quick proto udp from 100.64.0.0/10 to any port 21116
+block in quick proto tcp from any to any port 21115:21119
+block in quick proto udp from any to any port 21116
 ```
 
 Anchor is geladen via `/etc/pf.conf` en actief bij boot.
+
+> **Let op**: de `block from !` negatie-syntax werkt niet betrouwbaar op
+> macOS utun (Tailscale) interfaces. Gebruik altijd het expliciete
+> `pass` + `block` patroon hierboven.
 
 ### Verificatie firewall
 

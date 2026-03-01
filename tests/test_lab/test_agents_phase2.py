@@ -34,11 +34,11 @@ FAKE_BT = {
 
 FAKE_ROBUSTNESS = {
     'cid': 'TEST', 'verdict': 'GO',
-    'baseline': {'trades': 30, 'pnl': 3500, 'dd': 18},
-    'walk_forward': {'n_positive': 4, 'n_folds': 5},
-    'monte_carlo': {'ruin_pct': 1.0, 'p5': 3000},
-    'param_jitter': {'pct_positive': 85},
-    'universe': {'n_positive_subsets': 3},
+    'baseline': {'trades': 30, 'pnl': 3500, 'dd': 18, 'wr': 72.0, 'pf': 3.2},
+    'walk_forward': {'passed_folds': 4, 'n_folds': 5, 'go': True, 'soft_go': False},
+    'monte_carlo': {'ruin_prob_pct': 1.0, 'equity': {'p5': 3000, 'median': 5000, 'p95': 8000}, 'go': True},
+    'param_jitter': {'positive_pct': 85, 'go': True},
+    'universe': {'n_positive_subsets': 3, 'go': True},
     'fails': [],
 }
 

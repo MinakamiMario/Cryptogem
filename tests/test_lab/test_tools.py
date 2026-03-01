@@ -30,7 +30,7 @@ def _make_fake_engine():
             'broke': False, 'early_stopped': False,
         }),
         'monte_carlo_block': MagicMock(return_value={
-            'median': 3200, 'p5': 2800, 'ruin_pct': 1.0,
+            'median': 3200, 'p5': 2800, 'ruin_prob_pct': 1.0,
         }),
         'cfg_hash': FAKE_CFG_HASH,
         'normalize_cfg': FAKE_NORMALIZE,
@@ -254,9 +254,9 @@ class TestRobustnessRunner:
     def test_check_gates_all_pass(self):
         """check_gates returns all_pass=True when all gates pass."""
         result = {
-            'walk_forward': {'n_positive': 5, 'n_folds': 5},
-            'monte_carlo': {'ruin_pct': 1.0},
-            'param_jitter': {'pct_positive': 85},
+            'walk_forward': {'passed_folds': 5, 'n_folds': 5},
+            'monte_carlo': {'ruin_prob_pct': 1.0},
+            'param_jitter': {'positive_pct': 85},
             'universe': {'n_positive_subsets': 3},
             'verdict': 'GO',
         }
@@ -279,9 +279,9 @@ class TestRobustnessRunner:
     def test_check_gates_wf_fail(self):
         """check_gates detects walk-forward failure (too few positive folds)."""
         result = {
-            'walk_forward': {'n_positive': 2, 'n_folds': 5},  # < 4
-            'monte_carlo': {'ruin_pct': 1.0},
-            'param_jitter': {'pct_positive': 85},
+            'walk_forward': {'passed_folds': 2, 'n_folds': 5},  # < 4
+            'monte_carlo': {'ruin_prob_pct': 1.0},
+            'param_jitter': {'positive_pct': 85},
             'universe': {'n_positive_subsets': 3},
             'verdict': 'NO-GO',
         }
@@ -301,9 +301,9 @@ class TestRobustnessRunner:
     def test_check_gates_mc_fail(self):
         """check_gates detects Monte Carlo ruin failure (ruin > 5%)."""
         result = {
-            'walk_forward': {'n_positive': 4, 'n_folds': 5},
-            'monte_carlo': {'ruin_pct': 12.0},  # > 5%
-            'param_jitter': {'pct_positive': 85},
+            'walk_forward': {'passed_folds': 4, 'n_folds': 5},
+            'monte_carlo': {'ruin_prob_pct': 12.0},  # > 5%
+            'param_jitter': {'positive_pct': 85},
             'universe': {'n_positive_subsets': 3},
             'verdict': 'NO-GO',
         }
@@ -323,9 +323,9 @@ class TestRobustnessRunner:
     def test_check_gates_jitter_fail(self):
         """check_gates detects param jitter failure (pct_positive < 70%)."""
         result = {
-            'walk_forward': {'n_positive': 4, 'n_folds': 5},
-            'monte_carlo': {'ruin_pct': 1.0},
-            'param_jitter': {'pct_positive': 50},  # < 70%
+            'walk_forward': {'passed_folds': 4, 'n_folds': 5},
+            'monte_carlo': {'ruin_prob_pct': 1.0},
+            'param_jitter': {'positive_pct': 50},  # < 70%
             'universe': {'n_positive_subsets': 3},
             'verdict': 'NO-GO',
         }
@@ -344,9 +344,9 @@ class TestRobustnessRunner:
     def test_check_gates_universe_fail(self):
         """check_gates detects universe shift failure (< 2 positive subsets)."""
         result = {
-            'walk_forward': {'n_positive': 4, 'n_folds': 5},
-            'monte_carlo': {'ruin_pct': 1.0},
-            'param_jitter': {'pct_positive': 85},
+            'walk_forward': {'passed_folds': 4, 'n_folds': 5},
+            'monte_carlo': {'ruin_prob_pct': 1.0},
+            'param_jitter': {'positive_pct': 85},
             'universe': {'n_positive_subsets': 1},  # < 2
             'verdict': 'NO-GO',
         }
@@ -361,6 +361,104 @@ class TestRobustnessRunner:
 
             assert gates['all_pass'] is False
             assert gates['universe']['pass'] is False
+
+
+class TestBacktestKeyMapping:
+    """Verify all agents read correct keys from run_backtest() results.
+
+    Backtest result keys: pnl, dd, trades, wr, pf, final_equity,
+    trade_list, exit_classes, broke, early_stopped.
+    NOT: total_pnl_pct, max_dd_pct, n_trades, win_rate, sharpe, profit_factor.
+    """
+
+    CORRECT_BT = {
+        'pnl': 5787.0, 'dd': 19.99, 'trades': 42, 'wr': 54.76,
+        'pf': 4.63, 'final_equity': 7787.0, 'broke': False,
+        'early_stopped': False,
+        'trade_list': [
+            {'pair': 'X/USD', 'pnl': 100, 'pnl_pct': 5.0,
+             'reason': 'DC TARGET', 'bars': 2, 'entry_bar': 10,
+             'exit_bar': 12, 'size': 2000, 'equity_after': 2100,
+             'entry': 1.0, 'exit': 1.05},
+        ] * 42,
+        'exit_classes': {
+            'A': {'DC TARGET': {'count': 6, 'pnl': 689, 'wins': 6}},
+            'B': {'TIME MAX': {'count': 21, 'pnl': 3424, 'wins': 11}},
+        },
+    }
+
+    def test_no_old_keys_in_risk_governor(self):
+        """risk_governor.py must not reference old backtest key names."""
+        import inspect
+        from lab.agents.risk_governor import RiskGovernor
+        src = inspect.getsource(RiskGovernor)
+        # These old keys should NOT appear in .get() calls
+        old_keys = ["'total_pnl_pct'", "'max_dd_pct'", "'n_trades'",
+                     "'win_rate'", "'sharpe'", "'profit_factor'"]
+        for key in old_keys:
+            # Allow key in report_data dict keys (those are output, not input)
+            # Only flag .get(old_key) patterns
+            if f".get({key}" in src:
+                pytest.fail(f"risk_governor still reads old key: .get({key})")
+
+    def test_no_old_keys_in_edge_analyst(self):
+        """edge_analyst.py must not reference old backtest key names."""
+        import inspect
+        from lab.agents.edge_analyst import EdgeAnalyst
+        src = inspect.getsource(EdgeAnalyst)
+        old_keys = ["'total_pnl_pct'", "'max_dd_pct'", "'n_trades'",
+                     "'win_rate'", "'sharpe'"]
+        for key in old_keys:
+            if f".get({key}" in src:
+                pytest.fail(f"edge_analyst still reads old key: .get({key})")
+
+    def test_no_old_keys_in_deployment_judge(self):
+        """deployment_judge.py must not reference old backtest key names."""
+        import inspect
+        from lab.agents.deployment_judge import DeploymentJudge
+        src = inspect.getsource(DeploymentJudge)
+        old_keys = ["'total_pnl_pct'", "'max_dd_pct'", "'n_trades'",
+                     "'win_rate'", "'sharpe'"]
+        for key in old_keys:
+            if f".get({key}" in src:
+                pytest.fail(f"deployment_judge still reads old key: .get({key})")
+
+    def test_no_old_keys_in_robustness_auditor(self):
+        """robustness_auditor.py must not reference old backtest key names."""
+        import inspect
+        from lab.agents.robustness_auditor import RobustnessAuditor
+        src = inspect.getsource(RobustnessAuditor)
+        old_keys = ["'total_pnl_pct'", "'max_dd_pct'", "'n_trades'",
+                     "'win_rate'", "'sharpe'"]
+        for key in old_keys:
+            if f".get({key}" in src:
+                pytest.fail(f"robustness_auditor still reads old key: .get({key})")
+
+    def test_robustness_runner_reads_correct_harness_keys(self):
+        """check_gates must read passed_folds, ruin_prob_pct, positive_pct."""
+        import inspect
+        from lab.tools.robustness_runner import check_gates
+        src = inspect.getsource(check_gates)
+        # Must use correct source keys
+        assert "passed_folds" in src, "check_gates must read passed_folds"
+        assert "ruin_prob_pct" in src, "check_gates must read ruin_prob_pct"
+        assert "positive_pct" in src, "check_gates must read positive_pct"
+        # Must NOT use old source keys in .get() calls
+        assert ".get('n_positive'" not in src, "check_gates still reads old n_positive"
+        assert ".get('ruin_pct'" not in src, "check_gates still reads old ruin_pct"
+        assert ".get('pct_positive'" not in src, "check_gates still reads old pct_positive"
+
+    def test_report_writer_reads_correct_keys(self):
+        """report_writer must use pnl/dd/trades/wr/pf, not old names."""
+        import inspect
+        from lab.tools import report_writer
+        src = inspect.getsource(report_writer)
+        # Must NOT have old backtest key lookups
+        old_patterns = [".get('total_pnl_pct'", ".get('max_dd_pct'",
+                        ".get('n_trades'", ".get('win_rate'"]
+        for pat in old_patterns:
+            if pat in src:
+                pytest.fail(f"report_writer still uses old key: {pat}")
 
 
 if __name__ == '__main__':

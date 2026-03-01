@@ -175,12 +175,12 @@ class DeploymentJudge(BaseAgent):
         universe = result.get('universe', {})
         friction = result.get('friction', {})
 
-        wf_positive = wf.get('n_positive', 0)
+        wf_positive = wf.get('passed_folds', 0)
         wf_total = wf.get('n_folds', 5)
-        mc_ruin = mc.get('ruin_pct', 0.0)
-        n_trades = baseline.get('n_trades', 0)
-        total_pnl = baseline.get('total_pnl_pct', 0.0)
-        max_dd = baseline.get('max_dd_pct', 0.0)
+        mc_ruin = mc.get('ruin_prob_pct', 0.0)
+        n_trades = baseline.get('trades', 0)
+        total_pnl = baseline.get('pnl', 0.0)
+        max_dd = baseline.get('dd', 0.0)
 
         # Build detailed gate table
         gate_rows = [
@@ -193,7 +193,7 @@ class DeploymentJudge(BaseAgent):
             ('Trade Count', str(n_trades),
              f">={MIN_TOTAL_TRADES}",
              'PASS' if n_trades >= MIN_TOTAL_TRADES else 'FAIL'),
-            ('Param Jitter', f"{jitter.get('pct_positive', 0):.1f}%",
+            ('Param Jitter', f"{jitter.get('positive_pct', 0):.1f}%",
              gates.get('param_jitter', {}).get('threshold', '-'),
              'PASS' if gates.get('param_jitter', {}).get('pass') else 'FAIL'),
             ('Universe Shift', f"{universe.get('n_positive_subsets', 0)} subsets",
@@ -309,10 +309,10 @@ class DeploymentJudge(BaseAgent):
 
         # Compare key metrics explicitly
         metrics_match = (
-            result_1.get('total_pnl_pct') == result_2.get('total_pnl_pct')
-            and result_1.get('max_dd_pct') == result_2.get('max_dd_pct')
-            and result_1.get('n_trades') == result_2.get('n_trades')
-            and result_1.get('win_rate') == result_2.get('win_rate')
+            result_1.get('pnl') == result_2.get('pnl')
+            and result_1.get('dd') == result_2.get('dd')
+            and result_1.get('trades') == result_2.get('trades')
+            and result_1.get('wr') == result_2.get('wr')
         )
 
         report_data = {
@@ -321,10 +321,10 @@ class DeploymentJudge(BaseAgent):
             'hash_run_2': hash_2,
             'deterministic': deterministic,
             'metrics_match': metrics_match,
-            'run_1_pnl': result_1.get('total_pnl_pct', 0.0),
-            'run_2_pnl': result_2.get('total_pnl_pct', 0.0),
-            'run_1_trades': result_1.get('n_trades', 0),
-            'run_2_trades': result_2.get('n_trades', 0),
+            'run_1_pnl': result_1.get('pnl', 0.0),
+            'run_2_pnl': result_2.get('pnl', 0.0),
+            'run_1_trades': result_1.get('trades', 0),
+            'run_2_trades': result_2.get('trades', 0),
         }
 
         md = (
@@ -341,18 +341,18 @@ class DeploymentJudge(BaseAgent):
             f"## Metric Comparison\n\n"
             f"| Metric | Run 1 | Run 2 | Match |\n"
             f"|--------|-------|-------|-------|\n"
-            f"| PnL % | {result_1.get('total_pnl_pct', 0):.4f} "
-            f"| {result_2.get('total_pnl_pct', 0):.4f} "
-            f"| {'YES' if result_1.get('total_pnl_pct') == result_2.get('total_pnl_pct') else 'NO'} |\n"
-            f"| Max DD % | {result_1.get('max_dd_pct', 0):.4f} "
-            f"| {result_2.get('max_dd_pct', 0):.4f} "
-            f"| {'YES' if result_1.get('max_dd_pct') == result_2.get('max_dd_pct') else 'NO'} |\n"
-            f"| Trades | {result_1.get('n_trades', 0)} "
-            f"| {result_2.get('n_trades', 0)} "
-            f"| {'YES' if result_1.get('n_trades') == result_2.get('n_trades') else 'NO'} |\n"
-            f"| Win Rate | {result_1.get('win_rate', 0):.4f} "
-            f"| {result_2.get('win_rate', 0):.4f} "
-            f"| {'YES' if result_1.get('win_rate') == result_2.get('win_rate') else 'NO'} |\n"
+            f"| PnL $ | {result_1.get('pnl', 0):.4f} "
+            f"| {result_2.get('pnl', 0):.4f} "
+            f"| {'YES' if result_1.get('pnl') == result_2.get('pnl') else 'NO'} |\n"
+            f"| DD % | {result_1.get('dd', 0):.4f} "
+            f"| {result_2.get('dd', 0):.4f} "
+            f"| {'YES' if result_1.get('dd') == result_2.get('dd') else 'NO'} |\n"
+            f"| Trades | {result_1.get('trades', 0)} "
+            f"| {result_2.get('trades', 0)} "
+            f"| {'YES' if result_1.get('trades') == result_2.get('trades') else 'NO'} |\n"
+            f"| WR % | {result_1.get('wr', 0):.4f} "
+            f"| {result_2.get('wr', 0):.4f} "
+            f"| {'YES' if result_1.get('wr') == result_2.get('wr') else 'NO'} |\n"
         )
 
         report_name = f"determinism_{task.id}"
@@ -361,8 +361,8 @@ class DeploymentJudge(BaseAgent):
         summary = (
             f"Determinism check: {'PASS' if deterministic else 'FAIL'}. "
             f"Hash match={deterministic}, metrics match={metrics_match}. "
-            f"PnL run1={result_1.get('total_pnl_pct', 0):.2f}%, "
-            f"run2={result_2.get('total_pnl_pct', 0):.2f}%."
+            f"PnL run1=${result_1.get('pnl', 0):.2f}, "
+            f"run2=${result_2.get('pnl', 0):.2f}."
         )
 
         return TaskResult(

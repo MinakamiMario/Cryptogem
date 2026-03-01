@@ -85,7 +85,7 @@ def check_gates(result: dict) -> dict:
 
     # Walk-forward
     wf = result.get('walk_forward', {})
-    wf_positive = wf.get('n_positive', 0)
+    wf_positive = wf.get('passed_folds', 0)
     wf_total = wf.get('n_folds', 5)
     gates['walk_forward'] = {
         'pass': wf_positive >= go.get('wf_min_pass', 4),
@@ -95,7 +95,7 @@ def check_gates(result: dict) -> dict:
 
     # Monte Carlo
     mc = result.get('monte_carlo', {})
-    mc_ruin = mc.get('ruin_pct', 100)
+    mc_ruin = mc.get('ruin_prob_pct', 100)
     gates['monte_carlo'] = {
         'pass': mc_ruin <= go.get('mc_ruin_max', 5.0),
         'ruin_pct': mc_ruin,
@@ -104,10 +104,10 @@ def check_gates(result: dict) -> dict:
 
     # Param jitter
     jitter = result.get('param_jitter', {})
-    jitter_pct = jitter.get('pct_positive', 0)
+    jitter_pct = jitter.get('positive_pct', 0)
     gates['param_jitter'] = {
         'pass': jitter_pct >= go.get('jitter_min_positive_pct', 70.0),
-        'pct_positive': jitter_pct,
+        'positive_pct': jitter_pct,
         'threshold': f">={go.get('jitter_min_positive_pct', 70.0)}%",
     }
 

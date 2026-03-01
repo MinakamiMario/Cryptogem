@@ -152,18 +152,18 @@ def write_backtest_report(agent_name: str, task_id: int,
 
     # Performance metrics
     sections.append('\n## Performance\n')
-    n_trades = bt_result.get('n_trades', 0)
-    wr = bt_result.get('win_rate', 0)
-    pnl = bt_result.get('total_pnl_pct', bt_result.get('pnl_pct', 0))
-    pf = bt_result.get('profit_factor', 0)
-    dd = bt_result.get('max_drawdown_pct', bt_result.get('max_dd_pct', 0))
+    n_trades = bt_result.get('trades', 0)
+    wr = bt_result.get('wr', 0)
+    pnl = bt_result.get('pnl', 0)
+    pf = bt_result.get('pf', 0)
+    dd = bt_result.get('dd', 0)
 
     sections.append(
         f'| Metric | Value |\n'
         f'|--------|-------|\n'
         f'| Trades | {n_trades} |\n'
         f'| Win Rate | {wr:.1f}% |\n'
-        f'| PnL | {pnl:+.2f}% |\n'
+        f'| PnL | ${pnl:+.2f} |\n'
         f'| Profit Factor | {pf:.2f} |\n'
         f'| Max Drawdown | {dd:.1f}% |'
     )
@@ -182,14 +182,14 @@ def write_backtest_report(agent_name: str, task_id: int,
     mc = bt_result.get('mc', bt_result.get('monte_carlo', {}))
     if mc:
         sections.append('\n## Monte Carlo\n')
-        mc_median = mc.get('median_pnl_pct', mc.get('median', 0))
-        mc_p5 = mc.get('p5_pnl_pct', mc.get('p5', 0))
-        mc_ruin = mc.get('ruin_pct', mc.get('ruin', 0))
+        mc_median = mc.get('median_equity', 0)
+        mc_p5 = mc.get('p5', 0)
+        mc_ruin = mc.get('broke_pct', mc.get('ruin_prob_pct', 0))
         sections.append(
             f'| Metric | Value |\n'
             f'|--------|-------|\n'
-            f'| Median PnL | {mc_median:+.2f}% |\n'
-            f'| P5 PnL | {mc_p5:+.2f}% |\n'
+            f'| Median Equity | ${mc_median:.0f} |\n'
+            f'| P5 Equity | ${mc_p5:.0f} |\n'
             f'| Ruin % | {mc_ruin:.1f}% |'
         )
 
@@ -272,11 +272,11 @@ def write_robustness_report(agent_name: str, task_id: int,
         sections.append(
             f'| Metric | Value |\n'
             f'|--------|-------|\n'
-            f'| Trades | {baseline.get("n_trades", "?")} |\n'
-            f'| Win Rate | {baseline.get("win_rate", 0):.1f}% |\n'
-            f'| PnL | {baseline.get("total_pnl_pct", baseline.get("pnl_pct", 0)):+.2f}% |\n'
-            f'| Profit Factor | {baseline.get("profit_factor", 0):.2f} |\n'
-            f'| Max Drawdown | {baseline.get("max_drawdown_pct", baseline.get("max_dd_pct", 0)):.1f}% |'
+            f'| Trades | {baseline.get("trades", "?")} |\n'
+            f'| Win Rate | {baseline.get("wr", 0):.1f}% |\n'
+            f'| PnL | ${baseline.get("pnl", 0):+.2f} |\n'
+            f'| Profit Factor | {baseline.get("pf", 0):.2f} |\n'
+            f'| Max Drawdown | {baseline.get("dd", 0):.1f}% |'
         )
 
     # Gate results table
@@ -285,7 +285,7 @@ def write_robustness_report(agent_name: str, task_id: int,
 
     # Walk-forward
     wf = harness_result.get('walk_forward', {})
-    wf_pos = wf.get('n_positive', 0)
+    wf_pos = wf.get('passed_folds', 0)
     wf_total = wf.get('n_folds', 5)
     wf_pass = wf_pos >= 4
     gate_lines.append(
@@ -295,7 +295,7 @@ def write_robustness_report(agent_name: str, task_id: int,
 
     # MC
     mc = harness_result.get('monte_carlo', {})
-    mc_ruin = mc.get('ruin_pct', 100)
+    mc_ruin = mc.get('ruin_prob_pct', 100)
     mc_pass = mc_ruin <= 5.0
     gate_lines.append(
         f'| Monte Carlo | {"PASS" if mc_pass else "FAIL"} '
@@ -304,7 +304,7 @@ def write_robustness_report(agent_name: str, task_id: int,
 
     # Param jitter
     jitter = harness_result.get('param_jitter', {})
-    jitter_pct = jitter.get('pct_positive', 0)
+    jitter_pct = jitter.get('positive_pct', 0)
     jitter_pass = jitter_pct >= 70.0
     gate_lines.append(
         f'| Param Jitter | {"PASS" if jitter_pass else "FAIL"} '
@@ -339,26 +339,26 @@ def write_robustness_report(agent_name: str, task_id: int,
         fold_lines = ['| Fold | PnL % | Trades | Win Rate |',
                       '|------|-------|--------|----------|']
         for i, fold in enumerate(folds):
-            f_pnl = fold.get('pnl_pct', fold.get('total_pnl_pct', 0))
-            f_trades = fold.get('n_trades', '?')
-            f_wr = fold.get('win_rate', 0)
+            f_pnl = fold.get('test_pnl', 0)
+            f_trades = fold.get('test_trades', '?')
+            f_wr = fold.get('test_wr', 0)
             fold_lines.append(
                 f'| {i + 1} | {f_pnl:+.2f}% | {f_trades} | {f_wr:.1f}% |'
             )
         sections.append('\n'.join(fold_lines))
 
-    # MC detail
+    # MC detail (from robustness_harness.monte_carlo_shuffle)
     if mc:
         sections.append('\n## Monte Carlo Detail\n')
-        mc_median = mc.get('median_pnl_pct', mc.get('median', 0))
-        mc_p5 = mc.get('p5_pnl_pct', mc.get('p5', 0))
-        mc_p95 = mc.get('p95_pnl_pct', mc.get('p95', 0))
+        mc_eq = mc.get('equity', {})
+        mc_dd = mc.get('max_dd', {})
         sections.append(
             f'| Metric | Value |\n'
             f'|--------|-------|\n'
-            f'| Median PnL | {mc_median:+.2f}% |\n'
-            f'| P5 PnL | {mc_p5:+.2f}% |\n'
-            f'| P95 PnL | {mc_p95:+.2f}% |\n'
+            f'| Median Equity | ${mc_eq.get("median", 0):.0f} |\n'
+            f'| P5 Equity | ${mc_eq.get("p5", 0):.0f} |\n'
+            f'| P95 Equity | ${mc_eq.get("p95", 0):.0f} |\n'
+            f'| P95 Max DD | {mc_dd.get("p95", 0):.1f}% |\n'
             f'| Ruin % | {mc_ruin:.1f}% |'
         )
 

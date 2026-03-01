@@ -11,7 +11,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from lab.config import REPO_ROOT
+from lab.config import GITHUB_REPO, REPO_ROOT
 
 # Import existing notifier class for reuse
 sys.path.insert(0, str(REPO_ROOT / 'trading_bot'))
@@ -36,6 +36,21 @@ def _load_lab_bot_token() -> str | None:
         for line in env_path.read_text().splitlines():
             line = line.strip()
             if line.startswith('LAB_TELEGRAM_BOT_TOKEN=') and not line.endswith('='):
+                return line.split('=', 1)[1].strip()
+    return None
+
+
+def _load_github_token() -> str | None:
+    """Load GITHUB_TOKEN from env or .env (optional, for private repos)."""
+    import os
+    token = os.environ.get('GITHUB_TOKEN')
+    if token:
+        return token
+    env_path = REPO_ROOT / 'trading_bot' / '.env'
+    if env_path.exists():
+        for line in env_path.read_text().splitlines():
+            line = line.strip()
+            if line.startswith('GITHUB_TOKEN=') and not line.endswith('='):
                 return line.split('=', 1)[1].strip()
     return None
 
@@ -134,6 +149,20 @@ class LabNotifier:
             return result['result']['message_id']
         return None
 
+    def _send_html(self, text: str) -> int | None:
+        """Send HTML-formatted message via raw API. Returns message_id."""
+        if not self.enabled:
+            logger.info(f"[TG disabled] {text}")
+            return None
+        result = self._api('sendMessage', json_body={
+            'chat_id': _CHAT_ID,
+            'text': f"{self.PREFIX} {text}",
+            'parse_mode': 'HTML',
+        })
+        if result and result.get('ok'):
+            return result['result']['message_id']
+        return None
+
     def _edit_message(self, message_id: int, text: str) -> None:
         """Edit an existing message (remove buttons after action)."""
         self._api('editMessageText', json_body={
@@ -206,6 +235,9 @@ class LabNotifier:
                 elif db and data.startswith('status:'):
                     self._answer_callback(callback_id, 'Rapport wordt geladen...')
                     self._send_status_summary(db)
+                    actions += 1
+                elif data.startswith('ci:'):
+                    self._handle_ci(callback_id)
                     actions += 1
                 continue
 
@@ -343,6 +375,42 @@ class LabNotifier:
         """Send a quick status summary when 📊 button is pressed."""
         self.send_dashboard(db)
 
+    def _handle_ci(self, callback_id: str) -> None:
+        """Show latest CI/CD workflow runs from GitHub Actions."""
+        self._answer_callback(callback_id, 'CI status wordt geladen...')
+
+        token = _load_github_token()
+        url = (f'https://api.github.com/repos/{GITHUB_REPO}'
+               f'/actions/runs?per_page=5')
+        headers = {'Accept': 'application/vnd.github.v3+json'}
+        if token:
+            headers['Authorization'] = f'token {token}'
+
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+        except Exception as e:
+            self._send(f'GitHub API fout: {e}')
+            return
+
+        icons = {
+            'success': '✅', 'failure': '❌', 'in_progress': '🔄',
+            'cancelled': '⏹', 'queued': '⏳',
+        }
+        lines = ['🔄 <b>CI/CD Status</b>\n']
+        for run in data.get('workflow_runs', [])[:5]:
+            conclusion = run.get('conclusion') or run.get('status', '?')
+            icon = icons.get(conclusion, '⚪')
+            name = run['name']
+            branch = run.get('head_branch', '?')
+            lines.append(f'{icon} {name} — {branch}')
+
+        if not data.get('workflow_runs'):
+            lines.append('Geen recente runs gevonden')
+
+        self._send_html('\n'.join(lines))
+
     def send_dashboard(self, db) -> None:
         """Send compact dashboard to Telegram."""
         summary = db.get_status_summary()
@@ -405,7 +473,9 @@ class LabNotifier:
                 bar = '█' * bar_filled + '░' * (10 - bar_filled)
                 lines.append(f'  {bar} {pct}% — {g["title"][:30]}')
 
-        self._send('\n'.join(lines))
+        self._send_with_buttons('\n'.join(lines), buttons=[
+            [{'text': '📊 CI Status', 'callback_data': 'ci:0'}],
+        ])
 
     # ── CLI → Telegram mirroring ─────────────────────────
 

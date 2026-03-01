@@ -1,8 +1,0 @@
-{
-  "lookback": 20,
-  "max_pos": 5,
-  "sl_pct": 5,
-  "time_limit": 30,
-  "tp_pct": 15,
-  "vol_mult": 3.0
-}

@@ -344,50 +344,55 @@ class LabNotifier:
         self.send_dashboard(db)
 
     def send_dashboard(self, db) -> None:
-        """Send full dashboard to Telegram."""
+        """Send compact dashboard to Telegram."""
         summary = db.get_status_summary()
-        task_counts = summary.get('tasks', {})
+        tc = summary.get('tasks', {})
         agents_info = summary.get('agents', {})
         goals_info = summary.get('goals', [])
 
         lines = ['📊 <b>CRYPTOGEM LAB DASHBOARD</b>\n']
 
-        # ── Task overview ──
-        total = sum(task_counts.values())
-        done = task_counts.get('done', 0)
-        review = task_counts.get('review', 0)
-        in_progress = task_counts.get('in_progress', 0)
-        peer_review = task_counts.get('peer_review', 0)
-        todo = task_counts.get('todo', 0)
-        backlog = task_counts.get('backlog', 0)
-        blocked = task_counts.get('blocked', 0)
-
+        # ── Task counts (all 8 statussen, compact grid) ──
         lines.append('<b>Taken</b>')
-        if review:
-            lines.append(f'  ⏳ Review: <b>{review}</b>')
-        if in_progress:
-            lines.append(f'  🔄 In progress: {in_progress}')
-        if peer_review:
-            lines.append(f'  👀 Peer review: {peer_review}')
-        if todo:
-            lines.append(f'  📝 Todo: {todo}')
-        if blocked:
-            lines.append(f'  🚧 Blocked: {blocked}')
-        if backlog:
-            lines.append(f'  📦 Backlog: {backlog}')
-        lines.append(f'  ✅ Done: {done}')
-        if total:
-            pct = round(done / total * 100)
-            lines.append(f'  Totaal: {total} ({pct}% klaar)')
+        lines.append(
+            f'  proposal: {tc.get("proposal", 0)} | '
+            f'todo: {tc.get("todo", 0)} | '
+            f'in_progress: {tc.get("in_progress", 0)}'
+        )
+        lines.append(
+            f'  peer_review: {tc.get("peer_review", 0)} | '
+            f'review: {tc.get("review", 0)} | '
+            f'approved: {tc.get("approved", 0)}'
+        )
+        lines.append(
+            f'  done: {tc.get("done", 0)} | '
+            f'blocked: {tc.get("blocked", 0)}'
+        )
 
-        # ── Review queue details ──
-        if review:
-            lines.append(f'\n⏳ <b>Wacht op jouw review ({review})</b>')
-            review_tasks = db.get_tasks_by_status('review')
-            for t in review_tasks[:5]:
+        # ── Approved queue (wacht op user actie) ──
+        approved_tasks = db.get_tasks_by_status('approved')
+        if approved_tasks:
+            lines.append(
+                f'\n⏳ <b>Wacht op jouw actie ({len(approved_tasks)})</b>')
+            for t in approved_tasks[:5]:
                 lines.append(f'  #{t.id} {t.title[:35]} ({t.assigned_to})')
-            if len(review_tasks) > 5:
-                lines.append(f'  ... en {len(review_tasks) - 5} meer')
+            if len(approved_tasks) > 5:
+                lines.append(f'  ... en {len(approved_tasks) - 5} meer')
+
+        # ── Agents: name status (HH:MM) ──
+        if agents_info:
+            lines.append('\n<b>Agents</b>')
+            for name, info in sorted(agents_info.items()):
+                hb = info.get('last_heartbeat')
+                if hb:
+                    # Parse "YYYY-MM-DD HH:MM:SS" → "HH:MM"
+                    try:
+                        hb_short = hb.split(' ')[1][:5]
+                    except (IndexError, AttributeError):
+                        hb_short = 'never'
+                else:
+                    hb_short = 'never'
+                lines.append(f'  {name} {info["status"]} ({hb_short})')
 
         # ── Goals progress ──
         if goals_info:
@@ -399,25 +404,6 @@ class LabNotifier:
                 bar_filled = int(pct / 10)
                 bar = '█' * bar_filled + '░' * (10 - bar_filled)
                 lines.append(f'  {bar} {pct}% — {g["title"][:30]}')
-
-        # ── Agents ──
-        if agents_info:
-            lines.append('\n<b>Agents</b>')
-            working = [a for a, i in agents_info.items() if i['status'] == 'working']
-            idle = [a for a, i in agents_info.items() if i['status'] == 'idle']
-            errors = [a for a, i in agents_info.items() if i['status'] == 'error']
-            if working:
-                lines.append(f'  🔄 {", ".join(working)}')
-            if errors:
-                lines.append(f'  🚨 {", ".join(errors)}')
-            lines.append(f'  💤 {len(idle)} idle')
-
-        # ── Blocked tasks ──
-        if blocked:
-            lines.append(f'\n🚧 <b>Geblokkeerd ({blocked})</b>')
-            blocked_tasks = db.get_tasks_by_status('blocked')
-            for t in blocked_tasks[:3]:
-                lines.append(f'  #{t.id} {t.title[:35]}')
 
         self._send('\n'.join(lines))
 

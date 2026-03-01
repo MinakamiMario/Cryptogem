@@ -410,10 +410,11 @@ class TestHypothesisGenAgent:
 class TestBossLLMUpgrade:
     """Test Boss LLM-assisted task generation."""
 
-    def test_boss_is_llm(self, db, notifier):
+    def test_boss_is_rule_based(self, db, notifier):
+        """Boss core is rule-based; LLM is optional enhancement."""
         from lab.agents.boss import BossAgent
         agent = BossAgent(db, notifier)
-        assert agent.is_llm is True
+        assert agent.is_llm is False
 
     def test_llm_task_gen_creates_tasks(self, db, notifier, goal_id):
         """LLM generates tasks when available."""

@@ -3,11 +3,11 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - 'lab-v*'
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to release (e.g. v0.3.0)'
+        description: 'Tag to release (e.g. lab-v0.4.0)'
         required: true
 
 permissions:
@@ -34,7 +34,7 @@ jobs:
         id: notes
         run: |
           TAG="${{ steps.tag.outputs.tag }}"
-          PREV=$(git tag --sort=-v:refname | grep '^v' | sed -n '2p' || echo "")
+          PREV=$(git tag --sort=-v:refname | grep '^lab-v' | sed -n '2p' || echo "")
           if [ -z "$PREV" ]; then
             RANGE="HEAD"
           else

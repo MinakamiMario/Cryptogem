@@ -10,6 +10,7 @@ from lab.agents.base import BaseAgent
 from lab.config import HEARTBEAT_INTERVAL_S, HEARTBEAT_STAGGER_S
 from lab.db import LabDB
 from lab.notifier import LabNotifier
+from lab.shell_guard import install as install_shell_guard
 
 logger = logging.getLogger('lab.heartbeat')
 
@@ -25,6 +26,9 @@ class HeartbeatLoop:
         self._running = True
         self._cycle = 0
         self._current_agent: str | None = None
+
+        # Hard kill-switch: block gh, git, pytest, etc.
+        install_shell_guard()
 
         # Graceful shutdown
         signal.signal(signal.SIGTERM, self._handle_signal)

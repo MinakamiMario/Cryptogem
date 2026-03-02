@@ -261,6 +261,11 @@ class LabNotifier:
                                           'Trends worden geladen...')
                     self._handle_trends(db)
                     actions += 1
+                elif db and data.startswith('gates:'):
+                    self._answer_callback(callback_id,
+                                          'Gate health wordt geladen...')
+                    self._handle_gates(db)
+                    actions += 1
                 continue
 
             # ── Handle text messages from user ──
@@ -402,8 +407,19 @@ class LabNotifier:
             return 0
 
     def _send_status_summary(self, db) -> None:
-        """Send a quick status summary when 📊 button is pressed."""
-        self.send_dashboard(db)
+        """Send full health report when 📊 button is pressed.
+
+        Uses LabInspector for comprehensive output. Falls back to
+        basic dashboard if inspector fails.
+        """
+        try:
+            from lab.inspector import LabInspector
+            inspector = LabInspector(db)
+            report = inspector.format_health_report()
+            self._send_html(f'📊 <b>STATUS REPORT</b>\n\n{report}')
+        except Exception:
+            # Fallback to basic dashboard
+            self.send_dashboard(db)
 
     def _handle_ci(self, callback_id: str) -> None:
         """Show latest CI/CD workflow runs from GitHub Actions."""
@@ -467,6 +483,52 @@ class LabNotifier:
             self._send_html('\n'.join(lines))
         except Exception as e:
             self._send(f'Remote Hands healthcheck fout: {e}')
+
+    def _handle_gates(self, db) -> None:
+        """Send gate rejection summary via Telegram."""
+        try:
+            from lab.inspector import LabInspector
+            inspector = LabInspector(db)
+            gate = inspector.gate_health(hours=24)
+
+            lines = ['🚧 <b>GATE HEALTH (24h)</b>\n']
+
+            total = gate['total_rejections']
+            if total == 0:
+                lines.append('✅ Geen gate rejections in de afgelopen 24 uur.')
+                self._send_html('\n'.join(lines))
+                return
+
+            lines.append(f'<b>Totaal</b>: {total} rejections\n')
+
+            # By gate type
+            if gate['by_gate']:
+                lines.append('<b>Per gate</b>')
+                for g, cnt in sorted(gate['by_gate'].items(),
+                                     key=lambda x: x[1], reverse=True):
+                    pct = cnt / total * 100
+                    lines.append(f'  {g}: {cnt} ({pct:.0f}%)')
+
+            # Most-blocked tasks
+            if gate['top_blocked_tasks']:
+                lines.append('\n<b>Meest geblokkeerd</b>')
+                for tid, cnt in gate['top_blocked_tasks'][:5]:
+                    lines.append(f'  Task #{tid}: {cnt} rejections')
+
+            # Recent rejections
+            if gate['recent']:
+                lines.append('\n<b>Recent</b>')
+                for r in gate['recent'][:5]:
+                    reason_short = r['reason'][:80]
+                    lines.append(
+                        f'  {r["gate"]}: {r["from"]}→{r["to"]} '
+                        f'({r["actor"]}) — {reason_short}'
+                    )
+
+            self._send_html('\n'.join(lines))
+        except Exception as e:
+            logger.warning(f"Gate health report failed: {e}")
+            self._send(f'Gate health rapport fout: {e}')
 
     def _handle_trends(self, db) -> None:
         """Send 24h trend analytics via Telegram."""
@@ -597,6 +659,9 @@ class LabNotifier:
         self._send_with_buttons('\n'.join(lines), buttons=[
             [
                 {'text': '📈 Trends', 'callback_data': 'trends:0'},
+                {'text': '🚧 Gates', 'callback_data': 'gates:0'},
+            ],
+            [
                 {'text': '📊 CI Status', 'callback_data': 'ci:0'},
                 {'text': '🖥 Remote Hands', 'callback_data': 'rh:0'},
             ],

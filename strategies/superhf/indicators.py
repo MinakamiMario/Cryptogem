@@ -364,6 +364,51 @@ def map_1h_to_15m(
 # 15m indicator precomputation (for signal evaluation)
 # ---------------------------------------------------------------------------
 
+def _vectorized_hlc3_vwap(
+    highs: list[float], lows: list[float], closes: list[float],
+    atr: list[float | None], period: int = 20, zscore_lookback: int = 50,
+) -> tuple[list, list, list]:
+    """Compute HLC3 VWAP proxy + ATR-normalized deviation + z-score.
+
+    HLC3 = (high + low + close) / 3  — same proxy as HF candle_downloader.
+    vwap_dev = (vwap - close) / ATR  — positive when price below VWAP.
+    vwap_dev_zscore = z-score of vwap_dev over rolling window.
+
+    Returns (vwap, vwap_dev, vwap_dev_zscore) — three parallel arrays.
+    """
+    n = len(closes)
+    vwap = [0.0] * n
+    vwap_dev: list[float | None] = [None] * n
+    vwap_dev_zscore: list[float | None] = [None] * n
+
+    # Pass 1: HLC3 + rolling VWAP average + deviation
+    for i in range(n):
+        vwap[i] = (highs[i] + lows[i] + closes[i]) / 3.0
+
+    # Pass 2: ATR-normalized deviation
+    for i in range(n):
+        if atr[i] is not None and atr[i] > 0 and closes[i] > 0:
+            vwap_dev[i] = (vwap[i] - closes[i]) / atr[i]
+
+    # Pass 3: Z-score over rolling window (normalizes HLC3 structural cap)
+    for bar in range(n):
+        if vwap_dev[bar] is None:
+            continue
+        window = []
+        for j in range(max(0, bar - zscore_lookback + 1), bar + 1):
+            if vwap_dev[j] is not None:
+                window.append(vwap_dev[j])
+        if len(window) < 20:
+            continue
+        mean_dev = sum(window) / len(window)
+        var_dev = sum((x - mean_dev) ** 2 for x in window) / len(window)
+        std_dev = var_dev ** 0.5
+        if std_dev > 1e-10:
+            vwap_dev_zscore[bar] = (vwap_dev[bar] - mean_dev) / std_dev
+
+    return vwap, vwap_dev, vwap_dev_zscore
+
+
 def precompute_15m_indicators(candles_15m: list[dict]) -> dict:
     """Compute 15m-level indicators needed by signal functions.
 
@@ -371,7 +416,9 @@ def precompute_15m_indicators(candles_15m: list[dict]) -> dict:
 
     Returns dict with parallel arrays:
         closes, highs, lows, opens, volumes, n,
-        rsi, atr, vol_avg
+        rsi, atr, vol_avg,
+        dc_prev_low, dc_mid, bb_mid, bb_lower, bb_upper,
+        vwap, vwap_dev, vwap_dev_zscore
     """
     n = len(candles_15m)
     closes = [c['close'] for c in candles_15m]
@@ -380,6 +427,9 @@ def precompute_15m_indicators(candles_15m: list[dict]) -> dict:
     opens = [c.get('open', c['close']) for c in candles_15m]
     volumes = [c.get('volume', 0) for c in candles_15m]
 
+    DC_PERIOD = 20
+    BB_PERIOD = 20
+    BB_DEV = 2.0
     RSI_PERIOD = 14
     ATR_PERIOD = 14
 
@@ -388,11 +438,32 @@ def precompute_15m_indicators(candles_15m: list[dict]) -> dict:
     atr_arr = _vectorized_atr(highs, lows, closes, ATR_PERIOD)
     vol_avg_arr = _vectorized_vol_avg(volumes, 20)
 
+    # DC channels (needed for DC-geometry gate)
+    dc_prev_low_arr = _vectorized_donchian_low(lows, DC_PERIOD)
+    dc_mid_arr = _vectorized_donchian_mid(highs, lows, DC_PERIOD)
+
+    # Bollinger Bands (needed for DC-geometry gate)
+    bb_mid_arr, bb_upper_arr, bb_lower_arr = _vectorized_bollinger(
+        closes, BB_PERIOD, BB_DEV,
+    )
+
+    # HLC3 VWAP proxy + deviation + z-score (for VWAP_DEV signals)
+    vwap_arr, vwap_dev_arr, vwap_dev_zscore_arr = _vectorized_hlc3_vwap(
+        highs, lows, closes, atr_arr,
+    )
+
     ind: dict = {
         'closes': closes, 'highs': highs, 'lows': lows,
         'opens': opens, 'volumes': volumes, 'n': n,
         'rsi': rsi_arr, 'atr': atr_arr,
         'vol_avg': vol_avg_arr,
+        # DC channels
+        'dc_prev_low': dc_prev_low_arr, 'dc_mid': dc_mid_arr,
+        # Bollinger Bands
+        'bb_mid': bb_mid_arr, 'bb_lower': bb_lower_arr, 'bb_upper': bb_upper_arr,
+        # HLC3 VWAP
+        'vwap': vwap_arr, 'vwap_dev': vwap_dev_arr,
+        'vwap_dev_zscore': vwap_dev_zscore_arr,
     }
 
     return ind
@@ -475,7 +546,7 @@ if __name__ == "__main__":
     )
     check("pivot_only_no_pivot", zone_pivot is None, f"got {zone_pivot}")
 
-    # Test 7: 15m indicators computation
+    # Test 7: 15m indicators computation (all indicators including new ones)
     candles_15m = [{'time': i * 900, 'open': 100 + random.gauss(0, 2),
                      'high': 102 + random.gauss(0, 2),
                      'low': 98 + random.gauss(0, 2),
@@ -486,6 +557,43 @@ if __name__ == "__main__":
     check("15m_ind_length", ind['n'] == 200)
     check("15m_rsi_computed", ind['rsi'][50] is not None, f"rsi[50]={ind['rsi'][50]}")
     check("15m_atr_computed", ind['atr'][50] is not None, f"atr[50]={ind['atr'][50]}")
+
+    # Test 8: DC channels on 15m
+    check("15m_dc_prev_low_computed", ind['dc_prev_low'][50] is not None,
+          f"dc_prev_low[50]={ind['dc_prev_low'][50]}")
+    check("15m_dc_mid_computed", ind['dc_mid'][50] is not None,
+          f"dc_mid[50]={ind['dc_mid'][50]}")
+
+    # Test 9: Bollinger Bands on 15m
+    check("15m_bb_mid_computed", ind['bb_mid'][50] is not None,
+          f"bb_mid[50]={ind['bb_mid'][50]}")
+    check("15m_bb_lower_computed", ind['bb_lower'][50] is not None,
+          f"bb_lower[50]={ind['bb_lower'][50]}")
+
+    # Test 10: HLC3 VWAP proxy
+    check("15m_vwap_computed", ind['vwap'][50] is not None and ind['vwap'][50] > 0,
+          f"vwap[50]={ind['vwap'][50]}")
+    # HLC3 = (H + L + C) / 3 — verify for bar 0
+    expected_hlc3 = (candles_15m[0]['high'] + candles_15m[0]['low'] + candles_15m[0]['close']) / 3
+    check("15m_vwap_is_hlc3", abs(ind['vwap'][0] - expected_hlc3) < 1e-10,
+          f"vwap[0]={ind['vwap'][0]} != expected {expected_hlc3}")
+
+    # Test 11: VWAP deviation
+    check("15m_vwap_dev_computed", ind['vwap_dev'][50] is not None,
+          f"vwap_dev[50]={ind['vwap_dev'][50]}")
+
+    # Test 12: VWAP deviation z-score (needs ≥20 bars warmup after ATR warmup)
+    check("15m_vwap_dev_zscore_computed", ind['vwap_dev_zscore'][100] is not None,
+          f"vwap_dev_zscore[100]={ind['vwap_dev_zscore'][100]}")
+
+    # Test 13: DC-geometry gate check — close < dc_mid AND close < bb_mid at bar 50
+    # (values depend on random seed, just verify both are computable)
+    dc_mid_val = ind['dc_mid'][50]
+    bb_mid_val = ind['bb_mid'][50]
+    close_val = ind['closes'][50]
+    check("15m_geometry_computable",
+          dc_mid_val is not None and bb_mid_val is not None and close_val > 0,
+          f"dc_mid={dc_mid_val}, bb_mid={bb_mid_val}, close={close_val}")
 
     print(f"\n{'='*40}")
     print(f"Results: {passed} passed, {failed} failed")

@@ -394,6 +394,24 @@ class LabInspector:
                     f'{p["reviews_24h"]} reviews'
                 )
 
+        # Agent timing (from cycle metrics)
+        try:
+            stats = self.db.get_cycle_metrics_stats(hours=24)
+            agent_times = stats.get('avg_agent_time', {})
+            if agent_times:
+                slowest = stats.get('slowest_agent')
+                sorted_agents = sorted(
+                    agent_times.items(), key=lambda x: x[1],
+                    reverse=True)[:3]
+                timing_parts = [
+                    f'{name} {t:.1f}s' for name, t in sorted_agents
+                ]
+                lines.append(f'  ⏱ Top: {", ".join(timing_parts)}')
+                if slowest and len(agent_times) > 3:
+                    lines.append(f'  🐢 Slowest: {slowest}')
+        except Exception:
+            pass  # Agent timing is optional enhancement
+
         # Approved queue
         if snap.approved_waiting > 0:
             lines.append(

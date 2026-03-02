@@ -92,6 +92,7 @@ class HeartbeatLoop:
 
     def run_once(self) -> dict:
         """Run one heartbeat cycle across all agents."""
+        cycle_start = time.time()
         self._cycle += 1
         cycle_stats = {
             'cycle': self._cycle,
@@ -196,12 +197,22 @@ class HeartbeatLoop:
             cycle_stats['promotions'],
         )
 
+        # ── Persist cycle metrics ─────────────────────────
+        cycle_stats['agent_count'] = len(self.agents)
+        cycle_stats['drain_cycles'] = self._drain_cycles
+        cycle_stats['cycle_duration_s'] = time.time() - cycle_start
+        try:
+            self.db.save_cycle_metrics(cycle_stats)
+        except Exception as e:
+            logger.warning(f"  [metrics] save failed: {e}")
+
         logger.info(
             f"=== Cycle {self._cycle} done: "
             f"reviews={cycle_stats['reviews']} "
             f"tasks={cycle_stats['tasks']} "
             f"promotions={cycle_stats['promotions']} "
-            f"errors={cycle_stats['errors']} ==="
+            f"errors={cycle_stats['errors']} "
+            f"duration={cycle_stats['cycle_duration_s']:.1f}s ==="
         )
 
         return cycle_stats

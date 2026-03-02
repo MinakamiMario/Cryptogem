@@ -12,7 +12,7 @@ from lab.config import (
     REVIEW_VERDICTS, VALID_TRANSITIONS, WIP_CAPS,
 )
 from lab.models import (
-    AgentStatus, Comment, Goal, Task, TaskResult, TaskReview,
+    AgentStatus, Comment, CycleMetrics, Goal, Task, TaskResult, TaskReview,
 )
 
 SCHEMA_SQL = """
@@ -82,6 +82,20 @@ CREATE TABLE IF NOT EXISTS activity_log (
     details     TEXT,
     created_at  TEXT DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS cycle_metrics (
+    id              INTEGER PRIMARY KEY,
+    cycle           INTEGER NOT NULL,
+    reviews         INTEGER DEFAULT 0,
+    tasks           INTEGER DEFAULT 0,
+    promotions      INTEGER DEFAULT 0,
+    errors          INTEGER DEFAULT 0,
+    drain_mode      INTEGER DEFAULT 0,
+    drain_cycles    INTEGER DEFAULT 0,
+    agent_count     INTEGER DEFAULT 0,
+    cycle_duration_s REAL DEFAULT 0.0,
+    created_at      TEXT DEFAULT (datetime('now'))
+);
 """
 
 
@@ -119,6 +133,26 @@ class LabDB:
             self.conn.execute(
                 "ALTER TABLE tasks ADD COLUMN exit_conditions TEXT"
             )
+        # Migration: create cycle_metrics table if missing (v1.0.5)
+        tables = {row[0] for row in self.conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table'"
+        ).fetchall()}
+        if 'cycle_metrics' not in tables:
+            self.conn.execute("""
+                CREATE TABLE IF NOT EXISTS cycle_metrics (
+                    id              INTEGER PRIMARY KEY,
+                    cycle           INTEGER NOT NULL,
+                    reviews         INTEGER DEFAULT 0,
+                    tasks           INTEGER DEFAULT 0,
+                    promotions      INTEGER DEFAULT 0,
+                    errors          INTEGER DEFAULT 0,
+                    drain_mode      INTEGER DEFAULT 0,
+                    drain_cycles    INTEGER DEFAULT 0,
+                    agent_count     INTEGER DEFAULT 0,
+                    cycle_duration_s REAL DEFAULT 0.0,
+                    created_at      TEXT DEFAULT (datetime('now'))
+                )
+            """)
         self.conn.commit()
 
     def close(self) -> None:
@@ -604,6 +638,57 @@ class LabDB:
         )
         self.conn.commit()
 
+    # ── Cycle Metrics ──────────────────────────────────────
+
+    def save_cycle_metrics(self, stats: dict) -> int:
+        """Persist a heartbeat cycle's stats for trend analysis.
+
+        Args:
+            stats: dict with keys: cycle, reviews, tasks, promotions,
+                   errors, drain_mode, drain_cycles, agent_count,
+                   cycle_duration_s.
+        Returns:
+            Row ID of inserted metric.
+        """
+        cur = self.conn.execute(
+            "INSERT INTO cycle_metrics "
+            "(cycle, reviews, tasks, promotions, errors, "
+            " drain_mode, drain_cycles, agent_count, cycle_duration_s) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                stats.get('cycle', 0),
+                stats.get('reviews', 0),
+                stats.get('tasks', 0),
+                stats.get('promotions', 0),
+                stats.get('errors', 0),
+                1 if stats.get('drain_mode') else 0,
+                stats.get('drain_cycles', 0),
+                stats.get('agent_count', 0),
+                stats.get('cycle_duration_s', 0.0),
+            ),
+        )
+        self.conn.commit()
+        return cur.lastrowid
+
+    def get_cycle_metrics(self, limit: int = 100) -> list[CycleMetrics]:
+        """Retrieve recent cycle metrics, newest first."""
+        rows = self.conn.execute(
+            "SELECT * FROM cycle_metrics "
+            "ORDER BY id DESC LIMIT ?",
+            (limit,),
+        ).fetchall()
+        return [self._row_to_cycle_metrics(r) for r in rows]
+
+    def get_cycle_metrics_since(self, hours: int = 24) -> list[CycleMetrics]:
+        """Retrieve cycle metrics from the last N hours."""
+        rows = self.conn.execute(
+            "SELECT * FROM cycle_metrics "
+            "WHERE created_at >= datetime('now', ? || ' hours') "
+            "ORDER BY created_at ASC",
+            (f'-{hours}',),
+        ).fetchall()
+        return [self._row_to_cycle_metrics(r) for r in rows]
+
     # ── Summary ───────────────────────────────────────────
 
     def get_status_summary(self) -> dict:
@@ -692,4 +777,17 @@ class LabDB:
             last_heartbeat=row['last_heartbeat'],
             current_task_id=row['current_task_id'],
             progress_note=row['progress_note'],
+        )
+
+    @staticmethod
+    def _row_to_cycle_metrics(row: sqlite3.Row) -> CycleMetrics:
+        return CycleMetrics(
+            id=row['id'], cycle=row['cycle'],
+            reviews=row['reviews'], tasks=row['tasks'],
+            promotions=row['promotions'], errors=row['errors'],
+            drain_mode=bool(row['drain_mode']),
+            drain_cycles=row['drain_cycles'],
+            agent_count=row['agent_count'],
+            cycle_duration_s=row['cycle_duration_s'],
+            created_at=row['created_at'] or '',
         )

@@ -111,3 +111,16 @@ class CycleMetrics:
     agent_count: int = 0
     cycle_duration_s: float = 0.0
     created_at: str = ''
+
+
+@dataclass
+class GateRejection:
+    """Record of a gate blocking a transition attempt."""
+    id: int
+    gate: str                  # e.g. 'wip_cap', 'drain_mode', 'quorum', etc.
+    task_id: int
+    actor: str
+    from_status: str
+    to_status: str
+    reason: str
+    created_at: str = ''

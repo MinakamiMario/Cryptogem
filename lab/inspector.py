@@ -195,6 +195,42 @@ class LabInspector:
             'current_streak': current,
         }
 
+    def gate_health(self, hours: int = 24) -> dict:
+        """Analyze gate rejection patterns over the last N hours.
+
+        Returns:
+            dict with:
+                total_rejections: int
+                by_gate: {gate_name: count}
+                top_blocked_tasks: [(task_id, count)] — most-blocked tasks
+                recent: list of last 10 rejections (gate, task_id, reason)
+        """
+        rejections = self.db.get_gate_rejections(hours=hours, limit=500)
+        by_gate = self.db.get_gate_rejection_counts(hours=hours)
+
+        # Top blocked tasks (most rejections)
+        task_counts: dict[int, int] = {}
+        for r in rejections:
+            if r.task_id:
+                task_counts[r.task_id] = task_counts.get(r.task_id, 0) + 1
+        top_tasks = sorted(task_counts.items(), key=lambda x: x[1],
+                           reverse=True)[:5]
+
+        # Recent rejections (last 10)
+        recent = [
+            {'gate': r.gate, 'task_id': r.task_id,
+             'actor': r.actor, 'reason': r.reason[:200],
+             'from': r.from_status, 'to': r.to_status}
+            for r in rejections[:10]
+        ]
+
+        return {
+            'total_rejections': len(rejections),
+            'by_gate': by_gate,
+            'top_blocked_tasks': top_tasks,
+            'recent': recent,
+        }
+
     def capacity_forecast(self) -> dict[str, Optional[int]]:
         """Estimate cycles until each WIP cap is hit.
 
@@ -250,6 +286,7 @@ class LabInspector:
         snap = self.health_snapshot()
         trend = self.throughput_trend(hours=24)
         drain = self.drain_history(hours=24)
+        gate = self.gate_health(hours=24)
 
         lines = []
 
@@ -317,5 +354,17 @@ class LabInspector:
                 f'\n\u23f3 <b>Waiting on user</b>: '
                 f'{snap.approved_waiting} task(s)'
             )
+
+        # Gate health (only show if rejections exist)
+        if gate['total_rejections'] > 0:
+            lines.append(f'\n\U0001f6a7 <b>Gate Rejections (24h)</b>: '
+                         f'{gate["total_rejections"]}')
+            for g, cnt in sorted(gate['by_gate'].items(),
+                                 key=lambda x: x[1], reverse=True):
+                lines.append(f'  {g}: {cnt}')
+            if gate['top_blocked_tasks']:
+                lines.append('  Most blocked:')
+                for tid, cnt in gate['top_blocked_tasks'][:3]:
+                    lines.append(f'    Task #{tid}: {cnt} rejections')
 
         return '\n'.join(lines)

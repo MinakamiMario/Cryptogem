@@ -245,15 +245,17 @@ class TestAutoVersionCheck:
             'name': tag_name,
         }).encode('utf-8')
 
-    def test_no_reload_when_versions_match(self, db):
-        """No reload when running version matches latest release."""
-        from lab.config import LAB_VERSION
+    def test_no_reload_when_tag_already_seen(self, db):
+        """No reload when latest release tag matches last-seen tag in DB."""
         notifier = _make_notifier(0)
         notifier._send = MagicMock()
 
+        # Seed DB with the tag that the API will return
+        db.set_setting('release_last_tag', 'lab-v1.0.25')
+
         mock_resp = MagicMock()
         mock_resp.read.return_value = self._make_release_response(
-            f'lab-v{LAB_VERSION}')
+            'lab-v1.0.25')
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=False)
 
@@ -264,14 +266,17 @@ class TestAutoVersionCheck:
         assert result is False
         mock_kill.assert_not_called()
 
-    def test_reload_when_newer_version_available(self, db):
-        """Trigger reload when a newer release exists."""
+    def test_reload_when_new_tag_detected(self, db):
+        """Trigger reload when API returns a tag different from last-seen."""
         notifier = _make_notifier(0)
         notifier._send = MagicMock()
 
+        # Last-seen tag is older than what API will return
+        db.set_setting('release_last_tag', 'lab-v1.0.24')
+
         mock_resp = MagicMock()
         mock_resp.read.return_value = self._make_release_response(
-            'lab-v99.99.99')
+            'lab-v1.0.25')
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=False)
 
@@ -281,10 +286,12 @@ class TestAutoVersionCheck:
 
         assert result is True
         mock_kill.assert_called_once_with(os.getpid(), signal.SIGTERM)
-        # Should send TG notification
+        # Should send TG notification mentioning the new tag
         notifier._send.assert_called_once()
         sent = notifier._send.call_args[0][0]
-        assert '99.99.99' in sent
+        assert '1.0.25' in sent
+        # Should persist the new tag in DB
+        assert db.get_setting('release_last_tag') == 'lab-v1.0.25'
 
     def test_rate_limited_check(self, db):
         """Doesn't hit GitHub API more than once per 5 min."""
@@ -301,23 +308,23 @@ class TestAutoVersionCheck:
 
     def test_check_allowed_after_interval(self, db):
         """GitHub API check proceeds after interval expires."""
-        from lab.config import LAB_VERSION
         notifier = _make_notifier(0)
         notifier._send = MagicMock()
 
-        # Simulate old check (10 min ago)
+        # Simulate old check (10 min ago) + tag already seen
         db.set_setting('release_check_ts', str(time.time() - 600))
+        db.set_setting('release_last_tag', 'lab-v1.0.25')
 
         mock_resp = MagicMock()
         mock_resp.read.return_value = self._make_release_response(
-            f'lab-v{LAB_VERSION}')
+            'lab-v1.0.25')
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=False)
 
         with patch('urllib.request.urlopen', return_value=mock_resp):
             result = notifier.check_for_new_release(db=db)
 
-        assert result is False  # Same version, no reload
+        assert result is False  # Same tag, no reload
 
     def test_api_failure_doesnt_crash(self, db):
         """GitHub API failure is handled gracefully."""
@@ -328,6 +335,27 @@ class TestAutoVersionCheck:
             result = notifier.check_for_new_release(db=db)
 
         assert result is False
+
+    def test_first_run_seeds_tag_without_reload(self, db):
+        """First run (no last-seen tag) seeds DB but does NOT reload."""
+        notifier = _make_notifier(0)
+        notifier._send = MagicMock()
+
+        # No release_last_tag in DB (fresh install)
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = self._make_release_response(
+            'lab-v1.0.25')
+        mock_resp.__enter__ = MagicMock(return_value=mock_resp)
+        mock_resp.__exit__ = MagicMock(return_value=False)
+
+        with patch('urllib.request.urlopen', return_value=mock_resp):
+            with patch('os.kill') as mock_kill:
+                result = notifier.check_for_new_release(db=db)
+
+        assert result is False  # No reload on first run
+        mock_kill.assert_not_called()
+        # Should persist the tag for next check
+        assert db.get_setting('release_last_tag') == 'lab-v1.0.25'
 
     def test_non_lab_tag_ignored(self, db):
         """Tags not starting with 'lab-v' are ignored."""

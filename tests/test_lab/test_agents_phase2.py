@@ -165,6 +165,13 @@ class TestAgentReviews:
             created_by='boss',
         )
         db.transition(tid, 'todo', actor='boss')
+        db.set_exit_conditions(tid, {
+            'scope': 'reports/lab/test_*',
+            'dod': 'Test report',
+            'artifact': 'reports/lab/test.json',
+            'write_surface': "['lab/lab.db', 'reports/lab/']",
+            'stop_condition': 'Error → blocked',
+        })
         db.transition(tid, 'in_progress', actor=assigned_to)
 
         # Set artifact (fake file that actually exists)
@@ -301,6 +308,13 @@ class TestE2ECycle:
                 created_by='boss',
             )
             db.transition(tid, 'todo', actor='boss')
+            db.set_exit_conditions(tid, {
+                'scope': 'reports/lab/test_*',
+                'dod': 'Test report',
+                'artifact': 'reports/lab/test.json',
+                'write_surface': "['lab/lab.db', 'reports/lab/']",
+                'stop_condition': 'Error → blocked',
+            })
             task_ids[name] = tid
 
         # ── Step 2: Build agents ─────────────────────────────

@@ -104,6 +104,12 @@ class TestErrorRecovery:
         goal_id = db.create_goal("Test", agents=['test_agent'])
         tid = db.create_task(goal_id, "Failing task", 'test_agent', 'boss')
         db.transition(tid, 'todo', actor='user')
+        db.set_exit_conditions(tid, {
+            'scope': 'reports/lab/test_*', 'dod': 'Test report',
+            'artifact': 'reports/lab/test.json',
+            'write_surface': "['lab/lab.db', 'reports/lab/']",
+            'stop_condition': 'Error → blocked',
+        })
 
         # Simulate: agent picks up task, transitions to in_progress, then fails
         db.transition(tid, 'in_progress', actor='test_agent')

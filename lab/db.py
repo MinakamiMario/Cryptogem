@@ -110,6 +110,12 @@ CREATE TABLE IF NOT EXISTS gate_rejections (
     reason      TEXT NOT NULL,
     created_at  TEXT DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS lab_settings (
+    key         TEXT PRIMARY KEY,
+    value       TEXT NOT NULL,
+    updated_at  TEXT DEFAULT (datetime('now'))
+);
 """
 
 
@@ -196,10 +202,39 @@ class LabDB:
                     "ALTER TABLE cycle_metrics "
                     "ADD COLUMN retries INTEGER DEFAULT 0"
                 )
+        # Migration: create lab_settings table if missing (v1.1.1)
+        if 'lab_settings' not in tables:
+            self.conn.execute("""
+                CREATE TABLE IF NOT EXISTS lab_settings (
+                    key         TEXT PRIMARY KEY,
+                    value       TEXT NOT NULL,
+                    updated_at  TEXT DEFAULT (datetime('now'))
+                )
+            """)
         self.conn.commit()
 
     def close(self) -> None:
         self.conn.close()
+
+    # ── Settings (key-value store) ─────────────────────────
+
+    def get_setting(self, key: str, default: str = '') -> str:
+        """Get a setting by key. Returns default if not found."""
+        row = self.conn.execute(
+            "SELECT value FROM lab_settings WHERE key = ?", (key,)
+        ).fetchone()
+        return row['value'] if row else default
+
+    def set_setting(self, key: str, value: str) -> None:
+        """Upsert a setting."""
+        self.conn.execute(
+            "INSERT INTO lab_settings (key, value, updated_at) "
+            "VALUES (?, ?, datetime('now')) "
+            "ON CONFLICT(key) DO UPDATE SET value=excluded.value, "
+            "updated_at=excluded.updated_at",
+            (key, value),
+        )
+        self.conn.commit()
 
     # ── Goals ─────────────────────────────────────────────
 

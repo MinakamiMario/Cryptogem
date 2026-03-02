@@ -189,8 +189,11 @@ class HeartbeatLoop:
                 try:
                     self.db.set_status(agent.name, 'error',
                                        note=str(e)[:200])
-                except Exception:
-                    pass
+                except Exception as status_err:
+                    logger.warning(
+                        f"  [{agent.name}] Failed to set error status: "
+                        f"{status_err}"
+                    )
 
         # ── Resilience: blocked task auto-retry ────────────
         cycle_stats['skipped_agents'] = skipped_agents
@@ -311,7 +314,11 @@ class HeartbeatLoop:
                     1 for c in comments
                     if '🔄 Auto-retry' in (c.body or '')
                 )
-            except Exception:
+            except Exception as count_err:
+                logger.debug(
+                    f"  [retry] Task #{task.id} comment query failed: "
+                    f"{count_err}"
+                )
                 retry_count = 0
 
             if retry_count >= RETRY_MAX_ATTEMPTS:

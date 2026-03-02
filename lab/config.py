@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-LAB_VERSION = "1.1.0"
+LAB_VERSION = "1.1.1"
 
 # ── GitHub ────────────────────────────────────────────────
 GITHUB_REPO = 'MinakamiMario/Cryptogem'

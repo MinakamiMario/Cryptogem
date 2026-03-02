@@ -15,10 +15,8 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
-if str(_REPO_ROOT / "trading_bot") not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT / "trading_bot"))
 
-from strategy import calc_rsi, calc_atr, calc_donchian, calc_bollinger
+from trading_bot.strategy import calc_rsi, calc_atr, calc_donchian, calc_bollinger
 
 
 # ---------------------------------------------------------------------------

@@ -624,27 +624,27 @@ class LabNotifier:
 
     # ── Auto-reload: version check via GitHub releases ──────
     def check_for_new_release(self, db=None) -> bool:
-        """Compare running LAB_VERSION with latest GitHub release tag.
+        """Check if a new GitHub release tag exists since last check.
 
-        Returns True if a newer version was detected and reload triggered.
-        Checks at most once per 5 minutes (uses DB setting).
+        Compares latest release tag against the last-seen tag stored in DB.
+        Returns True if a new release was detected and reload triggered.
+        Checks at most once per 5 minutes (rate-limited via DB setting).
         """
         import time as _time
         from lab.config import LAB_VERSION
 
-        if not self.enabled:
+        if not self.enabled or not db:
             return False
 
         # Rate-limit: check at most once per 5 min
         CHECK_INTERVAL = 300
-        if db:
-            last_check = db.get_setting('release_check_ts', '0')
-            try:
-                elapsed = _time.time() - float(last_check)
-            except (ValueError, TypeError):
-                elapsed = CHECK_INTERVAL + 1
-            if elapsed < CHECK_INTERVAL:
-                return False
+        last_check = db.get_setting('release_check_ts', '0')
+        try:
+            elapsed = _time.time() - float(last_check)
+        except (ValueError, TypeError):
+            elapsed = CHECK_INTERVAL + 1
+        if elapsed < CHECK_INTERVAL:
+            return False
 
         # Query GitHub releases API
         try:
@@ -660,20 +660,27 @@ class LabNotifier:
                 data = json.loads(resp.read().decode('utf-8'))
 
             # Update check timestamp
-            if db:
-                db.set_setting('release_check_ts', str(_time.time()))
+            db.set_setting('release_check_ts', str(_time.time()))
 
-            tag = data.get('tag_name', '')  # e.g. 'lab-v1.2.6'
+            tag = data.get('tag_name', '')  # e.g. 'lab-v1.0.25'
             if not tag.startswith('lab-v'):
                 return False
 
-            remote_version = tag.replace('lab-v', '')
-            if remote_version == LAB_VERSION:
+            # Compare with last-seen tag (not LAB_VERSION — different scheme)
+            last_seen = db.get_setting('release_last_tag', '')
+            if not last_seen:
+                # First run: seed tag without reload (avoid boot loop)
+                logger.info(f"First release check — seeding tag: {tag}")
+                db.set_setting('release_last_tag', tag)
                 return False
+            if tag == last_seen:
+                return False  # Already processed this release
 
-            # Newer version available — trigger reload
+            # New release detected — trigger reload
             logger.info(
-                f"New release detected: {tag} (running v{LAB_VERSION})")
+                f"New release detected: {tag} "
+                f"(last seen: {last_seen or 'none'}, "
+                f"running v{LAB_VERSION})")
             self._send(
                 f'🆕 Nieuwe release gevonden: {tag}\n'
                 f'Huidige versie: v{LAB_VERSION}\n'
@@ -681,15 +688,15 @@ class LabNotifier:
             )
 
             # Persist state before exit
-            if db:
-                try:
-                    db.set_setting(
-                        'tg_last_update_id',
-                        str(self._last_update_id))
-                    db.set_setting(
-                        'reload_last_ts', str(_time.time()))
-                except Exception:
-                    pass
+            try:
+                db.set_setting('release_last_tag', tag)
+                db.set_setting(
+                    'tg_last_update_id',
+                    str(self._last_update_id))
+                db.set_setting(
+                    'reload_last_ts', str(_time.time()))
+            except Exception:
+                pass
 
             import os
             import signal
@@ -700,12 +707,11 @@ class LabNotifier:
         except Exception as e:
             logger.debug(f"Release check failed: {e}")
             # Update timestamp even on failure to avoid hammering
-            if db:
-                try:
-                    db.set_setting(
-                        'release_check_ts', str(_time.time()))
-                except Exception:
-                    pass
+            try:
+                db.set_setting(
+                    'release_check_ts', str(_time.time()))
+            except Exception:
+                pass
             return False
 
     def _handle_remote_hands(self, callback_id: str) -> None:

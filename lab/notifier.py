@@ -622,6 +622,92 @@ class LabNotifier:
 
         self._send_html('\n'.join(lines))
 
+    # ── Auto-reload: version check via GitHub releases ──────
+    def check_for_new_release(self, db=None) -> bool:
+        """Compare running LAB_VERSION with latest GitHub release tag.
+
+        Returns True if a newer version was detected and reload triggered.
+        Checks at most once per 5 minutes (uses DB setting).
+        """
+        import time as _time
+        from lab.config import LAB_VERSION
+
+        if not self.enabled:
+            return False
+
+        # Rate-limit: check at most once per 5 min
+        CHECK_INTERVAL = 300
+        if db:
+            last_check = db.get_setting('release_check_ts', '0')
+            try:
+                elapsed = _time.time() - float(last_check)
+            except (ValueError, TypeError):
+                elapsed = CHECK_INTERVAL + 1
+            if elapsed < CHECK_INTERVAL:
+                return False
+
+        # Query GitHub releases API
+        try:
+            token = _load_github_token()
+            url = (f'https://api.github.com/repos/{GITHUB_REPO}'
+                   f'/releases/latest')
+            headers = {'Accept': 'application/vnd.github.v3+json'}
+            if token:
+                headers['Authorization'] = f'token {token}'
+
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+
+            # Update check timestamp
+            if db:
+                db.set_setting('release_check_ts', str(_time.time()))
+
+            tag = data.get('tag_name', '')  # e.g. 'lab-v1.2.6'
+            if not tag.startswith('lab-v'):
+                return False
+
+            remote_version = tag.replace('lab-v', '')
+            if remote_version == LAB_VERSION:
+                return False
+
+            # Newer version available — trigger reload
+            logger.info(
+                f"New release detected: {tag} (running v{LAB_VERSION})")
+            self._send(
+                f'🆕 Nieuwe release gevonden: {tag}\n'
+                f'Huidige versie: v{LAB_VERSION}\n'
+                f'Auto-reload wordt gestart...'
+            )
+
+            # Persist state before exit
+            if db:
+                try:
+                    db.set_setting(
+                        'tg_last_update_id',
+                        str(self._last_update_id))
+                    db.set_setting(
+                        'reload_last_ts', str(_time.time()))
+                except Exception:
+                    pass
+
+            import os
+            import signal
+            logger.info("Auto-reload: sending SIGTERM")
+            os.kill(os.getpid(), signal.SIGTERM)
+            return True
+
+        except Exception as e:
+            logger.debug(f"Release check failed: {e}")
+            # Update timestamp even on failure to avoid hammering
+            if db:
+                try:
+                    db.set_setting(
+                        'release_check_ts', str(_time.time()))
+                except Exception:
+                    pass
+            return False
+
     def _handle_remote_hands(self, callback_id: str) -> None:
         """Run Remote Hands healthcheck and send output to Telegram."""
         self._answer_callback(callback_id, 'Healthcheck wordt uitgevoerd...')

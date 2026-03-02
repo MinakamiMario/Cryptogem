@@ -117,14 +117,16 @@ jobs:
             -d chat_id="${TELEGRAM_CHAT_ID}" \
             -d text="[LAB] ${TEXT}" || true
 
-      - name: Trigger daemon reload
+      - name: Notify daemon of new release
         if: success()
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           [ -z "$TELEGRAM_BOT_TOKEN" ] && exit 0
-          # Send /reload command — daemon picks it up on next poll cycle
+          TAG="${{ steps.version.outputs.tag }}"
+          # Note: daemon auto-detects new releases via GitHub API check.
+          # This TG message is informational only (bot can't read own msgs).
           curl -sf -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
-            -d text="/reload" || true
+            -d text="📦 Release ${TAG} gepubliceerd — daemon reload volgt automatisch." || true

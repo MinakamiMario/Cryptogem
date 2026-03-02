@@ -1,11 +1,13 @@
-"""Tests for v1.2.6 — reload guardrails + fail-safe signals.
+"""Tests for v1.2.6 — reload guardrails + fail-safe signals + auto-version-check.
 
 Covers:
 - Rate-limit: max 1 reload per 5 min
 - Fail-safe: dual TG signals (ontvangen + voltooid)
 - Wrapper log output includes version + self-test status
 - Reload persists cooldown timestamp in DB
+- Auto-version-check via GitHub releases API
 """
+import json
 import os
 import signal
 import sys
@@ -227,3 +229,120 @@ class TestReloadFailSafe:
         # Both success and failure paths exist
         assert 'Self-test PASS' in content or 'Self-test passed' in content
         assert 'Self-test FAILED' in content
+
+
+# ═══════════════════════════════════════════════════════════
+# Auto-version-check via GitHub releases API
+# ═══════════════════════════════════════════════════════════
+
+class TestAutoVersionCheck:
+    """Verify daemon auto-detects new releases and triggers reload."""
+
+    def _make_release_response(self, tag_name):
+        """Create a mock GitHub release API response."""
+        return json.dumps({
+            'tag_name': tag_name,
+            'name': tag_name,
+        }).encode('utf-8')
+
+    def test_no_reload_when_versions_match(self, db):
+        """No reload when running version matches latest release."""
+        from lab.config import LAB_VERSION
+        notifier = _make_notifier(0)
+        notifier._send = MagicMock()
+
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = self._make_release_response(
+            f'lab-v{LAB_VERSION}')
+        mock_resp.__enter__ = MagicMock(return_value=mock_resp)
+        mock_resp.__exit__ = MagicMock(return_value=False)
+
+        with patch('urllib.request.urlopen', return_value=mock_resp):
+            with patch('os.kill') as mock_kill:
+                result = notifier.check_for_new_release(db=db)
+
+        assert result is False
+        mock_kill.assert_not_called()
+
+    def test_reload_when_newer_version_available(self, db):
+        """Trigger reload when a newer release exists."""
+        notifier = _make_notifier(0)
+        notifier._send = MagicMock()
+
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = self._make_release_response(
+            'lab-v99.99.99')
+        mock_resp.__enter__ = MagicMock(return_value=mock_resp)
+        mock_resp.__exit__ = MagicMock(return_value=False)
+
+        with patch('urllib.request.urlopen', return_value=mock_resp):
+            with patch('os.kill') as mock_kill:
+                result = notifier.check_for_new_release(db=db)
+
+        assert result is True
+        mock_kill.assert_called_once_with(os.getpid(), signal.SIGTERM)
+        # Should send TG notification
+        notifier._send.assert_called_once()
+        sent = notifier._send.call_args[0][0]
+        assert '99.99.99' in sent
+
+    def test_rate_limited_check(self, db):
+        """Doesn't hit GitHub API more than once per 5 min."""
+        notifier = _make_notifier(0)
+
+        # Simulate recent check (10s ago)
+        db.set_setting('release_check_ts', str(time.time() - 10))
+
+        with patch('urllib.request.urlopen') as mock_url:
+            result = notifier.check_for_new_release(db=db)
+
+        assert result is False
+        mock_url.assert_not_called()
+
+    def test_check_allowed_after_interval(self, db):
+        """GitHub API check proceeds after interval expires."""
+        from lab.config import LAB_VERSION
+        notifier = _make_notifier(0)
+        notifier._send = MagicMock()
+
+        # Simulate old check (10 min ago)
+        db.set_setting('release_check_ts', str(time.time() - 600))
+
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = self._make_release_response(
+            f'lab-v{LAB_VERSION}')
+        mock_resp.__enter__ = MagicMock(return_value=mock_resp)
+        mock_resp.__exit__ = MagicMock(return_value=False)
+
+        with patch('urllib.request.urlopen', return_value=mock_resp):
+            result = notifier.check_for_new_release(db=db)
+
+        assert result is False  # Same version, no reload
+
+    def test_api_failure_doesnt_crash(self, db):
+        """GitHub API failure is handled gracefully."""
+        notifier = _make_notifier(0)
+
+        with patch('urllib.request.urlopen',
+                   side_effect=Exception('Network error')):
+            result = notifier.check_for_new_release(db=db)
+
+        assert result is False
+
+    def test_non_lab_tag_ignored(self, db):
+        """Tags not starting with 'lab-v' are ignored."""
+        notifier = _make_notifier(0)
+        notifier._send = MagicMock()
+
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = self._make_release_response(
+            'trading-v2.0.0')
+        mock_resp.__enter__ = MagicMock(return_value=mock_resp)
+        mock_resp.__exit__ = MagicMock(return_value=False)
+
+        with patch('urllib.request.urlopen', return_value=mock_resp):
+            with patch('os.kill') as mock_kill:
+                result = notifier.check_for_new_release(db=db)
+
+        assert result is False
+        mock_kill.assert_not_called()

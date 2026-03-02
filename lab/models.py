@@ -113,6 +113,7 @@ class CycleMetrics:
     skipped_agents: int = 0
     retries: int = 0
     created_at: str = ''
+    agent_timings: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass

@@ -97,6 +97,7 @@ CREATE TABLE IF NOT EXISTS cycle_metrics (
     cycle_duration_s REAL DEFAULT 0.0,
     skipped_agents  INTEGER DEFAULT 0,
     retries         INTEGER DEFAULT 0,
+    agent_timings   TEXT DEFAULT '{}',
     created_at      TEXT DEFAULT (datetime('now'))
 );
 
@@ -211,6 +212,13 @@ class LabDB:
                     updated_at  TEXT DEFAULT (datetime('now'))
                 )
             """)
+        # Migration: add agent_timings column to cycle_metrics (v1.2.0)
+        if 'cycle_metrics' in tables:
+            if 'agent_timings' not in cm_cols:
+                self.conn.execute(
+                    "ALTER TABLE cycle_metrics "
+                    "ADD COLUMN agent_timings TEXT DEFAULT '{}'"
+                )
         self.conn.commit()
 
     def close(self) -> None:
@@ -835,16 +843,19 @@ class LabDB:
         Args:
             stats: dict with keys: cycle, reviews, tasks, promotions,
                    errors, drain_mode, drain_cycles, agent_count,
-                   cycle_duration_s, skipped_agents, retries.
+                   cycle_duration_s, skipped_agents, retries,
+                   agent_timings.
         Returns:
             Row ID of inserted metric.
         """
+        agent_timings = stats.get('agent_timings', {})
+        timings_json = json.dumps(agent_timings) if agent_timings else '{}'
         cur = self.conn.execute(
             "INSERT INTO cycle_metrics "
             "(cycle, reviews, tasks, promotions, errors, "
             " drain_mode, drain_cycles, agent_count, cycle_duration_s,"
-            " skipped_agents, retries) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            " skipped_agents, retries, agent_timings) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 stats.get('cycle', 0),
                 stats.get('reviews', 0),
@@ -857,6 +868,7 @@ class LabDB:
                 stats.get('cycle_duration_s', 0.0),
                 stats.get('skipped_agents', 0),
                 stats.get('retries', 0),
+                timings_json,
             ),
         )
         self.conn.commit()
@@ -880,6 +892,63 @@ class LabDB:
             (f'-{hours}',),
         ).fetchall()
         return [self._row_to_cycle_metrics(r) for r in rows]
+
+    def get_cycle_metrics_stats(self, hours: int = 24) -> dict:
+        """Aggregate cycle metrics over a time window.
+
+        Returns dict with:
+            cycles: int — number of cycles
+            total_tasks, total_reviews, total_errors: int
+            avg_duration_s, min_duration_s, max_duration_s: float
+            drain_pct: float — percentage of cycles in drain mode
+            avg_agent_time: dict[str, float] — per-agent avg execution time
+            slowest_agent: str | None — agent with highest avg time
+        """
+        metrics = self.get_cycle_metrics_since(hours=hours)
+        if not metrics:
+            return {
+                'cycles': 0,
+                'total_tasks': 0, 'total_reviews': 0, 'total_errors': 0,
+                'avg_duration_s': 0.0, 'min_duration_s': 0.0,
+                'max_duration_s': 0.0,
+                'drain_pct': 0.0,
+                'avg_agent_time': {},
+                'slowest_agent': None,
+            }
+
+        durations = [m.cycle_duration_s for m in metrics
+                     if m.cycle_duration_s > 0]
+        drain_count = sum(1 for m in metrics if m.drain_mode)
+
+        # Aggregate per-agent timings across all cycles
+        agent_totals: dict[str, list[float]] = {}
+        for m in metrics:
+            for agent, elapsed in m.agent_timings.items():
+                agent_totals.setdefault(agent, []).append(elapsed)
+
+        avg_agent_time = {
+            agent: sum(times) / len(times)
+            for agent, times in agent_totals.items()
+        }
+        slowest = max(avg_agent_time, key=avg_agent_time.get) \
+            if avg_agent_time else None
+
+        return {
+            'cycles': len(metrics),
+            'total_tasks': sum(m.tasks for m in metrics),
+            'total_reviews': sum(m.reviews for m in metrics),
+            'total_errors': sum(m.errors for m in metrics),
+            'avg_duration_s': (
+                sum(durations) / len(durations) if durations else 0.0
+            ),
+            'min_duration_s': min(durations) if durations else 0.0,
+            'max_duration_s': max(durations) if durations else 0.0,
+            'drain_pct': (
+                drain_count / len(metrics) * 100 if metrics else 0.0
+            ),
+            'avg_agent_time': avg_agent_time,
+            'slowest_agent': slowest,
+        }
 
     # ── Summary ───────────────────────────────────────────
 
@@ -973,6 +1042,12 @@ class LabDB:
 
     @staticmethod
     def _row_to_cycle_metrics(row: sqlite3.Row) -> CycleMetrics:
+        # Parse agent_timings JSON — graceful fallback to empty dict
+        timings_raw = row['agent_timings'] if 'agent_timings' in row.keys() else '{}'
+        try:
+            agent_timings = json.loads(timings_raw) if timings_raw else {}
+        except (json.JSONDecodeError, TypeError):
+            agent_timings = {}
         return CycleMetrics(
             id=row['id'], cycle=row['cycle'],
             reviews=row['reviews'], tasks=row['tasks'],
@@ -984,6 +1059,7 @@ class LabDB:
             skipped_agents=row['skipped_agents'] or 0,
             retries=row['retries'] or 0,
             created_at=row['created_at'] or '',
+            agent_timings=agent_timings,
         )
 
     @staticmethod

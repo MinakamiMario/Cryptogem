@@ -109,6 +109,7 @@ class HeartbeatLoop:
             'tasks': 0,
             'promotions': 0,
             'errors': 0,
+            'agent_timings': {},
         }
 
         logger.info(f"=== Heartbeat cycle {self._cycle} ===")
@@ -150,7 +151,11 @@ class HeartbeatLoop:
                 mode = " [HALF_OPEN test]" if is_half_open else ""
                 logger.info(
                     f"  [{agent.name}] starting heartbeat{mode}")
+                agent_start = time.time()
                 stats = agent.heartbeat()
+                agent_elapsed = time.time() - agent_start
+                cycle_stats['agent_timings'][agent.name] = round(
+                    agent_elapsed, 2)
                 cycle_stats['reviews'] += stats.get('reviews', 0)
                 cycle_stats['tasks'] += stats.get('tasks', 0)
                 cycle_stats['promotions'] += stats.get('promotions', 0)
@@ -161,7 +166,7 @@ class HeartbeatLoop:
                 circuit.record_success()
 
                 logger.info(
-                    f"  [{agent.name}] done: "
+                    f"  [{agent.name}] done ({agent_elapsed:.1f}s): "
                     f"reviews={stats.get('reviews', 0)} "
                     f"tasks={stats.get('tasks', 0)} "
                     f"errors={stats.get('errors', 0)}"

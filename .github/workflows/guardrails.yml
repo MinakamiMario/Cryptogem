@@ -42,27 +42,18 @@ jobs:
         if: steps.scope.outputs.bot != '0'
         run: python3 scripts/check_cfg_schema.py
 
+      - name: Decompress CI fixture
+        if: steps.scope.outputs.bot != '0'
+        run: |
+          gunzip -c tests/fixtures/candle_cache_ci.json.gz > trading_bot/candle_cache_532.json
+          echo "✅ Fixture decompressed ($(wc -c < trading_bot/candle_cache_532.json) bytes)"
+
       - name: Regression tests (66 param sensitivity tests)
         if: steps.scope.outputs.bot != '0'
         run: |
           cd trading_bot
-          if [ -f candle_cache_532.json ]; then
-            python3 test_param_sensitivity.py
-          else
-            echo "⚠️  candle_cache_532.json not in CI — running syntax check"
-            python3 -c "
-          import ast, sys, pathlib
-          errors = 0
-          for f in pathlib.Path('.').glob('*.py'):
-              try:
-                  ast.parse(f.read_text())
-              except SyntaxError as e:
-                  print(f'SYNTAX ERROR: {f}: {e}')
-                  errors += 1
-          print(f'Checked {sum(1 for _ in pathlib.Path(\".\").glob(\"*.py\"))} files, {errors} errors')
-          sys.exit(1 if errors else 0)
-          "
-          fi
+          # No fallback — fixture MUST exist, tests MUST run
+          python3 test_param_sensitivity.py
 
       - name: Context drift sentinel
         if: steps.scope.outputs.bot != '0'

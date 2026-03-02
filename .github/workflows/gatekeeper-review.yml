@@ -72,12 +72,13 @@ jobs:
         run: |
           DIFF=$(git diff origin/master...HEAD -- lab/config.py 2>/dev/null || true)
           if echo "$DIFF" | grep -qE "^\+.*WRITE_ALLOWLIST"; then
-            echo "::warning::WRITE_ALLOWLIST modification detected — verify manually"
+            echo "::error::WRITE_ALLOWLIST expansion blocked — modification not allowed via PR"
+            exit 1
           fi
 
       - name: Scan lab code for dangerous patterns
         run: |
-          CHANGED=$(git diff --name-only origin/master...HEAD -- 'lab/*.py' 2>/dev/null || true)
+          CHANGED=$(git diff --name-only origin/master...HEAD -- 'lab/**/*.py' 2>/dev/null || true)
           VIOLATIONS=0
           while IFS= read -r file; do
             [ -z "$file" ] || [ ! -f "$file" ] && continue
@@ -134,27 +135,18 @@ jobs:
         if: steps.scope.outputs.lab != '0'
         run: python -m pytest tests/test_lab/ -x -q
 
+      - name: Decompress CI fixture
+        if: steps.scope.outputs.bot != '0'
+        run: |
+          gunzip -c tests/fixtures/candle_cache_ci.json.gz > trading_bot/candle_cache_532.json
+          echo "✅ Fixture decompressed ($(wc -c < trading_bot/candle_cache_532.json) bytes)"
+
       - name: Run trading bot tests
         if: steps.scope.outputs.bot != '0'
         run: |
           cd trading_bot
-          # Data file is gitignored (too large). Run syntax-only checks if absent.
-          if [ -f "candle_cache_532.json" ]; then
-            python test_param_sensitivity.py
-          else
-            echo "⚠️  candle_cache_532.json not in CI — running import check only"
-            python -c "
-          import ast, sys, pathlib
-          errors = 0
-          for f in pathlib.Path('.').glob('*.py'):
-              try:
-                  ast.parse(f.read_text())
-              except SyntaxError as e:
-                  print(f'SYNTAX ERROR: {f}: {e}')
-                  errors += 1
-          sys.exit(1 if errors else 0)
-          "
-          fi
+          # No fallback — fixture MUST exist, tests MUST run
+          python test_param_sensitivity.py
 
       - name: Verify Python syntax (changed files)
         run: |

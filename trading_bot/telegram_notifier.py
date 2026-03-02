@@ -15,8 +15,6 @@ import json
 import time
 import urllib.request
 import urllib.parse
-import urllib.error
-from pathlib import Path
 from datetime import datetime
 
 # --- Config ---

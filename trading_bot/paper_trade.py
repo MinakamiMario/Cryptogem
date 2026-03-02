@@ -32,12 +32,12 @@ from dotenv import load_dotenv
 
 # Excel
 from openpyxl import Workbook, load_workbook
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side, numbers
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
 # Project imports
 from kraken_client import KrakenClient
-from strategy import DualConfirmStrategy, DonchianBounceStrategy, MeanReversionStrategy, Position, Signal
+from strategy import DualConfirmStrategy, Position, Signal
 
 # === SETUP ===
 BASE_DIR = Path(__file__).parent

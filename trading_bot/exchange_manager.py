@@ -29,7 +29,6 @@ import time
 import logging
 from abc import ABC, abstractmethod
 from typing import Optional, Dict, List
-from pathlib import Path
 
 logger = logging.getLogger('trading_bot')
 

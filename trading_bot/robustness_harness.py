@@ -21,7 +21,6 @@ import time
 import random
 import hashlib
 from pathlib import Path
-from copy import deepcopy
 from datetime import datetime
 
 BASE_DIR = Path(__file__).parent

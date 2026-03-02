@@ -4,8 +4,12 @@ data/manifest_hf_*.json
 data/cache_parts_hf/
 data/orderbook_snapshots/
 trading_bot/candle_cache*.json
-trading_bot/paper_state_*.json
+trading_bot/paper_state*.json
 trading_bot/dashboard_*.json
+trading_bot/*_results.json
+trading_bot/*_report.json
+trading_bot/*_blackboard.json
+trading_bot/*_scoreboard.json
 archive/backtest_engine_v2.0/data/
 
 # Runtime

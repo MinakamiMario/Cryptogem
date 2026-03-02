@@ -175,5 +175,172 @@ class TestHeartbeatWithDB:
         assert status.status == 'error'
 
 
+class TestGuardrailIntegration:
+    """Heartbeat loop + Guardrail v1 drain mode & daily digest."""
+
+    def _fill_cap(self, db, goal_id, status='blocked'):
+        """Fill a WIP cap to trigger drain mode."""
+        from lab.config import WIP_CAPS
+        cap = WIP_CAPS[status]
+        for _ in range(cap):
+            tid = db.create_task(
+                goal_id, f"Fill {status}", 'edge_analyst', 'boss',
+                initial_status='todo',
+                exit_conditions={
+                    'scope': 'reports/lab/*', 'dod': 'Test',
+                    'artifact': 'reports/lab/x.json',
+                    'write_surface': "['lab/lab.db']",
+                    'stop_condition': 'Error → blocked',
+                },
+            )
+            db.transition(tid, 'in_progress', actor='edge_analyst')
+            if status == 'blocked':
+                db.transition(tid, 'blocked', actor='edge_analyst')
+
+    def test_drain_mode_in_cycle_stats(self, db, notifier):
+        """run_once() includes drain_mode in stats."""
+        agent = MockAgent('agent_a')
+        with patch('lab.heartbeat.HEARTBEAT_STAGGER_S', 0), \
+             patch('lab.heartbeat.DAILY_DIGEST_INTERVAL_S', 999999):
+            loop = HeartbeatLoop(db, notifier, [agent])
+            stats = loop.run_once()
+        assert 'drain_mode' in stats
+        assert stats['drain_mode'] is False
+
+    def test_drain_mode_entered_notified(self, db, notifier):
+        """Entering drain mode sends TG notification."""
+        notifier.drain_mode_entered = MagicMock()
+        goal_id = db.create_goal("Test", agents=['edge_analyst'])
+
+        agent = MockAgent('agent_a')
+        with patch('lab.heartbeat.HEARTBEAT_STAGGER_S', 0), \
+             patch('lab.heartbeat.DAILY_DIGEST_INTERVAL_S', 999999):
+            loop = HeartbeatLoop(db, notifier, [agent])
+
+            # Cycle 1: no drain
+            stats = loop.run_once()
+            assert stats['drain_mode'] is False
+            notifier.drain_mode_entered.assert_not_called()
+
+            # Fill blocked cap → drain
+            self._fill_cap(db, goal_id, 'blocked')
+            assert db.is_drain_mode() is True
+
+            # Cycle 2: drain entered
+            stats = loop.run_once()
+            assert stats['drain_mode'] is True
+            notifier.drain_mode_entered.assert_called_once()
+
+    def test_drain_mode_exited_notified(self, db, notifier):
+        """Exiting drain mode sends TG notification."""
+        notifier.drain_mode_entered = MagicMock()
+        notifier.drain_mode_exited = MagicMock()
+        goal_id = db.create_goal("Test", agents=['edge_analyst'])
+
+        agent = MockAgent('agent_a')
+        with patch('lab.heartbeat.HEARTBEAT_STAGGER_S', 0), \
+             patch('lab.heartbeat.DAILY_DIGEST_INTERVAL_S', 999999):
+            loop = HeartbeatLoop(db, notifier, [agent])
+
+            # Fill blocked cap → drain
+            self._fill_cap(db, goal_id, 'blocked')
+            loop.run_once()  # enters drain
+            assert loop._prev_drain_mode is True
+
+            # Clear blocked tasks → exit drain
+            for task in db.get_tasks_by_status('blocked'):
+                db.set_exit_conditions(task.id, {
+                    'scope': 'reports/lab/*', 'dod': 'Test',
+                    'artifact': 'reports/lab/x.json',
+                    'write_surface': "['lab/lab.db']",
+                    'stop_condition': 'Error → blocked',
+                })
+                db.transition(task.id, 'in_progress', actor='edge_analyst')
+                db.transition(task.id, 'peer_review', actor='edge_analyst')
+            assert db.is_drain_mode() is False
+
+            loop.run_once()  # exits drain
+            notifier.drain_mode_exited.assert_called_once()
+            assert loop._prev_drain_mode is False
+
+    def test_cap_breach_escalated_after_threshold(self, db, notifier):
+        """Persistent drain mode (>2 cycles) triggers cap_breach_alert."""
+        notifier.drain_mode_entered = MagicMock()
+        notifier.cap_breach_alert = MagicMock()
+        goal_id = db.create_goal("Test", agents=['edge_analyst'])
+
+        agent = MockAgent('agent_a')
+        with patch('lab.heartbeat.HEARTBEAT_STAGGER_S', 0), \
+             patch('lab.heartbeat.DAILY_DIGEST_INTERVAL_S', 999999), \
+             patch('lab.heartbeat.CAP_BREACH_ESCALATE_CYCLES', 2):
+            loop = HeartbeatLoop(db, notifier, [agent])
+
+            self._fill_cap(db, goal_id, 'blocked')
+
+            # Cycle 1: drain enters (cycle count = 1)
+            loop.run_once()
+            notifier.cap_breach_alert.assert_not_called()
+
+            # Cycle 2: drain persists (cycle count = 2)
+            loop.run_once()
+            notifier.cap_breach_alert.assert_not_called()
+
+            # Cycle 3: > threshold → escalate
+            loop.run_once()
+            notifier.cap_breach_alert.assert_called()
+
+    def test_daily_digest_fires_on_first_cycle(self, db, notifier):
+        """Daily digest fires on first heartbeat cycle (time=0)."""
+        notifier.daily_digest = MagicMock()
+        agent = MockAgent('agent_a')
+        with patch('lab.heartbeat.HEARTBEAT_STAGGER_S', 0), \
+             patch('lab.heartbeat.DAILY_DIGEST_INTERVAL_S', 0):
+            loop = HeartbeatLoop(db, notifier, [agent])
+            loop.run_once()
+        notifier.daily_digest.assert_called_once_with(db)
+
+    def test_daily_digest_skipped_before_interval(self, db, notifier):
+        """Daily digest skipped when interval hasn't elapsed."""
+        notifier.daily_digest = MagicMock()
+        agent = MockAgent('agent_a')
+        with patch('lab.heartbeat.HEARTBEAT_STAGGER_S', 0), \
+             patch('lab.heartbeat.DAILY_DIGEST_INTERVAL_S', 999999):
+            loop = HeartbeatLoop(db, notifier, [agent])
+            # Fake: last digest was just sent
+            loop._last_digest_time = time.time()
+            loop.run_once()
+        notifier.daily_digest.assert_not_called()
+
+    def test_drain_cycles_reset_on_exit(self, db, notifier):
+        """Drain cycle counter resets when drain mode exits."""
+        notifier.drain_mode_entered = MagicMock()
+        notifier.drain_mode_exited = MagicMock()
+        goal_id = db.create_goal("Test", agents=['edge_analyst'])
+
+        agent = MockAgent('agent_a')
+        with patch('lab.heartbeat.HEARTBEAT_STAGGER_S', 0), \
+             patch('lab.heartbeat.DAILY_DIGEST_INTERVAL_S', 999999):
+            loop = HeartbeatLoop(db, notifier, [agent])
+
+            self._fill_cap(db, goal_id, 'blocked')
+            loop.run_once()  # drain enters, _drain_cycles = 1
+            loop.run_once()  # _drain_cycles = 2
+            assert loop._drain_cycles == 2
+
+            # Clear drain
+            for task in db.get_tasks_by_status('blocked'):
+                db.set_exit_conditions(task.id, {
+                    'scope': 'reports/lab/*', 'dod': 'Test',
+                    'artifact': 'reports/lab/x.json',
+                    'write_surface': "['lab/lab.db']",
+                    'stop_condition': 'Error → blocked',
+                })
+                db.transition(task.id, 'in_progress', actor='edge_analyst')
+                db.transition(task.id, 'peer_review', actor='edge_analyst')
+
+            loop.run_once()  # drain exits
+            assert loop._drain_cycles == 0
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

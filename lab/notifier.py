@@ -513,10 +513,21 @@ class LabNotifier:
     # ── Guardrail v1 — Flow Control Notifications ────────
 
     def daily_digest(self, db) -> None:
-        """Send daily digest with task counts, cap indicators, drain mode.
+        """Send daily digest with task counts, throughput, drain history.
 
         Called once per 24h by the scheduler/orchestrator.
+        Uses LabInspector for richer metrics when cycle_metrics are available.
         """
+        try:
+            from lab.inspector import LabInspector
+            inspector = LabInspector(db)
+            report = inspector.format_health_report()
+            self._send_html(f'📊 <b>DAILY DIGEST</b>\n\n{report}')
+            return
+        except Exception:
+            pass  # Fall back to basic digest
+
+        # ── Fallback: basic digest without inspector ──────
         counts = db.get_task_counts_by_status()
         breaches = db.get_cap_breaches()
         drain = db.is_drain_mode()

@@ -95,3 +95,19 @@ class TaskResult:
     git_hash: Optional[str] = None
     cmd: Optional[str] = None
     details: dict = field(default_factory=dict)
+
+
+@dataclass
+class CycleMetrics:
+    """Snapshot of one heartbeat cycle — persisted for trend analysis."""
+    id: int
+    cycle: int
+    reviews: int = 0
+    tasks: int = 0
+    promotions: int = 0
+    errors: int = 0
+    drain_mode: bool = False
+    drain_cycles: int = 0
+    agent_count: int = 0
+    cycle_duration_s: float = 0.0
+    created_at: str = ''

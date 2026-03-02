@@ -38,14 +38,12 @@ import sys
 import json
 import time
 import random
-import math
 import hashlib
 import argparse
 from pathlib import Path
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass
 from copy import deepcopy
 from datetime import datetime
-from typing import Optional
 
 BASE_DIR = Path(__file__).parent
 sys.path.insert(0, str(BASE_DIR))

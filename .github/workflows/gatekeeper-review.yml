@@ -1,0 +1,187 @@
+name: Gatekeeper Review
+
+# Elke PR naar master gaat door BEIDE gatekeepers.
+# Spiegelt lab governance: risk_governor + robustness_auditor (quorum 2/2).
+# Boss mag PRs aanmaken maar NIET goedkeuren.
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  # ── Risk Governor ──────────────────────────────────────────
+  # Rol: security invarianten, gevoelige bestanden, shell guard, secrets.
+  risk-governor:
+    name: "🛡️ Risk Governor"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files
+        id: changes
+        run: |
+          FILES=$(git diff --name-only origin/master...HEAD || true)
+          echo "files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$FILES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          echo "$FILES"
+
+      - name: Flag high-risk file modifications
+        run: |
+          HIGH_RISK_PATTERNS=(
+            ".github/workflows/"
+            "lab/config.py"
+            "lab/db.py"
+            "lab/shell_guard.py"
+            "lab/notifier.py"
+            "lab/deploy/"
+          )
+          CHANGED=$(git diff --name-only origin/master...HEAD || true)
+          FOUND=0
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            for pattern in "${HIGH_RISK_PATTERNS[@]}"; do
+              if [[ "$file" == "$pattern"* ]]; then
+                echo "::warning file=$file::High-risk file modified (matches $pattern)"
+                FOUND=1
+              fi
+            done
+          done <<< "$CHANGED"
+          if [ "$FOUND" -eq 1 ]; then
+            echo "⚠️  High-risk files detected — CODEOWNERS review vereist"
+          fi
+
+      - name: Verify shell guard kill-switch
+        run: |
+          if git diff origin/master...HEAD -- lab/config.py 2>/dev/null | grep -q "^+.*ALLOW_LOCAL_SHELL.*=.*True"; then
+            echo "::error::ALLOW_LOCAL_SHELL must remain False — shell guard bypass blocked"
+            exit 1
+          fi
+
+      - name: Verify gatekeeper config untouched
+        run: |
+          DIFF=$(git diff origin/master...HEAD -- lab/config.py 2>/dev/null || true)
+          if echo "$DIFF" | grep -qE "^[+-].*(GATEKEEPERS|GATEKEEPER_QUORUM)\s*="; then
+            echo "::error::GATEKEEPERS / GATEKEEPER_QUORUM config mag niet worden gewijzigd via PR"
+            exit 1
+          fi
+
+      - name: Verify write allowlist not expanded
+        run: |
+          DIFF=$(git diff origin/master...HEAD -- lab/config.py 2>/dev/null || true)
+          if echo "$DIFF" | grep -qE "^\+.*WRITE_ALLOWLIST"; then
+            echo "::warning::WRITE_ALLOWLIST modification detected — verify manually"
+          fi
+
+      - name: Scan lab code for dangerous patterns
+        run: |
+          CHANGED=$(git diff --name-only origin/master...HEAD -- 'lab/*.py' 2>/dev/null || true)
+          VIOLATIONS=0
+          while IFS= read -r file; do
+            [ -z "$file" ] || [ ! -f "$file" ] && continue
+            if grep -nE "subprocess\.(run|Popen|call)|os\.system|os\.exec[lv]|eval\(|exec\(" "$file" 2>/dev/null; then
+              echo "::error file=$file::Dangerous pattern: subprocess/os.system/eval in lab code"
+              VIOLATIONS=1
+            fi
+          done <<< "$CHANGED"
+          if [ "$VIOLATIONS" -eq 1 ]; then
+            exit 1
+          fi
+          echo "✅ No dangerous patterns in lab code"
+
+      - name: Check no new secrets in diff
+        run: |
+          # Alleen NIEUWE regels checken (^+), niet verwijderde (^-)
+          DIFF=$(git diff origin/master...HEAD -- '*.py' '*.yml' '*.yaml' 2>/dev/null || true)
+          # Zoek naar hardcoded secrets in NIEUWE code (niet bestaande)
+          if echo "$DIFF" | grep "^+" | grep -iqE "(api_secret|private_key|secret_key)\s*=\s*['\"][A-Za-z0-9+/=]{20,}['\"]"; then
+            echo "::error::Potential new secret detected in diff"
+            exit 1
+          fi
+          echo "✅ No new secrets detected"
+
+  # ── Robustness Auditor ─────────────────────────────────────
+  # Rol: tests, regressie, code kwaliteit, broken imports.
+  robustness-auditor:
+    name: "🔬 Robustness Auditor"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: pip install pytest numpy
+
+      - name: Detect changed scope
+        id: scope
+        run: |
+          CHANGED=$(git diff --name-only origin/master...HEAD || true)
+          LAB=$(echo "$CHANGED" | grep -c "^lab/\|^tests/test_lab/" || true)
+          BOT=$(echo "$CHANGED" | grep -c "^trading_bot/\|^scripts/" || true)
+          echo "lab=$LAB" >> "$GITHUB_OUTPUT"
+          echo "bot=$BOT" >> "$GITHUB_OUTPUT"
+          echo "Scope: lab=$LAB files, bot=$BOT files"
+
+      - name: Run lab tests
+        if: steps.scope.outputs.lab != '0'
+        run: python -m pytest tests/test_lab/ -x -q
+
+      - name: Run trading bot tests
+        if: steps.scope.outputs.bot != '0'
+        run: |
+          cd trading_bot
+          python test_param_sensitivity.py
+
+      - name: Verify Python syntax (changed files)
+        run: |
+          CHANGED=$(git diff --name-only origin/master...HEAD -- '*.py' || true)
+          ERRORS=0
+          while IFS= read -r file; do
+            [ -z "$file" ] || [ ! -f "$file" ] && continue
+            if ! python -c "import ast; ast.parse(open('$file').read())" 2>&1; then
+              echo "::error file=$file::Syntax error"
+              ERRORS=1
+            fi
+          done <<< "$CHANGED"
+          if [ "$ERRORS" -eq 1 ]; then
+            exit 1
+          fi
+          echo "✅ All changed Python files parse cleanly"
+
+  # ── Telegram Notification ──────────────────────────────────
+  notify:
+    name: "📬 Gate Notification"
+    needs: [risk-governor, robustness-auditor]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send result to Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          [ -z "$TELEGRAM_BOT_TOKEN" ] && exit 0
+          RG="${{ needs.risk-governor.result }}"
+          RA="${{ needs.robustness-auditor.result }}"
+          if [ "$RG" = "success" ] && [ "$RA" = "success" ]; then
+            ICON="✅"
+            VERDICT="APPROVED"
+          else
+            ICON="❌"
+            VERDICT="BLOCKED"
+          fi
+          TEXT="${ICON} Gatekeeper Review ${VERDICT}
+          🛡️ Risk Governor: ${RG}
+          🔬 Robustness Auditor: ${RA}
+          Branch: ${{ github.head_ref }}"
+          curl -sf -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="${TELEGRAM_CHAT_ID}" \
+            -d text="${TEXT}" || true

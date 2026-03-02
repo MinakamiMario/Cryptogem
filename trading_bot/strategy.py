@@ -5,7 +5,7 @@ Berekent buy/sell signalen op basis van OHLC data van Kraken.
 Identieke logica als de backtest strategieën.
 """
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 logger = logging.getLogger('trading_bot')

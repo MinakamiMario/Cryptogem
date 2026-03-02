@@ -28,12 +28,14 @@ if [ $? -ne 0 ]; then
 fi
 echo "$LOG_PREFIX ✅ Self-test passed — v${VERSION}"
 
-# ── Step 3: Post TG startup notification ──────────────────
+# ── Step 3: Post TG reload-complete notification ───────────
+# Signal 2: confirms reload succeeded (pair with "reload ontvangen")
+echo "$LOG_PREFIX Loaded version: v${VERSION} — Self-test PASS"
 python3 -c "
 from lab.notifier import LabNotifier
 n = LabNotifier(enabled=True)
 if n.enabled:
-    n._send('🔄 Daemon herstart — v${VERSION} geladen')
+    n._send('✅ Reload voltooid — v${VERSION} geladen\n\nSelf-test: PASS\nDaemon start nu.')
 " 2>/dev/null || true
 
 # ── Step 4: Run daemon (exec replaces this shell) ─────────

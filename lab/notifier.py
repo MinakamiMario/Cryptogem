@@ -378,18 +378,42 @@ class LabNotifier:
                     )
                     actions += 1
                 elif cmd == 'reload':
+                    import time as _time
                     from lab.config import LAB_VERSION
+                    # ── Rate-limit: max 1 reload per 5 min ──
+                    RELOAD_COOLDOWN = 300  # seconds
+                    if db:
+                        last_reload = db.get_setting(
+                            'reload_last_ts', '0')
+                        try:
+                            elapsed = _time.time() - float(last_reload)
+                        except (ValueError, TypeError):
+                            elapsed = RELOAD_COOLDOWN + 1
+                        if elapsed < RELOAD_COOLDOWN:
+                            remaining = int(RELOAD_COOLDOWN - elapsed)
+                            self._send(
+                                f'⏳ Reload geweigerd — cooldown actief.\n'
+                                f'Wacht nog {remaining}s (max 1 reload'
+                                f' per {RELOAD_COOLDOWN // 60} min).'
+                            )
+                            actions += 1
+                            continue
+                    # ── Signal 1: TG "reload ontvangen" ──
                     self._send(
-                        f'🔄 Reload aangevraagd — daemon stopt...\n'
+                        f'🔄 Reload ontvangen — daemon stopt...\n'
                         f'Huidige versie: v{LAB_VERSION}\n'
-                        f'Launchd herstart automatisch met nieuwe code.'
+                        f'Launchd herstart automatisch met nieuwe code.\n'
+                        f'Verwacht: ✅ bevestiging na herstart.'
                     )
-                    # Persist update_id before exit
+                    # Persist state before exit
                     if db:
                         try:
                             db.set_setting(
                                 'tg_last_update_id',
                                 str(self._last_update_id))
+                            db.set_setting(
+                                'reload_last_ts',
+                                str(_time.time()))
                         except Exception:
                             pass
                     # Signal the daemon to stop — launchd restarts it

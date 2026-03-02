@@ -274,20 +274,29 @@ def cmd_goal_add(args: argparse.Namespace) -> None:
 def cmd_goal_list(args: argparse.Namespace) -> None:
     """List goals."""
     db = LabDB()
-    goals = db.get_goals()
-    db.close()
+    try:
+        goals = db.get_goals()
 
-    if not goals:
-        print("No active goals. Create one with: python -m lab.main goal add")
-        return
+        if not goals:
+            print("No active goals. Create one with: python -m lab.main goal add")
+            return
 
-    print("\n=== ACTIVE GOALS ===\n")
-    for g in goals:
-        tasks = db.get_tasks_by_goal(g.id) if hasattr(db, 'conn') else []
-        print(f"  [{g.id}] {g.title}")
-        print(f"      Agents: {', '.join(g.agents)}")
-        print(f"      Tasks/day: {g.tasks_per_day}")
-        print()
+        print("\n=== ACTIVE GOALS ===\n")
+        for g in goals:
+            tasks = db.get_tasks_by_goal(g.id)
+            print(f"  [{g.id}] {g.title}")
+            print(f"      Agents: {', '.join(g.agents)}")
+            print(f"      Tasks/day: {g.tasks_per_day}")
+            if tasks:
+                by_status: dict[str, int] = {}
+                for t in tasks:
+                    by_status[t.status] = by_status.get(t.status, 0) + 1
+                status_str = ', '.join(
+                    f"{s}: {c}" for s, c in sorted(by_status.items()))
+                print(f"      Tasks: {status_str}")
+            print()
+    finally:
+        db.close()
 
 
 def cmd_tasks(args: argparse.Namespace) -> None:

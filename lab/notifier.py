@@ -748,8 +748,10 @@ class LabNotifier:
 
     def infra_check(self, passed: bool, details: str = '') -> None:
         icon = '✅' if passed else '🚨'
-        self._send(f"{icon} Infrastructure check: {'PASS' if passed else 'FAIL'}"
-                    f"\n{details[:500]}" if details else '')
+        msg = f"{icon} Infrastructure check: {'PASS' if passed else 'FAIL'}"
+        if details:
+            msg += f"\n{details[:500]}"
+        self._send(msg)
 
     def live_drift(self, metric: str, expected: str, actual: str) -> None:
         self._send(

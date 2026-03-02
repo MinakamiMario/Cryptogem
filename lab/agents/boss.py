@@ -212,7 +212,7 @@ class BossAgent(BaseAgent):
                 initial_status='proposal',
             )
         except ValueError as e:
-            logger.info(f"Proposal blocked: {e}")
+            logger.warning(f"Proposal blocked: {e}")
             return None
         # Create review entries for GATEKEEPERS (not goal agents)
         for gk in GATEKEEPERS:
@@ -257,6 +257,8 @@ class BossAgent(BaseAgent):
 
             result = []
             for t in tasks:
+                if not isinstance(t, dict):
+                    continue
                 title = t.get('title', '')
                 agent = t.get('assigned_to', '')
                 desc = t.get('description', f"LLM-generated for: {goal.title}")

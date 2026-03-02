@@ -238,7 +238,11 @@ def ask(prompt: str, agent_name: str = '', **kwargs) -> str:
 
 
 def ask_json(prompt: str, agent_name: str = '', **kwargs) -> dict:
-    """Call and parse response as JSON. Strips markdown fences."""
+    """Call and parse response as JSON. Strips markdown fences.
+
+    Raises ValueError with context on JSON parse failure so callers
+    can fall back gracefully (e.g. boss → template tasks).
+    """
     text = ask(prompt, agent_name=agent_name, **kwargs)
     # Strip ```json ... ``` fences
     text = text.strip()
@@ -250,4 +254,11 @@ def ask_json(prompt: str, agent_name: str = '', **kwargs) -> dict:
         else:
             lines = lines[1:]
         text = '\n'.join(lines)
-    return json.loads(text)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as e:
+        # Include first 200 chars of raw text for debugging
+        preview = text[:200].replace('\n', '\\n')
+        raise ValueError(
+            f"LLM returned invalid JSON: {e}. Preview: {preview}"
+        ) from e

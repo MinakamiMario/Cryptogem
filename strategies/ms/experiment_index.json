@@ -1,0 +1,115 @@
+{
+  "version": "v1",
+  "generated": "2026-03-02",
+  "project": "ms",
+  "description": "MS — Market Structure signal research on 4H Kraken (526 coins)",
+  "experiments": [
+    {
+      "id": "sprint1",
+      "name": "Sprint 1 — 5 Market Structure Families",
+      "adr": "ADR-MS-001",
+      "date": "2026-03-02",
+      "dataset": "4h_default (candle_cache_532.json, 487 coins >= 360 bars)",
+      "fee_model": "kraken_spot_26bps",
+      "exit_mode": "hybrid_notrl (DC TARGET + RSI RECOVERY + BB TARGET)",
+      "configs": 18,
+      "families": [
+        "liq_sweep (4) — Liquidity Sweep + Reclaim",
+        "fvg_fill (4) — Fair Value Gap Fill",
+        "ob_touch (4) — Order Block Touch",
+        "sfp (3) — Swing Failure Pattern",
+        "shift_pb (3) — Structure Shift + Pullback"
+      ],
+      "go": 7,
+      "best_pf": 2.08,
+      "best_config": "ms_018_mse_shallow (shift_pb, PF=2.08, 697 trades, DD=21.3%)",
+      "scoreboard": "reports/ms/sprint1_scoreboard.json",
+      "runner": "scripts/run_ms_sprint1_sweep.py",
+      "status": "GO — advance to Sprint 2 truth-pass",
+      "survivors": [
+        "ms_018_mse_shallow (shift_pb): PF=2.08, 697 trades, DD=21.3%",
+        "ms_017_mse_fib618 (shift_pb): PF=1.80, 475 trades, DD=28.0%",
+        "ms_016_mse_base (shift_pb): PF=1.68, 568 trades, DD=35.2%",
+        "ms_007_msb_deep (fvg_fill): PF=1.66, 344 trades, DD=22.9%",
+        "ms_005_msb_base (fvg_fill): PF=1.65, 429 trades, DD=19.5%",
+        "ms_008_msb_wide (fvg_fill): PF=1.60, 295 trades, DD=37.5%",
+        "ms_006_msb_norsi (fvg_fill): PF=1.46, 548 trades, DD=29.8%"
+      ],
+      "bugs_fixed": [
+        "FVG/OB snapshot timing: snapshot after fill → snapshot before fill (0 trades → 295-548 trades)"
+      ]
+    },
+    {
+      "id": "sprint2",
+      "name": "Sprint 2 — Truth-Pass (Top-4 Robustness Validation)",
+      "adr": "ADR-MS-002",
+      "date": "2026-03-02",
+      "dataset": "4h_default (candle_cache_532.json, 487 coins >= 360 bars, 721 bars max)",
+      "fee_model": "kraken_spot_26bps",
+      "exit_mode": "hybrid_notrl (DC TARGET + RSI RECOVERY + BB TARGET)",
+      "configs": 4,
+      "tests": [
+        "T1: 3-Way Window Split (early/mid/late, PF>=1.0 in >=2/3)",
+        "T2: Walk-Forward (2 splits, cal PF>=1.0 + test PF>=0.9)",
+        "T3: Bootstrap Monte Carlo (1000 resamples, P5_PF>=0.85, >=60% profitable)"
+      ],
+      "verified": 4,
+      "conditional": 0,
+      "failed": 0,
+      "runner": "scripts/run_ms_sprint2_truthpass.py",
+      "scoreboard": "reports/ms/sprint2_truthpass_summary.json",
+      "status": "GO — advance to paper trading validation",
+      "results": [
+        "ms_018_mse_shallow (shift_pb): VERIFIED 3/3, PF=2.08, P5_PF=1.48, 100% boot prof, DD=21.3%",
+        "ms_005_msb_base (fvg_fill): VERIFIED 3/3, PF=1.65, P5_PF=1.19, 100% boot prof, DD=19.5%",
+        "ms_017_mse_fib618 (shift_pb): VERIFIED 3/3, PF=1.80, P5_PF=1.28, 100% boot prof, DD=28.0%",
+        "ms_007_msb_deep (fvg_fill): VERIFIED 3/3, PF=1.66, P5_PF=1.24, 99% boot prof, DD=22.9%"
+      ]
+    },
+    {
+      "id": "sprint3",
+      "name": "Sprint 3 — Ensemble Analysis (shift_pb + fvg_fill)",
+      "adr": "ADR-MS-003",
+      "date": "2026-03-02",
+      "dataset": "4h_default (487 coins >= 360 bars)",
+      "fee_model": "kraken_spot_26bps",
+      "exit_mode": "hybrid_notrl (DC TARGET + RSI RECOVERY + BB TARGET)",
+      "ensembles_tested": 3,
+      "mode": "priority",
+      "runner": "scripts/run_ms_sprint3_ensemble.py",
+      "scoreboard": "reports/ms/sprint3_ensemble_summary.json",
+      "status": "DECIDED — ms_018 standalone preferred over ensemble",
+      "results": [
+        "ms_018+ms_005: VERIFIED PF=1.89 (vs 2.08 standalone), DD=24.2%, 454 trades",
+        "ms_018+ms_007: VERIFIED PF=1.55 (vs 2.08 standalone), DD=24.5%, 417 trades",
+        "ms_017+ms_005: VERIFIED PF=1.66 (vs 1.80 standalone), DD=21.9%, 445 trades"
+      ],
+      "conclusion": "Ensemble degrades ms_018 performance (-9% PF, -62% P&L). Low overlap (1.9-4.1%) confirms independent signals, but capital competition hurts. ms_018 standalone is optimal."
+    },
+    {
+      "id": "sprint4",
+      "name": "Sprint 4 — Paper Trading (MEXC 4H ms_018)",
+      "adr": "ADR-MS-004",
+      "date": "2026-03-02",
+      "exchange": "MEXC SPOT",
+      "fee_model": "mexc_spot_10bps",
+      "exit_mode": "hybrid_notrl (DC TARGET + RSI RECOVERY + BB TARGET)",
+      "config": "ms_018_mse_shallow (shift_pb, max_bos_age=15, pullback_pct=0.382)",
+      "runner": "trading_bot/paper_ms_4h.py",
+      "status": "DEPLOYED — paper trading ready",
+      "baseline": {
+        "pf": 2.08,
+        "p5_pf": 1.48,
+        "dd_max": "21.3%",
+        "trades": 697,
+        "backtest_fee": "kraken_26bps"
+      },
+      "rollback_criteria": [
+        "R1: PF < 1.0 after 30+ trades",
+        "R2: DD > 30%",
+        "R3: 8+ consecutive losses"
+      ],
+      "success_criteria": "PF > 1.48 (P5 baseline), DD < 30%, WR > 35% after 50+ trades"
+    }
+  ]
+}

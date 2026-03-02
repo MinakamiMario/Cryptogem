@@ -589,6 +589,27 @@ class LabNotifier:
                         f'({agent_times[stats["slowest_agent"]]:.1f}s avg)'
                     )
 
+            # Capacity forecast
+            try:
+                from lab.inspector import LabInspector
+                inspector = LabInspector(db)
+                forecast = inspector.capacity_forecast()
+                approaching = {
+                    s: c for s, c in forecast.items()
+                    if c is not None and c <= 10
+                }
+                if approaching:
+                    lines.append('\n📈 <b>Capacity Forecast</b>')
+                    for status, cyc in sorted(approaching.items(),
+                                              key=lambda x: x[1]):
+                        if cyc == 0:
+                            lines.append(f'  {status}: ⚠️ BREACHED')
+                        else:
+                            lines.append(
+                                f'  {status}: ~{cyc} cycles to breach')
+            except Exception:
+                pass  # Forecast is optional enrichment
+
             self._send_html('\n'.join(lines))
         except Exception as e:
             logger.warning(f"Trends report failed: {e}")
@@ -910,7 +931,11 @@ class LabNotifier:
             msg += f"\n{details[:500]}"
         self._send(msg)
 
+    # ── Future agent hooks (prepared, not yet wired) ─────
+    # Called by: live_monitor agent (rule-based, implemented)
+    # Wired when: live_monitor.heartbeat() detects drift
     def live_drift(self, metric: str, expected: str, actual: str) -> None:
+        """Alert on live metric drift. Called by live_monitor agent."""
         self._send(
             f"🔍 Live drift gedetecteerd:\n"
             f"Metric: <b>{metric}</b>\n"
@@ -918,8 +943,11 @@ class LabNotifier:
             f"Actueel: {actual}"
         )
 
+    # Called by: deployment_judge agent (rule-based, implemented)
+    # Wired when: deployment_judge.heartbeat() evaluates GO/NO-GO
     def deployment_verdict(self, task_id: int, verdict: str,
                            details: str = '') -> None:
+        """Alert on deployment verdict. Called by deployment_judge agent."""
         icons = {'GO': '🟢', 'NO-GO': '🔴', 'PAPERTRADE': '🟡'}
         icon = icons.get(verdict, '⚪')
         self._send(

@@ -2,10 +2,13 @@
 from __future__ import annotations
 
 import json
+import logging
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
+
+logger = logging.getLogger('lab.db')
 
 from lab.config import (
     AGENT_NAMES, ALL_STATUSES, DB_PATH, EXIT_CONDITIONS, GATEKEEPERS,
@@ -379,8 +382,10 @@ class LabDB:
                 (gate, task_id, actor, from_status, to_status, reason),
             )
             self.conn.commit()
-        except Exception:
-            pass  # Never let rejection logging break the gate itself
+        except Exception as e:
+            logger.warning(
+                f"Gate rejection log failed ({gate}, task #{task_id}): {e}"
+            )
 
     def transition(self, task_id: int, new_status: str, actor: str) -> None:
         """Enforce state machine. Raises ValueError on invalid transition.

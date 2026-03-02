@@ -1,0 +1,52 @@
+{
+  "date": "2026-03-02T23:11:21.032499+00:00",
+  "config": "ms_018_mse_shallow",
+  "dataset": "4h_default",
+  "results": [
+    {
+      "max_pos": 1,
+      "trades": 239,
+      "pf": 1.55,
+      "pnl": 17182.55,
+      "dd_pct": 31.6,
+      "wr_pct": 4937.0,
+      "avg_bars": 0.0
+    },
+    {
+      "max_pos": 2,
+      "trades": 447,
+      "pf": 2.04,
+      "pnl": 42899.69,
+      "dd_pct": 20.4,
+      "wr_pct": 5369.0,
+      "avg_bars": 0.0
+    },
+    {
+      "max_pos": 3,
+      "trades": 682,
+      "pf": 2.08,
+      "pnl": 40943.71,
+      "dd_pct": 21.3,
+      "wr_pct": 5425.0,
+      "avg_bars": 0.0
+    },
+    {
+      "max_pos": 5,
+      "trades": 1014,
+      "pf": 1.42,
+      "pnl": 5308.13,
+      "dd_pct": 35.1,
+      "wr_pct": 5069.0,
+      "avg_bars": 0.0
+    },
+    {
+      "max_pos": 8,
+      "trades": 1371,
+      "pf": 1.36,
+      "pnl": 2863.32,
+      "dd_pct": 29.6,
+      "wr_pct": 5106.0,
+      "avg_bars": 0.0
+    }
+  ]
+}

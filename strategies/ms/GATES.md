@@ -95,10 +95,35 @@ Verdicts: ALL 3 PASS → VERIFIED, 2/3 → CONDITIONAL, ≤1/3 → FAILED
 | **ms_017** | shift_pb | 1.80 | 28.0% | PASS | PASS | PASS | **VERIFIED** |
 | **ms_007** | fvg_fill | 1.66 | 22.9% | PASS | PASS | PASS | **VERIFIED** |
 
-## Next: Paper Trading Validation
+## Position Sizing Sensitivity (ADR-MS-005)
 
-Priority order:
-1. **ms_018** (shift_pb shallow): Primary — PF=2.08, P5_PF=1.48, DD=21.3%, 697 trades
+ms_018 tested at max_pos={1, 2, 3, 5, 8}:
+
+| max_pos | Trades | PF | P&L | DD% | Risk-adj |
+|---------|--------|----|-----|-----|----------|
+| 1 | 239 | 1.55 | $17,183 | 31.6% | 4.91 |
+| **2** | **447** | **2.04** | **$42,900** | **20.4%** | **10.00** |
+| 3 | 682 | 2.08 | $40,944 | 21.3% | 9.77 |
+| 5 | 1,014 | 1.42 | $5,308 | 35.1% | 4.05 |
+| 8 | 1,371 | 1.36 | $2,863 | 29.6% | 4.59 |
+
+**Decision**: max_pos=2 optimal. Risk-adjusted score 10.00, best P&L, lowest DD.
+
+## Deployment Config (Paper Trading)
+
+```
+Exchange:       MEXC SPOT (10bps/side)
+Signal:         ms_018 shift_pb shallow
+Max positions:  2 (ADR-MS-005)
+Capital/trade:  $5,000
+Equity:         $10,000
+Cooldown:       4 bars (8 after stop)
+Est. frequency: ~2-3 trades/day
+```
+
+## Priority Order
+
+1. **ms_018** (shift_pb shallow): PRIMARY — PF=2.04 @max_pos=2, P5_PF=1.48, DD=20.4%, 447 trades
 2. **ms_005** (fvg base): Secondary — PF=1.65, P5_PF=1.19, DD=19.5%, 429 trades
 3. **ms_017** (shift_pb fib618): Reserve — PF=1.80, P5_PF=1.28, DD=28.0%
 4. **ms_007** (fvg deep): Reserve — PF=1.66, P5_PF=1.24, DD=22.9%

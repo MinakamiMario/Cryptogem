@@ -12,7 +12,7 @@ Exits: hybrid_notrl (FIXED STOP → TIME MAX → RSI RECOVERY → DC TARGET → 
   - max_stop_pct=15, time_max_bars=15, rsi_rec_target=45, rsi_rec_min_bars=2
 
 Fee: MEXC SPOT 10bps/side (taker, conservative).
-Sizing: Fixed $2,000/trade.
+Sizing: Fixed $5,000/trade, max 2 positions (ADR-MS-005 optimal).
 
 Backtest baseline (ms_018 on Kraken 26bps): PF=2.08, P5_PF=1.48, DD=21.3%, 697 trades
 Note: MEXC fees (10bps) are lower than backtest (26bps), so live PF should be >= backtest.
@@ -67,10 +67,10 @@ LOG_DIR.mkdir(exist_ok=True)
 # MEXC fee (taker, conservative — actual may be 0% maker / 5bps taker)
 MEXC_FEE = 0.0010  # 10bps per side
 
-# Sizing
-CAPITAL_PER_TRADE = 2000.0
+# Sizing (ADR-MS-005: max_pos=2 optimal from sensitivity analysis)
+CAPITAL_PER_TRADE = 5000.0
 INITIAL_EQUITY = 10000.0
-MAX_POSITIONS = 3
+MAX_POSITIONS = 2
 
 # ─── ms_018 config (frozen from ADR-MS-002) ─────────────────
 ENTRY_PARAMS = {
@@ -104,10 +104,10 @@ MIN_CANDLES = 120
 # Backtest was on Kraken 26bps; MEXC 10bps is more favorable.
 # PF should be at least backtest level, likely better.
 BASELINE = {
-    'pf': 2.08,
-    'p5_pf': 1.48,
-    'dd_max': 0.213,
-    'trades_per_487coins_721bars': 697,
+    'pf': 2.04,           # max_pos=2 baseline (ADR-MS-005)
+    'p5_pf': 1.48,        # conservative: keep P5 from max_pos=3 bootstrap
+    'dd_max': 0.204,      # max_pos=2 DD (was 21.3% at max_pos=3)
+    'trades_per_487coins_721bars': 447,  # max_pos=2 trades (was 697 at max_pos=3)
     'backtest_fee_bps': 26,
     'live_fee_bps': 10,
 }

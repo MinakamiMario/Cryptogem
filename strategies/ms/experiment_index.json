@@ -97,12 +97,18 @@
       "config": "ms_018_mse_shallow (shift_pb, max_bos_age=15, pullback_pct=0.382)",
       "runner": "trading_bot/paper_ms_4h.py",
       "status": "DEPLOYED — paper trading ready",
+      "sizing": {
+        "max_positions": 2,
+        "capital_per_trade": 5000,
+        "rationale": "ADR-MS-005: max_pos=2 optimal (PF/DD=10.00, best P&L $42.9K, lowest DD 20.4%)"
+      },
       "baseline": {
-        "pf": 2.08,
+        "pf": 2.04,
         "p5_pf": 1.48,
-        "dd_max": "21.3%",
-        "trades": 697,
-        "backtest_fee": "kraken_26bps"
+        "dd_max": "20.4%",
+        "trades": 447,
+        "backtest_fee": "kraken_26bps",
+        "note": "Baseline at max_pos=2 (ADR-MS-005)"
       },
       "rollback_criteria": [
         "R1: PF < 1.0 after 30+ trades",
@@ -110,6 +116,25 @@
         "R3: 8+ consecutive losses"
       ],
       "success_criteria": "PF > 1.48 (P5 baseline), DD < 30%, WR > 35% after 50+ trades"
+    },
+    {
+      "id": "maxpos_sensitivity",
+      "name": "Position Sizing Sensitivity (max_pos 1-8)",
+      "adr": "ADR-MS-005",
+      "date": "2026-03-03",
+      "dataset": "4h_default (487 coins >= 360 bars)",
+      "fee_model": "kraken_spot_26bps",
+      "config": "ms_018_mse_shallow",
+      "runner": "scripts/run_ms_maxpos_sensitivity.py",
+      "report": "reports/ms/maxpos_sensitivity.json",
+      "status": "DECIDED — max_pos=2 optimal",
+      "results": [
+        "max_pos=1: PF=1.55, DD=31.6%, 239 trades, $17.2K — too concentrated",
+        "max_pos=2: PF=2.04, DD=20.4%, 447 trades, $42.9K — OPTIMAL",
+        "max_pos=3: PF=2.08, DD=21.3%, 682 trades, $40.9K — baseline",
+        "max_pos=5: PF=1.42, DD=35.1%, 1014 trades, $5.3K — diluted",
+        "max_pos=8: PF=1.36, DD=29.6%, 1371 trades, $2.9K — over-diluted"
+      ]
     }
   ]
 }

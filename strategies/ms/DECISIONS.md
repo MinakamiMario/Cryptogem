@@ -341,7 +341,7 @@ Params:     max_bos_age=15, pullback_pct=0.382, max_pullback_bars=6
 Exits:      hybrid_notrl (FIXED STOP → TIME MAX → RSI RECOVERY → DC TARGET → BB TARGET)
 Exit grid:  max_stop_pct=15, time_max_bars=15, rsi_rec_target=45, rsi_rec_min_bars=2
 Fee:        MEXC 10bps/side (conservative)
-Sizing:     $2,000/trade, max 3 positions
+Sizing:     $5,000/trade, max 2 positions (updated ADR-MS-005)
 Cooldown:   4 bars normal, 8 bars after stop loss
 ```
 
@@ -409,3 +409,74 @@ python trading_bot/paper_ms_4h.py --report
 | MEXC rate limits | 10% | Missed signals | 0.25s delay between API calls |
 | Structural entry scarcity | 25% | < 1 trade/day | 300 coins scanned (vs 487 backtest) |
 | Fee advantage masks degradation | 15% | False confidence | Compare vs P5 baseline (Kraken fees) |
+
+---
+
+## ADR-MS-005: Position Sizing — max_pos=2 optimal
+
+**Date**: 2026-03-03
+**Status**: DECIDED — max_pos=2 deployed, capital per trade $5K
+
+### Context
+
+ADR-MS-004 deployed paper trading with max_pos=3, $2K/trade (default from backtest engine). This was inherited from Sprint 3 without explicit optimization. Question: what's the optimal number of concurrent positions for ms_018?
+
+### Experiment
+
+Sensitivity run: ms_018 (shift_pb shallow) with max_pos={1, 2, 3, 5, 8} on same dataset (487 coins, 4H Kraken, 26bps).
+
+### Results
+
+| max_pos | Trades | PF | P&L | DD% | Risk-adj (PF/DD) |
+|---------|--------|----|-----|-----|-------------------|
+| 1 | 239 | 1.55 | $17,183 | 31.6% | 4.91 |
+| **2** | **447** | **2.04** | **$42,900** | **20.4%** | **10.00** |
+| 3 | 682 | 2.08 | $40,944 | 21.3% | 9.77 |
+| 5 | 1,014 | 1.42 | $5,308 | 35.1% | 4.05 |
+| 8 | 1,371 | 1.36 | $2,863 | 29.6% | 4.59 |
+
+### Key Findings
+
+#### 1. max_pos=2 dominates on risk-adjusted basis
+- Best risk-adjusted score: PF/DD = 10.00 (vs 9.77 for max_pos=3)
+- Highest P&L: $42,900 (vs $40,944 for max_pos=3)
+- Lowest DD: 20.4% (vs 21.3% for max_pos=3)
+- PF negligibly lower: 2.04 vs 2.08 (-0.04, within noise)
+
+#### 2. max_pos=1 is paradoxically worse
+- DD rises to 31.6% despite fewer trades (239)
+- Single-coin concentration: each trade absorbs full portfolio risk
+- PF drops to 1.55 — engine can't diversify across entry timing
+
+#### 3. max_pos>=5 dilutes quality
+- PF collapses: 1.42 (5 slots) → 1.36 (8 slots)
+- P&L drops 87-93% vs optimal
+- Engine fills slots with marginal entries that drag portfolio down
+- More trades ≠ better: 1,371 trades at PF 1.36 < 447 trades at PF 2.04
+
+#### 4. Capital allocation follows naturally
+- $10K equity / 2 positions = $5K per trade
+- vs previous: $10K / 3 positions = $3.3K per trade
+- Larger position in fewer, higher-quality entries = more efficient capital use
+
+### Decision
+
+**max_pos=2, $5K/trade** for paper trading deployment.
+
+Updated in `trading_bot/paper_ms_4h.py`:
+- `MAX_POSITIONS = 2` (was 3)
+- `CAPITAL_PER_TRADE = 5000` (was 2000)
+- Baseline PF updated to 2.04, DD to 20.4%, trades to 447
+
+### Trade Frequency Expectation
+
+- Backtest: 447 trades / ~120 days / 487 coins = **~3.7 trades/day**
+- Live (MEXC, ~300 coins scanned): **~2-3 trades/day** expected
+- With max 2 concurrent and avg ~7 bar hold: typically 1-2 open at any time
+
+### Consequences
+
+1. **Paper trader updated**: max_pos=2, $5K/trade, drift baseline adjusted
+2. **ADR-MS-004 superseded on sizing**: config section now stale, this ADR is authoritative
+3. **Sensitivity script saved**: `scripts/run_ms_maxpos_sensitivity.py` for reproducibility
+4. **Report saved**: `reports/ms/maxpos_sensitivity.json`

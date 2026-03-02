@@ -60,7 +60,7 @@ TASK_TEMPLATES = {
         ("GO/NO-GO gate check on candidate", 'deployment_judge'),
     ],
     'default': [
-        ("Infrastructure integrity check (make check)", 'infra_guardian'),
+        ("Infrastructure integrity check", 'infra_guardian'),
     ],
 }
 

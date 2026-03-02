@@ -6,10 +6,7 @@
     <string>com.cryptogem.lab</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/opt/homebrew/bin/python3</string>
-        <string>-m</string>
-        <string>lab.main</string>
-        <string>run</string>
+        <string>__REPO__/lab/deploy/start-daemon.sh</string>
     </array>
     <key>WorkingDirectory</key>
     <string>__REPO__</string>

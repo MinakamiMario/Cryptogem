@@ -184,7 +184,7 @@ class TestDeployConfigs:
         assert path.exists()
         content = path.read_text()
         assert 'com.cryptogem.lab' in content
-        assert 'lab.main' in content
+        assert 'start-daemon.sh' in content
 
     def test_systemd_service_exists(self):
         path = REPO_ROOT / 'lab' / 'deploy' / 'lab.service'

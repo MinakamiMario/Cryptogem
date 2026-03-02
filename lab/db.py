@@ -710,6 +710,41 @@ class LabDB:
             if counts.get(status, 0) >= cap
         }
 
+    # ── Agent Performance ─────────────────────────────────
+
+    def get_agent_task_counts(self) -> dict[str, dict[str, int]]:
+        """Per-agent task counts by status.
+
+        Returns:
+            {agent: {status: count}} for all agents with tasks.
+        """
+        rows = self.conn.execute(
+            "SELECT assigned_to, status, COUNT(*) as cnt "
+            "FROM tasks GROUP BY assigned_to, status"
+        ).fetchall()
+        result: dict[str, dict[str, int]] = {}
+        for row in rows:
+            agent = row['assigned_to']
+            if agent not in result:
+                result[agent] = {}
+            result[agent][row['status']] = row['cnt']
+        return result
+
+    def get_agent_review_counts(self, hours: int = 24) -> dict[str, int]:
+        """Per-agent review count in the last N hours.
+
+        Returns:
+            {reviewer: count} for reviewers with verdicts != 'pending'.
+        """
+        rows = self.conn.execute(
+            "SELECT reviewer, COUNT(*) as cnt FROM task_reviews "
+            "WHERE verdict != 'pending' "
+            "AND updated_at >= datetime('now', ? || ' hours') "
+            "GROUP BY reviewer",
+            (f'-{hours}',),
+        ).fetchall()
+        return {row['reviewer']: row['cnt'] for row in rows}
+
     # ── Gate Rejections ─────────────────────────────────
 
     def get_gate_rejections(self, hours: int = 24,

@@ -20,6 +20,8 @@ logger = logging.getLogger('lab.shell_guard')
 # Optional callback(binary_name) fired on every blocked attempt.
 # Set via set_violation_callback(). Used by heartbeat to send TG alerts.
 _violation_callback: Optional[Callable[[str], None]] = None
+_violation_last_fire: dict[str, float] = {}  # binary → timestamp
+VIOLATION_COOLDOWN_S = 30  # min seconds between alerts per binary
 
 BLOCKED_BINARIES = frozenset([
     'gh', 'git', 'pytest', 'make', 'which', 'sleep',
@@ -85,8 +87,17 @@ _installed = False
 
 
 def _fire_violation(binary: str) -> None:
-    """Call violation callback if set. Never raises."""
+    """Call violation callback if set. Rate-limited: max 1 per binary per 30s.
+
+    Prevents TG spam if an agent loops trying a blocked command.
+    """
     if _violation_callback is not None:
+        import time
+        now = time.time()
+        last = _violation_last_fire.get(binary, 0.0)
+        if now - last < VIOLATION_COOLDOWN_S:
+            return  # suppress — too soon since last alert
+        _violation_last_fire[binary] = now
         try:
             _violation_callback(binary)
         except Exception:
@@ -94,9 +105,13 @@ def _fire_violation(binary: str) -> None:
 
 
 def set_violation_callback(callback: Callable[[str], None]) -> None:
-    """Register callback(binary_name) fired on every blocked attempt."""
+    """Register callback(binary_name) fired on every blocked attempt.
+
+    Resets rate-limit state when callback changes (new session/test).
+    """
     global _violation_callback
     _violation_callback = callback
+    _violation_last_fire.clear()
 
 
 def install() -> None:

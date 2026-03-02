@@ -231,6 +231,39 @@ class LabInspector:
             'recent': recent,
         }
 
+    def agent_performance(self, hours: int = 24) -> list[dict]:
+        """Per-agent performance summary.
+
+        Returns list of dicts sorted by done_tasks descending:
+            [{agent, status, done_tasks, active_tasks, reviews_24h}]
+        """
+        agent_statuses = {
+            a.agent: a.status
+            for a in self.db.get_all_agent_statuses()
+        }
+        task_counts = self.db.get_agent_task_counts()
+        review_counts = self.db.get_agent_review_counts(hours=hours)
+
+        perf = []
+        for agent, status in sorted(agent_statuses.items()):
+            agent_tasks = task_counts.get(agent, {})
+            perf.append({
+                'agent': agent,
+                'status': status,
+                'done_tasks': agent_tasks.get('done', 0),
+                'active_tasks': sum(
+                    agent_tasks.get(s, 0)
+                    for s in ('in_progress', 'peer_review', 'review')
+                ),
+                'blocked_tasks': agent_tasks.get('blocked', 0),
+                'reviews_24h': review_counts.get(agent, 0),
+            })
+
+        # Sort: most productive first (done_tasks desc, then reviews desc)
+        perf.sort(key=lambda x: (x['done_tasks'], x['reviews_24h']),
+                  reverse=True)
+        return perf
+
     def capacity_forecast(self) -> dict[str, Optional[int]]:
         """Estimate cycles until each WIP cap is hit.
 
@@ -340,13 +373,26 @@ class LabInspector:
                     f'  Longest streak: {drain["longest_drain_streak"]} cycles'
                 )
 
-        # Agents
+        # Agents (summary + top performers)
         lines.append(
             f'\n<b>Agents</b>: '
             f'{snap.agents_active} active | '
             f'{snap.agents_idle} idle | '
             f'{snap.agents_error} error'
         )
+        perf = self.agent_performance(hours=24)
+        # Show agents that completed tasks or did reviews
+        active_perf = [
+            p for p in perf
+            if p['done_tasks'] > 0 or p['reviews_24h'] > 0
+        ]
+        if active_perf:
+            for p in active_perf[:5]:
+                lines.append(
+                    f'  {p["agent"]}: '
+                    f'{p["done_tasks"]} done, '
+                    f'{p["reviews_24h"]} reviews'
+                )
 
         # Approved queue
         if snap.approved_waiting > 0:

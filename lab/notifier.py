@@ -405,7 +405,7 @@ class LabNotifier:
         for run in data.get('workflow_runs', [])[:5]:
             conclusion = run.get('conclusion') or run.get('status', '?')
             icon = icons.get(conclusion, '⚪')
-            name = run['name']
+            name = run.get('name', '?')
             branch = run.get('head_branch', '?')
             lines.append(f'{icon} {name} — {branch}')
 

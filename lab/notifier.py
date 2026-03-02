@@ -256,6 +256,11 @@ class LabNotifier:
                 elif data.startswith('rh:'):
                     self._handle_remote_hands(callback_id)
                     actions += 1
+                elif db and data.startswith('trends:'):
+                    self._answer_callback(callback_id,
+                                          'Trends worden geladen...')
+                    self._handle_trends(db)
+                    actions += 1
                 continue
 
             # ── Handle text messages from user ──
@@ -463,6 +468,70 @@ class LabNotifier:
         except Exception as e:
             self._send(f'Remote Hands healthcheck fout: {e}')
 
+    def _handle_trends(self, db) -> None:
+        """Send 24h trend analytics via Telegram."""
+        try:
+            stats = db.get_cycle_metrics_stats(hours=24)
+            cycles = stats['cycles']
+
+            lines = ['📈 <b>TRENDS (24h)</b>\n']
+
+            if cycles == 0:
+                lines.append('Geen cycle data beschikbaar.')
+                self._send_html('\n'.join(lines))
+                return
+
+            # Throughput
+            lines.append('<b>Throughput</b>')
+            lines.append(
+                f'  Cycles: {cycles} | '
+                f'Tasks: {stats["total_tasks"]} | '
+                f'Reviews: {stats["total_reviews"]}'
+            )
+            err_rate = stats['total_errors'] / cycles if cycles else 0
+            lines.append(
+                f'  Errors: {stats["total_errors"]} '
+                f'({err_rate:.1f}/cycle)'
+            )
+
+            # Cycle duration
+            lines.append('\n<b>Cycle Duration</b>')
+            lines.append(
+                f'  Avg: {stats["avg_duration_s"]:.1f}s | '
+                f'Min: {stats["min_duration_s"]:.1f}s | '
+                f'Max: {stats["max_duration_s"]:.1f}s'
+            )
+
+            # Drain mode
+            if stats['drain_pct'] > 0:
+                lines.append(
+                    f'\n⚠️ <b>Drain</b>: {stats["drain_pct"]:.0f}% '
+                    f'of cycles'
+                )
+
+            # Per-agent timing (top 5 slowest)
+            agent_times = stats.get('avg_agent_time', {})
+            if agent_times:
+                lines.append('\n<b>Agent Timing (avg)</b>')
+                sorted_agents = sorted(
+                    agent_times.items(), key=lambda x: x[1],
+                    reverse=True)
+                for name, avg_t in sorted_agents[:5]:
+                    bar_len = min(int(avg_t / 2), 10)  # 2s per block
+                    bar = '█' * bar_len + '░' * (10 - bar_len)
+                    lines.append(f'  {bar} {avg_t:.1f}s {name}')
+
+                if stats['slowest_agent']:
+                    lines.append(
+                        f'\n🐢 Slowest: {stats["slowest_agent"]} '
+                        f'({agent_times[stats["slowest_agent"]]:.1f}s avg)'
+                    )
+
+            self._send_html('\n'.join(lines))
+        except Exception as e:
+            logger.warning(f"Trends report failed: {e}")
+            self._send(f'Trends rapport fout: {e}')
+
     def send_dashboard(self, db) -> None:
         """Send compact dashboard to Telegram."""
         summary = db.get_status_summary()
@@ -527,6 +596,7 @@ class LabNotifier:
 
         self._send_with_buttons('\n'.join(lines), buttons=[
             [
+                {'text': '📈 Trends', 'callback_data': 'trends:0'},
                 {'text': '📊 CI Status', 'callback_data': 'ci:0'},
                 {'text': '🖥 Remote Hands', 'callback_data': 'rh:0'},
             ],

@@ -16,6 +16,12 @@ from lab.config import (
 )
 from lab.db import LabDB
 from lab.notifier import LabNotifier
+from lab.resilience import (
+    CircuitBreakerRegistry,
+    CircuitState,
+    RETRY_MAX_ATTEMPTS,
+    RETRY_MIN_AGE_S,
+)
 from lab.shell_guard import install as install_shell_guard
 from lab.shell_guard import set_violation_callback
 
@@ -39,6 +45,9 @@ class HeartbeatLoop:
         self._drain_cycles = 0
         # Daily digest: send on first cycle, then every 24h
         self._last_digest_time = 0.0
+
+        # Resilience: per-agent circuit breakers
+        self._circuits = CircuitBreakerRegistry()
 
         # Hard kill-switch: block gh, git, pytest, etc.
         # Fail-closed: if guard can't install → exit(1).
@@ -115,6 +124,7 @@ class HeartbeatLoop:
         except Exception as e:
             logger.warning(f"  [telegram] poll failed: {e}")
 
+        skipped_agents = 0
         for i, agent in enumerate(self.agents):
             if not self._running:
                 break
@@ -123,15 +133,33 @@ class HeartbeatLoop:
             if i > 0:
                 self._interruptible_sleep(HEARTBEAT_STAGGER_S)
 
+            # ── Circuit breaker: skip agents in cooldown ──────
+            circuit = self._circuits.get(agent.name)
+            if circuit.should_skip():
+                logger.info(
+                    f"  [{agent.name}] SKIPPED (circuit OPEN, "
+                    f"errors={circuit.consecutive_errors}, "
+                    f"open_count={circuit.open_count})"
+                )
+                skipped_agents += 1
+                continue
+
             try:
                 self._current_agent = agent.name
-                logger.info(f"  [{agent.name}] starting heartbeat")
+                is_half_open = circuit.state == CircuitState.HALF_OPEN
+                mode = " [HALF_OPEN test]" if is_half_open else ""
+                logger.info(
+                    f"  [{agent.name}] starting heartbeat{mode}")
                 stats = agent.heartbeat()
                 cycle_stats['reviews'] += stats.get('reviews', 0)
                 cycle_stats['tasks'] += stats.get('tasks', 0)
                 cycle_stats['promotions'] += stats.get('promotions', 0)
                 cycle_stats['errors'] += stats.get('errors', 0)
                 self._current_agent = None
+
+                # Circuit breaker: record success
+                circuit.record_success()
+
                 logger.info(
                     f"  [{agent.name}] done: "
                     f"reviews={stats.get('reviews', 0)} "
@@ -143,12 +171,31 @@ class HeartbeatLoop:
                 logger.error(f"  [{agent.name}] CRASHED: {e}")
                 cycle_stats['errors'] += 1
                 self.notifier.agent_error(agent.name, str(e))
+
+                # Circuit breaker: record error, may trip to OPEN
+                circuit.record_error(str(e))
+                if circuit.state == CircuitState.OPEN:
+                    self.notifier.agent_circuit_open(
+                        agent.name, circuit.consecutive_errors,
+                        circuit.open_count)
+
+                # Escalation: too many open periods → TG alert
+                if circuit.needs_escalation:
+                    self.notifier.agent_circuit_escalation(
+                        agent.name, circuit.open_count,
+                        circuit.last_error_msg)
+
                 # Skip agent, continue with next
                 try:
                     self.db.set_status(agent.name, 'error',
                                        note=str(e)[:200])
                 except Exception:
                     pass
+
+        # ── Resilience: blocked task auto-retry ────────────
+        cycle_stats['skipped_agents'] = skipped_agents
+        retried = self._retry_blocked_tasks()
+        cycle_stats['retries'] = retried
 
         # ── Guardrail v1: drain mode reporting ──────────────
         drain = self.db.is_drain_mode()
@@ -206,16 +253,97 @@ class HeartbeatLoop:
         except Exception as e:
             logger.warning(f"  [metrics] save failed: {e}")
 
+        # ── Log circuit breaker summary if any non-closed ────
+        open_circuits = self._circuits.open_circuits()
+        if open_circuits:
+            names = [c.agent_name for c in open_circuits]
+            logger.warning(f"  [circuit] Open circuits: {names}")
+
         logger.info(
             f"=== Cycle {self._cycle} done: "
             f"reviews={cycle_stats['reviews']} "
             f"tasks={cycle_stats['tasks']} "
             f"promotions={cycle_stats['promotions']} "
             f"errors={cycle_stats['errors']} "
+            f"skipped={skipped_agents} "
+            f"retries={retried} "
             f"duration={cycle_stats['cycle_duration_s']:.1f}s ==="
         )
 
         return cycle_stats
+
+    def _retry_blocked_tasks(self) -> int:
+        """Auto-retry blocked tasks older than RETRY_MIN_AGE_S.
+
+        Returns number of tasks retried (moved blocked → in_progress).
+        Respects RETRY_MAX_ATTEMPTS via comment counting.
+        """
+        retried = 0
+        try:
+            blocked = self.db.get_tasks_by_status('blocked')
+        except Exception as e:
+            logger.warning(f"  [retry] failed to query blocked tasks: {e}")
+            return 0
+
+        now_ts = time.time()
+
+        for task in blocked:
+            if not task.blocked_since:
+                continue
+
+            # Parse blocked_since timestamp
+            try:
+                from datetime import datetime, timezone
+                blocked_dt = datetime.strptime(
+                    task.blocked_since, '%Y-%m-%d %H:%M:%S')
+                blocked_dt = blocked_dt.replace(tzinfo=timezone.utc)
+                blocked_age_s = now_ts - blocked_dt.timestamp()
+            except (ValueError, AttributeError):
+                continue
+
+            if blocked_age_s < RETRY_MIN_AGE_S:
+                continue
+
+            # Count previous retry attempts via comments
+            try:
+                comments = self.db.get_comments(task.id)
+                retry_count = sum(
+                    1 for c in comments
+                    if '🔄 Auto-retry' in (c.body or '')
+                )
+            except Exception:
+                retry_count = 0
+
+            if retry_count >= RETRY_MAX_ATTEMPTS:
+                logger.info(
+                    f"  [retry] Task #{task.id} max retries "
+                    f"({RETRY_MAX_ATTEMPTS}) reached — skipping"
+                )
+                continue
+
+            # Attempt retry: blocked → in_progress
+            try:
+                self.db.transition(task.id, 'in_progress',
+                                   actor=task.assigned_to)
+                self.db.add_comment(
+                    task.id, 'heartbeat',
+                    f"🔄 Auto-retry #{retry_count + 1}/{RETRY_MAX_ATTEMPTS} "
+                    f"(blocked {blocked_age_s / 60:.0f}m)",
+                    'comment',
+                )
+                retried += 1
+                logger.info(
+                    f"  [retry] Task #{task.id} retried "
+                    f"(attempt {retry_count + 1}/{RETRY_MAX_ATTEMPTS})"
+                )
+            except ValueError as e:
+                # Transition blocked (drain mode, WIP cap, etc.)
+                logger.debug(f"  [retry] Task #{task.id} retry blocked: {e}")
+            except Exception as e:
+                logger.warning(
+                    f"  [retry] Task #{task.id} retry failed: {e}")
+
+        return retried
 
     def run(self, max_hours: Optional[float] = None,
             dry_run: bool = False) -> None:

@@ -700,6 +700,25 @@ class LabNotifier:
             f"Actie: PermissionError raised"
         )
 
+    def agent_circuit_open(self, agent: str, errors: int,
+                           open_count: int) -> None:
+        """Alert: agent circuit breaker tripped to OPEN."""
+        self._send(
+            f"🔌 <b>CIRCUIT OPEN</b> — Agent: {agent}\n"
+            f"Consecutive errors: {errors}\n"
+            f"Times opened: {open_count}\n"
+            f"Agent paused for 5m cooldown."
+        )
+
+    def agent_circuit_escalation(self, agent: str, open_count: int,
+                                  last_error: str) -> None:
+        """Alert: agent circuit breaker needs human attention."""
+        self._send(
+            f"🚨 <b>CIRCUIT ESCALATION</b> — Agent: {agent}\n"
+            f"Circuit opened {open_count}× — needs attention!\n"
+            f"Last error: {last_error[:300]}"
+        )
+
     def heartbeat_summary(self, cycle: int, tasks_reviewed: int,
                           tasks_worked: int, tasks_promoted: int) -> None:
         if tasks_reviewed + tasks_worked + tasks_promoted == 0:

@@ -64,6 +64,6 @@ technische schuld aflossen. Geen nieuwe features.
 
 | PR | Status | Branch | Merged |
 |----|--------|--------|--------|
-| metric-key-alignment | TODO | — | — |
+| metric-key-alignment | DONE | cleanup/metric-key-alignment | PR #40 |
 | paper-bot-cleanup | TODO | — | — |
 | superhf sprint3 | TODO | — | — |

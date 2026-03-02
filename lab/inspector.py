@@ -355,6 +355,22 @@ class LabInspector:
                 f'{snap.approved_waiting} task(s)'
             )
 
+        # Capacity forecast (only show approaching breaches)
+        forecast = self.capacity_forecast()
+        approaching = {
+            s: c for s, c in forecast.items()
+            if c is not None and c <= 10
+        }
+        if approaching:
+            lines.append('\n\U0001f4c8 <b>Capacity Forecast</b>')
+            for status, cycles in sorted(approaching.items(),
+                                         key=lambda x: x[1]):
+                if cycles == 0:
+                    lines.append(f'  {status}: \u26a0\ufe0f BREACHED')
+                else:
+                    lines.append(
+                        f'  {status}: ~{cycles} cycles until breach')
+
         # Gate health (only show if rejections exist)
         if gate['total_rejections'] > 0:
             lines.append(f'\n\U0001f6a7 <b>Gate Rejections (24h)</b>: '

@@ -272,7 +272,35 @@ class LabNotifier:
             msg = update.get('message')
             if msg and msg.get('chat', {}).get('id') == _CHAT_ID:
                 text = msg.get('text', '').strip()
-                if text:
+                if not text:
+                    continue
+
+                # ── Text commands (v1.2.3) ──────────────────
+                cmd = text.lower().lstrip('/')
+                if cmd in ('help', '?'):
+                    self._send_html(
+                        '🤖 <b>LAB COMMANDS</b>\n\n'
+                        '/dashboard — Dashboard met knoppen\n'
+                        '/status — Dashboard (alias)\n'
+                        '/health — Volledig inspector health report\n'
+                        '/trends — Cycle analytics & forecasts\n'
+                        '/gates — Gate rejection overzicht\n'
+                        '/help — Dit menu'
+                    )
+                    actions += 1
+                elif db and cmd in ('status', 'dashboard'):
+                    self.send_dashboard(db)
+                    actions += 1
+                elif db and cmd == 'trends':
+                    self._handle_trends(db)
+                    actions += 1
+                elif db and cmd == 'gates':
+                    self._handle_gates(db)
+                    actions += 1
+                elif db and cmd == 'health':
+                    self._send_status_summary(db)
+                    actions += 1
+                else:
                     incoming_messages.append(text)
 
         # Persist update_id to DB if it changed

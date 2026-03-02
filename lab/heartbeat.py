@@ -114,6 +114,13 @@ class HeartbeatLoop:
 
         logger.info(f"=== Heartbeat cycle {self._cycle} ===")
 
+        # Check for new GitHub release → auto-reload if newer version
+        try:
+            if self.notifier.check_for_new_release(db=self.db):
+                return cycle_stats  # SIGTERM sent, daemon will restart
+        except Exception as e:
+            logger.debug(f"  [release-check] {e}")
+
         # Process any pending Telegram updates (approvals + messages)
         try:
             tg_actions, tg_messages = self.notifier.poll_telegram(self.db)

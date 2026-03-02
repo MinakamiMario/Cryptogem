@@ -365,15 +365,38 @@ class LabNotifier:
                 # ── Text commands (v1.2.3) ──────────────────
                 cmd = text.lower().lstrip('/')
                 if cmd in ('help', '?'):
+                    from lab.config import LAB_VERSION
                     self._send_html(
-                        '🤖 <b>LAB COMMANDS</b>\n\n'
+                        f'🤖 <b>LAB COMMANDS</b> (v{LAB_VERSION})\n\n'
                         '/dashboard — Dashboard met knoppen\n'
                         '/status — Dashboard (alias)\n'
                         '/health — Volledig inspector health report\n'
                         '/trends — Cycle analytics & forecasts\n'
                         '/gates — Gate rejection overzicht\n'
+                        '/reload — Herstart daemon (laadt nieuwe code)\n'
                         '/help — Dit menu'
                     )
+                    actions += 1
+                elif cmd == 'reload':
+                    from lab.config import LAB_VERSION
+                    self._send(
+                        f'🔄 Reload aangevraagd — daemon stopt...\n'
+                        f'Huidige versie: v{LAB_VERSION}\n'
+                        f'Launchd herstart automatisch met nieuwe code.'
+                    )
+                    # Persist update_id before exit
+                    if db:
+                        try:
+                            db.set_setting(
+                                'tg_last_update_id',
+                                str(self._last_update_id))
+                        except Exception:
+                            pass
+                    # Signal the daemon to stop — launchd restarts it
+                    import os
+                    import signal
+                    logger.info("Reload requested via TG — sending SIGTERM")
+                    os.kill(os.getpid(), signal.SIGTERM)
                     actions += 1
                 elif db and cmd in ('status', 'dashboard'):
                     self.send_dashboard(db)

@@ -344,7 +344,7 @@ def cmd_task_approve(args: argparse.Namespace) -> None:
         if task.status == 'approved':
             db.transition(args.id, 'done', actor='user')
             print(f"Task #{args.id} approved and done: {task.title}")
-            notifier.notify_task_done(args.id, task.title, via='cli')
+            notifier.notify_task_done(args.id, task.title, via='cli', db=db)
         elif task.status == 'backlog':
             db.transition(args.id, 'todo', actor='user')
             print(f"Task #{args.id} moved to todo: {task.title}")
@@ -378,7 +378,7 @@ def cmd_task_reject(args: argparse.Namespace) -> None:
                 'rejection'
             )
             print(f"Task #{args.id} rejected → in_progress: {task.title}")
-            notifier.notify_task_rejected(args.id, task.title, via='cli')
+            notifier.notify_task_rejected(args.id, task.title, via='cli', db=db)
         else:
             print(f"Task #{args.id} is in '{task.status}', expected 'approved'")
     except ValueError as e:

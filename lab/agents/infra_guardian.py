@@ -1,11 +1,13 @@
 """Infrastructure Guardian — repo integrity enforcer.
 
-Draait `make check`, bewaakt schema invariants, detecteert tm_bars regressies.
-Rule-based agent (geen LLM).
+Bewaakt schema invariants, detecteert tm_bars regressies, checks
+file integrity. Rule-based agent (geen LLM).
+
+NOTE: Shell commands (make, pytest, git) are blocked by shell_guard.
+CI is canonical — all build/test runs happen via GitHub Actions.
+This agent performs in-process checks only.
 """
 from __future__ import annotations
-
-import subprocess
 
 from lab.agents.base import BaseAgent
 from lab.config import REPO_ROOT
@@ -21,13 +23,13 @@ class InfraGuardian(BaseAgent):
         """Run infrastructure checks based on task description."""
         title_lower = task.title.lower()
 
-        if 'make check' in title_lower or 'full check' in title_lower:
-            return self._run_make_check(task)
-        elif 'schema' in title_lower or 'tm_bars' in title_lower:
+        if 'schema' in title_lower or 'tm_bars' in title_lower:
             return self._check_schema_invariants(task)
+        elif 'integrity' in title_lower or 'file' in title_lower:
+            return self._check_file_integrity(task)
         else:
-            # Default: run make check
-            return self._run_make_check(task)
+            # Default: run all in-process checks
+            return self._run_all_checks(task)
 
     def review_task(self, task: Task) -> None:
         """Infra Guardian reviews ALL tasks — checks artifact integrity."""
@@ -70,66 +72,72 @@ class InfraGuardian(BaseAgent):
             )
             self.db.update_review(task.id, self.name, 'approved', comment_id)
 
-    def _run_make_check(self, task: Task) -> TaskResult:
-        """Run `make check` and report results."""
-        try:
-            result = subprocess.run(
-                ['make', 'check'],
-                capture_output=True, text=True,
-                cwd=str(REPO_ROOT),
-                timeout=300,  # 5 min max
-            )
-            passed = result.returncode == 0
-            output = result.stdout[-2000:] if result.stdout else ''
-            errors = result.stderr[-1000:] if result.stderr else ''
+    def _run_all_checks(self, task: Task) -> TaskResult:
+        """Run all in-process infrastructure checks.
 
-            summary_lines = []
-            # Parse test count from output
-            for line in output.split('\n'):
-                if 'passed' in line.lower() or 'failed' in line.lower():
-                    summary_lines.append(line.strip())
+        NOTE: Shell commands (make, pytest) are blocked by shell_guard.
+        CI is canonical for build/test. This runs safe in-process checks.
+        """
+        issues = []
 
-            summary = (
-                f"make check: {'PASS' if passed else 'FAIL'}\n"
-                f"Return code: {result.returncode}\n"
-                + '\n'.join(summary_lines[-5:])
-            )
+        # 1. Schema invariant check
+        schema_result = self._check_schema_invariants(task)
+        if not schema_result.success:
+            issues.append(f"Schema: {schema_result.summary}")
 
-            self.notifier.infra_check(passed, summary)
+        # 2. File integrity check
+        integrity_result = self._check_file_integrity(task)
+        if not integrity_result.success:
+            issues.append(f"Integrity: {integrity_result.summary}")
 
-            # Write report
-            report_data = {
-                'passed': passed,
-                'return_code': result.returncode,
-                'stdout_tail': output,
-                'stderr_tail': errors,
-            }
-            md = f"# Infrastructure Check\n\n{summary}\n"
-            if errors:
-                md += f"\n## Errors\n```\n{errors}\n```\n"
+        passed = len(issues) == 0
+        summary = (
+            f"Infra checks: {'PASS' if passed else 'FAIL'}\n"
+            f"Issues: {len(issues)}"
+        )
+        if issues:
+            summary += '\n' + '\n'.join(f"- {i}" for i in issues)
 
-            report_name = f"infra_check_{task.id}"
-            json_path = self._write_report(report_name, report_data, md)
+        self.notifier.infra_check(passed, summary)
 
-            return TaskResult(
-                success=passed,
-                summary=summary,
-                artifact_path=str(json_path),
-                sha256=self._file_sha256(json_path),
-                git_hash=self._git_hash(),
-                cmd='make check',
-            )
+        report_data = {'passed': passed, 'issues': issues}
+        md = f"# Infrastructure Check\n\n{summary}\n"
+        report_name = f"infra_check_{task.id}"
+        json_path = self._write_report(report_name, report_data, md)
 
-        except subprocess.TimeoutExpired:
-            return TaskResult(
-                success=False,
-                summary="make check timed out after 300s",
-            )
-        except Exception as e:
-            return TaskResult(
-                success=False,
-                summary=f"make check error: {e}",
-            )
+        return TaskResult(
+            success=passed,
+            summary=summary,
+            artifact_path=str(json_path),
+            sha256=self._file_sha256(json_path),
+            git_hash=self._git_hash(),
+            cmd='infra_checks',
+        )
+
+    def _check_file_integrity(self, task: Task) -> TaskResult:
+        """Check critical file existence and basic integrity."""
+        critical_files = [
+            'lab/config.py', 'lab/db.py', 'lab/shell_guard.py',
+            'lab/notifier.py', 'lab/heartbeat.py',
+        ]
+        missing = []
+        for f in critical_files:
+            path = REPO_ROOT / f
+            if not path.exists():
+                missing.append(f)
+            elif path.stat().st_size == 0:
+                missing.append(f"{f} (empty)")
+
+        passed = len(missing) == 0
+        summary = (
+            f"File integrity: {'PASS' if passed else 'FAIL'}\n"
+            f"Checked: {len(critical_files)}, "
+            f"Missing/empty: {len(missing)}"
+        )
+        if missing:
+            summary += '\n' + '\n'.join(f"- {m}" for m in missing)
+
+        return TaskResult(success=passed, summary=summary)
 
     def _check_schema_invariants(self, task: Task) -> TaskResult:
         """Check for tm_bars regression and schema issues."""

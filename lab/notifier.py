@@ -584,14 +584,31 @@ class LabNotifier:
         )
 
     def drain_mode_entered(self, breaches: dict) -> None:
-        """Alert when drain mode activates."""
+        """Alert when drain mode activates with recovery guidance."""
         breach_lines = ', '.join(
             f"{s}: {c}/{cap}" for s, (c, cap) in breaches.items()
         )
+        # Build recovery hints per breached status
+        recovery = []
+        for status, (count, cap) in breaches.items():
+            if status in ('in_progress', 'peer_review'):
+                recovery.append(
+                    f"  {status}: review/complete existing tasks")
+            elif status == 'review':
+                recovery.append(
+                    f"  {status}: boss must approve or reject")
+            elif status == 'approved':
+                recovery.append(
+                    f"  {status}: user TG ✅/❌ to clear queue")
+            else:
+                recovery.append(
+                    f"  {status}: clear {count - cap + 1}+ task(s)")
+        recovery_text = '\n'.join(recovery) if recovery else ''
         self._send(
             f"🔴 <b>DRAIN MODE ACTIVATED</b>\n"
             f"Breaches: {breach_lines}\n"
-            f"Intake transitions blocked until caps clear."
+            f"Intake transitions blocked until caps clear.\n"
+            f"\n<b>Recovery</b>:\n{recovery_text}"
         )
 
     def drain_mode_exited(self) -> None:

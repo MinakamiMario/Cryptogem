@@ -95,6 +95,8 @@ CREATE TABLE IF NOT EXISTS cycle_metrics (
     drain_cycles    INTEGER DEFAULT 0,
     agent_count     INTEGER DEFAULT 0,
     cycle_duration_s REAL DEFAULT 0.0,
+    skipped_agents  INTEGER DEFAULT 0,
+    retries         INTEGER DEFAULT 0,
     created_at      TEXT DEFAULT (datetime('now'))
 );
 
@@ -179,6 +181,21 @@ class LabDB:
                     created_at  TEXT DEFAULT (datetime('now'))
                 )
             """)
+        # Migration: add skipped_agents + retries to cycle_metrics (v1.0.8)
+        if 'cycle_metrics' in tables:
+            cm_cols = {row[1] for row in
+                       self.conn.execute(
+                           "PRAGMA table_info(cycle_metrics)").fetchall()}
+            if 'skipped_agents' not in cm_cols:
+                self.conn.execute(
+                    "ALTER TABLE cycle_metrics "
+                    "ADD COLUMN skipped_agents INTEGER DEFAULT 0"
+                )
+            if 'retries' not in cm_cols:
+                self.conn.execute(
+                    "ALTER TABLE cycle_metrics "
+                    "ADD COLUMN retries INTEGER DEFAULT 0"
+                )
         self.conn.commit()
 
     def close(self) -> None:
@@ -748,15 +765,16 @@ class LabDB:
         Args:
             stats: dict with keys: cycle, reviews, tasks, promotions,
                    errors, drain_mode, drain_cycles, agent_count,
-                   cycle_duration_s.
+                   cycle_duration_s, skipped_agents, retries.
         Returns:
             Row ID of inserted metric.
         """
         cur = self.conn.execute(
             "INSERT INTO cycle_metrics "
             "(cycle, reviews, tasks, promotions, errors, "
-            " drain_mode, drain_cycles, agent_count, cycle_duration_s) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            " drain_mode, drain_cycles, agent_count, cycle_duration_s,"
+            " skipped_agents, retries) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 stats.get('cycle', 0),
                 stats.get('reviews', 0),
@@ -767,6 +785,8 @@ class LabDB:
                 stats.get('drain_cycles', 0),
                 stats.get('agent_count', 0),
                 stats.get('cycle_duration_s', 0.0),
+                stats.get('skipped_agents', 0),
+                stats.get('retries', 0),
             ),
         )
         self.conn.commit()
@@ -891,6 +911,8 @@ class LabDB:
             drain_cycles=row['drain_cycles'],
             agent_count=row['agent_count'],
             cycle_duration_s=row['cycle_duration_s'],
+            skipped_agents=row['skipped_agents'] or 0,
+            retries=row['retries'] or 0,
             created_at=row['created_at'] or '',
         )
 

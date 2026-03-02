@@ -110,6 +110,8 @@ class CycleMetrics:
     drain_cycles: int = 0
     agent_count: int = 0
     cycle_duration_s: float = 0.0
+    skipped_agents: int = 0
+    retries: int = 0
     created_at: str = ''
 
 

@@ -94,3 +94,37 @@ ALL_STATUSES = list(VALID_TRANSITIONS.keys())  # done zit er nu in
 
 # ── Review verdicts ───────────────────────────────────────
 REVIEW_VERDICTS = ['pending', 'approved', 'rejected', 'needs_changes']
+
+# ── WIP caps (Guardrail v1) ──────────────────────────────
+# Static caps per status — no runtime modification.
+# Cap breach blocks NEW transitions into that status; existing tasks continue.
+WIP_CAPS: dict[str, int] = {
+    'in_progress':  3,
+    'peer_review':  5,
+    'review':       5,
+    'approved':     7,
+    'blocked':      3,
+    'proposal':     6,   # open_proposals cap
+}
+
+# ── Exit conditions (required for todo → in_progress) ────
+# Every task MUST have these fields populated before start.
+# Missing any → transition blocked, agent must move to blocked.
+# Boss fills these at proposal creation; gatekeepers validate completeness.
+EXIT_CONDITIONS = [
+    'scope',            # Allowed files, or "NO WRITES"
+    'dod',              # Definition of Done — concrete end result
+    'artifact',         # What will be delivered (file type + location)
+    'write_surface',    # Exact paths; subset of WRITE_ALLOWLIST
+    'stop_condition',   # When to stop + move to blocked
+]
+
+# ── High-risk files (TG alert on modification) ───────────
+HIGH_RISK_FILES = [
+    '.github/workflows/',
+    'lab/config.py',
+    'lab/db.py',
+    'lab/shell_guard.py',
+    'lab/notifier.py',
+    'lab/deploy/',
+]

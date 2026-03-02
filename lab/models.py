@@ -42,6 +42,17 @@ class Task:
     artifact_sha256: Optional[str] = None
     artifact_git_hash: Optional[str] = None
     artifact_cmd: Optional[str] = None
+    exit_conditions: Optional[dict] = None
+
+    def get_missing_exit_conditions(self) -> list[str]:
+        """Return list of missing exit condition fields.
+
+        Checks against config.EXIT_CONDITIONS. Returns empty list if all present.
+        """
+        from lab.config import EXIT_CONDITIONS
+        if not self.exit_conditions:
+            return list(EXIT_CONDITIONS)
+        return [f for f in EXIT_CONDITIONS if not self.exit_conditions.get(f)]
 
 
 @dataclass

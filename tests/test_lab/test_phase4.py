@@ -265,6 +265,12 @@ class TestLiveMonitorExecute:
         # Create task without artifact
         tid = db.create_task(goal_id, "Test task", 'edge_analyst', 'boss')
         db.transition(tid, 'todo', actor='user')
+        db.set_exit_conditions(tid, {
+            'scope': 'reports/lab/test_*', 'dod': 'Test report',
+            'artifact': 'reports/lab/test.json',
+            'write_surface': "['lab/lab.db', 'reports/lab/']",
+            'stop_condition': 'Error → blocked',
+        })
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'live_monitor')
@@ -492,6 +498,12 @@ class TestPortfolioExecute:
 
         tid = db.create_task(goal_id, "Test", 'risk_governor', 'boss')
         db.transition(tid, 'todo', actor='user')
+        db.set_exit_conditions(tid, {
+            'scope': 'reports/lab/test_*', 'dod': 'Test report',
+            'artifact': 'reports/lab/test.json',
+            'write_surface': "['lab/lab.db', 'reports/lab/']",
+            'stop_condition': 'Error → blocked',
+        })
         db.transition(tid, 'in_progress', actor='risk_governor')
         db.transition(tid, 'peer_review', actor='risk_governor')
         db.create_review(tid, 'portfolio_architect')

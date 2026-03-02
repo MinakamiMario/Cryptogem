@@ -11,7 +11,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from lab.config import GITHUB_REPO, REPO_ROOT
+from lab.config import GITHUB_REPO, REPO_ROOT, WIP_CAPS
 
 # Import existing notifier class for reuse
 sys.path.insert(0, str(REPO_ROOT / 'trading_bot'))
@@ -509,6 +509,86 @@ class LabNotifier:
                 {'text': '🖥 Remote Hands', 'callback_data': 'rh:0'},
             ],
         ])
+
+    # ── Guardrail v1 — Flow Control Notifications ────────
+
+    def daily_digest(self, db) -> None:
+        """Send daily digest with task counts, cap indicators, drain mode.
+
+        Called once per 24h by the scheduler/orchestrator.
+        """
+        counts = db.get_task_counts_by_status()
+        breaches = db.get_cap_breaches()
+        drain = db.is_drain_mode()
+
+        lines = ['📊 <b>DAILY DIGEST</b>\n']
+
+        # Task counts with cap indicators
+        lines.append('<b>Taken per status</b>')
+        for status, cap in WIP_CAPS.items():
+            count = counts.get(status, 0)
+            indicator = ' ⚠️' if count >= cap else ''
+            lines.append(f'  {status}: {count}/{cap}{indicator}')
+
+        # Non-capped statuses
+        for status in ['todo', 'backlog', 'done']:
+            if status in counts and status not in WIP_CAPS:
+                lines.append(f'  {status}: {counts.get(status, 0)}')
+
+        # Cap breaches
+        if breaches:
+            lines.append('\n🚨 <b>Cap Breaches</b>')
+            for status, (count, cap) in breaches.items():
+                over = count - cap
+                lines.append(
+                    f'  {status}: {count}/{cap} '
+                    f'(+{over} over cap)'
+                )
+
+        # Approved queue
+        approved_tasks = db.get_tasks_by_status('approved')
+        if approved_tasks:
+            lines.append(
+                f'\n⏳ <b>Wacht op jouw actie ({len(approved_tasks)})</b>')
+            for t in approved_tasks[:5]:
+                lines.append(f'  #{t.id} {t.title[:35]} ({t.assigned_to})')
+            if len(approved_tasks) > 5:
+                lines.append(f'  ... en {len(approved_tasks) - 5} meer')
+
+        # Drain mode status
+        drain_icon = '🔴' if drain else '🟢'
+        drain_text = 'ACTIVE' if drain else 'INACTIVE'
+        lines.append(f'\n{drain_icon} <b>Drain Mode</b>: {drain_text}')
+
+        self._send_html('\n'.join(lines))
+
+    def cap_breach_alert(self, status: str, count: int, cap: int) -> None:
+        """Immediate alert for persistent cap breach (>2 heartbeat cycles).
+
+        Called by orchestrator when breach persists beyond 2 cycles.
+        """
+        self._send(
+            f"⚠️ <b>CAP BREACH</b> — status: {status}, "
+            f"count: {count}/{cap} (>2 cycles)"
+        )
+
+    def drain_mode_entered(self, breaches: dict) -> None:
+        """Alert when drain mode activates."""
+        breach_lines = ', '.join(
+            f"{s}: {c}/{cap}" for s, (c, cap) in breaches.items()
+        )
+        self._send(
+            f"🔴 <b>DRAIN MODE ACTIVATED</b>\n"
+            f"Breaches: {breach_lines}\n"
+            f"Intake transitions blocked until caps clear."
+        )
+
+    def drain_mode_exited(self) -> None:
+        """Alert when drain mode deactivates."""
+        self._send(
+            "🟢 <b>DRAIN MODE CLEARED</b>\n"
+            "All caps within limits. Normal operation resumed."
+        )
 
     # ── CLI → Telegram mirroring ─────────────────────────
 

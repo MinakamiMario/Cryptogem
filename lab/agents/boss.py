@@ -198,15 +198,22 @@ class BossAgent(BaseAgent):
 
     def _create_proposal(self, goal, title: str, agent: str,
                          description: str) -> int | None:
-        """Create a proposal task and review entries for GATEKEEPERS."""
-        task_id = self.db.create_task(
-            goal_id=goal.id,
-            title=title,
-            assigned_to=agent,
-            created_by='boss',
-            description=description,
-            initial_status='proposal',
-        )
+        """Create a proposal task and review entries for GATEKEEPERS.
+
+        Returns task_id or None if blocked by WIP cap / drain mode.
+        """
+        try:
+            task_id = self.db.create_task(
+                goal_id=goal.id,
+                title=title,
+                assigned_to=agent,
+                created_by='boss',
+                description=description,
+                initial_status='proposal',
+            )
+        except ValueError as e:
+            logger.info(f"Proposal blocked: {e}")
+            return None
         # Create review entries for GATEKEEPERS (not goal agents)
         for gk in GATEKEEPERS:
             self.db.create_review(task_id, reviewer=gk)
@@ -315,14 +322,32 @@ class BossAgent(BaseAgent):
         return promoted
 
     def heartbeat(self) -> dict:
-        """Override: boss generates proposals, promotes, checks stuck."""
+        """Override: boss generates proposals, promotes, checks stuck.
+
+        Guardrail v1 backpressure:
+        - Drain mode → skip generate_tasks() and _promote_approved_proposals()
+        - Pipeline transitions (peer_review→review, review→approved) always run
+        - Stuck detection always runs (monitoring)
+        """
         stats = super().heartbeat()
 
-        # Boss governance duties
-        stats['tasks_generated'] = self.generate_tasks()
-        stats['proposals_promoted'] = self._promote_approved_proposals()
+        drain = self.db.is_drain_mode()
+        stats['drain_mode'] = drain
+
+        if drain:
+            logger.info("Drain mode active — skipping task generation "
+                        "and proposal promotion")
+            stats['tasks_generated'] = 0
+            stats['proposals_promoted'] = 0
+        else:
+            stats['tasks_generated'] = self.generate_tasks()
+            stats['proposals_promoted'] = self._promote_approved_proposals()
+
+        # Pipeline draining — always allowed
         stats['peerreview_promoted'] = self._promote_peerreview_to_review()
         stats['review_promoted'] = self._promote_review_to_approved()
+
+        # Monitoring — always allowed
         stats['stuck_detected'] = self.check_stuck_tasks()
 
         return stats

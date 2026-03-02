@@ -55,6 +55,14 @@ def _task_to_approved(db, goal_id: int) -> int:
     db.update_review(tid, 'risk_governor', 'approved')
     db.update_review(tid, 'robustness_auditor', 'approved')
     db.transition(tid, 'todo', actor='boss')
+    # Guardrail v1: set exit conditions before todo→in_progress
+    db.set_exit_conditions(tid, {
+        'scope': 'reports/lab/test_*',
+        'dod': 'Test report',
+        'artifact': 'reports/lab/test.json',
+        'write_surface': "['lab/lab.db', 'reports/lab/']",
+        'stop_condition': 'Error → blocked',
+    })
     db.transition(tid, 'in_progress', actor='edge_analyst')
     db.transition(tid, 'peer_review', actor='edge_analyst')
     # Peer reviews

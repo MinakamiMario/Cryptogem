@@ -8,8 +8,8 @@ from pathlib import Path
 from typing import Optional
 
 from lab.config import (
-    AGENT_NAMES, ALL_STATUSES, DB_PATH, GATEKEEPERS, REVIEW_VERDICTS,
-    VALID_TRANSITIONS,
+    AGENT_NAMES, ALL_STATUSES, DB_PATH, EXIT_CONDITIONS, GATEKEEPERS,
+    REVIEW_VERDICTS, VALID_TRANSITIONS, WIP_CAPS,
 )
 from lab.models import (
     AgentStatus, Comment, Goal, Task, TaskResult, TaskReview,
@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS tasks (
     artifact_path   TEXT,
     artifact_sha256 TEXT,
     artifact_git_hash TEXT,
-    artifact_cmd    TEXT
+    artifact_cmd    TEXT,
+    exit_conditions TEXT
 );
 
 CREATE TABLE IF NOT EXISTS task_reviews (
@@ -104,12 +105,19 @@ class LabDB:
         self.conn.execute("PRAGMA foreign_keys=ON")
 
     def init_schema(self) -> None:
-        """Create tables + seed agent_status rows."""
+        """Create tables + seed agent_status rows + run migrations."""
         self.conn.executescript(SCHEMA_SQL)
         for name in AGENT_NAMES:
             self.conn.execute(
                 "INSERT OR IGNORE INTO agent_status (agent) VALUES (?)",
                 (name,),
+            )
+        # Migration: add exit_conditions column if missing (existing DBs)
+        cols = {row[1] for row in
+                self.conn.execute("PRAGMA table_info(tasks)").fetchall()}
+        if 'exit_conditions' not in cols:
+            self.conn.execute(
+                "ALTER TABLE tasks ADD COLUMN exit_conditions TEXT"
             )
         self.conn.commit()
 
@@ -149,18 +157,41 @@ class LabDB:
     def create_task(self, goal_id: int, title: str, assigned_to: str,
                     created_by: str, description: str = '',
                     priority: int = 5,
-                    initial_status: str = 'backlog') -> int:
-        """Create a task. Boss uses initial_status='proposal' for quorum gate."""
+                    initial_status: str = 'backlog',
+                    exit_conditions: Optional[dict] = None) -> int:
+        """Create a task. Boss uses initial_status='proposal' for quorum gate.
+
+        Args:
+            exit_conditions: dict with keys from config.EXIT_CONDITIONS.
+                             Stored as JSON in DB. Boss fills at proposal time.
+        """
         if initial_status not in ('backlog', 'todo', 'proposal'):
             raise ValueError(
                 f"initial_status must be 'backlog', 'todo', or 'proposal', "
                 f"got '{initial_status}'"
             )
+        # Guardrail v1: check proposal cap first (specific error)
+        if initial_status == 'proposal' and 'proposal' in WIP_CAPS:
+            counts = self.get_task_counts_by_status()
+            cap = WIP_CAPS['proposal']
+            if counts.get('proposal', 0) >= cap:
+                raise ValueError(
+                    f"WIP cap reached: proposal has "
+                    f"{counts['proposal']}/{cap} tasks"
+                )
+        # Guardrail v1: block new proposals in drain mode (other caps hit)
+        if initial_status == 'proposal' and self.is_drain_mode():
+            raise ValueError(
+                "Drain mode active — new proposals forbidden. "
+                f"Cap breaches: {self.get_cap_breaches()}"
+            )
+        ec_json = json.dumps(exit_conditions) if exit_conditions else None
         cur = self.conn.execute(
             "INSERT INTO tasks (goal_id, title, description, assigned_to, "
-            "created_by, priority, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "created_by, priority, status, exit_conditions) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             (goal_id, title, description, assigned_to, created_by, priority,
-             initial_status),
+             initial_status, ec_json),
         )
         self.conn.commit()
         self.log_activity(created_by, 'task_created', cur.lastrowid,
@@ -273,6 +304,44 @@ class LabDB:
                 f"Alleen user mag approved → in_progress zetten, "
                 f"niet '{actor}'"
             )
+
+        # ── Guardrail v1 gates ──────────────────────────────
+
+        # Gate 5: WIP cap check — target status must not be at capacity
+        # Pipeline transitions (draining work) bypass cap checks.
+        # Only intake/accumulation transitions are subject to caps.
+        if new_status in WIP_CAPS:
+            counts = self.get_task_counts_by_status()
+            cap = WIP_CAPS[new_status]
+            if counts.get(new_status, 0) >= cap:
+                raise ValueError(
+                    f"WIP cap reached: {new_status} has "
+                    f"{counts[new_status]}/{cap} tasks"
+                )
+
+        # Gate 6: Drain mode — block intake transitions
+        # Forbidden in drain mode: todo→in_progress, proposal→todo
+        _drain_forbidden = {
+            ('todo', 'in_progress'),
+            ('proposal', 'todo'),
+        }
+        if (task.status, new_status) in _drain_forbidden:
+            if self.is_drain_mode():
+                breaches = self.get_cap_breaches()
+                raise ValueError(
+                    f"Drain mode active — {task.status}→{new_status} "
+                    f"forbidden. Breaches: {breaches}"
+                )
+
+        # Gate 7: Exit conditions — required for todo→in_progress
+        if task.status == 'todo' and new_status == 'in_progress':
+            missing = task.get_missing_exit_conditions()
+            if missing:
+                raise ValueError(
+                    f"Exit conditions missing for task #{task_id}: "
+                    f"{', '.join(missing)}. "
+                    f"Boss must fill these before start."
+                )
 
         now = _now()
         blocked_since = now if new_status == 'blocked' else None
@@ -496,6 +565,45 @@ class LabDB:
         ).fetchall()
         return [self._row_to_task(r) for r in rows]
 
+    # ── Guardrail v1 — Flow Control ─────────────────────
+
+    def get_task_counts_by_status(self) -> dict[str, int]:
+        """Canonical task counts per status. Source of truth for WIP caps."""
+        counts: dict[str, int] = {}
+        for status in ALL_STATUSES:
+            row = self.conn.execute(
+                "SELECT COUNT(*) FROM tasks WHERE status = ?", (status,)
+            ).fetchone()
+            counts[status] = row[0]
+        return counts
+
+    def is_drain_mode(self) -> bool:
+        """True if any WIP cap is hit. Evaluated every heartbeat cycle."""
+        counts = self.get_task_counts_by_status()
+        return any(
+            counts.get(status, 0) >= cap
+            for status, cap in WIP_CAPS.items()
+        )
+
+    def get_cap_breaches(self) -> dict[str, tuple[int, int]]:
+        """Return {status: (count, cap)} for every breached/hit cap."""
+        counts = self.get_task_counts_by_status()
+        return {
+            status: (counts.get(status, 0), cap)
+            for status, cap in WIP_CAPS.items()
+            if counts.get(status, 0) >= cap
+        }
+
+    def set_exit_conditions(self, task_id: int,
+                            exit_conditions: dict) -> None:
+        """Set exit conditions on an existing task. Boss fills at proposal."""
+        self.conn.execute(
+            "UPDATE tasks SET exit_conditions = ?, updated_at = ? "
+            "WHERE id = ?",
+            (json.dumps(exit_conditions), _now(), task_id),
+        )
+        self.conn.commit()
+
     # ── Summary ───────────────────────────────────────────
 
     def get_status_summary(self) -> dict:
@@ -541,6 +649,8 @@ class LabDB:
 
     @staticmethod
     def _row_to_task(row: sqlite3.Row) -> Task:
+        ec_raw = row['exit_conditions']
+        ec = json.loads(ec_raw) if ec_raw else None
         return Task(
             id=row['id'], goal_id=row['goal_id'],
             title=row['title'], description=row['description'] or '',
@@ -553,6 +663,7 @@ class LabDB:
             artifact_sha256=row['artifact_sha256'],
             artifact_git_hash=row['artifact_git_hash'],
             artifact_cmd=row['artifact_cmd'],
+            exit_conditions=ec,
         )
 
     @staticmethod

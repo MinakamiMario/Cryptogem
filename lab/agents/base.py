@@ -70,11 +70,50 @@ class BaseAgent(ABC):
             # Step 3: Work on own tasks (rework first, then new)
             rework = self.db.get_my_tasks(self.name, status='in_progress')
             new_tasks = self.db.get_my_tasks(self.name, status='todo')
+
+            # Guardrail v1: pre-check drain mode for new task starts
+            # Rework (already in_progress) is always allowed.
+            # New starts (todo→in_progress) are blocked in drain mode.
+            if not rework and new_tasks and self.db.is_drain_mode():
+                self.logger.info(
+                    "Drain mode active — skipping new task starts"
+                )
+                new_tasks = []  # Only rework allowed
+
             my_tasks = rework + new_tasks
             if my_tasks:
                 task = my_tasks[0]  # rework or oldest first
                 if task.status == 'todo':
-                    self.db.transition(task.id, 'in_progress', actor=self.name)
+                    # Guardrail v1: pre-check exit conditions for UX
+                    missing = task.get_missing_exit_conditions()
+                    if missing:
+                        self.logger.warning(
+                            f"Task #{task.id} missing exit conditions: "
+                            f"{missing} — moving to blocked"
+                        )
+                        try:
+                            self.db.transition(
+                                task.id, 'in_progress', actor=self.name)
+                        except ValueError:
+                            # DB gate caught it — move to blocked instead
+                            pass
+                        try:
+                            self.db.add_comment(
+                                task.id, self.name,
+                                f"⚠️ Cannot start: missing exit conditions: "
+                                f"{', '.join(missing)}",
+                                'comment',
+                            )
+                        except Exception:
+                            pass
+                        # Skip this task, don't execute
+                        my_tasks = my_tasks[1:] if len(my_tasks) > 1 else []
+                        if not my_tasks:
+                            return stats
+                        task = my_tasks[0]
+                    else:
+                        self.db.transition(
+                            task.id, 'in_progress', actor=self.name)
                 self.db.set_status(self.name, 'working', task_id=task.id,
                                    note=task.title)
 

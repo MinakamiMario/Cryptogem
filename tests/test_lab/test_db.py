@@ -10,8 +10,19 @@ import pytest
 # Ensure repo root is importable
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from lab.config import VALID_TRANSITIONS, safe_write_check
+from lab.config import EXIT_CONDITIONS, VALID_TRANSITIONS, safe_write_check
 from lab.db import LabDB
+
+
+def _set_ec(db, task_id):
+    """Set valid exit conditions on a task for testing."""
+    db.set_exit_conditions(task_id, {
+        'scope': 'reports/lab/test_*',
+        'dod': 'Test report',
+        'artifact': 'reports/lab/test.json',
+        'write_surface': "['lab/lab.db', 'reports/lab/']",
+        'stop_condition': 'Error → blocked',
+    })
 
 
 @pytest.fixture
@@ -215,6 +226,7 @@ class TestTransitions:
         assert db.get_task(tid).status == 'todo'
 
         # todo → in_progress
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         assert db.get_task(tid).status == 'in_progress'
 
@@ -257,6 +269,7 @@ class TestTransitions:
         """Cannot go backwards from done (terminal state)."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss')
         db.transition(tid, 'todo', actor='user')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'risk_governor')
@@ -271,6 +284,7 @@ class TestTransitions:
         """in_progress → blocked → in_progress."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss')
         db.transition(tid, 'todo', actor='user')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'blocked', actor='edge_analyst')
         task = db.get_task(tid)
@@ -317,6 +331,7 @@ class TestBossPromotionGate:
         """Cannot promote if reviews are still pending."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss')
         db.transition(tid, 'todo', actor='user')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         # Create reviews
@@ -331,6 +346,7 @@ class TestBossPromotionGate:
         """Can promote when ALL reviews are approved."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss')
         db.transition(tid, 'todo', actor='user')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'risk_governor')
@@ -348,6 +364,7 @@ class TestBossPromotionGate:
         # NOT EXISTS(non-approved)
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss')
         db.transition(tid, 'todo', actor='user')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         # No reviews created — transition should succeed
@@ -359,6 +376,7 @@ class TestBossPromotionGate:
         """Rejected review: task can go back to in_progress."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss')
         db.transition(tid, 'todo', actor='user')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'risk_governor')
@@ -412,6 +430,7 @@ class TestReviews:
         # Move both to peer_review
         for tid in [t1, t2]:
             db.transition(tid, 'todo', actor='user')
+            _set_ec(db, tid)
             db.transition(tid, 'in_progress', actor='edge_analyst')
             db.transition(tid, 'peer_review', actor='edge_analyst')
         # Create reviews for robustness_auditor
@@ -423,6 +442,7 @@ class TestReviews:
     def test_get_fully_reviewed_tasks(self, db, goal_id):
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss')
         db.transition(tid, 'todo', actor='user')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         # Create and approve reviews
@@ -631,6 +651,7 @@ class TestProposalQuorum:
         """approved → done BLOCKED als actor != 'user'."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
                              initial_status='todo')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'risk_governor')
@@ -644,6 +665,7 @@ class TestProposalQuorum:
         """approved → done OK als actor == 'user'."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
                              initial_status='todo')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'risk_governor')
@@ -657,6 +679,7 @@ class TestProposalQuorum:
         """done is terminal: geen transitions uit."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
                              initial_status='todo')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'risk_governor')
@@ -671,6 +694,7 @@ class TestProposalQuorum:
         """review → approved OK (boss auto-promote)."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
                              initial_status='todo')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'risk_governor')
@@ -683,6 +707,7 @@ class TestProposalQuorum:
         """approved → in_progress OK (user reject)."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
                              initial_status='todo')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'risk_governor')
@@ -696,6 +721,7 @@ class TestProposalQuorum:
         """approved → in_progress BLOCKED als actor != 'user'."""
         tid = db.create_task(goal_id, "T1", 'edge_analyst', 'boss',
                              initial_status='todo')
+        _set_ec(db, tid)
         db.transition(tid, 'in_progress', actor='edge_analyst')
         db.transition(tid, 'peer_review', actor='edge_analyst')
         db.create_review(tid, 'risk_governor')

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-LAB_VERSION = "1.0.3"
+LAB_VERSION = "1.0.4"
 
 # ── GitHub ────────────────────────────────────────────────
 GITHUB_REPO = 'MinakamiMario/Cryptogem'
@@ -47,6 +47,8 @@ def safe_write_check(path: str | Path) -> None:
 HEARTBEAT_INTERVAL_S = 600        # 10 minuten
 HEARTBEAT_STAGGER_S = 60          # 1 min offset per agent
 STUCK_THRESHOLD_H = 24            # uren voordat boss escaleert
+DAILY_DIGEST_INTERVAL_S = 86400   # 24 uur — digest 1×/dag
+CAP_BREACH_ESCALATE_CYCLES = 2    # drain >N cycles → cap_breach_alert
 
 # ── LLM ───────────────────────────────────────────────────
 LLM_MODEL = 'claude-sonnet-4-20250514'

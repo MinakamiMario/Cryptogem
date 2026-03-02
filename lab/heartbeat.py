@@ -8,7 +8,12 @@ import time
 from typing import Optional
 
 from lab.agents.base import BaseAgent
-from lab.config import HEARTBEAT_INTERVAL_S, HEARTBEAT_STAGGER_S
+from lab.config import (
+    CAP_BREACH_ESCALATE_CYCLES,
+    DAILY_DIGEST_INTERVAL_S,
+    HEARTBEAT_INTERVAL_S,
+    HEARTBEAT_STAGGER_S,
+)
 from lab.db import LabDB
 from lab.notifier import LabNotifier
 from lab.shell_guard import install as install_shell_guard
@@ -28,6 +33,12 @@ class HeartbeatLoop:
         self._running = True
         self._cycle = 0
         self._current_agent: str | None = None
+
+        # Guardrail v1: drain mode tracking
+        self._prev_drain_mode = False
+        self._drain_cycles = 0
+        # Daily digest: send on first cycle, then every 24h
+        self._last_digest_time = 0.0
 
         # Hard kill-switch: block gh, git, pytest, etc.
         # Fail-closed: if guard can't install → exit(1).
@@ -137,6 +148,45 @@ class HeartbeatLoop:
                                        note=str(e)[:200])
                 except Exception:
                     pass
+
+        # ── Guardrail v1: drain mode reporting ──────────────
+        drain = self.db.is_drain_mode()
+        cycle_stats['drain_mode'] = drain
+
+        if drain and not self._prev_drain_mode:
+            # Transition: OFF → ON
+            breaches = self.db.get_cap_breaches()
+            self.notifier.drain_mode_entered(breaches)
+            logger.warning(f"  [guardrail] Drain mode ENTERED: {breaches}")
+            self._drain_cycles = 1
+        elif drain:
+            self._drain_cycles += 1
+            if self._drain_cycles > CAP_BREACH_ESCALATE_CYCLES:
+                # Persistent breach — escalate per cap
+                breaches = self.db.get_cap_breaches()
+                for status, (count, cap) in breaches.items():
+                    self.notifier.cap_breach_alert(status, count, cap)
+                logger.warning(
+                    f"  [guardrail] Drain persistent "
+                    f"({self._drain_cycles} cycles): {breaches}"
+                )
+        elif not drain and self._prev_drain_mode:
+            # Transition: ON → OFF
+            self.notifier.drain_mode_exited()
+            logger.info("  [guardrail] Drain mode EXITED")
+            self._drain_cycles = 0
+
+        self._prev_drain_mode = drain
+
+        # ── Guardrail v1: daily digest ─────────────────────
+        now = time.time()
+        if now - self._last_digest_time >= DAILY_DIGEST_INTERVAL_S:
+            try:
+                self.notifier.daily_digest(self.db)
+                self._last_digest_time = now
+                logger.info("  [guardrail] Daily digest sent")
+            except Exception as e:
+                logger.warning(f"  [guardrail] Daily digest failed: {e}")
 
         # Send summary (only if something happened)
         self.notifier.heartbeat_summary(

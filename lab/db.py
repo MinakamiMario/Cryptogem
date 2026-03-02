@@ -12,7 +12,8 @@ from lab.config import (
     REVIEW_VERDICTS, VALID_TRANSITIONS, WIP_CAPS,
 )
 from lab.models import (
-    AgentStatus, Comment, CycleMetrics, Goal, Task, TaskResult, TaskReview,
+    AgentStatus, Comment, CycleMetrics, GateRejection, Goal, Task,
+    TaskResult, TaskReview,
 )
 
 SCHEMA_SQL = """
@@ -96,6 +97,17 @@ CREATE TABLE IF NOT EXISTS cycle_metrics (
     cycle_duration_s REAL DEFAULT 0.0,
     created_at      TEXT DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS gate_rejections (
+    id          INTEGER PRIMARY KEY,
+    gate        TEXT NOT NULL,
+    task_id     INTEGER,
+    actor       TEXT NOT NULL,
+    from_status TEXT NOT NULL,
+    to_status   TEXT NOT NULL,
+    reason      TEXT NOT NULL,
+    created_at  TEXT DEFAULT (datetime('now'))
+);
 """
 
 
@@ -151,6 +163,20 @@ class LabDB:
                     agent_count     INTEGER DEFAULT 0,
                     cycle_duration_s REAL DEFAULT 0.0,
                     created_at      TEXT DEFAULT (datetime('now'))
+                )
+            """)
+        # Migration: create gate_rejections table if missing (v1.0.7)
+        if 'gate_rejections' not in tables:
+            self.conn.execute("""
+                CREATE TABLE IF NOT EXISTS gate_rejections (
+                    id          INTEGER PRIMARY KEY,
+                    gate        TEXT NOT NULL,
+                    task_id     INTEGER,
+                    actor       TEXT NOT NULL,
+                    from_status TEXT NOT NULL,
+                    to_status   TEXT NOT NULL,
+                    reason      TEXT NOT NULL,
+                    created_at  TEXT DEFAULT (datetime('now'))
                 )
             """)
         self.conn.commit()
@@ -281,6 +307,21 @@ class LabDB:
         ).fetchone()
         return row[0]
 
+    def _log_gate_rejection(self, gate: str, task_id: int, actor: str,
+                            from_status: str, to_status: str,
+                            reason: str) -> None:
+        """Record a gate rejection in the gate_rejections table."""
+        try:
+            self.conn.execute(
+                "INSERT INTO gate_rejections "
+                "(gate, task_id, actor, from_status, to_status, reason) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (gate, task_id, actor, from_status, to_status, reason),
+            )
+            self.conn.commit()
+        except Exception:
+            pass  # Never let rejection logging break the gate itself
+
     def transition(self, task_id: int, new_status: str, actor: str) -> None:
         """Enforce state machine. Raises ValueError on invalid transition.
 
@@ -289,6 +330,11 @@ class LabDB:
         2. proposal → todo: BOTH gatekeepers must have approved reviews
         3. approved → done: only user actor allowed
         4. approved → in_progress: only user actor allowed (reject)
+        5. WIP cap check
+        6. Drain mode check
+        7. Exit conditions check
+
+        All gate rejections are logged to gate_rejections table.
         """
         task = self.get_task(task_id)
         if task is None:
@@ -296,19 +342,23 @@ class LabDB:
 
         allowed = VALID_TRANSITIONS.get(task.status, [])
         if new_status not in allowed:
-            raise ValueError(
-                f"Invalid transition: {task.status} -> {new_status} "
-                f"(allowed: {allowed})"
-            )
+            reason = (f"Invalid transition: {task.status} -> {new_status} "
+                      f"(allowed: {allowed})")
+            self._log_gate_rejection(
+                'invalid_transition', task_id, actor,
+                task.status, new_status, reason)
+            raise ValueError(reason)
 
         # Gate 1: peer_review → review requires all peer reviews approved
         if task.status == 'peer_review' and new_status == 'review':
             pending = self.get_pending_reviews(task_id)
             if pending:
-                raise ValueError(
-                    f"Cannot promote: {len(pending)} reviews pending: "
-                    f"{[r.reviewer for r in pending]}"
-                )
+                reason = (f"Cannot promote: {len(pending)} reviews pending: "
+                          f"{[r.reviewer for r in pending]}")
+                self._log_gate_rejection(
+                    'peer_review_quorum', task_id, actor,
+                    task.status, new_status, reason)
+                raise ValueError(reason)
 
         # Gate 2: proposal → todo requires GATEKEEPER quorum
         if task.status == 'proposal' and new_status == 'todo':
@@ -316,28 +366,37 @@ class LabDB:
             review_map = {r.reviewer: r.verdict for r in reviews}
             for gk in GATEKEEPERS:
                 if gk not in review_map:
-                    raise ValueError(
-                        f"Gatekeeper '{gk}' review ontbreekt"
-                    )
+                    reason = f"Gatekeeper '{gk}' review ontbreekt"
+                    self._log_gate_rejection(
+                        'gatekeeper_quorum', task_id, actor,
+                        task.status, new_status, reason)
+                    raise ValueError(reason)
                 if review_map[gk] != 'approved':
-                    raise ValueError(
-                        f"Gatekeeper '{gk}' verdict is "
-                        f"'{review_map[gk]}', niet 'approved'"
-                    )
+                    reason = (f"Gatekeeper '{gk}' verdict is "
+                              f"'{review_map[gk]}', niet 'approved'")
+                    self._log_gate_rejection(
+                        'gatekeeper_quorum', task_id, actor,
+                        task.status, new_status, reason)
+                    raise ValueError(reason)
 
         # Gate 3: approved → done ALLEEN door user
         if new_status == 'done' and actor != 'user':
-            raise ValueError(
-                f"Alleen user mag approved → done zetten, niet '{actor}'"
-            )
+            reason = (f"Alleen user mag approved → done zetten, "
+                      f"niet '{actor}'")
+            self._log_gate_rejection(
+                'user_only', task_id, actor,
+                task.status, new_status, reason)
+            raise ValueError(reason)
 
         # Gate 4: approved → in_progress (reject) ALLEEN door user
         if task.status == 'approved' and new_status == 'in_progress' \
                 and actor != 'user':
-            raise ValueError(
-                f"Alleen user mag approved → in_progress zetten, "
-                f"niet '{actor}'"
-            )
+            reason = (f"Alleen user mag approved → in_progress zetten, "
+                      f"niet '{actor}'")
+            self._log_gate_rejection(
+                'user_only', task_id, actor,
+                task.status, new_status, reason)
+            raise ValueError(reason)
 
         # ── Guardrail v1 gates ──────────────────────────────
 
@@ -348,10 +407,12 @@ class LabDB:
             counts = self.get_task_counts_by_status()
             cap = WIP_CAPS[new_status]
             if counts.get(new_status, 0) >= cap:
-                raise ValueError(
-                    f"WIP cap reached: {new_status} has "
-                    f"{counts[new_status]}/{cap} tasks"
-                )
+                reason = (f"WIP cap reached: {new_status} has "
+                          f"{counts[new_status]}/{cap} tasks")
+                self._log_gate_rejection(
+                    'wip_cap', task_id, actor,
+                    task.status, new_status, reason)
+                raise ValueError(reason)
 
         # Gate 6: Drain mode — block intake transitions
         # Forbidden in drain mode: todo→in_progress, proposal→todo
@@ -362,20 +423,24 @@ class LabDB:
         if (task.status, new_status) in _drain_forbidden:
             if self.is_drain_mode():
                 breaches = self.get_cap_breaches()
-                raise ValueError(
-                    f"Drain mode active — {task.status}→{new_status} "
-                    f"forbidden. Breaches: {breaches}"
-                )
+                reason = (f"Drain mode active — {task.status}→{new_status} "
+                          f"forbidden. Breaches: {breaches}")
+                self._log_gate_rejection(
+                    'drain_mode', task_id, actor,
+                    task.status, new_status, reason)
+                raise ValueError(reason)
 
         # Gate 7: Exit conditions — required for todo→in_progress
         if task.status == 'todo' and new_status == 'in_progress':
             missing = task.get_missing_exit_conditions()
             if missing:
-                raise ValueError(
-                    f"Exit conditions missing for task #{task_id}: "
-                    f"{', '.join(missing)}. "
-                    f"Boss must fill these before start."
-                )
+                reason = (f"Exit conditions missing for task #{task_id}: "
+                          f"{', '.join(missing)}. "
+                          f"Boss must fill these before start.")
+                self._log_gate_rejection(
+                    'exit_conditions', task_id, actor,
+                    task.status, new_status, reason)
+                raise ValueError(reason)
 
         now = _now()
         blocked_since = now if new_status == 'blocked' else None
@@ -628,6 +693,43 @@ class LabDB:
             if counts.get(status, 0) >= cap
         }
 
+    # ── Gate Rejections ─────────────────────────────────
+
+    def get_gate_rejections(self, hours: int = 24,
+                            gate: Optional[str] = None,
+                            task_id: Optional[int] = None,
+                            limit: int = 100) -> list[GateRejection]:
+        """Query gate rejections with optional filters."""
+        clauses = ["created_at >= datetime('now', ? || ' hours')"]
+        params: list = [f'-{hours}']
+
+        if gate:
+            clauses.append("gate = ?")
+            params.append(gate)
+        if task_id is not None:
+            clauses.append("task_id = ?")
+            params.append(task_id)
+
+        where = " AND ".join(clauses)
+        params.append(limit)
+        rows = self.conn.execute(
+            f"SELECT * FROM gate_rejections "
+            f"WHERE {where} "
+            f"ORDER BY id DESC LIMIT ?",
+            tuple(params),
+        ).fetchall()
+        return [self._row_to_gate_rejection(r) for r in rows]
+
+    def get_gate_rejection_counts(self, hours: int = 24) -> dict[str, int]:
+        """Count gate rejections by gate type over the last N hours."""
+        rows = self.conn.execute(
+            "SELECT gate, COUNT(*) as cnt FROM gate_rejections "
+            "WHERE created_at >= datetime('now', ? || ' hours') "
+            "GROUP BY gate ORDER BY cnt DESC",
+            (f'-{hours}',),
+        ).fetchall()
+        return {row['gate']: row['cnt'] for row in rows}
+
     def set_exit_conditions(self, task_id: int,
                             exit_conditions: dict) -> None:
         """Set exit conditions on an existing task. Boss fills at proposal."""
@@ -789,5 +891,15 @@ class LabDB:
             drain_cycles=row['drain_cycles'],
             agent_count=row['agent_count'],
             cycle_duration_s=row['cycle_duration_s'],
+            created_at=row['created_at'] or '',
+        )
+
+    @staticmethod
+    def _row_to_gate_rejection(row: sqlite3.Row) -> GateRejection:
+        return GateRejection(
+            id=row['id'], gate=row['gate'],
+            task_id=row['task_id'], actor=row['actor'],
+            from_status=row['from_status'], to_status=row['to_status'],
+            reason=row['reason'],
             created_at=row['created_at'] or '',
         )

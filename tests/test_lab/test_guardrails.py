@@ -502,6 +502,12 @@ class TestBossBackpressure:
         assert stats['drain_mode'] is True
         assert stats['tasks_generated'] == 0
         assert stats['proposals_promoted'] == 0
+        # promotions = sum of all promotion keys
+        assert stats['promotions'] == (
+            stats['proposals_promoted']
+            + stats['peerreview_promoted']
+            + stats['review_promoted']
+        )
 
     def test_boss_generates_when_no_drain(self, db, goal_id):
         """Boss generates tasks normally when not in drain mode."""
@@ -516,6 +522,12 @@ class TestBossBackpressure:
         assert stats['drain_mode'] is False
         # May generate 0 if no templates match, but should have tried
         assert 'tasks_generated' in stats
+        # promotions should aggregate all promotion sub-keys
+        assert stats['promotions'] == (
+            stats['proposals_promoted']
+            + stats['peerreview_promoted']
+            + stats['review_promoted']
+        )
 
 
 # ═══════════════════════════════════════════════════════════

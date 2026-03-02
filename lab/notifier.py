@@ -1188,14 +1188,14 @@ class LabNotifier:
             f"Last error: {last_error[:300]}"
         )
 
-    def heartbeat_summary(self, cycle: int, tasks_reviewed: int,
-                          tasks_worked: int, tasks_promoted: int) -> None:
-        if tasks_reviewed + tasks_worked + tasks_promoted == 0:
+    def heartbeat_summary(self, cycle: int, reviews: int,
+                          tasks: int, promotions: int) -> None:
+        if reviews + tasks + promotions == 0:
             return  # Geen spam bij idle cycli
         self._send(
             f"🔄 Heartbeat #{cycle}:\n"
-            f"Reviews: {tasks_reviewed} | Taken: {tasks_worked} | "
-            f"Gepromoot: {tasks_promoted}"
+            f"Reviews: {reviews} | Taken: {tasks} | "
+            f"Gepromoot: {promotions}"
         )
 
     def infra_check(self, passed: bool, details: str = '') -> None:

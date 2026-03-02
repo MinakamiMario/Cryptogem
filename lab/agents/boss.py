@@ -352,6 +352,13 @@ class BossAgent(BaseAgent):
         # Monitoring — always allowed
         stats['stuck_detected'] = self.check_stuck_tasks()
 
+        # Aggregate promotions for heartbeat cycle stats
+        stats['promotions'] = (
+            stats['proposals_promoted']
+            + stats['peerreview_promoted']
+            + stats['review_promoted']
+        )
+
         return stats
 
     @staticmethod

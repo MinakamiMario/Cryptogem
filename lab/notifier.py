@@ -83,6 +83,7 @@ class LabNotifier:
             self._token = token
             self._base_url = f'https://api.telegram.org/bot{token}'
             self._last_update_id = 0
+            self._update_id_loaded = False  # Lazy-load from DB on first poll
             self._pending_messages: dict[int, int] = {}  # task_id → message_id
             self.enabled = True
             logger.info("Lab Telegram notifier active (@datakingbot_bot)")
@@ -196,9 +197,20 @@ class LabNotifier:
         """Poll all Telegram updates: callbacks AND text messages.
 
         Returns (actions_processed, list_of_incoming_text_messages).
+        Persists _last_update_id to DB to prevent duplicate processing
+        after daemon restarts (v1.1.1).
         """
         if not self.enabled:
             return 0, []
+
+        # Lazy-load _last_update_id from DB on first poll
+        if not self._update_id_loaded and db:
+            stored = db.get_setting('tg_last_update_id', '0')
+            try:
+                self._last_update_id = int(stored)
+            except (ValueError, TypeError):
+                self._last_update_id = 0
+            self._update_id_loaded = True
 
         actions = 0
         incoming_messages: list[str] = []
@@ -209,6 +221,8 @@ class LabNotifier:
         })
         if not result or not result.get('ok'):
             return 0, []
+
+        prev_update_id = self._last_update_id
 
         for update in result.get('result', []):
             self._last_update_id = update['update_id'] + 1
@@ -250,6 +264,14 @@ class LabNotifier:
                 text = msg.get('text', '').strip()
                 if text:
                     incoming_messages.append(text)
+
+        # Persist update_id to DB if it changed
+        if db and self._last_update_id != prev_update_id:
+            try:
+                db.set_setting('tg_last_update_id',
+                               str(self._last_update_id))
+            except Exception:
+                pass  # Best effort — next poll will re-process at worst
 
         return actions, incoming_messages
 

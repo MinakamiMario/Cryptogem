@@ -132,7 +132,11 @@ class TestAgentCircuit:
         assert c.consecutive_errors == 2
 
     def test_multiple_open_close_cycles(self):
-        """Circuit can open, half-open, close, then open again."""
+        """Circuit can open, half-open, close, then open again.
+
+        v1.1.0: open_count resets on HALF_OPEN → CLOSED recovery,
+        so after successful recovery + re-trip, open_count is 1 (not 2).
+        """
         c = AgentCircuit(agent_name='test')
 
         # Cycle 1: open
@@ -146,15 +150,16 @@ class TestAgentCircuit:
         c.should_skip()
         assert c.state == CircuitState.HALF_OPEN
 
-        # Success closes
+        # Success closes — open_count resets (v1.1.0 fix)
         c.record_success()
         assert c.state == CircuitState.CLOSED
+        assert c.open_count == 0  # Reset on recovery
 
-        # Cycle 2: open again
+        # Cycle 2: open again — fresh count
         for i in range(CIRCUIT_ERROR_THRESHOLD):
             c.record_error(f"e{i}")
         assert c.state == CircuitState.OPEN
-        assert c.open_count == 2
+        assert c.open_count == 1  # Fresh start after recovery
 
 
 # ── CircuitBreakerRegistry tests ─────────────────────────────

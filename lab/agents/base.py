@@ -104,8 +104,11 @@ class BaseAgent(ABC):
                                 f"{', '.join(missing)}",
                                 'comment',
                             )
-                        except Exception:
-                            pass
+                        except Exception as exc:
+                            logger.warning(
+                                f"[{self.name}] Failed to post exit-condition "
+                                f"comment on task #{task.id}: {exc}"
+                            )
                         # Skip this task, don't execute
                         my_tasks = my_tasks[1:] if len(my_tasks) > 1 else []
                         if not my_tasks:
@@ -151,8 +154,11 @@ class BaseAgent(ABC):
                             f"\u26a0\ufe0f Task blocked due to error: {str(e)[:200]}",
                             'comment'
                         )
-                    except Exception:
-                        pass  # Best effort
+                    except Exception as block_err:
+                        logger.warning(
+                            f"[{self.name}] Failed to block task "
+                            f"#{task.id}: {block_err}"
+                        )
                     stats['errors'] += 1
 
         finally:

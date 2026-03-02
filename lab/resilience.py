@@ -50,12 +50,18 @@ class AgentCircuit:
     total_errors: int = 0
 
     def record_success(self) -> None:
-        """Agent completed heartbeat successfully."""
+        """Agent completed heartbeat successfully.
+
+        Resets open_count on recovery from HALF_OPEN so that
+        needs_escalation clears once the agent is healthy again.
+        """
         if self.state == CircuitState.HALF_OPEN:
             logger.info(
                 f"[circuit] {self.agent_name}: HALF_OPEN → CLOSED "
-                f"(success after {self.consecutive_errors} errors)"
+                f"(recovered after {self.open_count} opens, "
+                f"{self.consecutive_errors} errors)"
             )
+            self.open_count = 0  # Agent recovered — clear escalation
         self.consecutive_errors = 0
         self.state = CircuitState.CLOSED
 

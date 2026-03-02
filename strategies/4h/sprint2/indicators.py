@@ -12,17 +12,15 @@ All use causal data only (no look-ahead).
 """
 from __future__ import annotations
 
-import sys
 import importlib
+import sys
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
-if str(_REPO_ROOT / "trading_bot") not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT / "trading_bot"))
 
-# Import Sprint 1 indicators (reuse everything)
+# 4h is not a valid Python identifier → use importlib
 _sprint1_ind = importlib.import_module("strategies.4h.sprint1.indicators")
 
 # Re-export Sprint 1 indicator functions
@@ -44,8 +42,7 @@ SMA_PERIOD = _sprint1_ind.SMA_PERIOD
 ADX_PERIOD = _sprint1_ind.ADX_PERIOD
 VOL_AVG_PERIOD = _sprint1_ind.VOL_AVG_PERIOD
 
-# Import strategy.py functions
-from strategy import calc_rsi, calc_atr, calc_donchian, calc_bollinger
+from trading_bot.strategy import calc_rsi, calc_atr, calc_donchian, calc_bollinger
 
 
 # ---------------------------------------------------------------------------

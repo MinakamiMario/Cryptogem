@@ -317,7 +317,7 @@ class BossAgent(BaseAgent):
         for task in self.db.get_tasks_by_status('review'):
             try:
                 self.db.transition(task.id, 'approved', actor='boss')
-                self.notifier.task_promoted(task.id, task.title)
+                self.notifier.task_promoted(task.id, task.title, db=self.db)
                 promoted += 1
             except ValueError:
                 pass

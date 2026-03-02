@@ -71,6 +71,10 @@ class LabNotifier:
         self._tg = None
         self._token = None
         self.enabled = False
+        self._pending_messages: dict[int, int] = {}
+        self._pending_loaded = False
+        self._last_update_id = 0
+        self._update_id_loaded = False
         if not enabled or TelegramNotifier is None:
             logger.info("Telegram notifier disabled (flag or missing import)")
             return
@@ -85,6 +89,7 @@ class LabNotifier:
             self._last_update_id = 0
             self._update_id_loaded = False  # Lazy-load from DB on first poll
             self._pending_messages: dict[int, int] = {}  # task_id → message_id
+            self._pending_loaded = False  # Lazy-load from DB
             self.enabled = True
             logger.info("Lab Telegram notifier active (@datakingbot_bot)")
         except Exception as e:
@@ -186,6 +191,80 @@ class LabNotifier:
         except Exception:
             pass  # Expired callbacks are normal, edit_message still works
 
+    # ── Pending messages persistence (v1.2.4) ───────────
+
+    def _load_pending_messages(self, db) -> None:
+        """Load pending_messages from DB on first use."""
+        if self._pending_loaded:
+            return
+        self._pending_loaded = True
+        try:
+            raw = db.get_setting('tg_pending_messages', '{}')
+            data = json.loads(raw) if raw else {}
+            # Keys are stored as strings in JSON, convert back to int
+            self._pending_messages = {
+                int(k): int(v) for k, v in data.items()
+            }
+        except (json.JSONDecodeError, TypeError, ValueError):
+            self._pending_messages = {}
+
+    def _save_pending_messages(self, db) -> None:
+        """Persist pending_messages to DB."""
+        try:
+            # JSON keys must be strings
+            data = {str(k): v for k, v in self._pending_messages.items()}
+            db.set_setting('tg_pending_messages', json.dumps(data))
+        except Exception:
+            pass  # Best effort
+
+    def _sync_approved_tasks(self, db) -> int:
+        """Check if any tracked tasks were approved/rejected externally.
+
+        Detects tasks that moved out of 'approved' status via CLI or
+        other channels (not TG buttons) and updates TG messages.
+        Returns number of synced tasks.
+        """
+        if not self._pending_messages:
+            return 0
+
+        synced = 0
+        to_remove = []
+
+        for task_id, msg_id in list(self._pending_messages.items()):
+            try:
+                task = db.get_task(task_id)
+                if not task:
+                    to_remove.append(task_id)
+                    continue
+
+                if task.status == 'done':
+                    self._edit_message(
+                        msg_id,
+                        f"✅ <b>GOEDGEKEURD</b> (extern) — Taak #{task_id}: "
+                        f"{task.title}\n\nStatus: done"
+                    )
+                    to_remove.append(task_id)
+                    synced += 1
+                elif task.status not in ('approved', 'done'):
+                    # Task moved to unexpected status (rejected, rework, etc.)
+                    self._edit_message(
+                        msg_id,
+                        f"🔄 Taak #{task_id}: {task.title}\n\n"
+                        f"Status: {task.status} (extern gewijzigd)"
+                    )
+                    to_remove.append(task_id)
+                    synced += 1
+            except Exception:
+                pass  # Don't break polling on sync errors
+
+        for tid in to_remove:
+            self._pending_messages.pop(tid, None)
+
+        if to_remove:
+            self._save_pending_messages(db)
+
+        return synced
+
     # ── Telegram Polling (callbacks + text messages) ─────
 
     def check_approvals(self, db) -> int:
@@ -211,6 +290,14 @@ class LabNotifier:
             except (ValueError, TypeError):
                 self._last_update_id = 0
             self._update_id_loaded = True
+
+        # Lazy-load pending_messages from DB (v1.2.4)
+        if db:
+            self._load_pending_messages(db)
+
+        # Sync: detect tasks approved/rejected externally (v1.2.4)
+        if db:
+            self._sync_approved_tasks(db)
 
         actions = 0
         incoming_messages: list[str] = []
@@ -303,13 +390,16 @@ class LabNotifier:
                 else:
                     incoming_messages.append(text)
 
-        # Persist update_id to DB if it changed
+        # Persist update_id and pending_messages to DB if changed
         if db and self._last_update_id != prev_update_id:
             try:
                 db.set_setting('tg_last_update_id',
                                str(self._last_update_id))
             except Exception:
                 pass  # Best effort — next poll will re-process at worst
+
+        if db and actions > 0:
+            self._save_pending_messages(db)
 
         return actions, incoming_messages
 
@@ -847,7 +937,8 @@ class LabNotifier:
             f"Goal: {goal_title}"
         )
 
-    def task_promoted(self, task_id: int, title: str) -> None:
+    def task_promoted(self, task_id: int, title: str,
+                      db=None) -> None:
         """Task promoted to approved — send with approve/reject buttons."""
         msg_id = self._send_with_buttons(
             f"📈 Taak #{task_id} klaar voor jouw goedkeuring:\n"
@@ -864,14 +955,20 @@ class LabNotifier:
         )
         if msg_id:
             self._pending_messages[task_id] = msg_id
+            if db:
+                self._save_pending_messages(db)
 
     def notify_task_done(self, task_id: int, title: str,
-                         via: str = 'cli') -> None:
+                         via: str = 'cli', db=None) -> None:
         """Notify Telegram that a task was approved (via CLI or other).
 
         Edits the original approval message to remove buttons.
         Called by CLI approve so Telegram stays in sync.
         """
+        # Load from DB if not yet loaded
+        if db:
+            self._load_pending_messages(db)
+
         # Edit the original message if we have it
         msg_id = self._pending_messages.pop(task_id, None)
         if msg_id:
@@ -887,9 +984,16 @@ class LabNotifier:
                 f"<b>{title}</b>"
             )
 
+        if db:
+            self._save_pending_messages(db)
+
     def notify_task_rejected(self, task_id: int, title: str,
-                             via: str = 'cli') -> None:
+                             via: str = 'cli', db=None) -> None:
         """Notify Telegram that a task was rejected via CLI."""
+        # Load from DB if not yet loaded
+        if db:
+            self._load_pending_messages(db)
+
         msg_id = self._pending_messages.pop(task_id, None)
         if msg_id:
             self._edit_message(
@@ -902,6 +1006,9 @@ class LabNotifier:
                 f"❌ Taak #{task_id} afgekeurd via {via}: "
                 f"<b>{title}</b>"
             )
+
+        if db:
+            self._save_pending_messages(db)
 
     def task_stuck(self, task_id: int, title: str, hours: float,
                    assigned_to: str) -> None:

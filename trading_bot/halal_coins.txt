@@ -1,0 +1,68 @@
+# Halal Crypto Whitelist — Utility-based coins only
+# Excluded: lending/riba (AAVE, COMP, MKR), meme/gambling (DOGE, SHIB, PEPE),
+#           interest-bearing stablecoins, casino tokens
+#
+# Format: one pair per line (SYMBOL/USDT)
+
+# Layer 1 — Store of value / Smart contract platforms
+BTC/USDT
+ETH/USDT
+SOL/USDT
+ADA/USDT
+AVAX/USDT
+DOT/USDT
+NEAR/USDT
+SUI/USDT
+APT/USDT
+SEI/USDT
+TON/USDT
+ICP/USDT
+EGLD/USDT
+NEO/USDT
+XTZ/USDT
+ALGO/USDT
+KAVA/USDT
+ROSE/USDT
+ZIL/USDT
+ONE/USDT
+FLOW/USDT
+QTUM/USDT
+
+# Layer 2 / Scaling
+POL/USDT
+OP/USDT
+ARB/USDT
+IMX/USDT
+
+# Cross-border payments
+XRP/USDT
+XLM/USDT
+
+# Oracle / Infra
+LINK/USDT
+GRT/USDT
+ATOM/USDT
+INJ/USDT
+TIA/USDT
+
+# Storage / Compute
+FIL/USDT
+AR/USDT
+RENDER/USDT
+IOTA/USDT
+
+# AI / Data
+FET/USDT
+TAO/USDT
+
+# Supply chain / Enterprise
+VET/USDT
+HBAR/USDT
+
+# DePIN / Real World
+KAS/USDT
+ONDO/USDT
+
+# Rebranded (MEXC ticker)
+SONIC/USDT
+TFUEL/USDT

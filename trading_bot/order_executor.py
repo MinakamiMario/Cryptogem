@@ -168,8 +168,24 @@ class OrderExecutor:
                     expected_price=current_price,
                 )
             # Round qty to exchange precision
-            precision = int(market_info.get('amount_precision', 8))
+            # amount_precision can be step size (0.001) or decimal count (3)
+            raw_prec = market_info.get('amount_precision', 8)
+            if isinstance(raw_prec, float) and raw_prec < 1:
+                # Step size (e.g. 0.001) → convert to decimal places (3)
+                import math as _math
+                precision = max(0, -int(_math.floor(_math.log10(raw_prec))))
+            else:
+                precision = int(raw_prec)
             qty = round(usd_amount / current_price, precision)
+
+            # Enforce minimum amount
+            min_amount = market_info.get('min_amount', 0)
+            if min_amount and qty < min_amount:
+                return OrderResult(
+                    filled=False,
+                    error=f"qty {qty} below min_amount {min_amount} for {pair}",
+                    expected_price=current_price,
+                )
         else:
             qty = usd_amount / current_price
 
@@ -193,7 +209,12 @@ class OrderExecutor:
         # Round qty to exchange precision
         market_info = self.client.get_market_info(pair)
         if market_info:
-            precision = int(market_info.get('amount_precision', 8))
+            raw_prec = market_info.get('amount_precision', 8)
+            if isinstance(raw_prec, float) and raw_prec < 1:
+                import math as _math
+                precision = max(0, -int(_math.floor(_math.log10(raw_prec))))
+            else:
+                precision = int(raw_prec)
             qty = round(qty, precision)
 
         # Place order with retry

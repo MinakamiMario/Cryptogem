@@ -1,0 +1,211 @@
+{
+  "project": "scalp",
+  "pair": "XRP/USDT",
+  "timeframe": "1m",
+  "exchange": "MEXC",
+  "fee_model": "zero-fee (0% maker/taker), spread-only cost",
+  "status": "LIVE — Phase 4A paper + 4B live ($25/trade) active (fvg_x2027)",
+  "date_started": "2026-03-03",
+  "date_closed": null,
+  "phases_completed": ["0A_spread", "0B_xrp_candles", "0C_atr", "0D_eth_btc_candles", "2_indicator_screening", "2_ms_screening", "3_verification", "4_live_integration"],
+  "phases_pending": [],
+  "experiments": [
+    {
+      "id": "scalp_phase0",
+      "name": "Phase 0: Data + Spread Measurement",
+      "verdict": "GO",
+      "key_metrics": {
+        "median_spread_bps": 1.49,
+        "p95_spread_bps": 2.97,
+        "xrp_bars": 43203,
+        "eth_bars": 43203,
+        "btc_bars": 43203,
+        "median_atr14_bps": 13.1,
+        "spread_atr_ratio": 0.114
+      }
+    },
+    {
+      "id": "scalp_phase2_indicators",
+      "name": "Phase 2A: Indicator Signal Screening (21 initial + 3011 grid)",
+      "verdict": "NO-GO",
+      "adr": "ADR-SCALP-001",
+      "configs_tested": 3032,
+      "families_tested": 10,
+      "configs_passing_g0_g1": 54,
+      "configs_passing_g2": 0,
+      "best_config": {
+        "signal": "RSI14<30, TP=2.0xATR, SL=1.0xATR, TL=15",
+        "pf": 1.127,
+        "trades": 509,
+        "wr": 41.3,
+        "pnl_usd": 14.74,
+        "breakeven_spread_bps": 2.1
+      },
+      "root_cause": "Edge too thin, temporal instability, adverse selection"
+    },
+    {
+      "id": "scalp_phase2_ms_initial",
+      "name": "Phase 2B: MS Initial Sweep (19 configs, 5 families)",
+      "verdict": "CONDITIONAL — grid expansion triggered",
+      "adr": "ADR-SCALP-002",
+      "configs_tested": 19,
+      "families_tested": 5,
+      "configs_go": 0,
+      "configs_go_spread_risk": 1,
+      "best_config": {
+        "id": "mssb_004",
+        "signal": "FVG_FILL, max_fvg_age=30, fill_depth=0.50, rsi_max=40",
+        "pf": 1.259,
+        "trades": 176,
+        "breakeven_spread_bps": 2.9
+      },
+      "families_ranking": {
+        "FVG_FILL": {"best_pf": 1.259, "note": "Only profitable family"},
+        "SHIFT_PB": {"best_pf": 0.922, "note": "ms_018 port fails on 1m"},
+        "OB_REJECT": {"best_pf": 0.843},
+        "LIQ_SWEEP": {"best_pf": 0.829},
+        "SFP": {"best_pf": 0.793}
+      }
+    },
+    {
+      "id": "scalp_phase2_ms_grid",
+      "name": "Phase 2C: FVG_FILL Grid Expansion (2,430 combos)",
+      "verdict": "CONDITIONAL GO",
+      "adr": "ADR-SCALP-002",
+      "configs_tested": 2430,
+      "configs_go_advanced": 145,
+      "configs_go_spread_risk": 143,
+      "configs_no_go": 2079,
+      "critical_discovery": "100% of GO_ADVANCED configs have rsi_max=40"
+    },
+    {
+      "id": "scalp_phase3_verification",
+      "name": "Phase 3: Truth-Pass Verification (5 candidates, 5 tests)",
+      "verdict": "GO — 5/5 VERIFIED",
+      "adr": "ADR-SCALP-002",
+      "candidates_tested": 5,
+      "candidates_verified": 5,
+      "tests_per_candidate": 5,
+      "tests": {
+        "T1_window_split": "3x10d, all PF >= 0.95",
+        "T2_walk_forward": "5-fold, all positive",
+        "T3_bootstrap": "1000 resamplings, P5 PF >= 0.85, 99%+ profitable",
+        "T4_spread_stress": "PF > 1.0 at P95 spread (2.97 bps)",
+        "T5_cross_asset": "ETH + BTC OOS, >= 1 coin PF >= 0.90"
+      },
+      "primary_candidate": {
+        "id": "fvg_x2027",
+        "pf": 1.769,
+        "trades": 131,
+        "breakeven_spread_bps": 4.8,
+        "params": {"max_fvg_age": 25, "fill_depth": 0.75, "rsi_max": 40, "tp_atr": 2.5, "sl_atr": 0.75, "time_limit": 15},
+        "verification": {
+          "window_split": "3/3 (PF 1.34-2.26)",
+          "walk_forward": "5/5 positive (PF 1.50-2.08)",
+          "bootstrap_p5_pf": 1.254,
+          "bootstrap_pct_profitable": 99.6,
+          "pf_at_p95_spread": 1.348,
+          "eth_oos_pf": 1.193,
+          "btc_oos_pf": 1.027
+        }
+      },
+      "secondary_candidate": {
+        "id": "fvg_x1217",
+        "pf": 1.713,
+        "trades": 150,
+        "breakeven_spread_bps": 4.6,
+        "params": {"max_fvg_age": 25, "fill_depth": 0.50, "rsi_max": 40, "tp_atr": 2.5, "sl_atr": 0.75, "time_limit": 15},
+        "verification": {
+          "window_split": "3/3 (PF 1.26-2.18)",
+          "walk_forward": "5/5 positive (PF 1.28-2.22)",
+          "bootstrap_p5_pf": 1.209,
+          "bootstrap_pct_profitable": 99.4,
+          "pf_at_p95_spread": 1.312,
+          "eth_oos_pf": 1.220,
+          "btc_oos_pf": 0.964
+        }
+      },
+      "cross_asset_summary": {
+        "eth_profitable_all_5": true,
+        "eth_pf_range": "1.193-1.248",
+        "eth_trades": "188-208",
+        "btc_marginal": true,
+        "btc_pf_range": "0.964-1.095",
+        "btc_trades": "224-251"
+      }
+    }
+    },
+    {
+      "id": "scalp_phase4_paper",
+      "name": "Phase 4: Paper Trading (1m FVG Fill on MEXC)",
+      "verdict": "RUNNING",
+      "date_started": "2026-03-03",
+      "config": {
+        "signal": "signal_mssb (FVG Fill)",
+        "primary_candidate": "fvg_x2027",
+        "params": {"max_fvg_age": 25, "fill_depth": 0.75, "rsi_max": 40, "tp_atr": 2.5, "sl_atr": 0.75, "time_limit": 15},
+        "cost_model": "spread-only (0% fees)",
+        "capital_per_trade": 200,
+        "pairs": ["XRP/USDT", "ETH/USDT"],
+        "poll_interval_sec": 65
+      },
+      "circuit_breaker": {
+        "dd_ceiling": 0.25,
+        "pf_floor_after_30t": 1.0,
+        "max_consec_losses": 8
+      },
+      "baseline": {
+        "pf": 1.769,
+        "boot_p5_pf": 1.254,
+        "pf_at_p95_spread": 1.348,
+        "trades_30d": 131,
+        "spread_bps_backtest": 1.5
+      },
+      "files": {
+        "paper_trader": "trading_bot/paper_scalp_1m.py",
+        "launchd_plist": "trading_bot/com.cryptogem.scalp1m.plist",
+        "state_file": "trading_bot/paper_state_scalp_1m_paper.json",
+        "dashboard": "trading_bot/dashboard_scalp_1m_paper.json"
+      }
+    },
+    {
+      "id": "scalp_phase4b_live",
+      "name": "Phase 4B: Live Order Mirroring ($25/trade)",
+      "verdict": "RUNNING",
+      "date_started": "2026-03-04",
+      "adr": "ADR-SCALP-003",
+      "design": {
+        "mode": "paper + live mirror",
+        "paper_size": 200,
+        "live_size": 25,
+        "max_exposure_usd": 50,
+        "executor": "OrderExecutor (fee_rate=0.0)",
+        "purpose": "Real fill data, slippage measurement, paper-vs-live gap validation"
+      },
+      "fee_discovery": {
+        "XRP_USDT": {"maker": 0.0, "taker": 0.0, "note": "TRUE ZERO — unique exception on MEXC"},
+        "ETH_USDT": {"maker": 0.0, "taker": 0.0005, "note": "5 bps taker — standard MEXC rate"},
+        "impact": "ETH OOS PF 1.193 → adjusted ~1.179 (still profitable, 7% thinner edge)",
+        "action": "Live fills track actual fees; paper-vs-live gap validates impact"
+      },
+      "safety": {
+        "startup_recovery": "Orphaned pending/open positions reconciled on restart",
+        "failed_sell_retry": "Max 3 attempts, then TG critical alert + manual close required",
+        "pre_write_marker": "Position saved as 'pending' BEFORE exchange call"
+      },
+      "bugfix": {
+        "issue": "CCXT precision step-size (0.001) parsed as int → qty=0 for high-price coins",
+        "affected": "TAO, BTC, ETH — any coin where $50/price < 1.0",
+        "fix": "Convert step-size to decimal count via -floor(log10(step))",
+        "file": "trading_bot/order_executor.py"
+      }
+    }
+  ],
+  "production_candidates": [
+    {"id": "fvg_x2027", "priority": "PRIMARY", "verdict": "VERIFIED (5/5)", "pf": 1.769, "boot_p5": 1.254, "pf_at_p95": 1.348},
+    {"id": "fvg_x1217", "priority": "SECONDARY", "verdict": "VERIFIED (5/5)", "pf": 1.713, "boot_p5": 1.209, "pf_at_p95": 1.312}
+  ],
+  "data_location": "~/CryptogemData/scalp/",
+  "sweep_results": "~/CryptogemData/scalp/ms/sweep/",
+  "verify_results": "~/CryptogemData/scalp/ms/verify/"
+}

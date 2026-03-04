@@ -480,3 +480,124 @@ Updated in `trading_bot/paper_ms_4h.py`:
 2. **ADR-MS-004 superseded on sizing**: config section now stale, this ADR is authoritative
 3. **Sensitivity script saved**: `scripts/run_ms_maxpos_sensitivity.py` for reproducibility
 4. **Report saved**: `reports/ms/maxpos_sensitivity.json`
+
+---
+
+## ADR-MS-006: Normal Live GO — $500/trade, halal whitelist, guarded-live 48h
+
+**Date**: 2026-03-04
+**Status**: GO — advance from micro-live to normal live
+
+### Context
+
+Micro-live smoke test (ADR-MS-004/005) completed:
+- 3 real trades via `live_trader.py --strategy ms_018 --live --micro` ($50/trade)
+- All 3 exits: DC TARGET (Class A) — best exit type
+- P&L: +$1.02 on $150 risked, PF=7.05
+- Slippage: -14.5 bps (worst, SEI sell) to +15.0 bps (worst, SEI buy)
+- Fees: $0.00 confirmed (MEXC 0% maker/taker)
+- 8 checks over 29h, no crashes, no circuit breaker triggers, no reconciliation mismatches
+
+OrderExecutor precision bugfix applied (commit `caf2cb4`):
+- CCXT `amount_precision` returns step size (0.001) on MEXC, not decimal count (3)
+- Fix: `-floor(log10(step))` conversion + `min_amount` guard
+- Affected TAO, BTC, ETH — any coin where `$size / price < 1.0`
+
+### Decision
+
+**GO** — advance to normal live with guarded parameters:
+
+| Parameter | Micro-Live | Normal Live | Rationale |
+|-----------|-----------|-------------|-----------|
+| Trade size | $50 | **$500** | 10x micro, conservative vs $1,400 Half Kelly |
+| Max positions | 2 | **2** | ADR-MS-005 optimal |
+| Max exposure | $100 | **$1,000** | Manageable risk |
+| Coin universe | 300 (all) | **45 (halal whitelist)** | Islamic compliance |
+| Duration | 24h | **48h (guarded)** | Meaningful sample, quick intervention |
+| Mode | --micro | **--trade-size 500** | New CLI flag added |
+
+### Execution Command
+
+```bash
+python live_trader.py --strategy ms_018 --live --trade-size 500 \
+    --coins-file halal_coins.txt --hours 48 --reset
+```
+
+### Halal Whitelist
+
+`trading_bot/halal_coins.txt` — 45 utility-based coins:
+- L1 platforms (BTC, ETH, SOL, ADA, AVAX, DOT, NEAR, SUI, APT, ...)
+- L2/scaling (OP, ARB, IMX, POL)
+- Cross-chain (ATOM, DOT, LINK)
+- Storage/compute (FIL, AR, RENDER, TAO)
+- Payment/transfer (XRP, XLM)
+
+Excluded: lending/riba (AAVE, COMP, MKR), meme/gambling (DOGE, SHIB, PEPE), interest-bearing stablecoins.
+
+### Trade Frequency Impact
+
+- Backtest: 447 trades / 120 days / 487 coins ≈ 3.7 trades/day
+- Halal universe: 45/487 = 9.2% of coins → **~0.34 trades/day expected**
+- In 48h: expect **0-2 trades** (low sample, but validates execution at $500)
+- If 0 trades: extend to 168h or add coins
+
+### Guarded-Live Monitoring (48h)
+
+| Criterion | Threshold | Action |
+|-----------|-----------|--------|
+| Trade execution | Any fill failure | Investigate immediately |
+| Slippage | > 30 bps avg | Pause entries, review liquidity |
+| Reconciliation | > 5% mismatch | Auto-pause (built-in) |
+| Circuit breaker | Any trip | Auto-panic-sell (built-in) |
+| Balance check | Manual 2x/day | Verify MEXC balance vs state |
+| TG notifications | All entries/exits | Real-time monitoring |
+
+### Infrastructure Verification
+
+| Component | Status | Evidence |
+|-----------|--------|----------|
+| `live_trader.py` | ✅ | 3 trades executed, all invariants held |
+| `order_executor.py` | ✅ | Precision bugfix applied, verified |
+| `circuit_breaker.py` | ✅ | DD, PF, consec-loss checks + panic sell |
+| `strategy_config.py` | ✅ | ms_018 config frozen from ADR-MS-002/005 |
+| `halal_coins.txt` | ✅ | 45 coins, manually curated |
+| `--trade-size` flag | ✅ | Added to live_trader.py |
+| Atomic state writes | ✅ | tmp → bak → rename pattern |
+| Reconciliation | ✅ | Exchange balance vs local state every cycle |
+| Graceful shutdown | ✅ | SIGTERM/SIGINT handlers save state |
+
+### Risk Analysis
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Slippage > backtest | 25% | Reduced PF | Real-time slippage tracking + alert |
+| Halal universe too small | 40% | 0 trades in 48h | Extend to 168h, then reassess |
+| Network/API failure during trade | 10% | Orphaned position | Pre-write markers + reconciliation |
+| Market flash crash | 5% | DD spike | Circuit breaker + panic sell |
+| Exchange maintenance | 10% | Missed signals | Retry logic + graceful degradation |
+
+### Success Criteria (after 48h)
+
+| Metric | Minimum | Ideal |
+|--------|---------|-------|
+| Trades executed | ≥ 1 | ≥ 3 |
+| Fill rate | 100% (no failures) | 100% |
+| Slippage | < 30 bps avg | < 15 bps avg |
+| No circuit breaker trips | Required | Required |
+| No reconciliation mismatches | Required | Required |
+| TG notifications working | Required | Required |
+
+### After 48h: Decision Point
+
+- **All criteria met + ≥1 trade**: Continue at $500/trade for 7 days
+- **0 trades but no issues**: Extend to 168h with same parameters
+- **Any execution issue**: Investigate, fix, re-start micro-live
+- **After 7 days + 10+ trades**: Review for Half Kelly ($1,400/trade)
+
+### Consequences
+
+1. `--trade-size` flag added to `live_trader.py` for flexible sizing
+2. Micro-live state preserved in `state_ms_018_shift_pb_live.json` (3 trades)
+3. Normal live starts fresh with `--reset` flag
+4. Paper trader (`paper_ms_4h.py`, PID 35757) continues running independently for signal tracking
+5. GATES document created for live deployment reproducibility

@@ -127,3 +127,105 @@ Est. frequency: ~2-3 trades/day
 2. **ms_005** (fvg base): Secondary — PF=1.65, P5_PF=1.19, DD=19.5%, 429 trades
 3. **ms_017** (shift_pb fib618): Reserve — PF=1.80, P5_PF=1.28, DD=28.0%
 4. **ms_007** (fvg deep): Reserve — PF=1.66, P5_PF=1.24, DD=22.9%
+
+---
+
+## Live Deployment Gates (ADR-MS-006)
+
+### Pre-Deployment Checklist
+
+| # | Gate | Criterion | Status |
+|---|------|-----------|--------|
+| G0 | Strategy verified | Truth-pass 3/3 | ✅ ADR-MS-002 |
+| G1 | Position sizing | Sensitivity analysis | ✅ ADR-MS-005 |
+| G2 | Ensemble ruled out | Standalone > ensemble | ✅ ADR-MS-003 |
+| G3 | Micro-live smoke | ≥1 real trade, no failures | ✅ ADR-MS-006: 3/3 trades |
+| G4 | Precision verified | All price ranges handled | ✅ Bugfix caf2cb4 |
+| G5 | Halal whitelist | Curated ≥30 coins | ✅ 45 coins |
+| G6 | Tests green | make check passes | ✅ 66 tests |
+
+### Runtime Gates (automated in live_trader.py)
+
+#### Hard — Circuit Breaker Trip (panic sell + halt)
+| Gate | Threshold | Active After |
+|------|-----------|-------------|
+| R1 | DD ≥ 25% of peak | Always |
+| R2 | PF < 1.0 | 30+ trades |
+| R3 | 8+ consecutive losses | Always |
+
+#### Soft — Entry Pause (24h)
+| Gate | Threshold | Active After |
+|------|-----------|-------------|
+| D1 | Daily loss > 5% of peak | Always |
+
+#### Warning — TG Alert (no action)
+| Gate | Threshold | Active After |
+|------|-----------|-------------|
+| W1 | PF < 1.48 (P5 baseline) | 50+ trades |
+| W2 | WR < 35% | 30+ trades |
+| W3 | Avg slippage > 20 bps | 20+ fills |
+
+#### Integrity — Every Cycle
+| Gate | Description | On Violation |
+|------|-------------|-------------|
+| I1 | Reconciliation (exchange vs state) | >5% → pause 24h |
+| I2 | Liquidity (24h volume ≥ $500K) | Skip that coin |
+| I3 | Atomic writes (tmp → bak → rename) | Recovery from .bak |
+
+### Frozen Parameters
+
+```yaml
+# Signal: shift_pb shallow (ms_018)
+max_bos_age: 15
+pullback_pct: 0.382
+max_pullback_bars: 6
+
+# Exits: hybrid_notrl
+max_stop_pct: 15.0
+time_max_bars: 15
+rsi_recovery: true
+rsi_rec_target: 45.0
+rsi_rec_min_bars: 2
+
+# Sizing: normal live (ADR-MS-006)
+capital_per_trade: 500.0
+max_positions: 2
+fee_rate: 0.0010  # conservative
+
+# Execution
+min_volume_24h: 500000
+cooldown_bars: 4
+cooldown_after_stop: 8
+min_candles: 120
+```
+
+### Escalation Path
+
+| Stage | Trade Size | Criterion to Advance |
+|-------|-----------|---------------------|
+| ~~Micro-live~~ | ~~$50~~ | ~~✅ 3 trades, all OK~~ |
+| **Normal live** | **$500** | **48h guarded monitoring** |
+| Full live | $1,400 (Half Kelly) | PF > 1.0, slippage < 20bps |
+| Scale up | $2,800+ | PF > 1.48, DD < 25%, 50+ trades |
+
+### Deployment Command
+
+```bash
+# Normal live ($500/trade, halal whitelist, 48h)
+python live_trader.py --strategy ms_018 --live --trade-size 500 \
+    --coins-file halal_coins.txt --hours 48 --reset
+```
+
+### Reproducibility Artifacts
+
+| Artifact | Location |
+|----------|----------|
+| Strategy config | `trading_bot/strategies/ms_018.py` |
+| Live trader | `trading_bot/live_trader.py` |
+| Order executor | `trading_bot/order_executor.py` |
+| Circuit breaker | `trading_bot/circuit_breaker.py` |
+| Halal whitelist | `trading_bot/halal_coins.txt` |
+| State (live) | `trading_bot/state_ms_018_shift_pb_live.json` |
+| Logs | `trading_bot/logs/live_ms_018_shift_pb_*.log` |
+| ADR chain | `strategies/ms/DECISIONS.md` (MS-001 → MS-006) |
+| Gate canon | this file |

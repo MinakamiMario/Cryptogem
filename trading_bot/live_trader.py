@@ -15,6 +15,8 @@ Usage:
     python live_trader.py --strategy ms_018                      # Paper (default)
     python live_trader.py --strategy ms_018 --live               # Live MEXC
     python live_trader.py --strategy ms_018 --live --micro       # Smoke test ($50)
+    python live_trader.py --strategy ms_018 --live --trade-size 500  # Live $500/trade
+    python live_trader.py --strategy ms_018 --live --coins-file halal_coins.txt  # Halal whitelist
     python live_trader.py --strategy ms_018 --report             # Show report
     python live_trader.py --strategy ms_018 --dry-run            # One cycle test
 """
@@ -934,6 +936,8 @@ def main():
                         help='Execute real orders on MEXC')
     parser.add_argument('--micro', action='store_true',
                         help='Smoke test: $50/trade')
+    parser.add_argument('--trade-size', type=float, default=None,
+                        help='USD per trade (overrides strategy default, e.g. --trade-size 500)')
     parser.add_argument('--hours', type=int, default=None,
                         help='Duration in hours (default: infinite)')
     parser.add_argument('--report', action='store_true',
@@ -951,9 +955,13 @@ def main():
     # Load strategy
     config = load_strategy(args.strategy)
 
-    # Micro mode override
+    # Trade size override (--micro or --trade-size)
+    if args.micro and args.trade_size:
+        parser.error("Cannot use --micro and --trade-size together")
     if args.micro:
         config.capital_per_trade = 50.0
+    elif args.trade_size:
+        config.capital_per_trade = args.trade_size
 
     # Report mode
     if args.report:
@@ -1017,8 +1025,11 @@ def main():
     circuit = CircuitBreaker(executor=executor, notifier=tg)
 
     logger.info(f"Mode: {mode.upper()} | Strategy: {config.name}")
+    logger.info(f"Trade size: ${config.capital_per_trade:.0f}/trade | Max exposure: ${config.capital_per_trade * config.max_positions:.0f}")
     if args.micro:
         logger.info(f"MICRO MODE: $50/trade (smoke test)")
+    elif args.trade_size:
+        logger.info(f"CUSTOM SIZE: ${args.trade_size:.0f}/trade (override)")
 
     # Run
     run(

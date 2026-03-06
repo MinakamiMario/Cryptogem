@@ -13,6 +13,9 @@ from lab.config import (
     DAILY_DIGEST_INTERVAL_S,
     HEARTBEAT_INTERVAL_S,
     HEARTBEAT_STAGGER_S,
+    STUCK_ALERT_COOLDOWN_CYCLES,
+    STUCK_REPEAT_THRESHOLD,
+    STUCK_WINDOW_H,
 )
 from lab.db import LabDB
 from lab.notifier import LabNotifier
@@ -48,6 +51,10 @@ class HeartbeatLoop:
 
         # Resilience: per-agent circuit breakers
         self._circuits = CircuitBreakerRegistry()
+
+        # Stuck detection: track last alert per (task_id, agent)
+        # to avoid re-alerting every cycle
+        self._stuck_alert_cooldowns: dict[tuple[int, str], int] = {}
 
         # Hard kill-switch: block gh, git, pytest, etc.
         # Fail-closed: if guard can't install → exit(1).
@@ -212,6 +219,9 @@ class HeartbeatLoop:
         retried = self._retry_blocked_tasks()
         cycle_stats['retries'] = retried
 
+        # ── Stuck detection: repeated errors → TG alert ──
+        self._check_stuck_agents()
+
         # ── Guardrail v1: drain mode reporting ──────────────
         drain = self.db.is_drain_mode()
         cycle_stats['drain_mode'] = drain
@@ -286,6 +296,56 @@ class HeartbeatLoop:
         )
 
         return cycle_stats
+
+    def _check_stuck_agents(self) -> None:
+        """Detect agents posting the same error repeatedly → TG alert.
+
+        Uses cooldown tracking to avoid spamming the alert itself.
+        """
+        try:
+            stuck = self.db.get_repeated_error_tasks(
+                hours=STUCK_WINDOW_H,
+                min_repeats=STUCK_REPEAT_THRESHOLD,
+            )
+        except Exception as e:
+            logger.debug(f"  [stuck] query failed: {e}")
+            return
+
+        # Decrement cooldowns
+        expired = [
+            k for k, v in self._stuck_alert_cooldowns.items()
+            if v <= 0
+        ]
+        for k in expired:
+            del self._stuck_alert_cooldowns[k]
+        for k in self._stuck_alert_cooldowns:
+            self._stuck_alert_cooldowns[k] -= 1
+
+        for item in stuck:
+            key = (item['task_id'], item['agent'])
+
+            # Skip if recently alerted
+            if key in self._stuck_alert_cooldowns:
+                continue
+
+            logger.warning(
+                f"  [stuck] Agent {item['agent']} stuck on "
+                f"task #{item['task_id']} ({item['count']}× same error)"
+            )
+
+            try:
+                self.notifier.stuck_task_alert(
+                    task_id=item['task_id'],
+                    agent=item['agent'],
+                    error_pattern=item['error_pattern'],
+                    count=item['count'],
+                    task_title=item['task_title'],
+                )
+            except Exception as e:
+                logger.debug(f"  [stuck] TG alert failed: {e}")
+
+            # Set cooldown
+            self._stuck_alert_cooldowns[key] = STUCK_ALERT_COOLDOWN_CYCLES
 
     def _retry_blocked_tasks(self) -> int:
         """Auto-retry blocked tasks older than RETRY_MIN_AGE_S.

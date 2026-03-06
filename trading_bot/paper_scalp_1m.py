@@ -480,6 +480,7 @@ def process_check(
                     state['wins'] += 1
                     state['gross_wins'] += net_pnl
                     state['consecutive_losses'] = 0
+                    state['_last_consec_alerted'] = 0  # Reset alert dedup
                 else:
                     state['losses'] += 1
                     state['gross_losses'] += net_pnl
@@ -702,43 +703,60 @@ def _update_metrics_and_check_circuit_breaker(state: dict) -> list:
     alerts = []
 
     # ─── Circuit Breaker (CRITICAL = halt new entries) ───────
+    # Track which CB alerts already sent (avoid TG spam on repeated cycles)
+    cb_sent = state.get('_cb_alerts_sent', set())
+    if isinstance(cb_sent, list):
+        cb_sent = set(cb_sent)
 
     # R1: PF < 1.0 after 30+ trades
     if closed >= 30 and rolling_pf < CB_PF_FLOOR:
         state['circuit_breaker_hit'] = True
-        alerts.append({
-            'type': 'CB_PF',
-            'severity': 'CRITICAL',
-            'msg': f"PF={rolling_pf:.2f} < {CB_PF_FLOOR} after {closed} trades — HALTING entries",
-            'time': datetime.now(timezone.utc).isoformat(),
-        })
+        if 'CB_PF' not in cb_sent:
+            cb_sent.add('CB_PF')
+            alerts.append({
+                'type': 'CB_PF',
+                'severity': 'CRITICAL',
+                'msg': f"PF={rolling_pf:.2f} < {CB_PF_FLOOR} after {closed} trades — HALTING entries",
+                'time': datetime.now(timezone.utc).isoformat(),
+            })
 
     # R2: DD > ceiling
     if state['dd_max'] >= CB_DD_CEILING:
         state['circuit_breaker_hit'] = True
-        alerts.append({
-            'type': 'CB_DD',
-            'severity': 'CRITICAL',
-            'msg': f"Max DD={state['dd_max'] * 100:.1f}% >= {CB_DD_CEILING * 100:.0f}% — HALTING entries",
-            'time': datetime.now(timezone.utc).isoformat(),
-        })
+        if 'CB_DD' not in cb_sent:
+            cb_sent.add('CB_DD')
+            alerts.append({
+                'type': 'CB_DD',
+                'severity': 'CRITICAL',
+                'msg': f"Max DD={state['dd_max'] * 100:.1f}% >= {CB_DD_CEILING * 100:.0f}% — HALTING entries",
+                'time': datetime.now(timezone.utc).isoformat(),
+            })
 
     # R3: Consecutive losses
     if state['consecutive_losses'] >= CB_CONSEC_LOSS:
         state['circuit_breaker_hit'] = True
-        alerts.append({
-            'type': 'CB_CONSEC',
-            'severity': 'CRITICAL',
-            'msg': f"{state['consecutive_losses']} consecutive losses >= {CB_CONSEC_LOSS} — HALTING entries",
-            'time': datetime.now(timezone.utc).isoformat(),
-        })
+        if 'CB_CONSEC' not in cb_sent:
+            cb_sent.add('CB_CONSEC')
+            alerts.append({
+                'type': 'CB_CONSEC',
+                'severity': 'CRITICAL',
+                'msg': f"{state['consecutive_losses']} consecutive losses >= {CB_CONSEC_LOSS} — HALTING entries",
+                'time': datetime.now(timezone.utc).isoformat(),
+            })
+
     elif state['consecutive_losses'] >= 5:
-        alerts.append({
-            'type': 'CONSEC_WARN',
-            'severity': 'WARNING',
-            'msg': f"{state['consecutive_losses']} consecutive losses",
-            'time': datetime.now(timezone.utc).isoformat(),
-        })
+        # Only alert on NEW consecutive loss count (avoid TG spam)
+        last_consec_alerted = state.get('_last_consec_alerted', 0)
+        if state['consecutive_losses'] > last_consec_alerted:
+            state['_last_consec_alerted'] = state['consecutive_losses']
+            alerts.append({
+                'type': 'CONSEC_WARN',
+                'severity': 'WARNING',
+                'msg': f"{state['consecutive_losses']} consecutive losses",
+                'time': datetime.now(timezone.utc).isoformat(),
+            })
+
+    state['_cb_alerts_sent'] = list(cb_sent)  # JSON-serializable
 
     # ─── Drift Detection (WARNING only) ─────────────────────
 
@@ -1239,8 +1257,8 @@ def run_live(mexc_client, pairs: List[str], logger,
         save_state(state)
         export_dashboard(state)
 
-        # Telegram status every 60 checks (~1 hour at 65s intervals)
-        if state['checks'] % 60 == 0:
+        # Telegram status every 360 checks (~6 hours at 65s intervals)
+        if state['checks'] % 360 == 0:
             _tg_status(state, logger)
 
         iteration += 1
@@ -1274,8 +1292,8 @@ def main():
                         help='Run one check cycle then exit')
     parser.add_argument('--reset', action='store_true',
                         help='Reset state (fresh start)')
-    parser.add_argument('--pairs', type=str, default='XRP/USDT,ETH/USDT',
-                        help='Comma-separated pair list (default: XRP/USDT,ETH/USDT)')
+    parser.add_argument('--pairs', type=str, default='XRP/USDT,ETH/USDT,BTC/USDT,SUI/USDT',
+                        help='Comma-separated pair list (default: XRP/USDT,ETH/USDT,BTC/USDT,SUI/USDT)')
     parser.add_argument('--live', action='store_true',
                         help='Execute real orders on MEXC (requires .env credentials)')
     parser.add_argument('--trade-size', type=float, default=25.0,

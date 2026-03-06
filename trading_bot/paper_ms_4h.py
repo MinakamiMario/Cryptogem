@@ -364,6 +364,7 @@ def process_check(
                 f"${exit_sig.price:.6f} | P&L=${net_pnl:+.2f} ({pnl_pct:+.1f}%) "
                 f"| {actual_bars} bars | Eq=${state['equity']:.2f}"
             )
+            send_telegram_exit(pair, trade_record, state, logger)
 
             pairs_to_close.append(pair)
             time.sleep(0.25)  # MEXC rate limit (20 req/sec)
@@ -441,6 +442,7 @@ def process_check(
                 f"  ENTRY {pair} @ ${close:.6f} | RSI={rsi_val:.1f} "
                 f"| Str={strength:.2f} | ${size_usd:.0f}"
             )
+            send_telegram_entry(pair, close, rsi_val, strength, state, logger)
 
     # Update rolling metrics + drift detection
     alerts = _update_rolling_metrics(state)
@@ -582,6 +584,41 @@ def send_telegram_alert(alerts: list, state: dict, logger):
 
     except Exception as e:
         logger.warning(f"  Telegram alert failed: {e}")
+
+
+def send_telegram_entry(pair: str, price: float, rsi: float, strength: float, state: dict, logger):
+    """Send Telegram notification for new entry."""
+    try:
+        from telegram_notifier import TelegramNotifier
+        tg = TelegramNotifier()
+        tg.send(
+            f"MS 4H Paper ENTRY\n"
+            f"Pair: {pair}\n"
+            f"Price: ${price:.6f}\n"
+            f"RSI: {rsi:.1f} | Str: {strength:.2f}\n"
+            f"Equity: ${state['equity']:.2f} | Open: {len(state['positions'])}/{MAX_POSITIONS}"
+        )
+    except Exception as e:
+        logger.debug(f"  TG entry notification failed: {e}")
+
+
+def send_telegram_exit(pair: str, trade_rec: dict, state: dict, logger):
+    """Send Telegram notification for exit."""
+    try:
+        from telegram_notifier import TelegramNotifier
+        tg = TelegramNotifier()
+        pnl = trade_rec['pnl']
+        icon = '+' if pnl >= 0 else ''
+        tg.send(
+            f"MS 4H Paper EXIT [{trade_rec['exit_reason']}]\n"
+            f"Pair: {pair}\n"
+            f"P&L: ${icon}{pnl:.2f} ({trade_rec['pnl_pct']:+.1f}%)\n"
+            f"Bars: {trade_rec['bars_held']}\n"
+            f"Equity: ${state['equity']:.2f} | PF: {state['rolling_pf']:.2f}\n"
+            f"Trades: {state['closed_trades']} (W:{state['wins']} L:{state['losses']})"
+        )
+    except Exception as e:
+        logger.debug(f"  TG exit notification failed: {e}")
 
 
 def send_telegram_status(state: dict, logger):

@@ -81,25 +81,19 @@ class BaseAgent(ABC):
                 new_tasks = []  # Only rework allowed
 
             my_tasks = rework + new_tasks
-            if my_tasks:
-                task = my_tasks[0]  # rework or oldest first
-                if task.status == 'todo':
-                    # Guardrail v1: pre-check exit conditions for UX
-                    missing = task.get_missing_exit_conditions()
+            # Find a viable task: skip those with missing exit conditions
+            task = None
+            for candidate in my_tasks:
+                if candidate.status == 'todo':
+                    missing = candidate.get_missing_exit_conditions()
                     if missing:
                         self.logger.warning(
-                            f"Task #{task.id} missing exit conditions: "
-                            f"{missing} — moving to blocked"
+                            f"Task #{candidate.id} missing exit conditions: "
+                            f"{missing} — skipping"
                         )
                         try:
-                            self.db.transition(
-                                task.id, 'in_progress', actor=self.name)
-                        except ValueError:
-                            # DB gate caught it — move to blocked instead
-                            pass
-                        try:
                             self.db.add_comment(
-                                task.id, self.name,
+                                candidate.id, self.name,
                                 f"⚠️ Cannot start: missing exit conditions: "
                                 f"{', '.join(missing)}",
                                 'comment',
@@ -107,16 +101,16 @@ class BaseAgent(ABC):
                         except Exception as exc:
                             logger.warning(
                                 f"[{self.name}] Failed to post exit-condition "
-                                f"comment on task #{task.id}: {exc}"
+                                f"comment on task #{candidate.id}: {exc}"
                             )
-                        # Skip this task, don't execute
-                        my_tasks = my_tasks[1:] if len(my_tasks) > 1 else []
-                        if not my_tasks:
-                            return stats
-                        task = my_tasks[0]
-                    else:
-                        self.db.transition(
-                            task.id, 'in_progress', actor=self.name)
+                        continue  # Try next task
+                    # Valid todo task — transition to in_progress
+                    self.db.transition(
+                        candidate.id, 'in_progress', actor=self.name)
+                task = candidate
+                break
+
+            if task:
                 self.db.set_status(self.name, 'working', task_id=task.id,
                                    note=task.title)
 

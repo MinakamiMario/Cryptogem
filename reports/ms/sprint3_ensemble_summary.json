@@ -1,0 +1,445 @@
+{
+  "experiment": "ms_sprint3_ensemble",
+  "timestamp": "2026-03-02T22:43:00.466513+00:00",
+  "n_ensembles": 3,
+  "results": [
+    {
+      "ensemble_id": "ens_ms_018_mse_shallow+ms_005_msb_base",
+      "config_a_id": "ms_018_mse_shallow",
+      "config_b_id": "ms_005_msb_base",
+      "family_a": "shift_pb",
+      "family_b": "fvg_fill",
+      "mode": "priority",
+      "git_hash": "22d5149",
+      "timestamp": "2026-03-02T22:42:48.951221+00:00",
+      "full_run": {
+        "trades": 454,
+        "pf": 1.8882,
+        "pnl": 17380.89,
+        "wr": 53.08,
+        "dd": 24.25
+      },
+      "tracker": {
+        "a_count": 2505,
+        "b_count": 2827,
+        "both_count": 224,
+        "total": 5332
+      },
+      "overlap": {
+        "total_bars": 317162,
+        "a_only": 4377,
+        "b_only": 6030,
+        "both": 441,
+        "neither": 306314,
+        "total_signals": 10848,
+        "overlap_rate": 4.07,
+        "a_share": 44.41,
+        "b_share": 59.65,
+        "signal_rate_per_1000": 34.2
+      },
+      "vs_a": {
+        "id": "ms_018_mse_shallow",
+        "standalone_pf": 2.0792,
+        "standalone_trades": 697,
+        "standalone_dd": 21.29,
+        "standalone_pnl": 46016.7
+      },
+      "vs_b": {
+        "id": "ms_005_msb_base",
+        "standalone_pf": 1.6478,
+        "standalone_trades": 429,
+        "standalone_dd": 19.51,
+        "standalone_pnl": 18755.99
+      },
+      "truth_pass": {
+        "verdict": "VERIFIED",
+        "tests_passed": 3,
+        "window_pass": true,
+        "wf_pass": true,
+        "bootstrap_pass": true,
+        "bootstrap_p5_pf": 1.2449,
+        "bootstrap_pct_profitable": 99.8,
+        "window_split": {
+          "early": {
+            "start_bar": 50,
+            "end_bar": 273,
+            "trades": 153,
+            "pf": 1.2205,
+            "pnl": 656.62,
+            "wr": 49.67,
+            "dd": 23.03
+          },
+          "mid": {
+            "start_bar": 273,
+            "end_bar": 496,
+            "trades": 146,
+            "pf": 2.5427,
+            "pnl": 2469.55,
+            "wr": 52.74,
+            "dd": 12.85
+          },
+          "late": {
+            "start_bar": 496,
+            "end_bar": 721,
+            "trades": 164,
+            "pf": 1.9777,
+            "pnl": 5253.12,
+            "wr": 57.32,
+            "dd": 19.93
+          },
+          "windows_profitable": 3,
+          "pass": true
+        },
+        "walk_forward": {
+          "cal_early_test_midlate": {
+            "cal": {
+              "start_bar": 50,
+              "end_bar": 273,
+              "trades": 153,
+              "pf": 1.2205,
+              "pnl": 656.62,
+              "wr": 49.67,
+              "dd": 23.03
+            },
+            "test": {
+              "start_bar": 273,
+              "end_bar": 721,
+              "trades": 298,
+              "pf": 2.0252,
+              "pnl": 13540.12,
+              "wr": 55.03,
+              "dd": 19.93
+            },
+            "pass": true
+          },
+          "cal_earlymid_test_late": {
+            "cal": {
+              "start_bar": 50,
+              "end_bar": 496,
+              "trades": 302,
+              "pf": 1.7017,
+              "pnl": 3574.21,
+              "wr": 50.99,
+              "dd": 24.25
+            },
+            "test": {
+              "start_bar": 496,
+              "end_bar": 721,
+              "trades": 164,
+              "pf": 1.9777,
+              "pnl": 5253.12,
+              "wr": 57.32,
+              "dd": 19.93
+            },
+            "pass": true
+          },
+          "pass": true
+        },
+        "bootstrap": {
+          "n_resamples": 1000,
+          "seed": 42,
+          "n_trades": 454,
+          "median_pf": 1.8674,
+          "p5_pf": 1.2449,
+          "p95_pf": 2.8428,
+          "median_pnl": 16695.84,
+          "p5_pnl": 5533.38,
+          "pct_profitable": 99.8,
+          "pass": true
+        }
+      }
+    },
+    {
+      "ensemble_id": "ens_ms_018_mse_shallow+ms_007_msb_deep",
+      "config_a_id": "ms_018_mse_shallow",
+      "config_b_id": "ms_007_msb_deep",
+      "family_a": "shift_pb",
+      "family_b": "fvg_fill",
+      "mode": "priority",
+      "git_hash": "22d5149",
+      "timestamp": "2026-03-02T22:42:54.342926+00:00",
+      "full_run": {
+        "trades": 417,
+        "pf": 1.5484,
+        "pnl": 12360.12,
+        "wr": 54.68,
+        "dd": 24.47
+      },
+      "tracker": {
+        "a_count": 2371,
+        "b_count": 1646,
+        "both_count": 72,
+        "total": 4017
+      },
+      "overlap": {
+        "total_bars": 317162,
+        "a_only": 4659,
+        "b_only": 3724,
+        "both": 159,
+        "neither": 308620,
+        "total_signals": 8542,
+        "overlap_rate": 1.86,
+        "a_share": 56.4,
+        "b_share": 45.46,
+        "signal_rate_per_1000": 26.93
+      },
+      "vs_a": {
+        "id": "ms_018_mse_shallow",
+        "standalone_pf": 2.0792,
+        "standalone_trades": 697,
+        "standalone_dd": 21.29,
+        "standalone_pnl": 46016.7
+      },
+      "vs_b": {
+        "id": "ms_007_msb_deep",
+        "standalone_pf": 1.6581,
+        "standalone_trades": 344,
+        "standalone_dd": 22.9,
+        "standalone_pnl": 9337.95
+      },
+      "truth_pass": {
+        "verdict": "VERIFIED",
+        "tests_passed": 3,
+        "window_pass": true,
+        "wf_pass": true,
+        "bootstrap_pass": true,
+        "bootstrap_p5_pf": 1.1773,
+        "bootstrap_pct_profitable": 99.0,
+        "window_split": {
+          "early": {
+            "start_bar": 50,
+            "end_bar": 273,
+            "trades": 142,
+            "pf": 1.7609,
+            "pnl": 2796.15,
+            "wr": 53.52,
+            "dd": 24.47
+          },
+          "mid": {
+            "start_bar": 273,
+            "end_bar": 496,
+            "trades": 141,
+            "pf": 2.0067,
+            "pnl": 1983.77,
+            "wr": 51.77,
+            "dd": 12.99
+          },
+          "late": {
+            "start_bar": 496,
+            "end_bar": 721,
+            "trades": 148,
+            "pf": 1.3297,
+            "pnl": 938.94,
+            "wr": 58.11,
+            "dd": 19.74
+          },
+          "windows_profitable": 3,
+          "pass": true
+        },
+        "walk_forward": {
+          "cal_early_test_midlate": {
+            "cal": {
+              "start_bar": 50,
+              "end_bar": 273,
+              "trades": 142,
+              "pf": 1.7609,
+              "pnl": 2796.15,
+              "wr": 53.52,
+              "dd": 24.47
+            },
+            "test": {
+              "start_bar": 273,
+              "end_bar": 721,
+              "trades": 275,
+              "pf": 1.5225,
+              "pnl": 4026.28,
+              "wr": 55.27,
+              "dd": 19.74
+            },
+            "pass": true
+          },
+          "cal_earlymid_test_late": {
+            "cal": {
+              "start_bar": 50,
+              "end_bar": 496,
+              "trades": 283,
+              "pf": 1.8448,
+              "pnl": 7492.99,
+              "wr": 52.65,
+              "dd": 24.47
+            },
+            "test": {
+              "start_bar": 496,
+              "end_bar": 721,
+              "trades": 148,
+              "pf": 1.3297,
+              "pnl": 938.94,
+              "wr": 58.11,
+              "dd": 19.74
+            },
+            "pass": true
+          },
+          "pass": true
+        },
+        "bootstrap": {
+          "n_resamples": 1000,
+          "seed": 42,
+          "n_trades": 417,
+          "median_pf": 1.5484,
+          "p5_pf": 1.1773,
+          "p95_pf": 2.0655,
+          "median_pnl": 12150.31,
+          "p5_pnl": 4549.81,
+          "pct_profitable": 99.0,
+          "pass": true
+        }
+      }
+    },
+    {
+      "ensemble_id": "ens_ms_017_mse_fib618+ms_005_msb_base",
+      "config_a_id": "ms_017_mse_fib618",
+      "config_b_id": "ms_005_msb_base",
+      "family_a": "shift_pb",
+      "family_b": "fvg_fill",
+      "mode": "priority",
+      "git_hash": "22d5149",
+      "timestamp": "2026-03-02T22:42:56.178207+00:00",
+      "full_run": {
+        "trades": 445,
+        "pf": 1.6605,
+        "pnl": 10619.57,
+        "wr": 53.71,
+        "dd": 21.88
+      },
+      "tracker": {
+        "a_count": 1573,
+        "b_count": 2770,
+        "both_count": 175,
+        "total": 4343
+      },
+      "overlap": {
+        "total_bars": 317162,
+        "a_only": 3004,
+        "b_only": 6094,
+        "both": 377,
+        "neither": 307687,
+        "total_signals": 9475,
+        "overlap_rate": 3.98,
+        "a_share": 35.68,
+        "b_share": 68.3,
+        "signal_rate_per_1000": 29.87
+      },
+      "vs_a": {
+        "id": "ms_017_mse_fib618",
+        "standalone_pf": 1.7993,
+        "standalone_trades": 475,
+        "standalone_dd": 27.96,
+        "standalone_pnl": 27497.56
+      },
+      "vs_b": {
+        "id": "ms_005_msb_base",
+        "standalone_pf": 1.6478,
+        "standalone_trades": 429,
+        "standalone_dd": 19.51,
+        "standalone_pnl": 18755.99
+      },
+      "truth_pass": {
+        "verdict": "VERIFIED",
+        "tests_passed": 3,
+        "window_pass": true,
+        "wf_pass": true,
+        "bootstrap_pass": true,
+        "bootstrap_p5_pf": 1.1683,
+        "bootstrap_pct_profitable": 99.0,
+        "window_split": {
+          "early": {
+            "start_bar": 50,
+            "end_bar": 273,
+            "trades": 145,
+            "pf": 1.2895,
+            "pnl": 846.53,
+            "wr": 50.34,
+            "dd": 21.88
+          },
+          "mid": {
+            "start_bar": 273,
+            "end_bar": 496,
+            "trades": 151,
+            "pf": 2.5,
+            "pnl": 2417.82,
+            "wr": 54.97,
+            "dd": 13.24
+          },
+          "late": {
+            "start_bar": 496,
+            "end_bar": 721,
+            "trades": 147,
+            "pf": 1.59,
+            "pnl": 2053.27,
+            "wr": 55.78,
+            "dd": 19.74
+          },
+          "windows_profitable": 3,
+          "pass": true
+        },
+        "walk_forward": {
+          "cal_early_test_midlate": {
+            "cal": {
+              "start_bar": 50,
+              "end_bar": 273,
+              "trades": 145,
+              "pf": 1.2895,
+              "pnl": 846.53,
+              "wr": 50.34,
+              "dd": 21.88
+            },
+            "test": {
+              "start_bar": 273,
+              "end_bar": 721,
+              "trades": 298,
+              "pf": 1.7777,
+              "pnl": 7994.33,
+              "wr": 55.7,
+              "dd": 19.74
+            },
+            "pass": true
+          },
+          "cal_earlymid_test_late": {
+            "cal": {
+              "start_bar": 50,
+              "end_bar": 496,
+              "trades": 298,
+              "pf": 1.697,
+              "pnl": 3578.26,
+              "wr": 52.35,
+              "dd": 21.88
+            },
+            "test": {
+              "start_bar": 496,
+              "end_bar": 721,
+              "trades": 147,
+              "pf": 1.59,
+              "pnl": 2053.27,
+              "wr": 55.78,
+              "dd": 19.74
+            },
+            "pass": true
+          },
+          "pass": true
+        },
+        "bootstrap": {
+          "n_resamples": 1000,
+          "seed": 42,
+          "n_trades": 445,
+          "median_pf": 1.6358,
+          "p5_pf": 1.1683,
+          "p95_pf": 2.3107,
+          "median_pnl": 10297.67,
+          "p5_pnl": 3138.57,
+          "pct_profitable": 99.0,
+          "pass": true
+        }
+      }
+    }
+  ]
+}

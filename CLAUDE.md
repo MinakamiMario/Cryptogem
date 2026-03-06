@@ -86,6 +86,14 @@ Wijzigingen aan deze bestanden vereisen review van @MinakamiMario:
 - `lab/deploy/**` — deployment scripts
 
 ## ═══════════════════════════════════════════════
+## Research Integrity Principles (ADR-LAB-001)
+- **Lees `strategies/DECISIONS.md` voor elke nieuwe strategie-evaluatie**
+- Falsifieerbaarheid: definieer vooraf wat de strategie weerlegt
+- OOS-validatie: in-sample bewijst niets
+- Voorspellende selectie: coin-selectie moet persistent zijn
+- Goedkoopste test eerst: blind portfolio VOOR coin-selectie
+- Exchange pariteit: valideer op live-exchange data
+
 ## TRADING BOT — Strategy Research
 ## ═══════════════════════════════════════════════
 

@@ -1157,6 +1157,19 @@ class LabNotifier:
             f"Agent: {assigned_to}"
         )
 
+    def stuck_task_alert(self, task_id: int, agent: str,
+                         error_pattern: str, count: int,
+                         task_title: str) -> None:
+        """Alert: agent is stuck posting the same error repeatedly."""
+        self._send(
+            f"🔁 <b>STUCK AGENT</b>\n"
+            f"Agent: <b>{agent}</b>\n"
+            f"Taak #{task_id}: {task_title[:80]}\n"
+            f"Zelfde error {count}× herhaald:\n"
+            f"<code>{error_pattern[:200]}</code>\n\n"
+            f"⚠️ Actie vereist: exit_conditions of taak config fixen"
+        )
+
     def agent_error(self, agent: str, error: str) -> None:
         self._send(f"⚠️ Agent <b>{agent}</b> error:\n{error[:500]}")
 

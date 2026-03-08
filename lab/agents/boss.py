@@ -247,9 +247,19 @@ class BossAgent(BaseAgent):
                 f"Beschrijving: {goal.description}\n"
                 f"Beschikbare agents: {', '.join(goal.agents)}\n"
                 f"Max {remaining} nieuwe taken.\n\n"
+                f"## Research Integrity Principles (ADR-LAB-001)\n"
+                f"1. Elke strategie moet falsifieerbaar zijn\n"
+                f"2. Edge moet out-of-sample aantoonbaar zijn\n"
+                f"3. Coin-selectie moet voorspellend zijn\n"
+                f"4. Goedkoopste test eerst\n"
+                f"5. Valideer op de exchange waarop je tradedt\n\n"
                 f"## Bestaande taken (niet dupliceren)\n{existing_list}\n\n"
                 f"## Recente activiteit (laatste 15 dagen)\n{activity_summary}\n\n"
-                f"Stel {remaining} concrete taken voor in JSON-formaat."
+                f"Stel {remaining} concrete taken voor in JSON-formaat.\n"
+                f"Elke task MOET een 'adr_ref' veld bevatten in exit_conditions.\n"
+                f"Formaat: 'ADR-LAB-001 principe X: [korte uitleg hoe toegepast]'.\n"
+                f"Voorbeeld: 'ADR-LAB-001 principe 4: blind portfolio test draait "
+                f"vóór coin-selectie om aggregate edge te bevestigen'."
             )
 
             response = ask_json(prompt, agent_name='boss')

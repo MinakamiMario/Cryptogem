@@ -1,0 +1,72 @@
+{
+  "experiment": "ms_sprint2_truthpass",
+  "timestamp": "2026-03-02T22:19:02.167479+00:00",
+  "n_configs": 4,
+  "verdicts": {
+    "VERIFIED": 4,
+    "CONDITIONAL": 0,
+    "FAILED": 0
+  },
+  "configs": [
+    {
+      "config_id": "ms_018_mse_shallow",
+      "family": "shift_pb",
+      "verdict": "VERIFIED",
+      "tests_passed": 3,
+      "full_pf": 2.0792,
+      "full_pnl": 46016.7,
+      "full_trades": 697,
+      "full_dd": 21.29,
+      "window_pass": true,
+      "wf_pass": true,
+      "bootstrap_pass": true,
+      "bootstrap_p5_pf": 1.4838,
+      "bootstrap_pct_profitable": 100.0
+    },
+    {
+      "config_id": "ms_005_msb_base",
+      "family": "fvg_fill",
+      "verdict": "VERIFIED",
+      "tests_passed": 3,
+      "full_pf": 1.6478,
+      "full_pnl": 18755.99,
+      "full_trades": 429,
+      "full_dd": 19.51,
+      "window_pass": true,
+      "wf_pass": true,
+      "bootstrap_pass": true,
+      "bootstrap_p5_pf": 1.1875,
+      "bootstrap_pct_profitable": 99.5
+    },
+    {
+      "config_id": "ms_017_mse_fib618",
+      "family": "shift_pb",
+      "verdict": "VERIFIED",
+      "tests_passed": 3,
+      "full_pf": 1.7993,
+      "full_pnl": 27497.56,
+      "full_trades": 475,
+      "full_dd": 27.96,
+      "window_pass": true,
+      "wf_pass": true,
+      "bootstrap_pass": true,
+      "bootstrap_p5_pf": 1.2798,
+      "bootstrap_pct_profitable": 99.9
+    },
+    {
+      "config_id": "ms_007_msb_deep",
+      "family": "fvg_fill",
+      "verdict": "VERIFIED",
+      "tests_passed": 3,
+      "full_pf": 1.6581,
+      "full_pnl": 9337.95,
+      "full_trades": 344,
+      "full_dd": 22.9,
+      "window_pass": true,
+      "wf_pass": true,
+      "bootstrap_pass": true,
+      "bootstrap_p5_pf": 1.2437,
+      "bootstrap_pct_profitable": 99.4
+    }
+  ]
+}

@@ -82,6 +82,10 @@ class ExchangeClient(ABC):
         """Haal alle handelbare paren op in 'BASE/QUOTE' formaat."""
         pass
 
+    def get_market_info(self, pair: str) -> Optional[dict]:
+        """Min order size, precision. Override per exchange."""
+        return None
+
     def get_quote_currency(self) -> str:
         """Welke quote currency deze exchange primair gebruikt."""
         return 'USD'
@@ -248,12 +252,28 @@ class MEXCExchangeClient(ExchangeClient):
                     'bid': float(ticker.get('bid', 0) or 0),
                     'last': float(ticker.get('last', 0) or 0),
                     'volume_24h': float(ticker.get('baseVolume', 0) or 0),
+                    'quote_volume_24h': float(ticker.get('quoteVolume', 0) or 0),
                     'high_24h': float(ticker.get('high', 0) or 0),
                     'low_24h': float(ticker.get('low', 0) or 0),
                 }
         except Exception as e:
             logger.error(f"MEXC ticker error voor {pair}: {e}")
         return None
+
+    def get_market_info(self, pair: str) -> Optional[dict]:
+        """Min order size, precision uit CCXT markets."""
+        self._ensure_markets()
+        market = (self._markets or {}).get(pair)
+        if not market:
+            return None
+        limits = market.get('limits', {})
+        precision = market.get('precision', {})
+        return {
+            'min_amount': float((limits.get('amount', {}) or {}).get('min', 0) or 0),
+            'min_cost': float((limits.get('cost', {}) or {}).get('min', 0) or 0),
+            'amount_precision': precision.get('amount', 8),
+            'price_precision': precision.get('price', 8),
+        }
 
     def get_balance(self) -> Optional[dict]:
         self._rate_limit()

@@ -1,0 +1,47 @@
+# Halal Crypto Whitelist — ms_018 (structure shift + pullback)
+# QC-validated: 2026-03-05 | 5/5 tests passed
+#
+# Edge: micro-cap class effect (99.7th percentile bootstrap)
+# Strategy: ms_018 on 4H candles, MEXC 10bps taker
+#
+# QC gates passed:
+#   QC1 — Spread ≤25bps AND depth ≥$500 (live MEXC check)
+#   QC2 — Walk-forward aggregate OOS PnL positive (+$9,420)
+#   QC3 — Realistic sizing PF=1.87, DD=18.2% ($5K, max_pos=2)
+#   QC4 — All coins actively trading on MEXC (3 delistings removed)
+#   QC5 — 99.7th percentile vs random selection (N=5000 bootstrap)
+#
+# Removed (2026-03-05):
+#   CTSI, AIOZ — DELISTED from MEXC
+#   APT, ATOM, GRT — Consistent losers (3/3 windows negative)
+#   ADA, DOT, SUI, TON, IMX, RENDER, FIL, HBAR, KAS, OP, ENS, AR — Large-cap wrong profile
+#   ALGO, NEAR, SEI, SOL, XRP — Flippers/high-volume (wrong structural profile for ms_018)
+#   NEO, ROSE, ZIL, ONE, IOTA, VET, ONDO, TFUEL — No backtest edge / wrong profile
+
+# ── Behouden micro/mid winners (6) ──────────────────────────
+EDU/USDT
+SC/USDT
+QTUM/USDT
+ANKR/USDT
+LRC/USDT
+SONIC/USDT
+
+# ── QC-validated additions (18) ─────────────────────────────
+RARI/USDT
+XMR/USDT
+COOKIE/USDT
+BAT/USDT
+ASTER/USDT
+LTC/USDT
+MOVR/USDT
+H/USDT
+ZRO/USDT
+TRAC/USDT
+SAHARA/USDT
+GUN/USDT
+STRK/USDT
+B2/USDT
+FF/USDT
+AXS/USDT
+ACH/USDT
+OPEN/USDT

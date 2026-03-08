@@ -50,6 +50,11 @@ STUCK_THRESHOLD_H = 24            # uren voordat boss escaleert
 DAILY_DIGEST_INTERVAL_S = 86400   # 24 uur — digest 1×/dag
 CAP_BREACH_ESCALATE_CYCLES = 2    # drain >N cycles → cap_breach_alert
 
+# ── Stuck detection ──────────────────────────────────────
+STUCK_REPEAT_THRESHOLD = 3        # same error N× → alert
+STUCK_WINDOW_H = 2                # look-back window in hours
+STUCK_ALERT_COOLDOWN_CYCLES = 6   # don't re-alert same task for 6 cycles (1h)
+
 # ── LLM ───────────────────────────────────────────────────
 LLM_MODEL = 'claude-sonnet-4-20250514'
 LLM_MAX_OUTPUT_TOKENS = 4096
@@ -119,6 +124,11 @@ EXIT_CONDITIONS = [
     'artifact',         # What will be delivered (file type + location)
     'write_surface',    # Exact paths; subset of WRITE_ALLOWLIST
     'stop_condition',   # When to stop + move to blocked
+]
+
+# Optional exit condition fields — not enforced by gate, but expected in reviews
+EXIT_CONDITIONS_OPTIONAL = [
+    'adr_ref',          # Which ADR(s) informed this task + how applied
 ]
 
 # ── High-risk files (TG alert on modification) ───────────

@@ -5,6 +5,8 @@ data/cache_parts_hf/
 data/orderbook_snapshots/
 trading_bot/candle_cache*.json
 trading_bot/paper_state*.json
+trading_bot/state_*.json
+trading_bot/*.bak
 trading_bot/dashboard_*.json
 trading_bot/*_results.json
 trading_bot/*_report.json

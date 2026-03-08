@@ -515,6 +515,17 @@ class LabDB:
             "WHERE id = ?",
             (new_status, now, blocked_since, task_id),
         )
+
+        # Rework: peer_review → in_progress resets reviews to pending
+        # so the agent can redo work and get fresh reviews
+        if task.status == 'peer_review' and new_status == 'in_progress':
+            self.conn.execute(
+                "UPDATE task_reviews SET verdict = 'pending', "
+                "comment_id = NULL, updated_at = ? "
+                "WHERE task_id = ? AND verdict != 'pending'",
+                (now, task_id),
+            )
+
         self.conn.commit()
         self.log_activity(actor, 'status_changed', task_id,
                           {'from': task.status, 'to': new_status})
@@ -728,6 +739,39 @@ class LabDB:
             (f'-{hours}',),
         ).fetchall()
         return [self._row_to_task(r) for r in rows]
+
+    def get_repeated_error_tasks(self, hours: int = 2,
+                                  min_repeats: int = 3) -> list[dict]:
+        """Find tasks where an agent posts the same error N+ times.
+
+        Returns list of dicts:
+          {task_id, agent, error_pattern, count, task_title}
+        """
+        rows = self.conn.execute("""
+            SELECT c.task_id, c.agent, c.body, COUNT(*) as cnt,
+                   t.title, t.status
+            FROM comments c
+            JOIN tasks t ON t.id = c.task_id
+            WHERE c.created_at > datetime('now', ? || ' hours')
+              AND (c.body LIKE '%Cannot start%'
+                   OR c.body LIKE '%ERROR%'
+                   OR c.body LIKE '%FAILED%'
+                   OR c.body LIKE '%niet gevonden%')
+            GROUP BY c.task_id, c.agent, c.body
+            HAVING COUNT(*) >= ?
+            ORDER BY cnt DESC
+        """, (f'-{hours}', min_repeats)).fetchall()
+        return [
+            {
+                'task_id': r[0],
+                'agent': r[1],
+                'error_pattern': r[2][:200],
+                'count': r[3],
+                'task_title': r[4],
+                'task_status': r[5],
+            }
+            for r in rows
+        ]
 
     # ── Guardrail v1 — Flow Control ─────────────────────
 

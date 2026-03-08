@@ -357,27 +357,31 @@ class TestE2ECycle:
                 f"{name} should have posted a completion comment on task #{tid}"
 
         # ── Step 5: Cross-review ─────────────────────────────
-        # Each agent reviews every other agent's task
-        for reviewer_name, reviewer_agent in agents.items():
+        # Create ALL review entries for ALL tasks first, then run
+        # heartbeats for review-only (no rework). Without suppressing
+        # rework, strict reviewers (e.g. deployment_judge) trigger
+        # rework cycles that reset reviews via peer_review→in_progress
+        # transition, causing a never-settling cascade.
+        for reviewer_name in agents:
             for task_owner, tid in task_ids.items():
                 if task_owner == reviewer_name:
                     continue  # Don't self-review
-
-                # Create review entry if not exists
                 db.create_review(tid, reviewer=reviewer_name)
 
-            # Run heartbeat again — should now pick up review duties
-            with patch('lab.tools.backtest_runner.backtest',
-                       return_value=FAKE_BT), \
-                 patch('lab.tools.robustness_runner.run_candidate',
-                       return_value=FAKE_ROBUSTNESS), \
-                 patch('lab.tools.report_writer.write_report',
-                       return_value=report_result), \
-                 patch('lab.tools.report_writer.write_backtest_report',
-                       return_value=report_result), \
-                 patch('lab.tools.report_writer.write_robustness_report',
-                       return_value=report_result):
-                stats = reviewer_agent.heartbeat()
+        # Run heartbeats with rework suppressed so agents only review
+        with patch('lab.tools.backtest_runner.backtest',
+                   return_value=FAKE_BT), \
+             patch('lab.tools.robustness_runner.run_candidate',
+                   return_value=FAKE_ROBUSTNESS), \
+             patch('lab.tools.report_writer.write_report',
+                   return_value=report_result), \
+             patch('lab.tools.report_writer.write_backtest_report',
+                   return_value=report_result), \
+             patch('lab.tools.report_writer.write_robustness_report',
+                   return_value=report_result), \
+             patch.object(db, 'get_my_rejected_tasks', return_value=[]):
+            for _name, agent in agents.items():
+                agent.heartbeat()
 
         # ── Step 6: Verify reviews were posted ───────────────
         for task_owner, tid in task_ids.items():

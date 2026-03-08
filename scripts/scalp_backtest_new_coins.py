@@ -34,10 +34,16 @@ PARAMS = {
 
 # Spread data from live scan (bps)
 KNOWN_SPREADS = {
+    # Original 13 (measured 2026-03-05)
     'BTC': 0.0, 'ETH': 0.4, 'XRP': 1.4, 'ZEC': 0.4,
     'HBAR': 1.0, 'SUI': 1.0, 'SOL': 1.1, 'LTC': 1.8,
     'BCH': 2.2, 'CHZ': 2.6, 'LINK': 3.2, 'TRX': 3.5,
-    'ADA': 3.6, 'AVAX': 4.2, 'FIL': 4.8,
+    'ADA': 3.6, 'AVAX': 2.2, 'FIL': 4.8,
+    # Batch 2 (measured 2026-03-07)
+    'DOGE': 1.1, 'AAVE': 1.8, 'UNI': 2.6, 'ONDO': 5.2,
+    'PEPE': 6.1, 'NEAR': 6.5, 'DOT': 6.8, 'FET': 6.9,
+    'ARB': 7.2, 'RENDER': 7.2, 'TON': 7.6, 'OP': 8.5,
+    'APT': 8.5, 'ATOM': 11.1,
 }
 
 MAX_FVG_AGE = PARAMS['max_fvg_age']

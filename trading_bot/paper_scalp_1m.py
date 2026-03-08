@@ -66,7 +66,9 @@ LOG_DIR = BASE_DIR / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
 # Polling
-POLL_INTERVAL_SEC = 65            # 65s = safe margin after 1m candle close
+# ADR-SCALP-007 fix: 65s was LONGER than 60s bar interval → 50% bar coverage!
+# 10s ensures every candle is caught. API load: ~0.3 calls/sec (well within limits).
+POLL_INTERVAL_SEC = 10            # 10s = catch every 1m candle close
 MIN_CANDLES = 100                 # Warmup for structural indicators
 
 # Cost model: SPREAD ONLY (0% maker/taker on MEXC)
@@ -116,6 +118,9 @@ CB_DD_CEILING = 0.25              # Halt if DD > 25%
 CB_PF_FLOOR = 1.0                 # Halt if PF < 1.0 after 30+ trades
 CB_CONSEC_LOSS = 8                # Halt after 8 consecutive losses
 
+# ADR-SCALP-007 fix: daily loss limit (match backtest harness)
+DAILY_LOSS_LIMIT = -0.02          # Halt entries after -2% daily loss
+
 
 # ─── Logging ────────────────────────────────────────────────
 
@@ -162,6 +167,9 @@ def new_state() -> dict:
         'drift_checks': [],
         'circuit_breaker_hit': False,
         'last_candle_time': {},
+        # Daily loss limit (ADR-SCALP-007: match backtest)
+        'daily_start_equity': INITIAL_EQUITY,
+        'current_day': None,
         # Live mode state
         'live_mode': False,
         'live_trade_size': 0.0,
@@ -417,7 +425,14 @@ def process_check(
             logger.warning(f"  [{pair}] Indicator computation failed")
             continue
 
-        bar = indicators['n'] - 1
+        # ADR-SCALP-007 fix: evaluate candles[-2] (last COMPLETED candle),
+        # not candles[-1] (currently forming candle with incomplete OHLCV).
+        # CCXT fetch_ohlcv includes the forming candle as the last element.
+        if indicators['n'] < 3:
+            continue
+        bar = indicators['n'] - 2
+        eval_candle = candles[-2]  # The completed candle we evaluate
+        eval_time = eval_candle['time']
         cur_atr = indicators['atr14'][bar]
         if cur_atr is None or cur_atr <= 0:
             logger.debug(f"  [{pair}] ATR is None at bar {bar}")
@@ -463,10 +478,10 @@ def process_check(
                     continue  # Don't process normal exit, keep retrying
 
             # Update trailing stop (harness.py lines 113-138)
-            _update_trailing_stop(pos, candles[-1]['high'], cur_atr)
+            _update_trailing_stop(pos, eval_candle['high'], cur_atr)
 
-            # Check exit conditions
-            trade_rec = check_exit(pos, candles[-1], cur_atr, spread_bps)
+            # Check exit conditions (on completed candle)
+            trade_rec = check_exit(pos, eval_candle, cur_atr, spread_bps)
 
             if trade_rec is not None:
                 net_pnl = trade_rec['pnl']
@@ -507,7 +522,7 @@ def process_check(
                     state['exit_types'][et]['wins'] += 1
 
                 # Cooldown tracking (Gap 1 fix: timestamps)
-                state['last_exit_time'][pair] = last_time
+                state['last_exit_time'][pair] = eval_time
                 state['last_exit_was_stop'][pair] = (et == 'STOP')
 
                 # Trade log
@@ -519,7 +534,7 @@ def process_check(
                 pnl_pct = net_pnl / pos['size_usd'] * 100
                 logger.info(
                     f"  {'WIN' if net_pnl >= 0 else 'LOSS'} EXIT {pair} [{et}] "
-                    f"${candles[-1]['close']:.6f} | P&L=${net_pnl:+.4f} ({pnl_pct:+.1f}%) "
+                    f"${eval_candle['close']:.6f} | P&L=${net_pnl:+.4f} ({pnl_pct:+.1f}%) "
                     f"| {trade_rec['bars_held']}bars | Spread={spread_bps:.1f}bps "
                     f"| Eq=${state['equity']:.2f}"
                 )
@@ -586,11 +601,21 @@ def process_check(
         if state.get('circuit_breaker_hit', False):
             continue  # Circuit breaker: no new entries
 
+        # ADR-SCALP-007: Daily loss limit (match backtest harness)
+        bar_day = eval_time // 86400
+        if state.get('current_day') != bar_day:
+            state['current_day'] = bar_day
+            state['daily_start_equity'] = state['equity']
+        if DAILY_LOSS_LIMIT < 0 and state['daily_start_equity'] > 0:
+            daily_return = (state['equity'] - state['daily_start_equity']) / state['daily_start_equity']
+            if daily_return <= DAILY_LOSS_LIMIT:
+                continue  # Daily loss limit hit — skip entry
+
         # Cooldown check (Gap 1 fix: timestamp-based)
         last_exit_t = state['last_exit_time'].get(pair, 0)
         was_stop = state['last_exit_was_stop'].get(pair, False)
         cd_bars = COOLDOWN_AFTER_STOP if was_stop else COOLDOWN_BARS
-        bars_since_exit = (last_time - last_exit_t) // 60 if last_exit_t > 0 else 9999
+        bars_since_exit = (eval_time - last_exit_t) // 60 if last_exit_t > 0 else 9999
         if bars_since_exit < cd_bars:
             continue
 
@@ -609,7 +634,8 @@ def process_check(
             continue
 
         # Entry fill: apply spread cost (harness.py line 208)
-        entry_price = candles[-1]['close']
+        # ADR-SCALP-007: use eval_candle (completed) for entry price
+        entry_price = eval_candle['close']
         spread_fraction = spread_bps / 10000.0
         entry_fill = entry_price * (1 + spread_fraction)
         qty = CAPITAL_PER_TRADE / entry_fill
@@ -619,7 +645,7 @@ def process_check(
             'pair': pair,
             'entry_price': entry_price,
             'entry_fill': entry_fill,
-            'entry_candle_time': last_time,
+            'entry_candle_time': eval_time,
             'entry_time': check_str,
             'stop_price': sig['stop_price'],
             'target_price': sig['target_price'],

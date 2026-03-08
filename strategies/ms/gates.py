@@ -3,10 +3,11 @@ MS Sprint 1 Gate Evaluator — Hard + Soft gates for market structure screening.
 
 Hard gates (KILL):
   G0: TRADES >= 80
-  G1: PF >= 1.0   (KILL — 0 pass → MS CLOSED)
+  G1: PNL > 0     (KILL — prevents false positives from DD=100% + PF>1.0, ADR-MS-009)
+  G2: PF >= 1.0   (KILL — 0 pass → MS CLOSED)
 
 Soft gates (advance / informational):
-  G2: PF >= 1.10  (advance to truth-pass)
+  G3: PF >= 1.10  (advance to truth-pass)
   S1: DD <= 50%
   S2: WF >= 2/3 folds PF >= 0.9
   S3: Concentration — top1 coin < 30% trades
@@ -76,11 +77,29 @@ def _gate_trades(bt: dict, *, min_trades: int = 80, **_kw) -> GateResult:
     )
 
 
+def _gate_pnl(bt: dict, **_kw) -> GateResult:
+    """Hard gate: total P&L must be positive.
+
+    Prevents false positives where PF > 1.0 but equity curve hit zero
+    (engine continues tracking hypothetical trades after account death,
+    inflating PF while actual P&L is negative).  See ADR-MS-009.
+    """
+    pnl = bt.get("pnl", 0.0)
+    return GateResult(
+        name="G1:PNL",
+        description="Total P&L must be positive",
+        passed=pnl > 0,
+        value=round(pnl, 2),
+        threshold="> 0",
+        detail=f"P&L ${pnl:,.2f} ({'PASS' if pnl > 0 else 'NEGATIVE — bankrupt'})",
+    )
+
+
 def _gate_pf(bt: dict, *, min_pf: float = 1.0, **_kw) -> GateResult:
     pf = bt.get("pf", 0.0)
     pf_display = min(pf, 99.9) if pf != float("inf") else 99.9
     return GateResult(
-        name="G1:PF",
+        name="G2:PF",
         description="Profit factor minimum",
         passed=pf >= min_pf,
         value=round(pf_display, 2),
@@ -96,7 +115,7 @@ def _gate_pf(bt: dict, *, min_pf: float = 1.0, **_kw) -> GateResult:
 def _soft_pf_advance(bt: dict, *, advance_pf: float = 1.10, **_kw) -> GateResult:
     pf = bt.get("pf", 0.0)
     return GateResult(
-        name="G2:PF_ADVANCE",
+        name="G3:PF_ADVANCE",
         description="PF advance to truth-pass",
         passed=pf >= advance_pf,
         value=round(min(pf, 99.9), 2),
@@ -225,11 +244,12 @@ def _soft_dc_geometry(bt: dict, **_kw) -> GateResult:
 
 HARD_GATES = [
     ("G0:TRADES", _gate_trades),
-    ("G1:PF", _gate_pf),
+    ("G1:PNL", _gate_pnl),
+    ("G2:PF", _gate_pf),
 ]
 
 SOFT_GATES = [
-    ("G2:PF_ADVANCE", _soft_pf_advance),
+    ("G3:PF_ADVANCE", _soft_pf_advance),
     ("S1:DD", _soft_dd),
     ("S2:WF", _soft_window_fold),
     ("S3:CONC", _soft_concentration),

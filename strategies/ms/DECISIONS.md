@@ -601,3 +601,386 @@ Excluded: lending/riba (AAVE, COMP, MKR), meme/gambling (DOGE, SHIB, PEPE), inte
 3. Normal live starts fresh with `--reset` flag
 4. Paper trader (`paper_ms_4h.py`, PID 35757) continues running independently for signal tracking
 5. GATES document created for live deployment reproducibility
+
+---
+
+## ADR-MS-007: Integrity Test + Overlap Analysis — Universe-Specific Edge
+
+**Date**: 2026-03-07
+**Status**: REVIEW — strategy status reclassification proposed
+**Supersedes**: None (addendum to ADR-MS-002 truth-pass verdicts)
+
+### Context
+
+ADR-MS-002 verified ms_018 and ms_005 via a 3-test truth-pass battery (window split, walk-forward, bootstrap) on Kraken 4H data. All 4 candidates scored VERIFIED (3/3). ADR-MS-004/006 advanced ms_018 to live trading on MEXC.
+
+Before extending ms_005 to paper trading, we ran a 4-test integrity battery (ADR-LAB-001 principles: falsifiability, cheapest test first, OOS validation) with an additional cross-exchange sanity check (T4). When T4 failed for both strategies, an overlap-only analysis was conducted to isolate whether the failure was exchange microstructure or universe composition.
+
+### Experiment: Integrity Test (4 tests)
+
+- **Dataset (Kraken)**: 4H, 487 coins (>=360 bars), 721 bars max
+- **Dataset (MEXC)**: 4H v2, 444 coins, time-aligned to Kraken window
+- **Exits**: hybrid_notrl (DC exits)
+- **Fees**: 26 bps/side (Kraken), 10 bps/side (MEXC)
+
+| Test | Description | ms_005 | ms_018 |
+|------|-------------|--------|--------|
+| T1: Blind universe | Full Kraken backtest | PASS (PF=1.65) | PASS (PF=2.08) |
+| T2: Coin distribution | HHI, top-N concentration | PASS (HHI=0.007) | PASS (HHI=0.004) |
+| T3: Walk-forward 5-fold | PF>=0.9 in 4/5 folds + coin persistence | PASS (5/5, rho=0.24) | PASS (5/5, rho=0.03) |
+| T4: Cross-exchange (MEXC) | PF>=0.8 on MEXC, time-aligned | **FAIL** (PF=0.71) | **FAIL** (PF=0.93*) |
+
+*ms_018 MEXC PF=0.93 passes the PF>=0.8 threshold but is not profitable (P&L=-$367). Both verdicts: **CONDITIONAL (3/4)**.
+
+Note: Initial T4 run used unaligned MEXC data (up to 2853 bars vs Kraken's 721). After aligning time windows, MEXC PF improved from 0.85→0.93 (ms_018) and 0.90→0.71 (ms_005).
+
+### Experiment: Overlap-Only Analysis
+
+To determine whether T4 failure was caused by exchange microstructure or universe composition, we ran both strategies on only the **203 coins present on both exchanges**, same time window, same exit rules.
+
+| Metric | ms_005 Kraken | ms_005 MEXC | ms_018 Kraken | ms_018 MEXC |
+|--------|--------------|-------------|--------------|-------------|
+| Universe | 203 overlap | 203 overlap | 203 overlap | 203 overlap |
+| Trades | 360 | 258 | 411 | 385 |
+| PF | **0.78** | 0.58 | **0.83** | 0.76 |
+| P&L | -$834 | -$1,305 | -$710 | -$877 |
+| WR | 53.1% | 53.5% | 48.7% | 53.3% |
+| DD | 45.3% | 69.2% | 47.9% | 51.4% |
+| Coins traded | 132 | 139 | 167 | 162 |
+
+**Comparison with full-universe results:**
+
+| Config | Full Kraken (487) PF | Overlap Kraken (203) PF | Delta |
+|--------|---------------------|------------------------|-------|
+| ms_005 | 1.65 | 0.78 | **-53%** |
+| ms_018 | 2.08 | 0.83 | **-60%** |
+
+### Key Findings
+
+#### 1. Both strategies are UNPROFITABLE on overlap coins, even on Kraken
+The 203 shared coins produce PF < 1.0 on BOTH exchanges. This is not an exchange microstructure effect — the overlap coins simply don't carry the signal.
+
+#### 2. The edge is concentrated in ~284 Kraken-only coins
+These are typically smaller altcoins without MEXC USDT listings: lower liquidity, less algorithmic competition, higher mean-reversion amplitude. The structural patterns (BoS+pullback, FVG fill) produce larger bounces on these coins.
+
+#### 3. Win rates transfer, P&L magnitude does not
+WR is nearly identical across exchanges and subsets (48-56%). The difference is in average win size vs average loss size — the Kraken-only coins have larger favorable moves relative to stops.
+
+#### 4. Exit attribution is consistent across exchanges
+RSI RECOVERY remains the dominant exit (~55%) and DC TARGET the secondary (~22%) on both exchanges. The exit mechanism works identically — it's the entry universe that determines profitability.
+
+#### 5. ms_018 overlap agreement is 66% vs ms_005 at 55%
+Of coins that traded on both exchanges, ms_018 had higher directional agreement, suggesting shift_pb is slightly more exchange-agnostic than fvg_fill, though both fail profitability on the overlap set.
+
+### Interpretation: T4 Reframed
+
+The original T4 test assumed cross-exchange portability is a valid falsification criterion. The overlap analysis reveals this assumption was **partially flawed**:
+
+- T4 tests **universe portability**, not just exchange portability
+- Kraken's USD pairs and MEXC's USDT pairs have only 42% overlap (203/487)
+- The profitable edge is concentrated in the 58% of coins that are Kraken-exclusive
+- T4 as designed conflates two variables: exchange mechanics and coin universe
+
+**T4 remains a valid test**, but its failure should be interpreted as: "the strategy is universe-specific" rather than "the strategy has no edge." The T1-T3 results (blind universe, distribution, walk-forward) on the full Kraken universe remain valid evidence of edge.
+
+### Team Verdict: Strategy Status Reclassification
+
+Based on the combined evidence:
+
+| Factor | Evidence | Weight |
+|--------|----------|--------|
+| Temporal robustness (T1-T3) | PASS — 5/5 WF folds, strong bootstrap, good distribution | Strong positive |
+| Cross-exchange portability | FAIL — not portable to MEXC universe | Moderate negative |
+| Root cause identified | Universe composition, not exchange mechanics | Explains T4 failure |
+| Live evidence (ADR-MS-006) | 3 trades, all DC TARGET exits, PF=7.05 | Weak positive (small N) |
+| Overlap-only edge | PF < 1.0 on shared coins | Strong negative for portability |
+
+**Proposed reclassification:**
+
+| Config | Previous Status | New Status | Rationale |
+|--------|----------------|------------|-----------|
+| ms_018 | VERIFIED (ADR-MS-002) | **VERIFIED, UNIVERSE-SPECIFIC** | Edge confirmed on Kraken universe; not portable to different coin universes |
+| ms_005 | VERIFIED (ADR-MS-002) | **VERIFIED, UNIVERSE-SPECIFIC** | Same pattern; stronger universe-dependency (PF drops more: 1.65→0.78) |
+
+This is NOT a downgrade of the truth-pass verdict. T1-T3 remain PASS. The new label adds a constraint: **deployment must use the Kraken coin universe (or a substantially similar one) to preserve the edge.**
+
+### Decision
+
+**ACCEPTED** — both strategies reclassified as **VERIFIED, UNIVERSE-SPECIFIC**.
+
+Implications:
+1. **Kraken deployment remains valid**: The live trader (ADR-MS-006) uses MEXC as exchange but should scan Kraken-listed coins for signal generation. The halal whitelist (45 coins) is already drawn from Kraken listings.
+2. **MEXC-native universe is NOT viable**: Deploying on MEXC-only USDT pairs without Kraken overlap would likely produce PF < 1.0.
+3. **Future exchange portability**: Any new exchange deployment must first verify that its coin universe overlaps sufficiently with Kraken's profitable subset (~284 Kraken-only coins).
+4. **ADR-MS-004 risk R1 ("MEXC data ≠ Kraken data") is now CONFIRMED**: The difference is real, and the root cause is identified (universe composition, not microstructure).
+
+### Consequences
+
+1. **No change to live deployment**: ms_018 on MEXC with halal whitelist (drawn from Kraken) continues as-is
+2. **Integrity test reports updated**: Addendum added to JSON reports with overlap analysis findings
+3. **ADR-MS-002 NOT rewritten**: VERIFIED verdict stands; universe-specificity is an addendum, not a correction
+4. **T4 threshold interpretation refined**: For future integrity tests, T4 should control for universe overlap before concluding exchange portability failure
+5. **ms_005 paper trading**: Remains viable on Kraken universe but NOT recommended for MEXC-native deployment
+
+### Risks
+
+1. **Kraken-only coins may delist**: If profitable coins get delisted from Kraken, the edge erodes
+2. **Universe dependency could mask overfitting**: Wide-universe profitability that disappears on a subset could be regime/selection-dependent rather than structural
+3. **Halal whitelist concentration**: 45 coins from Kraken may or may not include the "Kraken-only" profitable subset — trade frequency data (ADR-MS-006: ~0.34 trades/day) suggests limited overlap
+4. **Sample size**: Overlap analysis used same 4-month window; longer-term data needed to confirm universe-specificity is stable
+
+### Data Artifacts
+
+| File | Contents |
+|------|----------|
+| `reports/ms/integrity_test_ms_005_msb_base.json` | 4-test integrity results (CONDITIONAL 3/4) |
+| `reports/ms/integrity_test_ms_018_mse_shallow.json` | 4-test integrity results (CONDITIONAL 3/4) |
+| `reports/ms/overlap_test_ms_005_msb_base.json` | Overlap-only analysis (203 coins) |
+| `reports/ms/overlap_test_ms_018_mse_shallow.json` | Overlap-only analysis (203 coins) |
+| `scripts/integrity_test_ms005.py` | Integrity test runner (4 tests + time alignment) |
+
+---
+
+## ADR-MS-008: MEXC Canonical Audit — NO-GO for MEXC Deployment
+
+**Date**: 2026-03-07
+**Status**: NO-GO — ms_018 and ms_005 are not deployment-worthy on MEXC
+**Supersedes**: ADR-MS-004 (paper trading setup on MEXC), ADR-MS-006 (normal live GO)
+
+### Context
+
+ADR-MS-007 identified that the MS strategy edge is universe-specific (Kraken-only coins). The user made a strategic decision: **MEXC is the canonical deployment venue.** Kraken results are discovery signals only — if a strategy doesn't hold on MEXC data and MEXC universe, it's not a live candidate.
+
+This audit answers: is there ANY viable MEXC deployment for ms_018 or ms_005?
+
+### Experiment
+
+Five-step MEXC canonical audit:
+- **A1**: Halal whitelist classification (overlap vs MEXC-only vs Kraken-only)
+- **A2**: MEXC full-universe backtest (444 coins, time-aligned to Kraken window)
+- **A3**: Profitable subset extraction (is there ANY MEXC subset with PF > 1.0?)
+- **A4**: Halal whitelist backtest on MEXC data
+- **A5**: Deployment verdict
+
+Dataset: MEXC 4H v2, 444 coins, aligned to Kraken time window (~Oct 2025 – Feb 2026).
+Fees: 10 bps/side (MEXC spot).
+
+### Results
+
+#### A1: Halal Whitelist Classification
+
+| Class | Count | Coins |
+|-------|-------|-------|
+| Overlap (both exchanges) | 16 | EDU, ANKR, LRC, XMR, COOKIE, BAT, ASTER, LTC, H, ZRO, SAHARA, GUN, STRK, FF, AXS, ACH |
+| Kraken-only | 8 | SC, QTUM, SONIC, RARI, MOVR, TRAC, B2, OPEN |
+| MEXC-only | 0 | — |
+
+**Finding**: 8/24 halal coins (33%) exist only on Kraken. The 16 overlap coins are in the subset that ADR-MS-007 showed produces PF < 1.0. Zero MEXC-exclusive coins on the halal list.
+
+#### A2: MEXC Full Universe
+
+| Config | Trades | PF | P&L | DD | Coins traded |
+|--------|--------|------|------|------|-------------|
+| ms_018 | 2,084 | 0.85 | -$1,967 | 98.4% | 336 |
+| ms_005 | 1,307 | 0.90 | -$2,000 | 100% | 201 |
+
+Both strategies are definitively unprofitable on the full MEXC universe. DD reaches 98-100% — the account goes to zero.
+
+#### A3: Profitable Subset Extraction
+
+Methodology: rank all MEXC coins by per-coin PF, then cumulatively add best-to-worst to find the largest subset with PF >= 1.0.
+
+| Config | Coins with >= 3 trades | Profitable coins | Largest PF>=1.0 subset | Subset PF | Subset trades |
+|--------|----------------------|-----------------|----------------------|-----------|---------------|
+| ms_018 | 336 | 173 (51%) | 307 coins | 1.006 | 1,825 |
+| ms_005 | 201 | 94 (47%) | 179 coins | 1.001 | 912 |
+
+**Finding**: The "best possible" cherry-picked MEXC subset barely breaks even (PF=1.006). This is:
+- Statistically indistinguishable from PF=1.0 (no edge)
+- Not survivable after real-world slippage and execution costs
+- A post-hoc cherry-pick — not a tradeable coin selection rule
+
+Even oracle-level coin selection (knowing which coins will be profitable) only produces PF=1.006 on MEXC. There is no exploitable edge.
+
+#### A4: Halal Whitelist on MEXC Data
+
+**Result: 0 trades.** The MEXC 4H dataset uses `/USD` pair notation while the halal whitelist uses `/USDT`. Even after correcting for this, the 16 overlap coins fall in the unprofitable subset identified in ADR-MS-007.
+
+#### A5: Top-10 / Bottom-10 Coin Analysis
+
+ms_018 top-10 MEXC coins by P&L: SPX ($+214), TIBBIR ($+112), TAKE ($+104), L3 ($+91), NAORIS ($+90), KMNO ($+90), LISTA ($+86), ZKP ($+78), TLOS ($+70), BONK ($+68).
+
+These are mostly very small-cap tokens (SPX, TIBBIR, TAKE, NAORIS) with 4-9 trades each — insufficient to establish statistical significance. The top performer (SPX, PF=9.84, 8 trades, +$214) is a single coin contributing 10.9% of all MEXC-universe profit — exactly the kind of concentration that ADR-LAB-001 warns against.
+
+### Decision
+
+**NO-GO** — both ms_018 and ms_005 fail the MEXC canonical standard.
+
+| Criterion | Required | ms_018 | ms_005 |
+|-----------|----------|--------|--------|
+| MEXC full-universe PF | >= 1.0 | 0.85 | 0.90 |
+| MEXC full-universe profitable | Required | No (-$1,967) | No (-$2,000) |
+| Viable MEXC subset exists | PF >= 1.10, 50+ trades | PF=1.006 (breakeven) | PF=1.001 (breakeven) |
+| Halal whitelist viable | PF >= 1.0 | 0 trades | 0 trades |
+
+### Consequences
+
+1. **Live trading should be suspended**: The current ms_018 deployment (ADR-MS-006) trades on MEXC using a halal whitelist. The whitelist coins are either overlap (PF < 1.0 on both exchanges) or Kraken-only (not available on MEXC). There is no MEXC evidence supporting continued deployment.
+
+2. **ADR-MS-004/006 superseded**: Paper and live trading setups were based on Kraken backtests + MEXC fee advantage assumption. MEXC canonical audit shows the fee advantage does not compensate for universe-dependent edge loss.
+
+3. **ms_018/ms_005 status: CLOSED for MEXC deployment**. The Kraken VERIFIED status (ADR-MS-002) remains technically valid but is not actionable — we deploy on MEXC, not Kraken.
+
+4. **Future MS research on MEXC**: If market structure strategies are to be pursued, they must be discovered and validated directly on MEXC 4H data. Porting Kraken discoveries to MEXC has been conclusively disproven.
+
+5. **Halal whitelist QC process**: The QC gates (ADR-MS-006 header) were applied to Kraken backtest data, not MEXC. Future QC must use canonical venue data.
+
+### Risk of NOT Acting
+
+Continuing to live trade ms_018 on MEXC with no MEXC-venue evidence of edge is equivalent to random trading with 10bps fees per side. Expected outcome over 100 trades at $500: **-$1,000 to -$2,000** (matching the MEXC backtest P&L).
+
+### Data Artifacts
+
+| File | Contents |
+|------|----------|
+| `reports/ms/mexc_canonical_audit.json` | Full audit results (A1-A5) |
+| `scripts/mexc_canonical_audit.py` | Audit runner |
+
+---
+
+## ADR-MS-009: Team Review — MEXC NO-GO Confirmed, MEXC-Native Discovery Initiated
+
+**Date**: 2026-03-07
+**Status**: DECIDED — pivot to MEXC-native signal discovery
+
+### Context
+
+ADR-MS-008 concluded NO-GO for both ms_018 and ms_005 on MEXC. Internal team review requested by user to confirm verdict and decide next steps.
+
+### Team Review
+
+**Participants**: risk_governor, robustness_auditor, deployment_judge, boss (research lead)
+
+#### risk_governor — CONFIRMED NO-GO
+- MEXC full universe DD = 98.4% (ms_018) and 100% (ms_005) — accounts go to zero
+- Oracle-level subset selection produces PF=1.006 — no exploitable margin after slippage
+- Halal whitelist: 0 trades on MEXC → no deployment basis
+- Recommendation: suspend live trading immediately
+
+#### robustness_auditor — METHODOLOGY CONFIRMED
+- A1-A5 pipeline correctly constructed, sufficient sample sizes (2,084 / 1,307 trades)
+- Subset extraction (A3) is strongest evidence: PF=1.006 maximum even with hindsight
+- ADR-MS-007 overlap analysis eliminates microstructure as alternative explanation
+- Process lesson: T4 cross-exchange check should be a HARD GATE before live deployment
+- Recommended: T4 = hard gate for all future deployments (not soft/informational)
+
+#### deployment_judge — ALL GATES FAIL
+| Gate | Required | ms_018 | ms_005 |
+|------|----------|--------|--------|
+| G0: MEXC full-universe PF | >= 1.0 | 0.85 FAIL | 0.90 FAIL |
+| G1: Viable MEXC subset | PF >= 1.10 | 1.006 FAIL | 1.001 FAIL |
+| G2: Halal-compatible | >= 1 trade | 0 trades FAIL | 0 trades FAIL |
+
+Status updates: ADR-MS-004 → SUPERSEDED, ADR-MS-006 → SUPERSEDED
+
+### Decision
+
+**Unanimous NO-GO confirmed. Pivot to MEXC-native discovery.**
+
+1. **Live trading**: SUSPEND (user to confirm kill of PID 59024)
+2. **Kraken→MEXC porting**: CLOSED as research path (81 configs tested, 0 MEXC-viable)
+3. **T4 upgrade**: Cross-exchange check promoted to HARD GATE for all future deployments
+4. **Next**: MEXC-Native MS Sprint 1 — run all 18 MS configs directly on MEXC 4H v2 data
+
+### MEXC-Native Sprint 1 Plan
+
+**Hypothesis**: Configs that failed on Kraken (26 bps) may survive on MEXC (10 bps) due to 32 bps roundtrip cost reduction. Additionally, MEXC's 439-coin universe has different volatility characteristics than Kraken's 526.
+
+**Method**:
+- Dataset: `ohlcv_4h_mexc_spot_usdt_v2` (439 coins, MEXC 4H)
+- Fees: 10 bps/side (MEXC spot taker)
+- Configs: all 18 MS from `strategies/ms/hypotheses.py` (5 families)
+- Engine: `strategies/4h/sprint3/engine.py` (unchanged)
+- Gates: `strategies/ms/gates.py` (unchanged, G1 threshold PF >= 1.0)
+- Script: `scripts/run_ms_sprint1_mexc.py` (new, adapted from `run_ms_sprint1_sweep.py`)
+
+**Success criteria**: >= 1 config with PF >= 1.0, trades >= 80, DD <= 50% on MEXC-native data.
+
+**If 0 GO**: MS signal families are not viable on any exchange at 4H. Consider:
+- New signal families designed for MEXC microstructure
+- Different timeframe (1H MEXC showed promise in HF research)
+- Alternative entry architectures
+
+### Process Lesson Documented
+
+The MS research path (Sprint 1-3 + integrity + audit) revealed a fundamental flaw:
+- **Discovery on Exchange A → Deploy on Exchange B is not valid** without T4 hard gate
+- 81 configs tested on Kraken, 2 verified, 0 survived MEXC port
+- Cost: ~2 weeks research + 3 live trades ($1.02 profit, immaterial)
+- Future research MUST discover AND validate on the same canonical venue
+
+### MEXC-Native Sprint 1 Results
+
+**Result: 0/18 MEXC-viable.** All 18 configs produce DD 96-100% on MEXC 4H.
+
+| Rank | Config | Family | PF | Trades | P&L | DD% | Verdict |
+|------|--------|--------|----|--------|-----|-----|---------|
+| 1 | ms_008 (fvg wide) | fvg_fill | 1.11* | 868 | -$2,000 | 100% | FALSE POSITIVE |
+| 2 | ms_005 (fvg base) | fvg_fill | 0.90 | 1,307 | -$2,000 | 100% | NO-GO |
+| 3 | ms_009 (ob base) | ob_touch | 0.87 | 2,689 | -$1,965 | 98.8% | NO-GO |
+| 4 | ms_018 (shift_pb shallow) | shift_pb | 0.85 | 2,084 | -$1,967 | 98.4% | NO-GO |
+
+*ms_008 PF=1.11 is an artifact: P&L=-$2,000 and DD=100% (account death). PF computes sum(wins)/sum(|losses|) independently of equity, producing PF>1.0 even when the account is bankrupt. Gate note: need to add P&L<0 as hard gate in future.
+
+**Family rankings (MEXC-native):**
+
+| Family | Best PF | Avg PF | Kraken Best PF | Delta |
+|--------|---------|--------|----------------|-------|
+| fvg_fill | 1.11* | 0.92 | 1.66 | -45% |
+| ob_touch | 0.87 | 0.82 | 0.72 | +14% |
+| shift_pb | 0.86 | 0.85 | 2.08 | -59% |
+| sfp | 0.81 | 0.70 | 0.63 | +11% |
+| liq_sweep | 0.72 | 0.64 | 0.76 | -5% |
+
+**Findings:**
+1. The 32 bps fee reduction (10 vs 26 bps) is insufficient to make MS signals profitable on MEXC
+2. shift_pb degrades most severely (-59%) — its edge was entirely Kraken-universe-dependent
+3. ob_touch and sfp actually improve slightly on MEXC (+11-14%) but remain firmly unprofitable
+4. fvg_fill is the only family to produce PF>1.0 (ms_008) but with 100% DD — not tradeable
+5. Every single config reaches DD 96-100% — accounts uniformly go to zero
+
+**Hypothesis falsified**: MEXC's lower fees do NOT compensate for the lack of structural edge on MEXC coin universe.
+
+### Final Verdict: MS Research CLOSED
+
+**Market Structure signals are not viable on MEXC at 4H.** This is confirmed by:
+- ADR-MS-008: Kraken→MEXC porting fails (0/2 configs survive)
+- ADR-MS-009: MEXC-native screening fails (0/18 configs survive)
+- Total: 0/18 configs produce viable P&L on MEXC-native data
+
+The MS signal families (shift_pb, fvg_fill, ob_touch, liq_sweep, sfp) rely on structural patterns that produce tradeable bounces only in Kraken's smaller-altcoin universe. MEXC's different coin composition eliminates this edge.
+
+### Consequences
+
+1. **MS research: CLOSED** — no further MS configs on 4H MEXC
+2. ADR-MS-008 NO-GO confirmed unanimously + MEXC-native Sprint 1 confirms
+3. T4 cross-exchange check upgraded to hard gate (was informational)
+4. Live trader (ms_018, $500/trade) to be suspended pending user confirmation
+5. Gate system note: add "P&L < 0 = HARD FAIL" to prevent false positives from PF>1.0 + DD=100%
+6. **Next research direction**: New signal architectures needed for MEXC 4H, or pivot to different timeframe/approach
+
+### Process Lessons
+
+1. **Discovery on Exchange A → Deploy on Exchange B is not valid** without T4 hard gate
+2. **99 configs tested total** (63 indicator + 18 MS Kraken + 18 MS MEXC), 0 MEXC-viable
+3. **Cost**: ~2 weeks research + 3 live trades ($1.02 profit, immaterial)
+4. **Future research MUST discover AND validate on the same canonical venue**
+5. **PF > 1.0 is necessary but not sufficient** — must be combined with P&L > 0 and DD < threshold
+
+### Data Artifacts
+
+| File | Contents |
+|------|---------|
+| `scripts/run_ms_sprint1_mexc.py` | MEXC-native sweep runner |
+| `reports/ms/sprint1_mexc_scoreboard.json` | Full results (18 configs) |
+| `reports/ms/sprint1_mexc_scoreboard.md` | Human-readable scoreboard |
